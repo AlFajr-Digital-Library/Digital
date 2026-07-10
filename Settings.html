@@ -1,0 +1,1548 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>الاعدادات المتقدمة - مكتبة الفجر</title>  
+  
+  <!-- Google Fonts + Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --clr-primary: #ff6b35;
+      --clr-primary-dark: #e55a2b;
+      --clr-secondary: #1a73e8;
+      --clr-pro: #8a2be2;
+      --clr-pro-light: #a55eff;
+      --clr-bg-main: #121212;
+      --clr-bg-deep: #0a0a0a;
+      --clr-bg-card: #1e1e1e;
+      --clr-bg-hover: #2c2c2c;
+      --txt-primary: #ffffff;
+      --txt-secondary: #b9b9b9;
+      --txt-muted: #6c6c6c;
+      --border-color: #2a2a2a;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-card: 0 12px 28px rgba(0, 0, 0, 0.5);
+      --grad-primary: linear-gradient(135deg, #ff6b35, #ff9068);
+      --grad-pro: linear-gradient(145deg, #8a2be2, #4e1a9e, #2b0b4e);
+      --transition: all 0.25s ease;
+      
+      /* Status Colors */
+      --status-active: #00d4aa;
+      --status-online: #4fc3f7;
+      --status-inactive: #8b8b8b;
+      --status-banned: #ff4757;
+      --status-frozen: #ffb74d;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: var(--clr-bg-main);
+      color: var(--txt-primary);
+      line-height: 1.5;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    /* ==========================================
+       STATUS CARD - البطاقة الرئيسية لحالة الحساب
+    ========================================== */
+    .status-card-main {
+      background: var(--clr-bg-card);
+      border-radius: var(--radius-lg);
+      padding: 1.8rem 2rem;
+      border: 2px solid var(--border-color);
+      margin-bottom: 1.5rem;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .status-card-main::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 6px;
+      height: 100%;
+      border-radius: 0 4px 4px 0;
+      transition: var(--transition);
+    }
+
+    .status-card-main.active::before {
+      background: var(--status-active);
+    }
+    .status-card-main.online::before {
+      background: var(--status-online);
+    }
+    .status-card-main.inactive::before {
+      background: var(--status-inactive);
+    }
+    .status-card-main.banned::before {
+      background: var(--status-banned);
+    }
+    .status-card-main.frozen::before {
+      background: var(--status-frozen);
+    }
+
+    .status-card-main .status-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .status-card-main .status-left {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .status-card-main .status-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+
+    .status-card-main.active .status-icon {
+      background: rgba(0, 212, 170, 0.15);
+      color: var(--status-active);
+    }
+    .status-card-main.online .status-icon {
+      background: rgba(79, 195, 247, 0.15);
+      color: var(--status-online);
+    }
+    .status-card-main.inactive .status-icon {
+      background: rgba(139, 139, 139, 0.15);
+      color: var(--status-inactive);
+    }
+    .status-card-main.banned .status-icon {
+      background: rgba(255, 71, 87, 0.15);
+      color: var(--status-banned);
+    }
+    .status-card-main.frozen .status-icon {
+      background: rgba(255, 183, 77, 0.15);
+      color: var(--status-frozen);
+    }
+
+    .status-card-main .status-info h3 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .status-card-main .status-info .status-sub {
+      font-size: 0.85rem;
+      color: var(--txt-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .status-card-main .status-info .status-sub .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulse-dot 2s infinite;
+    }
+
+    .status-card-main.active .dot {
+      background: var(--status-active);
+    }
+    .status-card-main.online .dot {
+      background: var(--status-online);
+    }
+    .status-card-main.inactive .dot {
+      background: var(--status-inactive);
+    }
+    .status-card-main.banned .dot {
+      background: var(--status-banned);
+    }
+    .status-card-main.frozen .dot {
+      background: var(--status-frozen);
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .status-card-main .status-badge-large {
+      padding: 0.6rem 2rem;
+      border-radius: 40px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 0.5px;
+      text-align: center;
+      min-width: 140px;
+    }
+
+    .status-card-main.active .status-badge-large {
+      background: rgba(0, 212, 170, 0.15);
+      color: var(--status-active);
+      border: 1px solid rgba(0, 212, 170, 0.3);
+    }
+    .status-card-main.online .status-badge-large {
+      background: rgba(79, 195, 247, 0.15);
+      color: var(--status-online);
+      border: 1px solid rgba(79, 195, 247, 0.3);
+    }
+    .status-card-main.inactive .status-badge-large {
+      background: rgba(139, 139, 139, 0.15);
+      color: var(--status-inactive);
+      border: 1px solid rgba(139, 139, 139, 0.3);
+    }
+    .status-card-main.banned .status-badge-large {
+      background: rgba(255, 71, 87, 0.15);
+      color: var(--status-banned);
+      border: 1px solid rgba(255, 71, 87, 0.3);
+    }
+    .status-card-main.frozen .status-badge-large {
+      background: rgba(255, 183, 77, 0.15);
+      color: var(--status-frozen);
+      border: 1px solid rgba(255, 183, 77, 0.3);
+    }
+
+    /* Status Reason */
+    .status-reason-box {
+      margin-top: 1rem;
+      padding: 0.8rem 1.2rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.9rem;
+      display: none;
+      text-align: right;
+    }
+
+    .status-reason-box.show {
+      display: block;
+    }
+
+    .status-card-main.banned .status-reason-box {
+      background: rgba(255, 71, 87, 0.1);
+      color: var(--status-banned);
+      border-right: 4px solid var(--status-banned);
+    }
+
+    .status-card-main.frozen .status-reason-box {
+      background: rgba(255, 183, 77, 0.1);
+      color: var(--status-frozen);
+      border-right: 4px solid var(--status-frozen);
+    }
+
+    .status-reason-box .reason-label {
+      font-weight: 600;
+      font-size: 0.8rem;
+      opacity: 0.7;
+    }
+
+    .status-reason-box .reason-text {
+      font-size: 1rem;
+      margin-top: 4px;
+    }
+
+    /* Status Alert Banner */
+    .status-alert {
+      margin-top: 1rem;
+      padding: 1rem 1.2rem;
+      border-radius: var(--radius-sm);
+      display: none;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .status-alert.show {
+      display: block;
+    }
+
+    .status-alert.banned {
+      background: rgba(255, 71, 87, 0.15);
+      border: 1px solid rgba(255, 71, 87, 0.3);
+      color: var(--status-banned);
+    }
+
+    .status-alert.frozen {
+      background: rgba(255, 183, 77, 0.15);
+      border: 1px solid rgba(255, 183, 77, 0.3);
+      color: var(--status-frozen);
+    }
+
+    .status-alert.active {
+      background: rgba(0, 212, 170, 0.1);
+      border: 1px solid rgba(0, 212, 170, 0.2);
+      color: var(--status-active);
+    }
+
+    /* ==========================================
+       باقي الأنماط (من الكود الأصلي)
+    ========================================== */
+    .site-header {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      height: 70px;
+      background: rgba(18, 18, 18, 0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand__icon {
+      width: 40px;
+      height: 40px;
+      background: var(--grad-primary);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+    .brand__text {
+      font-size: 1.4rem;
+      font-weight: 800;
+      background: var(--grad-primary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 12px;
+    }
+    .btn-nav {
+      background: var(--clr-bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--txt-primary);
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-nav:hover {
+      background: var(--clr-bg-hover);
+      border-color: var(--clr-primary);
+      color: var(--clr-primary);
+    }
+
+    .mobile-menu-toggle {
+      display: none;
+      background: var(--clr-bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 0.5rem 0.9rem;
+      font-size: 1.3rem;
+      cursor: pointer;
+      color: var(--txt-primary);
+    }
+
+    .dashboard {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 2rem 1.8rem;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 2rem;
+      position: relative;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+      transition: transform 0.3s ease;
+    }
+
+    .quick-links {
+      background: var(--clr-bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem;
+      box-shadow: var(--shadow-card);
+    }
+    .quick-links__title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--txt-muted);
+      margin-bottom: 1rem;
+      padding-right: 0.5rem;
+      font-weight: 700;
+    }
+    .links-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .link-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0.7rem 1rem;
+      border-radius: var(--radius-md);
+      color: var(--txt-secondary);
+      font-weight: 600;
+      transition: var(--transition);
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .link-item i {
+      width: 24px;
+      font-size: 1.1rem;
+    }
+    .link-item:hover {
+      background: var(--clr-bg-hover);
+      color: var(--clr-primary);
+      transform: translateX(-4px);
+    }
+    .active-link {
+      background: rgba(255, 107, 53, 0.12);
+      color: var(--clr-primary);
+      border-right: 2px solid var(--clr-primary);
+    }
+
+    .pro-premium-card {
+      background: linear-gradient(125deg, #11101c, #1a1128);
+      border: 1.5px solid var(--clr-pro);
+      border-radius: var(--radius-lg);
+      padding: 1.6rem;
+      box-shadow: 0 15px 30px rgba(138, 43, 226, 0.25);
+      transition: transform 0.2s;
+      margin-top: 0.5rem;
+    }
+    .pro-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--grad-pro);
+      padding: 0.2rem 1rem;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+    .pro-title {
+      font-size: 1.65rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #e0b0ff, #b87cff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    .pro-desc {
+      color: var(--txt-secondary);
+      font-size: 0.85rem;
+      margin-bottom: 1.2rem;
+      line-height: 1.5;
+    }
+    .pro-feature-list {
+      list-style: none;
+      margin: 1rem 0;
+    }
+    .pro-feature-list li {
+      margin-bottom: 0.65rem;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #cdb4ff;
+    }
+    .btn-pro-sub {
+      width: 100%;
+      background: var(--grad-pro);
+      border: none;
+      padding: 0.85rem;
+      border-radius: 50px;
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 6px 14px rgba(138, 43, 226, 0.4);
+      text-align: center;
+      display: inline-block;
+      text-decoration: none;
+    }
+    .btn-pro-sub:hover {
+      transform: scale(1.02);
+      background: linear-gradient(145deg, #9f40ff, #6b1fcf);
+    }
+
+    .settings-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .setting-card {
+      background: var(--clr-bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.8rem;
+      transition: var(--transition);
+    }
+    .card-header {
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .card-header h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+    .card-header p {
+      color: var(--txt-secondary);
+      font-size: 0.85rem;
+      margin-top: 0.2rem;
+    }
+    .form-group {
+      margin-bottom: 1.6rem;
+    }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .form-control {
+      width: 100%;
+      background: var(--clr-bg-deep);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 0.8rem 1rem;
+      color: var(--txt-primary);
+      font-family: inherit;
+      transition: var(--transition);
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--clr-primary);
+    }
+    .btn-save {
+      background: var(--grad-primary);
+      border: none;
+      padding: 0.7rem 1.8rem;
+      border-radius: 40px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      transition: 0.2s;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 0.9rem;
+    }
+    .btn-save:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: #2c2c2c;
+    }
+
+    .all-links-section {
+      background: var(--clr-bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem;
+      box-shadow: var(--shadow-card);
+      transition: all 0.2s;
+      scroll-margin-top: 85px;
+      margin-top: 0.5rem;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    .section-header i {
+      font-size: 1.3rem;
+      color: var(--clr-primary);
+      background: rgba(255,107,53,0.15);
+      padding: 8px;
+      border-radius: 12px;
+    }
+    .section-header h3 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+    .all-links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 0.6rem;
+    }
+    .all-link-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--clr-bg-deep);
+      padding: 0.65rem 0.9rem;
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      color: var(--txt-secondary);
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+    .all-link-item i {
+      width: 28px;
+      font-size: 1rem;
+      color: var(--clr-pro-light);
+    }
+    .all-link-item:hover {
+      background: var(--clr-bg-hover);
+      border-color: var(--clr-primary);
+      color: var(--clr-primary);
+      transform: translateX(-3px);
+    }
+    .all-link-item span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .account-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+    .modal-container {
+      background: var(--clr-bg-card);
+      border: 1px solid var(--clr-pro);
+      border-radius: 28px;
+      width: 95%;
+      max-width: 95%;
+      height: 90%;
+      max-height: 90%;
+      overflow-y: auto;
+      padding: 2rem;
+      box-shadow: 0 30px 50px rgba(0,0,0,0.6);
+      position: relative;
+      animation: fadeSlideUp 0.3s ease;
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+      margin-bottom: 1.8rem;
+    }
+    .modal-header h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: var(--grad-primary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .close-modal {
+      background: rgba(255,255,255,0.05);
+      border: none;
+      color: var(--txt-secondary);
+      font-size: 2rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 60px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .close-modal:hover {
+      background: var(--clr-primary);
+      color: white;
+      transform: rotate(90deg);
+    }
+
+    .account-dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .info-glass {
+      background: rgba(10, 10, 10, 0.6);
+      border-radius: 20px;
+      padding: 1.2rem 1.5rem;
+      border: 1px solid var(--border-color);
+      transition: 0.2s;
+    }
+    .info-glass strong {
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--clr-pro-light);
+      letter-spacing: 1px;
+      margin-bottom: 0.6rem;
+    }
+    .info-glass span {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--txt-primary);
+      word-break: break-word;
+    }
+    .wallet-highlight {
+      background: linear-gradient(135deg, rgba(0, 208, 194, 0.1), rgba(0, 208, 194, 0.02));
+      border-right: 3px solid #00d0c2;
+    }
+    .balance-badge {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #00d0c2;
+      text-shadow: 0 0 6px rgba(0,208,194,0.3);
+    }
+    .danger-zone-modern {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 2px dashed rgba(244, 67, 54, 0.3);
+    }
+    .btn-group-flex {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    .btn-danger-glow {
+      background: linear-gradient(95deg, #e74c3c, #c0392b);
+      border: none;
+      padding: 0.8rem 1.8rem;
+      border-radius: 50px;
+      font-weight: 800;
+      color: white;
+      cursor: pointer;
+    }
+    .btn-warning-glow {
+      background: linear-gradient(95deg, #f39c12, #e67e22);
+      border: none;
+      padding: 0.8rem 1.8rem;
+      border-radius: 50px;
+      font-weight: 800;
+      color: white;
+      cursor: pointer;
+    }
+
+    .footer-note {
+      text-align: center;
+      padding: 1.5rem;
+      border-top: 1px solid var(--border-color);
+      margin-top: 1rem;
+      font-size: 0.8rem;
+      color: var(--txt-muted);
+    }
+
+    @media (max-width: 550px) {
+      .all-links-grid {
+        grid-template-columns: 1fr;
+      }
+      .modal-container {
+        width: 98%;
+        height: 94%;
+        padding: 1.5rem;
+      }
+      .status-card-main {
+        padding: 1.2rem;
+      }
+      .status-card-main .status-header {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+      }
+      .status-card-main .status-left {
+        justify-content: center;
+      }
+      .status-card-main .status-badge-large {
+        align-self: center;
+      }
+    }
+    @media (max-width: 992px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+      }
+      .mobile-menu-toggle {
+        display: block;
+      }
+      .sidebar {
+        position: fixed;
+        top: 70px;
+        right: -100%;
+        width: 280px;
+        height: calc(100% - 70px);
+        background: var(--clr-bg-deep);
+        z-index: 200;
+        padding: 1.5rem;
+        overflow-y: auto;
+        transition: right 0.3s ease;
+        border-left: 1px solid var(--border-color);
+        box-shadow: -5px 0 25px rgba(0,0,0,0.6);
+      }
+      .sidebar.open {
+        right: 0;
+      }
+      .overlay {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        z-index: 150;
+        display: none;
+      }
+      .overlay.active {
+        display: block;
+      }
+    }
+    @media (max-width: 550px) {
+      .site-header {
+        padding: 0 1rem;
+      }
+      .brand__text {
+        font-size: 1.1rem;
+      }
+      .account-dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .btn-nav .fa-spinner {
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">
+    <div class="brand__icon"><i class="fa-solid fa-user-gear"></i></div>
+    <span class="brand__text">الاعدادات المتقدمة</span>
+  </div>
+  <div class="nav-actions">
+    <button class="mobile-menu-toggle" id="mobileMenuToggle"><i class="fas fa-bars"></i></button>
+    <a href="#" class="btn-nav" id="refreshUserBtn"><i class="fas fa-user-circle"></i> <span>حسابي</span></a>
+    <a href="basket.html" class="btn-nav"><i class="fas fa-shopping-cart"></i> <span>السلة</span></a>
+  </div>
+</header>
+
+<div id="overlay" class="overlay"></div>
+
+<div class="dashboard">
+  <aside class="sidebar" id="mobileSidebar">
+    <div class="quick-links">
+      <div class="quick-links__title"><i class="fas fa-bolt"></i> جميع الروابط السريعة</div>
+      <div class="links-grid">
+        <a href="index.html" class="link-item"><i class="fas fa-home"></i> الرئيسية</a>
+        <a href="Terms of Use.html" class="link-item"><i class="fas fa-file-contract"></i> سياسة الاستخدام</a>
+        <a href="wallet.html" class="link-item"><i class="fas fa-wallet"></i> المحفظة الرقمية</a>
+        <a href="Alr-comment.html" class="link-item"><i class="fas fa-chart-line"></i> الرأي العام والاستبيانات</a>
+        <a href="Account and Data.html" class="link-item active-link"><i class="fas fa-user-cog"></i> إعدادات الحساب والبيانات</a>
+        <a href="orders.html" class="link-item"><i class="fas fa-clipboard-list"></i> سجل الطلبات والمشتريات</a>
+        <a href="Rt-chat.html" class="link-item"><i class="fas fa-microchip"></i> المساعد الذكي (AI)</a>
+        <a href="call.html" class="link-item"><i class="fas fa-headset"></i> مركز الاتصال والدعم</a>
+        <a href="basket.html" class="link-item"><i class="fas fa-shopping-basket"></i> سلة التسوق الحالية</a>
+        <a href="#" id="allLinksNavBtn" class="link-item"><i class="fas fa-link"></i>جميع الروابط</a>
+        <a href="YoT Pru.html" class="link-item"><i class="fas fa-crown"></i> يوت برو - الترقية</a>
+      </div>
+    </div>
+
+    <div class="pro-premium-card">
+      <div class="pro-badge"><i class="fas fa-gem"></i> عضوية نادرة</div>
+      <div class="pro-title">يوت برو ✨</div>
+      <p class="pro-desc">ترقية استثنائية تفتح لك أفق المعرفة المدعوم بالذكاء الفائق.</p>
+      <ul class="pro-feature-list">
+        <li><i class="fas fa-robot"></i> مساعد ذكي فائق التحليل</li>
+        <li><i class="fas fa-coins"></i> استرداد نقدي يصل إلى 5%</li>
+        <li><i class="fas fa-download"></i> تحميل غير محدود للافلام</li>
+        <li><i class="fa-solid fa-gift"></i>7 هدايا تصل لك في أقل من اسبوع</li>
+      </ul>
+      <a href="YoT Pru.html" class="btn-pro-sub"><i class="fas fa-crown"></i> اشترك الآن في يوت برو</a>
+    </div>
+  </aside>
+
+  <main class="settings-main">
+    
+    <!-- ========================================== -->
+    <!-- بطاقة حالة الحساب - STATUS CARD -->
+    <!-- ========================================== -->
+    <div class="status-card-main" id="statusCard">
+      <div class="status-header">
+        <div class="status-left">
+          <div class="status-icon" id="statusIcon">
+            <i class="fas fa-circle-check"></i>
+          </div>
+          <div class="status-info">
+            <h3 id="statusTitle">حالة الحساب</h3>
+            <div class="status-sub" id="statusSub">
+              <span class="dot"></span>
+              <span id="statusText">جاري التحقق...</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="status-badge-large" id="statusBadge">⏳ جاري التحميل</div>
+        </div>
+      </div>
+      
+      <!-- سبب الحظر/التجميد -->
+      <div class="status-reason-box" id="statusReasonBox">
+        <div class="reason-label"><i class="fas fa-info-circle"></i> السبب</div>
+        <div class="reason-text" id="statusReasonText"></div>
+      </div>
+      
+      <!-- تنبيه إضافي -->
+      <div class="status-alert" id="statusAlert">
+        <i class="fas fa-info-circle"></i>
+        <span id="statusAlertText"></span>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- باقي أقسام الإعدادات -->
+    <!-- ========================================== -->
+    
+    <!-- إعدادات الحساب والبيانات -->
+    <div class="setting-card">
+      <div class="card-header">
+        <h2><i class="fas fa-id-card"></i> إعدادات الحساب والبيانات</h2>
+        <p>تحكم في هويتك الرقمية، إدارة الخصوصية، ومزامنة بياناتك بكل أمان.</p>
+      </div>
+      <form id="accountSettingsForm">
+        <div class="form-group">
+          <label>الاسم الظاهر في مجتمعات الرأي العام</label>
+          <input type="text" class="form-control" id="displayNameInput" value="عبد الله الحارثي">
+        </div>
+        <div class="form-group">
+          <label>البريد الإلكتروني (مرتبط بالمحفظة)</label>
+          <input type="email" class="form-control" id="emailSettingInput" value="abdullah@digitallib.com">
+        </div>
+        <div class="form-group">
+          <label>رقم الهاتف المسجل</label>
+          <input type="tel" class="form-control" id="phoneSettingInput" value="0551234567">
+        </div>
+        <div class="form-group">
+          <label>مزامنة البيانات السحابية</label>
+          <select class="form-control" id="syncSelect">
+            <option>تلقائي (كل ساعة)</option>
+            <option>يدوي عند الطلب</option>
+            <option>تعطيل المزامنة المؤقتة</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <button type="button" class="btn-save" id="saveBasicSettingsBtn"><i class="fas fa-save"></i> حفظ الإعدادات</button>
+          <button type="button" class="btn-save btn-secondary" id="fullAccountDetailsBtn" style="background: linear-gradient(135deg, #8a2be2, #5a1eb0); margin-right: 12px;"><i class="fas fa-arrow-left"></i> الانتقال إلى كامل التفاصيل</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- تخصيص المساعد الذكي (AI) -->
+    <div class="setting-card">
+      <div class="card-header"><h2><i class="fas fa-microchip"></i> تخصيص المساعد الذكي (AI)</h2></div>
+      <select class="form-control" style="margin-bottom:1rem;">
+        <option>تحليلي شامل للبيانات والكتب (موصى به مع يوت برو)</option>
+      </select>
+      <button class="btn-save">تطبيق التخصيصات</button>
+    </div>
+
+    <!-- المحفظة الرقمية -->
+    <div class="setting-card">
+      <div class="card-header"><h2><i class="fas fa-wallet"></i> المحفظة الرقمية – تحويل، شحن، استرداد</h2></div>
+      <div style="background: var(--clr-bg-deep); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1rem;">
+        <span>💰 الرصيد الحالي (من البطاقات): </span><strong id="globalWalletBalance" style="font-size: 1.8rem; color:#00d0c2;">0.00</strong> <span>ر.س</span>
+      </div>
+      <div class="form-group"><label>تحويل نقود</label><div style="display: flex; gap: 12px; flex-wrap: wrap;"><input type="text" class="form-control" placeholder="البريد الإلكتروني" id="transferUser" style="flex:1;min-width:150px;"><input type="number" class="form-control" placeholder="المبلغ" id="transferAmount" style="flex:1;min-width:120px;"><button class="btn-save" id="doTransferBtn">تحويل</button></div></div>
+      <div class="form-group"><label>شحن المحفظة</label><div style="display: flex; gap: 12px; flex-wrap: wrap;"><input type="number" class="form-control" placeholder="المبلغ" id="rechargeValue" style="flex:1;min-width:120px;"><button class="btn-save" id="doRechargeBtn">شحن</button></div></div>
+    </div>
+
+    <!-- جميع الروابط الأساسية -->
+    <div id="allLinksAnchor" class="all-links-section">
+      <div class="section-header">
+        <i class="fas fa-link"></i>
+        <h3>🗺️ جميع الروابط الأساسية | استكشف المكتبة الرقمية</h3>
+      </div>
+      <div class="all-links-grid">
+        <a href="index.html" class="all-link-item"><i class="fas fa-home"></i><span>الرئيسية</span></a>
+        <a href="Terms of Use.html" class="all-link-item"><i class="fas fa-file-contract"></i><span>سياسة الاستخدام</span></a>
+        <a href="wallet.html" class="all-link-item"><i class="fas fa-wallet"></i><span>المحفظة الرقمية</span></a>
+        <a href="Alr-comment.html" class="all-link-item"><i class="fas fa-chart-line"></i><span>الرأي العام والاستبيانات</span></a>
+        <a href="Account and Data.html" class="all-link-item"><i class="fas fa-user-cog"></i><span>إعدادات الحساب</span></a>
+        <a href="login.html" class="all-link-item"><i class="fa-solid fa-arrow-right-to-bracket"></i><span>تسجيل الدخول</span></a>
+        <a href="orders.html" class="all-link-item"><i class="fas fa-clipboard-list"></i><span>سجل الطلبات والمشتريات</span></a>
+        <a href="Rt-chat.html" class="all-link-item"><i class="fas fa-microchip"></i><span>المساعد الذكي (AI)</span></a>
+        <a href="call.html" class="all-link-item"><i class="fas fa-headset"></i><span>مركز الاتصال والدعم</span></a>
+        <a href="basket.html" class="all-link-item"><i class="fas fa-shopping-basket"></i><span>سلة التسوق الحالية</span></a>
+        <a href="YoT Pru.html" class="all-link-item"><i class="fas fa-crown"></i><span>يوت برو - الترقية</span></a>
+        <a href="jobs.html" class="all-link-item"><i class="fas fa-briefcase"></i><span>التوظيف</span></a>
+        <a href="#" class="all-link-item" id="quickProfileLink"><i class="fas fa-id-card"></i><span>الملف الشخصي (حسابي)</span></a>
+        <a href="library.html" class="all-link-item"><i class="fas fa-building"></i><span>مكتبتي</span></a>
+        <a href="mozlee.html" class="all-link-item"><i class="fas fa-building"></i><span>خدمة mozlee</span></a>
+      </div>
+      <div style="margin-top: 0.9rem; font-size: 0.75rem; color: var(--txt-muted); border-top: 1px solid var(--border-color); padding-top: 0.8rem; display: flex; gap: 10px; justify-content: flex-start;">
+        <i class="fas fa-globe"></i> <span>جميع الخدمات والمنصات الفرعية متاحة بنقرة واحدة</span>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- المودال الخاص بكامل التفاصيل -->
+<div id="accountModal" class="account-modal">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2><i class="fas fa-user-astronaut"></i> الملف الرقمي المتكامل (كامل التفاصيل)</h2>
+      <button class="close-modal" id="closeModalBtn">&times;</button>
+    </div>
+    <div id="fullAccountDetailsContent"></div>
+    <div class="danger-zone-modern">
+      <h4 style="color:#e74c3c;"><i class="fas fa-exclamation-triangle"></i> منطقة حذف واسترداد الحساب</h4>
+      <div class="btn-group-flex">
+        <button class="btn-danger-glow" id="deleteAccountBtn"><i class="fas fa-trash-alt"></i> حذف الحساب نهائيًا</button>
+        <button class="btn-warning-glow" id="restoreRequestBtn"><i class="fas fa-undo-alt"></i> طلب استرداد الحساب</button>
+      </div>
+      <p style="font-size:0.75rem; margin-top:12px;"><i class="fas fa-clock"></i> يمكن استرداد الحساب خلال 30 يومًا من الحذف عبر طلب الدعم.</p>
+    </div>
+  </div>
+</div>
+
+<footer class="footer-note">
+  <i class="fas fa-laptop-code"></i> المكتبة الرقمية المتكاملة | إدارة متقدمة للحساب ورصيد فوري من البطاقات
+</footer>
+
+<!-- ========================================== -->
+<!-- FIREBASE IMPORTS -->
+<!-- ========================================== -->
+<script type="importmap">
+{
+  "imports": {
+    "firebase/app": "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js",
+    "firebase/database": "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js",
+    "firebase/auth": "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js"
+  }
+}
+</script>
+
+<script type="module">
+  import { initializeApp } from "firebase/app";
+  import { getDatabase, ref, get, child, onValue } from "firebase/database";
+  import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+  // ============================================
+  // FIREBASE CONFIG
+  // ============================================
+  const firebaseConfig = {
+    apiKey: "AIzaSyBlcKC2ncX9mTOPlhDOnfmyzdJ5mLinWYY",
+    authDomain: "al-fajr-digital-library.firebaseapp.com",
+    databaseURL: "https://al-fajr-digital-library-default-rtdb.firebaseio.com",
+    projectId: "al-fajr-digital-library",
+    storageBucket: "al-fajr-digital-library.firebasestorage.app",
+    messagingSenderId: "739899495618",
+    appId: "1:739899495618:web:8e60409193ec1408b4d75b",
+    measurementId: "G-FFRQP9CXYK"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const database = getDatabase(app);
+  const auth = getAuth(app);
+
+  // ============================================
+  // STATUS MANAGEMENT
+  // ============================================
+  const statusMap = {
+    active: {
+      class: 'active',
+      icon: 'fa-circle-check',
+      label: '✅ حساب نشط',
+      badge: '✅ نشط',
+      description: 'جميع الخدمات متاحة',
+      alert: 'حسابك نشط، يمكنك الاستفادة من جميع الخدمات'
+    },
+    online: {
+      class: 'online',
+      icon: 'fa-wifi',
+      label: '🟣 متصل الآن',
+      badge: '🟣 متصل',
+      description: 'متصل في هذه اللحظة',
+      alert: 'أنت متصل الآن، جميع الخدمات متاحة'
+    },
+    inactive: {
+      class: 'inactive',
+      icon: 'fa-user-slash',
+      label: '⚪ غير نشط',
+      badge: '⚪ غير نشط',
+      description: 'آخر نشاط منذ أكثر من 7 أيام',
+      alert: 'حسابك غير نشط، قم بتسجيل الدخول لتفعيل الخدمات'
+    },
+    banned: {
+      class: 'banned',
+      icon: 'fa-ban',
+      label: '🚫 محظور',
+      badge: '🚫 محظور',
+      description: 'تم حظر حسابك من قبل الإدارة',
+      alert: '⚠️ حسابك محظور، لا يمكنك استخدام أي من الخدمات'
+    },
+    frozen: {
+      class: 'frozen',
+      icon: 'fa-snowflake',
+      label: '❄️ مجمد',
+      badge: '❄️ مجمد',
+      description: 'الحساب مجمد مؤقتاً',
+      alert: '❄️ حسابك مجمد، بعض الخدمات قد تكون غير متاحة'
+    }
+  };
+
+  let currentUserStatus = 'active';
+  let currentUserData = null;
+
+  function updateStatusUI(status, reason = '', userData = null) {
+    const card = document.getElementById('statusCard');
+    const icon = document.getElementById('statusIcon');
+    const title = document.getElementById('statusTitle');
+    const sub = document.getElementById('statusSub');
+    const statusText = document.getElementById('statusText');
+    const badge = document.getElementById('statusBadge');
+    const reasonBox = document.getElementById('statusReasonBox');
+    const reasonText = document.getElementById('statusReasonText');
+    const alertBox = document.getElementById('statusAlert');
+    const alertText = document.getElementById('statusAlertText');
+
+    // Remove all status classes
+    card.className = 'status-card-main';
+    
+    const statusData = statusMap[status] || statusMap.inactive;
+    
+    card.classList.add(statusData.class);
+    icon.innerHTML = `<i class="fas ${statusData.icon}"></i>`;
+    title.textContent = 'حالة الحساب';
+    statusText.textContent = statusData.label;
+    badge.textContent = statusData.badge;
+
+    // Show/Hide reason
+    if ((status === 'banned' || status === 'frozen') && reason) {
+      reasonBox.classList.add('show');
+      reasonText.textContent = reason;
+    } else {
+      reasonBox.classList.remove('show');
+      reasonText.textContent = '';
+    }
+
+    // Show/Hide alert
+    if (status === 'banned' || status === 'frozen') {
+      alertBox.className = `status-alert show ${status}`;
+      alertText.textContent = statusData.alert;
+    } else if (status === 'inactive') {
+      alertBox.className = `status-alert show inactive`;
+      alertText.textContent = statusData.alert;
+    } else {
+      alertBox.className = `status-alert show active`;
+      alertText.textContent = statusData.alert;
+    }
+
+    // Update the dot
+    const dot = sub.querySelector('.dot');
+    if (dot) {
+      // CSS handles the color via parent class
+    }
+
+    currentUserStatus = status;
+    currentUserData = userData;
+  }
+
+  function setLoadingStatus() {
+    const card = document.getElementById('statusCard');
+    card.className = 'status-card-main';
+    document.getElementById('statusIcon').innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    document.getElementById('statusText').textContent = '⏳ جاري التحقق...';
+    document.getElementById('statusBadge').textContent = '⏳ جاري التحميل';
+    document.getElementById('statusReasonBox').classList.remove('show');
+    document.getElementById('statusAlert').className = 'status-alert';
+  }
+
+  // ============================================
+  // FETCH USER STATUS FROM FIREBASE
+  // ============================================
+  async function fetchUserStatus(user) {
+    if (!user) {
+      setLoadingStatus();
+      document.getElementById('statusText').textContent = '🔓 غير مسجل الدخول';
+      document.getElementById('statusBadge').textContent = '🔓 غير مسجل';
+      return;
+    }
+
+    try {
+      const dbRef = ref(database);
+      const snapshot = await get(child(dbRef, `users/${user.uid}`));
+      
+      if (snapshot.exists()) {
+        const userData = snapshot.val();
+        const status = userData.status || 'active';
+        const reason = userData.banReason || userData.frozenReason || '';
+        
+        // تحديث واجهة المستخدم
+        updateStatusUI(status, reason, userData);
+        
+        // حفظ في localStorage
+        let localUser = JSON.parse(localStorage.getItem('user') || '{}');
+        localUser.uid = user.uid;
+        localUser.email = user.email;
+        localUser.status = status;
+        localUser.statusReason = reason;
+        localUser.username = userData.username || userData.name || 'مستخدم';
+        localUser.phone = userData.phone || '';
+        localStorage.setItem('user', JSON.stringify(localUser));
+        
+        // تحديث حقول النموذج
+        document.getElementById('displayNameInput').value = localUser.username || 'مستخدم';
+        document.getElementById('emailSettingInput').value = user.email || '';
+        document.getElementById('phoneSettingInput').value = localUser.phone || '';
+        
+        // إرسال إشعار إلى الإدارة بأن المستخدم قد تحقق من حالته
+        await sendStatusNotification(user, status);
+        
+      } else {
+        // المستخدم غير موجود في قاعدة البيانات - نعتبره نشط
+        updateStatusUI('active');
+        
+        // حفظ بيانات المستخدم الأساسية
+        let localUser = JSON.parse(localStorage.getItem('user') || '{}');
+        localUser.uid = user.uid;
+        localUser.email = user.email;
+        localUser.status = 'active';
+        localStorage.setItem('user', JSON.stringify(localUser));
+      }
+    } catch (error) {
+      console.error('Error fetching user status:', error);
+      updateStatusUI('active');
+    }
+  }
+
+  // ============================================
+  // إرسال إشعار إلى الإدارة
+  // ============================================
+  async function sendStatusNotification(user, status) {
+    try {
+      const dbRef = ref(database);
+      const notificationsRef = ref(database, 'adminNotifications');
+      
+      const notification = {
+        type: 'status_check',
+        userId: user.uid,
+        userEmail: user.email,
+        status: status,
+        timestamp: new Date().toISOString(),
+        read: false,
+        message: `قام المستخدم بالتحقق من حالة حسابه (${status})`
+      };
+      
+      await push(notificationsRef, notification);
+      console.log('✅ تم إرسال إشعار إلى الإدارة');
+    } catch (error) {
+      console.error('❌ خطأ في إرسال الإشعار:', error);
+    }
+  }
+
+  // ============================================
+  // SETUP REAL-TIME STATUS UPDATES
+  // ============================================
+  function setupRealtimeStatus(user) {
+    if (!user) return;
+    
+    const userRef = ref(database, `users/${user.uid}`);
+    onValue(userRef, (snapshot) => {
+      if (snapshot.exists()) {
+        const userData = snapshot.val();
+        const status = userData.status || 'active';
+        const reason = userData.banReason || userData.frozenReason || '';
+        updateStatusUI(status, reason, userData);
+        
+        // تحديث localStorage
+        let localUser = JSON.parse(localStorage.getItem('user') || '{}');
+        localUser.status = status;
+        localUser.statusReason = reason;
+        localStorage.setItem('user', JSON.stringify(localUser));
+      }
+    }, (error) => {
+      console.error('Realtime status error:', error);
+    });
+  }
+
+  // ============================================
+  // AUTH STATE LISTENER
+  // ============================================
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setLoadingStatus();
+      fetchUserStatus(user);
+      setupRealtimeStatus(user);
+    } else {
+      // محاولة جلب من localStorage
+      const localUser = JSON.parse(localStorage.getItem('user') || '{}');
+      if (localUser && localUser.uid) {
+        setLoadingStatus();
+        fetchUserStatus({ uid: localUser.uid, email: localUser.email });
+      } else {
+        setLoadingStatus();
+        document.getElementById('statusText').textContent = '🔓 غير مسجل الدخول';
+        document.getElementById('statusBadge').textContent = '🔓 غير مسجل';
+      }
+    }
+  });
+
+  // ============================================
+  // وظائف المحفظة والإعدادات (من الكود الأصلي)
+  // ============================================
+  function getTotalWalletBalanceFromCards() {
+    try {
+      const userData = localStorage.getItem('user');
+      if (!userData) return 0;
+      const user = JSON.parse(userData);
+      const loggedInEmail = user.email;
+      if (!loggedInEmail) return 0;
+      const CARDS_KEY = `cards_${loggedInEmail}`;
+      const cards = JSON.parse(localStorage.getItem(CARDS_KEY)) || [];
+      const total = cards.reduce((sum, card) => sum + (card.balance || 0), 0);
+      return total;
+    } catch(e) { return 0; }
+  }
+
+  function updateGlobalBalanceDisplay() {
+    const balance = getTotalWalletBalanceFromCards();
+    const el = document.getElementById('globalWalletBalance');
+    if(el) el.innerText = balance.toFixed(2);
+    return balance;
+  }
+
+  function renderFullAccountModal() {
+    let user = JSON.parse(localStorage.getItem('user') || 'null');
+    const displayName = document.getElementById('displayNameInput').value;
+    const email = document.getElementById('emailSettingInput').value;
+    const phone = document.getElementById('phoneSettingInput').value;
+    const syncOption = document.getElementById('syncSelect').value;
+    const walletTotal = getTotalWalletBalanceFromCards();
+    
+    const statusLabels = {
+      active: '✅ نشط',
+      online: '🟣 متصل الآن',
+      inactive: '⚪ غير نشط',
+      banned: '🚫 محظور',
+      frozen: '❄️ مجمد'
+    };
+    const userStatus = user?.status || 'active';
+    
+    const accountData = {
+      username: user?.username || displayName,
+      email: email,
+      phone: phone,
+      sync: syncOption,
+      memberSince: user?.createdAt ? new Date(user.createdAt).toLocaleDateString('ar-EG') : '2025-02-10',
+      lastLogin: user?.lastLogin ? new Date(user.lastLogin).toLocaleString('ar-EG') : new Date().toLocaleString('ar-EG'),
+      accountStatus: statusLabels[userStatus] || '✅ نشط',
+      totalOrders: 18,
+      walletBalance: walletTotal,
+      proStatus: 'عضو عادي',
+      favoriteCategory: 'لاتوجد أي اهتمامات'
+    };
+
+    const statusColors = {
+      banned: '#ff4757',
+      frozen: '#ffb74d',
+      active: '#00d4aa',
+      online: '#4fc3f7',
+      inactive: '#8b8b8b'
+    };
+
+    const html = `
+      <div class="account-dashboard-grid">
+        <div class="info-glass"><strong><i class="fas fa-user"></i> الاسم الكامل</strong><span>${escapeHtml(accountData.username)}</span></div>
+        <div class="info-glass"><strong><i class="fas fa-envelope"></i> البريد الإلكتروني</strong><span>${escapeHtml(accountData.email)}</span></div>
+        <div class="info-glass"><strong><i class="fas fa-phone-alt"></i> رقم الهاتف</strong><span>${escapeHtml(accountData.phone)}</span></div>
+        <div class="info-glass"><strong><i class="fas fa-cloud-upload-alt"></i> إعداد المزامنة</strong><span>${escapeHtml(accountData.sync)}</span></div>
+        <div class="info-glass"><strong><i class="fas fa-calendar-alt"></i> تاريخ العضوية</strong><span>${accountData.memberSince}</span></div>
+        <div class="info-glass"><strong><i class="fas fa-history"></i> آخر دخول</strong><span>${accountData.lastLogin}</span></div>
+        <div class="info-glass" style="border-right: 3px solid ${statusColors[userStatus] || '#00d4aa'};">
+          <strong><i class="fas fa-shield-alt"></i> حالة الحساب</strong>
+          <span style="color: ${statusColors[userStatus] || '#00d4aa'};">${accountData.accountStatus}</span>
+          ${user?.statusReason ? `<br><small style="color:var(--txt-muted);font-size:12px;">السبب: ${user.statusReason}</small>` : ''}
+        </div>
+        <div class="info-glass wallet-highlight"><strong><i class="fas fa-wallet"></i> الرصيد الإجمالي (المحفظة)</strong><span class="balance-badge">${accountData.walletBalance.toFixed(2)} ر.س</span></div>
+        <div class="info-glass"><strong><i class="fas fa-chart-line"></i> إجمالي الطلبات</strong><span>${accountData.totalOrders} طلب</span></div>
+        <div class="info-glass"><strong><i class="fas fa-crown"></i> نوع العضوية</strong><span>${accountData.proStatus}</span></div>
+        <div class="info-glass"><strong><i class="fas fa-heart"></i> الاهتمامات</strong><span>${accountData.favoriteCategory}</span></div>
+      </div>
+    `;
+    document.getElementById('fullAccountDetailsContent').innerHTML = html;
+  }
+
+  function escapeHtml(str) { if(!str) return ''; return String(str).replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+  // ============================================
+  // EVENT LISTENERS
+  // ============================================
+  const allLinksNavBtn = document.getElementById('allLinksNavBtn');
+  const allLinksAnchor = document.getElementById('allLinksAnchor');
+  if(allLinksNavBtn && allLinksAnchor) {
+    allLinksNavBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      allLinksAnchor.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      allLinksAnchor.style.transition = '0.2s';
+      allLinksAnchor.style.boxShadow = '0 0 0 3px var(--clr-primary)';
+      setTimeout(() => { allLinksAnchor.style.boxShadow = ''; }, 800);
+    });
+  }
+
+  document.getElementById('saveBasicSettingsBtn')?.addEventListener('click', function() {
+    const updatedName = document.getElementById('displayNameInput').value;
+    const updatedEmail = document.getElementById('emailSettingInput').value;
+    const updatedPhone = document.getElementById('phoneSettingInput').value;
+    let currentUser = JSON.parse(localStorage.getItem('user') || 'null');
+    if(currentUser) {
+      currentUser.username = updatedName;
+      currentUser.email = updatedEmail;
+      currentUser.phone = updatedPhone;
+      localStorage.setItem('user', JSON.stringify(currentUser));
+      let savedAccounts = JSON.parse(localStorage.getItem('savedAccounts') || '[]');
+      let idx = savedAccounts.findIndex(acc => acc.email === currentUser.email);
+      if(idx !== -1) savedAccounts[idx] = currentUser;
+      else savedAccounts.push(currentUser);
+      localStorage.setItem('savedAccounts', JSON.stringify(savedAccounts));
+    } else {
+      let newU = { username: updatedName, email: updatedEmail, phone: updatedPhone, lastLogin: new Date().toISOString() };
+      localStorage.setItem('user', JSON.stringify(newU));
+      let saved = JSON.parse(localStorage.getItem('savedAccounts') || '[]');
+      saved.push(newU);
+      localStorage.setItem('savedAccounts', JSON.stringify(saved));
+    }
+    updateGlobalBalanceDisplay();
+    alert("تم حفظ إعدادات الحساب بنجاح");
+  });
+
+  document.getElementById('fullAccountDetailsBtn')?.addEventListener('click', function() {
+    renderFullAccountModal();
+    document.getElementById('accountModal').style.display = 'flex';
+  });
+  document.getElementById('closeModalBtn')?.addEventListener('click', () => { document.getElementById('accountModal').style.display = 'none'; });
+  window.addEventListener('click', (e) => { if(e.target === document.getElementById('accountModal')) document.getElementById('accountModal').style.display = 'none'; });
+
+  document.getElementById('deleteAccountBtn')?.addEventListener('click', () => {
+    if(confirm("⚠️ تحذير: هل أنت متأكد من حذف حسابك نهائياً؟")) {
+      let userBackup = localStorage.getItem('user');
+      if(userBackup) localStorage.setItem('deleted_account_backup', userBackup);
+      localStorage.removeItem('user');
+      localStorage.removeItem('savedAccounts');
+      alert("تم حذف الحساب. يمكنك طلب استرداد الحساب خلال شهر.");
+      document.getElementById('accountModal').style.display = 'none';
+      window.location.reload();
+    }
+  });
+  document.getElementById('restoreRequestBtn')?.addEventListener('click', () => {
+    let backup = localStorage.getItem('deleted_account_backup');
+    if(backup) {
+      localStorage.setItem('user', backup);
+      let savedAcc = JSON.parse(localStorage.getItem('savedAccounts') || '[]');
+      let restored = JSON.parse(backup);
+      if(!savedAcc.some(acc => acc.email === restored.email)) savedAcc.push(restored);
+      localStorage.setItem('savedAccounts', JSON.stringify(savedAcc));
+      alert("تم استرداد حسابك بنجاح!");
+      window.location.reload();
+    } else alert("لا يوجد حساب محذوف مؤخراً أو انتهت صلاحية الاسترداد.");
+  });
+
+  document.getElementById('doTransferBtn')?.addEventListener('click', () => {
+    let userTo = document.getElementById('transferUser').value;
+    let amount = document.getElementById('transferAmount').value;
+    if(!userTo || !amount) alert("أدخل بيانات التحويل");
+    else alert(`تم تحويل ${amount} ريال إلى ${userTo} (محاكاة).`);
+  });
+  document.getElementById('doRechargeBtn')?.addEventListener('click', () => {
+    let val = document.getElementById('rechargeValue').value;
+    if(!val) alert("أدخل مبلغ الشحن");
+    else alert(`تم شحن المحفظة بمبلغ ${val} ريال. استخدم أكواد الشحن الفعلية في صفحة المحفظة.`);
+  });
+  document.getElementById('refreshUserBtn')?.addEventListener('click', (e) => { 
+    e.preventDefault(); 
+    const user = auth.currentUser;
+    if(user) {
+      setLoadingStatus();
+      fetchUserStatus(user);
+    }
+    updateGlobalBalanceDisplay();
+    alert("تم تحديث بيانات الحساب والرصيد"); 
+  });
+  document.getElementById('quickProfileLink')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    renderFullAccountModal();
+    document.getElementById('accountModal').style.display = 'flex';
+  });
+
+  // موبايل سايدبار
+  const menuToggle = document.getElementById('mobileMenuToggle');
+  const sidebar = document.getElementById('mobileSidebar');
+  const overlayDiv = document.getElementById('overlay');
+  function closeSidebar() { sidebar.classList.remove('open'); overlayDiv.classList.remove('active'); }
+  function openSidebar() { sidebar.classList.add('open'); overlayDiv.classList.add('active'); }
+  menuToggle?.addEventListener('click', (e) => { e.stopPropagation(); sidebar.classList.contains('open') ? closeSidebar() : openSidebar(); });
+  overlayDiv?.addEventListener('click', closeSidebar);
+  document.querySelectorAll('#mobileSidebar a').forEach(link => link.addEventListener('click', () => { if(window.innerWidth <= 992) closeSidebar(); }));
+  window.addEventListener('storage', (e) => { if(e.key && e.key.includes('cards_')) updateGlobalBalanceDisplay(); });
+  
+  // ============================================
+  // INITIALIZE
+  // ============================================
+  updateGlobalBalanceDisplay();
+  console.log('🚀 لوحة الإعدادات المتقدمة مع حالة الحساب تعمل بنجاح');
+  console.log('📌 يتم عرض حالة الحساب من Firebase (محظور/مجمد/نشط)');
+</script>
+
+</body>
+</html>

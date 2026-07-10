@@ -3,12 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>سلة الشراء - Netflix Style</title>
+<title>سلة الشراء</title>
 <link rel="icon" type="image/x-icon" href="img/icon1.jpg">
 <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<!-- إضافة Leaflet للخرائط -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- إضافة Geocoder للترجمة التلقائية -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+<script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 <style>
-/* ===== تصميم Netflix للصفحة بأكملها ===== */
 :root {
   --netflix-red: #e50914;
   --netflix-dark: #141414;
@@ -21,6 +26,11 @@
   --transition-speed: 0.3s;
   --header-height: 70px;
   --footer-height: 90px;
+  --success-green: #4caf50;
+  --warning-orange: #ff9800;
+  --error-red: #f44336;
+  --info-blue: #2196f3;
+  --purple: #9c27b0;
 }
 
 * {
@@ -43,7 +53,7 @@ body {
   overflow-x: hidden;
 }
 
-/* ===== الشريط العلوي - أصغر حجم ===== */
+/* ===== الشريط العلوي ===== */
 header {
   position: fixed; 
   top: 0; 
@@ -124,7 +134,7 @@ header h1 {
   box-shadow: 0 5px 15px rgba(229, 9, 20, 0.2);
 }
 
-/* ===== عنوان الصفحة الرئيسي ===== */
+/* ===== عنوان الصفحة ===== */
 .page-title {
   padding: 20px 4% 10px;
   margin-bottom: 20px;
@@ -156,7 +166,7 @@ header h1 {
   margin: 5px 0 0 0;
 }
 
-/* ===== حاوية السلة الرئيسية ===== */
+/* ===== حاوية السلة ===== */
 .container { 
   max-width: 1200px; 
   margin: 0 auto; 
@@ -166,300 +176,904 @@ header h1 {
   gap: 20px; 
 }
 
-/* ===== إحصائيات السلة ===== */
-.cart-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+/* ===== قسم العنوان الذكي ===== */
+.address-section {
+  background: var(--netflix-gray);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.address-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(229, 9, 20, 0.1) 0%, transparent 70%);
+  z-index: 0;
+}
+
+.address-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
   gap: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.address-header h3 {
+  font-size: 1.3em;
+  color: var(--netflix-white);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.address-header h3 i {
+  color: var(--netflix-red);
+  font-size: 1.1em;
+}
+
+.address-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.address-btn {
+  padding: 10px 18px;
+  background: rgba(229, 9, 20, 0.15);
+  color: white;
+  border: 1px solid rgba(229, 9, 20, 0.3);
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all var(--transition-speed) ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9em;
+  position: relative;
+  overflow: hidden;
+}
+
+.address-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.address-btn:hover::after {
+  transform: translateX(100%);
+}
+
+.address-btn:hover {
+  background: var(--netflix-red);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(229, 9, 20, 0.3);
+}
+
+.address-btn.gps-btn {
+  background: rgba(76, 175, 80, 0.15);
+  border-color: rgba(76, 175, 80, 0.3);
+}
+
+.address-btn.gps-btn:hover {
+  background: var(--success-green);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+.address-btn.map-btn {
+  background: rgba(33, 150, 243, 0.15);
+  border-color: rgba(33, 150, 243, 0.3);
+}
+
+.address-btn.map-btn:hover {
+  background: var(--info-blue);
+  box-shadow: 0 5px 15px rgba(33, 150, 243, 0.3);
+}
+
+.address-btn.manual-btn {
+  background: rgba(255, 152, 0, 0.15);
+  border-color: rgba(255, 152, 0, 0.3);
+}
+
+.address-btn.manual-btn:hover {
+  background: var(--warning-orange);
+  box-shadow: 0 5px 15px rgba(255, 152, 0, 0.3);
+}
+
+.address-btn.saved-btn {
+  background: rgba(156, 39, 176, 0.15);
+  border-color: rgba(156, 39, 176, 0.3);
+}
+
+.address-btn.saved-btn:hover {
+  background: var(--purple);
+  box-shadow: 0 5px 15px rgba(156, 39, 176, 0.3);
+}
+
+/* ===== عرض العنوان ===== */
+.address-display {
+  background: rgba(0,0,0,0.2);
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+  display: none;
+  animation: fadeIn 0.5s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.address-display.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.address-display-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid rgba(229, 9, 20, 0.3);
+}
+
+.address-name-display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.address-name-display i {
+  color: var(--netflix-red);
+  font-size: 1.2em;
+}
+
+.address-name-display span {
+  font-size: 1.2em;
+  font-weight: 700;
+  color: var(--netflix-white);
+}
+
+.address-type-badge {
+  background: linear-gradient(45deg, var(--netflix-red), #ff416c);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
+.address-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
   margin-bottom: 20px;
 }
 
-.stat-card {
-  background: var(--netflix-gray);
+.address-card {
+  background: rgba(255,255,255,0.05);
   border-radius: 10px;
   padding: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
   border: 1px solid rgba(255,255,255,0.1);
   transition: all var(--transition-speed) ease;
 }
 
-.stat-card:hover {
-  transform: translateY(-3px);
+.address-card:hover {
+  transform: translateY(-5px);
   border-color: var(--netflix-red);
   box-shadow: var(--shadow-light);
 }
 
-.stat-card i {
-  font-size: 1.5em;
-  color: var(--netflix-red);
-  margin-bottom: 8px;
-}
-
-.stat-card .value {
-  font-size: 1.5em;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.stat-card .label {
+.address-card h4 {
   color: var(--netflix-light-gray);
-  font-size: 0.8em;
-}
-
-/* ===== قائمة المنتجات - تصميم Netflix Cards ===== */
-.cart-list { 
-  display: grid; 
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px; 
-  margin-bottom: 30px;
-}
-
-/* ===== بطاقات المنتجات Netflix Style ===== */
-.item {
-  background: var(--netflix-gray);
-  border-radius: 12px;
-  overflow: hidden;
-  padding: 0;
-  box-shadow: var(--shadow-light);
-  transition: all var(--transition-speed) cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  border: 1px solid rgba(255,255,255,0.05);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.item:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: var(--shadow-heavy);
-  border-color: var(--netflix-red);
-  z-index: 10;
-}
-
-.item:hover::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--netflix-red);
-  z-index: 11;
-}
-
-.item img { 
-  width: 100%; 
-  height: 180px; 
-  object-fit: cover;
-  border-radius: 0;
-  margin: 0;
-  transition: transform 0.5s ease;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.item:hover img {
-  transform: scale(1.05);
-}
-
-.item-content {
-  padding: 15px;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.item-info { 
-  flex: 1; 
-  display: flex; 
-  flex-direction: column; 
-  justify-content: flex-start;
-  margin: 0;
-  margin-bottom: 12px;
-}
-
-.item-info .title { 
-  font-weight: 700; 
-  font-size: 1em; 
-  color: var(--netflix-white);
+  font-size: 0.9em;
   margin-bottom: 8px;
-  line-height: 1.3;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.item-details {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-.detail-badge {
-  background: rgba(255,255,255,0.1);
-  padding: 3px 8px;
-  border-radius: 12px;
-  font-size: 0.75em;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.detail-badge i {
-  color: var(--netflix-red);
-  font-size: 0.8em;
-}
-
-.price-section {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(255,255,255,0.1);
-}
-
-.quantity-controls {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255,255,255,0.1);
-  padding: 4px 8px;
-  border-radius: 20px;
 }
 
-.quantity-controls button {
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all var(--transition-speed) ease;
+.address-card h4 i {
+  color: var(--netflix-red);
   font-size: 0.9em;
 }
 
-.quantity-controls button:hover {
-  background: var(--netflix-red);
+.address-card p {
+  color: var(--netflix-white);
+  font-size: 1em;
+  font-weight: 500;
+  line-height: 1.5;
+  word-break: break-word;
 }
 
-.quantity-controls span {
-  min-width: 25px;
-  text-align: center;
-  font-weight: bold;
+.address-coordinates {
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  padding: 12px;
+  font-family: 'Courier New', monospace;
   font-size: 0.9em;
-}
-
-.item-price { 
-  font-weight: 600; 
-  font-size: 1.1em; 
-  color: var(--netflix-red); 
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.total-price {
-  font-size: 0.8em;
   color: var(--netflix-light-gray);
-  margin-top: 4px;
+  margin-top: 15px;
 }
 
-.item-actions { 
+.address-actions-footer {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: auto;
-  padding-top: 12px;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 20px;
   border-top: 1px solid rgba(255,255,255,0.1);
 }
 
-.item-actions button { 
-  padding: 8px 16px; 
-  border-radius: 20px; 
-  border: none; 
-  cursor: pointer; 
-  font-weight: 700; 
-  background: rgba(229, 9, 20, 0.2); 
-  color: white; 
-  font-size: 0.85em; 
+/* ===== أزرار ===== */
+.btn {
+  padding: 10px 20px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
   transition: all var(--transition-speed) ease;
   display: flex;
   align-items: center;
-  gap: 6px;
-  border: 1px solid rgba(229, 9, 20, 0.4);
+  gap: 8px;
+  font-size: 0.9em;
+  position: relative;
+  overflow: hidden;
 }
 
-.item-actions button:hover { 
-  background: var(--netflix-red); 
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4);
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
 }
 
-.item-actions .delete-btn {
-  background: rgba(220, 53, 69, 0.2);
-  border-color: rgba(220, 53, 69, 0.4);
+.btn:hover::after {
+  transform: translateX(100%);
 }
 
-.item-actions .delete-btn:hover {
-  background: #dc3545;
+.btn-primary {
+  background: linear-gradient(45deg, var(--netflix-red), #ff416c);
+  color: white;
 }
 
-/* ===== حالة السلة الفارغة ===== */
-.empty-cart {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 40px 20px;
-  color: var(--netflix-light-gray);
+.btn-primary:hover {
+  background: linear-gradient(45deg, #ff416c, var(--netflix-red));
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(229, 9, 20, 0.4);
 }
 
-.empty-cart i {
-  font-size: 3em;
-  color: var(--netflix-gray);
-  margin-bottom: 15px;
-  opacity: 0.5;
+.btn-secondary {
+  background: rgba(255,255,255,0.1);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.2);
 }
 
-.empty-cart h3 {
-  font-size: 1.5em;
-  color: var(--netflix-white);
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.2);
+  transform: translateY(-3px);
+}
+
+.btn-success {
+  background: linear-gradient(45deg, var(--success-green), #45a049);
+  color: white;
+}
+
+.btn-success:hover {
+  background: linear-gradient(45deg, #45a049, var(--success-green));
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+}
+
+.btn-info {
+  background: linear-gradient(45deg, var(--info-blue), #1976d2);
+  color: white;
+}
+
+.btn-info:hover {
+  background: linear-gradient(45deg, #1976d2, var(--info-blue));
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
+}
+
+/* ===== نافذة الخريطة الذكية ===== */
+#mapModal .modal-content {
+  max-width: 900px;
+  height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.map-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+#map {
+  flex: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,0.1);
+}
+
+.map-search-box {
+  display: flex;
+  gap: 10px;
   margin-bottom: 10px;
 }
 
-.empty-cart p {
+.map-search-box input {
+  flex: 1;
+  padding: 12px 20px;
+  border-radius: 25px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
+  color: var(--netflix-white);
   font-size: 1em;
-  max-width: 500px;
-  margin: 0 auto 25px;
 }
 
-.empty-cart .browse-btn {
-  display: inline-block;
-  padding: 10px 25px;
-  background: var(--netflix-red);
-  color: white;
-  text-decoration: none;
-  border-radius: 25px;
-  font-weight: 700;
-  transition: all var(--transition-speed) ease;
+.map-search-box input:focus {
+  outline: none;
+  border-color: var(--netflix-red);
+  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1);
+}
+
+.map-search-box button {
+  padding: 12px 25px;
+  white-space: nowrap;
+}
+
+.map-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.map-coordinates {
+  font-family: 'Courier New', monospace;
+  color: var(--netflix-light-gray);
+  font-size: 0.95em;
+}
+
+.map-coordinates span {
+  color: var(--netflix-white);
+  font-weight: 600;
+}
+
+.address-preview {
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px;
+  padding: 15px;
+  margin-top: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.address-preview h4 {
+  color: var(--netflix-white);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.address-preview h4 i {
+  color: var(--netflix-red);
+}
+
+.address-preview p {
+  color: var(--netflix-light-gray);
+  font-size: 0.9em;
+  line-height: 1.6;
+}
+
+.address-name-input {
+  margin-top: 15px;
+}
+
+.address-name-input label {
+  display: block;
+  color: var(--netflix-light-gray);
+  margin-bottom: 8px;
   font-size: 0.9em;
 }
 
-.empty-cart .browse-btn:hover {
-  background: #f40612;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(229, 9, 20, 0.4);
+.address-name-input input {
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
+  color: var(--netflix-white);
+  font-size: 1em;
 }
 
-/* ===== الفوتر - أصغر حجم ===== */
+/* ===== قائمة المنتجات ===== */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+  margin: 30px 0;
+}
+
+.product-card {
+  background: var(--netflix-gray);
+  border-radius: 15px;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid rgba(255,255,255,0.1);
+  position: relative;
+}
+
+.product-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  border-color: var(--netflix-red);
+}
+
+.product-badge {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: linear-gradient(45deg, var(--netflix-red), #ff416c);
+  color: white;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 600;
+  z-index: 2;
+}
+
+.product-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.1);
+}
+
+.product-content {
+  padding: 20px;
+}
+
+.product-title {
+  font-size: 1.2em;
+  font-weight: 700;
+  color: var(--netflix-white);
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.product-description {
+  color: var(--netflix-light-gray);
+  font-size: 0.9em;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.product-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.product-type {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--netflix-light-gray);
+  font-size: 0.9em;
+}
+
+.product-type i {
+  color: var(--netflix-red);
+}
+
+.product-price {
+  font-size: 1.3em;
+  font-weight: 700;
+  color: var(--netflix-red);
+}
+
+.product-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* ===== المنتجات في السلة ===== */
+.cart-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+  margin: 30px 0;
+}
+
+.cart-item {
+  background: var(--netflix-gray);
+  border-radius: 15px;
+  overflow: hidden;
+  padding: 0;
+  box-shadow: var(--shadow-light);
+  transition: all 0.4s ease;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.cart-item:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-heavy);
+  border-color: var(--netflix-red);
+}
+
+.cart-item-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.cart-item-content {
+  padding: 20px;
+}
+
+.cart-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.cart-item-title {
+  font-size: 1.1em;
+  font-weight: 700;
+  color: var(--netflix-white);
+  flex: 1;
+}
+
+.cart-item-type {
+  background: rgba(229, 9, 20, 0.2);
+  color: var(--netflix-red);
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 0.8em;
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.cart-item-details {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.cart-item-detail {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--netflix-light-gray);
+  font-size: 0.9em;
+}
+
+.cart-item-detail i {
+  color: var(--netflix-red);
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.1);
+  padding: 8px 15px;
+  border-radius: 25px;
+  margin: 15px 0;
+}
+
+.quantity-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: var(--netflix-red);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.quantity-btn:hover {
+  background: #f40612;
+  transform: scale(1.1);
+}
+
+.quantity-display {
+  min-width: 40px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+.cart-item-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.item-total-price {
+  font-size: 1.3em;
+  font-weight: 700;
+  color: var(--netflix-red);
+}
+
+.item-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* ===== إحصائيات السلة ===== */
+.cart-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin: 30px 0;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, var(--netflix-gray), #2a2a2a);
+  border-radius: 15px;
+  padding: 25px 20px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent 30%, rgba(229, 9, 20, 0.05) 50%, transparent 70%);
+  transform: translateX(-100%);
+}
+
+.stat-card:hover::before {
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--netflix-red);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+}
+
+.stat-icon {
+  font-size: 2.5em;
+  color: var(--netflix-red);
+  margin-bottom: 15px;
+}
+
+.stat-value {
+  font-size: 2em;
+  font-weight: 700;
+  color: var(--netflix-white);
+  margin-bottom: 5px;
+}
+
+.stat-label {
+  color: var(--netflix-light-gray);
+  font-size: 0.9em;
+}
+
+/* ===== الخصومات ===== */
+.discount-section {
+  background: linear-gradient(135deg, var(--netflix-gray), #2a2a2a);
+  border-radius: 15px;
+  padding: 25px;
+  margin: 30px 0;
+  border: 1px solid rgba(255,255,255,0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.discount-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(229, 9, 20, 0.1) 0%, transparent 50%);
+  z-index: 0;
+}
+
+.discount-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.discount-title {
+  font-size: 1.3em;
+  color: var(--netflix-white);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.discount-title i {
+  color: var(--success-green);
+}
+
+.view-discounts-btn {
+  background: linear-gradient(45deg, var(--success-green), #45a049);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.view-discounts-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+}
+
+.discount-input-group {
+  display: flex;
+  gap: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.discount-input {
+  flex: 1;
+  padding: 15px 20px;
+  border-radius: 25px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
+  color: var(--netflix-white);
+  font-size: 1em;
+  transition: all 0.3s ease;
+}
+
+.discount-input:focus {
+  outline: none;
+  border-color: var(--success-green);
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.apply-discount-btn {
+  padding: 15px 30px;
+  background: linear-gradient(45deg, var(--success-green), #45a049);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.apply-discount-btn:hover {
+  background: linear-gradient(45deg, #45a049, var(--success-green));
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+}
+
+.discount-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--netflix-light-gray);
+  font-size: 0.9em;
+  margin-top: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.discount-info i {
+  color: var(--success-green);
+}
+
+/* ===== ملخص الفاتورة ===== */
+.invoice-summary {
+  background: linear-gradient(135deg, var(--netflix-gray), #2a2a2a);
+  border-radius: 15px;
+  padding: 25px;
+  margin: 30px 0;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.invoice-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.invoice-row:last-child {
+  border-bottom: none;
+  font-weight: 700;
+  font-size: 1.3em;
+  color: var(--netflix-red);
+  padding-top: 20px;
+}
+
+.invoice-label {
+  color: var(--netflix-light-gray);
+  font-size: 1em;
+}
+
+.invoice-value {
+  color: var(--netflix-white);
+  font-weight: 600;
+  font-size: 1.1em;
+}
+
+.discount-applied {
+  color: var(--success-green) !important;
+}
+
+/* ===== الفوتر ===== */
 .footer {
   position: fixed; 
   bottom: 0; 
@@ -468,85 +1082,92 @@ header h1 {
   display: flex; 
   justify-content: space-between; 
   align-items: center;
-  gap: 12px;
+  gap: 20px;
   background: var(--netflix-gradient);
-  backdrop-filter: blur(8px);
-  padding: 15px 4%;
+  backdrop-filter: blur(10px);
+  padding: 20px 4%;
   border-top: 1px solid rgba(255,255,255,0.1);
   z-index: 10000;
-  box-shadow: 0 -5px 25px rgba(0,0,0,0.5);
+  box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
   height: var(--footer-height);
-  min-height: 80px;
+  min-height: 90px;
 }
 
 .total-section {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
 }
 
-#totalAmount { 
+.total-amount {
   font-weight: 700; 
-  font-size: 1.2em; 
+  font-size: 1.5em; 
   color: var(--netflix-white);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .total-label {
-  font-size: 0.8em;
+  font-size: 0.9em;
   color: var(--netflix-light-gray);
   font-weight: 400;
 }
 
-#itemsCount {
-  font-size: 0.8em;
+.items-count {
+  font-size: 0.9em;
   color: var(--netflix-light-gray);
 }
 
-#payBtn { 
-  padding: 12px 25px; 
-  background: linear-gradient(to right, var(--netflix-red), #f40612); 
-  color: white; 
-  border-radius: 20px; 
-  cursor: pointer; 
-  font-weight: 700; 
-  transition: all var(--transition-speed) ease;
-  border: none;
-  font-size: 1em;
+.warning-message {
+  color: var(--warning-orange);
+  font-size: 0.9em;
   display: flex;
   align-items: center;
   gap: 8px;
-  letter-spacing: 0.5px;
-  position: relative;
-  overflow: hidden;
-  white-space: nowrap;
+  margin-top: 5px;
 }
 
-#payBtn::after {
+.pay-btn {
+  padding: 15px 35px; 
+  background: linear-gradient(45deg, var(--netflix-red), #ff416c); 
+  color: white; 
+  border-radius: 25px; 
+  cursor: pointer; 
+  font-weight: 700; 
+  transition: all 0.4s ease;
+  border: none;
+  font-size: 1.1em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.pay-btn::after {
   content: '';
   position: absolute;
   top: 0;
-  left: 0;
+  right: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to right, rgba(255,255,255,0.1), rgba(255,255,255,0));
+  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
   transform: translateX(-100%);
-  transition: transform 0.6s ease;
+  transition: transform 0.8s ease;
 }
 
-#payBtn:hover::after {
+.pay-btn:hover::after {
   transform: translateX(100%);
 }
 
-#payBtn:hover:not(:disabled) { 
-  background: linear-gradient(to right, #f40612, var(--netflix-red));
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(229, 9, 20, 0.4);
+.pay-btn:hover:not(:disabled) { 
+  background: linear-gradient(45deg, #ff416c, var(--netflix-red));
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(229, 9, 20, 0.4);
 }
 
-#payBtn:disabled { 
+.pay-btn:disabled { 
   background: var(--netflix-gray); 
   color: var(--netflix-light-gray);
   cursor: not-allowed; 
@@ -554,113 +1175,23 @@ header h1 {
   box-shadow: none !important;
 }
 
-#payBtn:disabled::after {
-  display: none;
-}
-
-/* ===== قسم كود الخصم ===== */
-.discount-section {
-  background: var(--netflix-gray);
-  border-radius: 12px;
-  padding: 15px;
-  margin-bottom: 20px;
-  border: 1px solid rgba(255,255,255,0.1);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.discount-section h3 {
-  font-size: 1.1em;
-  color: var(--netflix-white);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 5px;
-}
-
-.discount-section h3 i {
-  color: var(--netflix-red);
-}
-
-.discount-input-group {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-#discountCode {
-  flex: 1;
-  padding: 10px 15px;
-  border-radius: 25px;
-  border: 1px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.1);
-  color: var(--netflix-white);
-  font-size: 0.9em;
-  transition: all var(--transition-speed) ease;
-}
-
-#discountCode:focus {
-  outline: none;
-  border-color: var(--netflix-red);
-  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1);
-}
-
-#applyDiscount {
-  padding: 10px 20px;
-  background: rgba(229, 9, 20, 0.2);
-  color: white;
-  border: 1px solid rgba(229, 9, 20, 0.4);
-  border-radius: 25px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all var(--transition-speed) ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-}
-
-#applyDiscount:hover {
-  background: var(--netflix-red);
-  transform: translateY(-2px);
-}
-
-.discount-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--netflix-light-gray);
-  font-size: 0.85em;
-  margin-top: 5px;
-}
-
-.discount-info i {
-  color: var(--netflix-red);
-}
-
-/* ===== نافذة اختيار البطاقة ===== */
-#cardModal, #policyModal, #discountModal { 
+/* ===== النوافذ المنبثقة ===== */
+.modal {
   position: fixed; 
   inset: 0; 
   display: none; 
   align-items: center; 
   justify-content: center; 
-  background: rgba(0,0,0,0.85); 
+  background: rgba(0,0,0,0.9); 
   z-index: 10001;
   animation: fadeIn 0.3s ease;
   padding: 20px;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.modal-content { 
+.modal-content {
   background: var(--netflix-gray); 
   border-radius: 20px; 
-  padding: 25px; 
+  padding: 30px; 
   max-width: 500px; 
   width: 100%; 
   box-shadow: var(--shadow-heavy);
@@ -670,155 +1201,60 @@ header h1 {
   overflow-y: auto;
 }
 
+.modal-content.large {
+  max-width: 900px;
+}
+
+.modal-content.xlarge {
+  max-width: 1200px;
+}
+
 @keyframes slideUp {
   from { transform: translateY(50px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
 
-.modal-content h3 { 
-  margin-top: 0; 
-  color: var(--netflix-white); 
-  font-size: 1.5em; 
-  margin-bottom: 20px;
-  padding-bottom: 15px;
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 20px;
   border-bottom: 2px solid var(--netflix-red);
+}
+
+.modal-title {
+  font-size: 1.5em; 
+  color: var(--netflix-white); 
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.card-option { 
-  cursor: pointer; 
-  margin: 12px 0; 
-  border-radius: 12px; 
-  overflow: hidden; 
-  box-shadow: var(--shadow-light); 
-  padding: 15px; 
-  transition: all var(--transition-speed) ease; 
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  position: relative;
+.close-modal {
+  background: none;
+  border: none;
+  color: var(--netflix-light-gray);
+  font-size: 1.5em;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.card-option:hover { 
-  transform: translateY(-3px); 
-  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-  background: rgba(229, 9, 20, 0.1);
-  border-color: var(--netflix-red);
-}
-
-.card-option::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 4px;
-  height: 100%;
-  background: var(--netflix-red);
-  transform: scaleY(0);
-  transition: transform var(--transition-speed) ease;
-}
-
-.card-option:hover::before {
-  transform: scaleY(1);
-}
-
-.card-option div { 
-  font-size: 15px; 
-  margin: 6px 0; 
-  color: var(--netflix-white); 
-}
-
-.card-option div:first-child { 
-  font-weight: 700; 
-  font-size: 1.1em;
-  color: var(--netflix-white);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.modal-content button { 
-  display: block; 
-  margin: 20px auto 0 auto; 
-  padding: 10px 20px; 
-  border: none; 
-  border-radius: 20px; 
-  background: rgba(255,255,255,0.1); 
-  color: white; 
-  cursor: pointer; 
-  font-weight: 700; 
-  width: 80%; 
-  transition: all var(--transition-speed) ease;
-  border: 1px solid rgba(255,255,255,0.2);
-}
-
-.modal-content button:hover { 
-  background: var(--netflix-red); 
-  border-color: var(--netflix-red);
-  transform: translateY(-2px);
-}
-
-/* ===== نافذة السياسة ===== */
-#policyModal .modal-content { 
-  background: var(--netflix-gray); 
-  max-width: 450px;
-}
-
-#policyModal .modal-content h3 { 
+.close-modal:hover {
   color: var(--netflix-red);
+  transform: rotate(90deg);
 }
 
-#policyModal p { 
-  padding: 12px 0; 
-  font-size: 14px; 
-  color: var(--netflix-light-gray);
-  line-height: 1.6;
-}
-
-/* ===== نافذة الخصومات ===== */
-#discountModal .modal-content {
-  max-width: 400px;
-}
-
-.discount-details {
-  background: rgba(255,255,255,0.05);
-  border-radius: 10px;
-  padding: 15px;
-  margin: 15px 0;
-  border: 1px solid rgba(229, 9, 20, 0.2);
-}
-
-.discount-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.discount-row:last-child {
-  border-bottom: none;
-}
-
-.discount-label {
-  color: var(--netflix-light-gray);
-}
-
-.discount-value {
-  color: var(--netflix-white);
-  font-weight: 600;
-}
-
-/* ===== صندوق الرسائل ===== */
-#messageBox {
+/* ===== صناديق الرسائل ===== */
+.message-box {
   position: fixed; 
   top: 100px; 
   left: 50%; 
   transform: translateX(-50%);
-  min-width: 280px; 
+  min-width: 300px; 
   max-width: 500px;
-  padding: 15px 20px; 
-  border-radius: 12px;
+  padding: 20px 25px; 
+  border-radius: 15px;
   box-shadow: var(--shadow-heavy);
   display: none; 
   opacity: 0; 
@@ -827,227 +1263,153 @@ header h1 {
   text-align: center; 
   font-weight: 700;
   color: white; 
-  font-size: 0.9em;
+  font-size: 1em;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.1);
   animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 @keyframes slideDown {
-  from { transform: translate(-50%, -20px); opacity: 0; }
+  from { transform: translate(-50%, -30px); opacity: 0; }
   to { transform: translate(-50%, 0); opacity: 1; }
 }
 
-#messageBox.show { 
+.message-box.show { 
   display: block; 
   opacity: 1; 
 }
 
-.success { 
+.message-success { 
   background: linear-gradient(135deg, rgba(46, 204, 113, 0.9), rgba(39, 174, 96, 0.9));
-  border-left: 4px solid #2ecc71;
+  border-left: 5px solid #2ecc71;
 }
 
-.error { 
+.message-error { 
   background: linear-gradient(135deg, rgba(231, 76, 60, 0.9), rgba(192, 57, 43, 0.9));
-  border-left: 4px solid #e74c3c;
+  border-left: 5px solid #e74c3c;
 }
 
-.warning { 
+.message-warning { 
   background: linear-gradient(135deg, rgba(241, 196, 15, 0.9), rgba(243, 156, 18, 0.9));
-  border-left: 4px solid #f1c40f;
-  color: #2c3e50; 
+  border-left: 5px solid #f1c40f;
 }
 
-/* ===== أزرار التحكم ===== */
-.controls-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  margin-bottom: 20px;
-}
-
-.control-buttons {
-  display: flex;
-  gap: 8px;
-}
-
-.control-btn {
-  padding: 8px 16px;
-  background: rgba(255,255,255,0.1);
-  color: white;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all var(--transition-speed) ease;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  border: 1px solid rgba(255,255,255,0.2);
-  font-size: 0.85em;
-}
-
-.control-btn:hover {
-  background: rgba(229, 9, 20, 0.2);
-  border-color: var(--netflix-red);
-  transform: translateY(-2px);
-}
-
-.control-btn.clear-btn {
-  background: rgba(220, 53, 69, 0.2);
-  border-color: rgba(220, 53, 69, 0.4);
-}
-
-.control-btn.clear-btn:hover {
-  background: #dc3545;
+.message-info { 
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.9), rgba(41, 128, 185, 0.9));
+  border-left: 5px solid #3498db;
 }
 
 /* ===== التصميم المتجاوب ===== */
 @media(max-width: 768px){
   :root {
     --header-height: 60px;
-    --footer-height: 80px;
+    --footer-height: 100px;
   }
   
-  body {
-    padding-top: var(--header-height);
-    padding-bottom: var(--footer-height);
+  .container {
+    padding: 0 3%;
   }
   
-  header {
-    padding: 8px 4%;
-  }
-  
-  header h1 {
-    font-size: 1.2em;
-  }
-  
-  .header-actions {
-    gap: 10px;
-  }
-  
-  .header-actions a {
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
-  }
-  
-  .balance-box {
-    padding: 5px 10px;
-    font-size: 0.8em;
-  }
-  
-  .page-title h2 {
-    font-size: 1.5em;
-  }
-  
-  .cart-list {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
-  }
-  
-  .item img {
-    height: 160px;
-  }
-  
-  .footer {
+  .address-actions {
     flex-direction: column;
-    gap: 10px;
-    padding: 12px 4%;
-    height: auto;
-    min-height: 100px;
+    width: 100%;
   }
   
-  .total-section {
-    order: 2;
-    text-align: center;
-  }
-  
-  #payBtn {
-    order: 1;
+  .address-btn {
     width: 100%;
     justify-content: center;
   }
   
-  .controls-section {
-    flex-direction: column;
-    gap: 12px;
-    align-items: stretch;
+  .address-grid {
+    grid-template-columns: 1fr;
   }
   
-  .control-buttons {
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  
-  .modal-content {
-    padding: 20px 15px;
-  }
-  
-  .discount-input-group {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  #applyDiscount {
-    width: 100%;
-    justify-content: center;
+  .products-grid,
+  .cart-items {
+    grid-template-columns: 1fr;
   }
   
   .cart-stats {
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    gap: 15px;
+  }
+  
+  .footer {
+    flex-direction: column;
+    gap: 15px;
+    height: auto;
+    padding: 15px 3%;
+  }
+  
+  .total-section {
+    text-align: center;
+  }
+  
+  .pay-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .modal-content.large,
+  .modal-content.xlarge {
+    max-width: 95%;
+    padding: 20px 15px;
+  }
+  
+  .map-search-box {
+    flex-direction: column;
+  }
+  
+  .map-controls {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+  
+  .discount-input-group {
+    flex-direction: column;
+  }
+  
+  .apply-discount-btn {
+    width: 100%;
+    justify-content: center;
   }
 }
 
 @media(max-width: 480px){
-  .cart-list {
-    grid-template-columns: 1fr;
-  }
-  
-  .page-title h2 {
-    font-size: 1.3em;
-  }
-  
-  .item img {
-    height: 140px;
-  }
-  
-  .item-content {
-    padding: 12px;
-  }
-  
-  .item-actions button {
-    padding: 7px 12px;
-    font-size: 0.8em;
-  }
-  
-  #messageBox {
-    min-width: 250px;
-    padding: 12px 15px;
-    font-size: 0.85em;
-    top: 80px;
-  }
-  
   .cart-stats {
     grid-template-columns: 1fr;
   }
   
-  header h1 {
+  .stat-card {
+    padding: 20px 15px;
+  }
+  
+  .stat-value {
+    font-size: 1.8em;
+  }
+  
+  .invoice-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  
+  .invoice-value {
     font-size: 1em;
   }
   
-  .balance-box {
-    font-size: 0.75em;
+  .message-box {
+    min-width: 280px;
+    padding: 15px 20px;
+    font-size: 0.9em;
+    top: 80px;
   }
 }
 
-/* ===== تخصيص شريط التمرير ===== */
+/* ===== شريط التمرير المخصص ===== */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -1055,116 +1417,150 @@ header h1 {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--netflix-red);
-  border-radius: 4px;
+  background: linear-gradient(to bottom, var(--netflix-red), #ff416c);
+  border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #f40612;
-}
-
-/* ===== رسالة الرصيد غير الكافي ===== */
-.insufficient-balance {
-  color: #ff6b6b;
-  font-weight: 600;
-  font-size: 0.9em;
-  margin-top: 5px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-/* ===== قسم ملخص الفاتورة ===== */
-.invoice-summary {
-  background: var(--netflix-gray);
-  border-radius: 12px;
-  padding: 15px;
-  margin-bottom: 20px;
-  border: 1px solid rgba(255,255,255,0.1);
-}
-
-.invoice-row {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.invoice-row:last-child {
-  border-bottom: none;
-  font-weight: 700;
-  font-size: 1.1em;
-  color: var(--netflix-red);
-  padding-top: 10px;
-}
-
-.invoice-label {
-  color: var(--netflix-light-gray);
-}
-
-.invoice-value {
-  color: var(--netflix-white);
-  font-weight: 600;
-}
-
-.discount-applied {
-  color: #4caf50;
+  background: linear-gradient(to bottom, #ff416c, var(--netflix-red));
 }
 </style>
 </head>
 <body>
 
 <header>
-  <h1><i class="fas fa-shopping-cart"></i> سلة الشراء</h1>
+  <h1><i class="fas fa-shopping-basket"></i> سلة الشراء</h1>
   <div class="header-actions">
     <a href="index.html" title="الرئيسية"><i class="fas fa-home"></i></a>
     <div class="balance-box">
       <i class="fas fa-wallet"></i>
-      الرصيد: <span id="globalBalance">0.00</span> ريال
+      رصيدك: <span id="globalBalance">0.00</span> ر.س
     </div>
   </div>
 </header>
 
 <div class="page-title">
-  <h2>منتجاتك المختارة</h2>
-  <p>قم بمراجعة المنتجات قبل عملية الدفع</p>
+  <h2>سلة مشترياتك</h2>
+  <p>راجع مشترياتك وأكمل عملية الشراء</p>
 </div>
 
 <div class="container">
-  <!-- إحصائيات السلة -->
-  <div class="cart-stats">
-    <div class="stat-card">
-      <i class="fas fa-shopping-cart"></i>
-      <div class="value" id="totalItems">0</div>
-      <div class="label">عدد المنتجات</div>
+  <!-- قسم العنوان الذكي -->
+  <div class="address-section">
+    <div class="address-header">
+      <h3><i class="fas fa-map-marker-alt"></i> عنوان التوصيل</h3>
+      <div class="address-actions">
+        <button class="address-btn gps-btn" onclick="getCurrentLocation()">
+          <i class="fas fa-location-crosshairs"></i>
+          الموقع الحالي
+        </button>
+        <button class="address-btn map-btn" onclick="openSmartMap()">
+          <i class="fas fa-map-marked-alt"></i>
+          خريطة ذكية
+        </button>
+        <button class="address-btn manual-btn" onclick="openManualAddress()">
+          <i class="fas fa-edit"></i>
+          إدخال يدوي
+        </button>
+        <button class="address-btn saved-btn" onclick="openSavedAddresses()">
+          <i class="fas fa-address-book"></i>
+          العناوين المحفوظة
+        </button>
+      </div>
     </div>
-    <div class="stat-card">
-      <i class="fas fa-boxes"></i>
-      <div class="value" id="totalQuantity">0</div>
-      <div class="label">إجمالي الكمية</div>
-    </div>
-    <div class="stat-card">
-      <i class="fas fa-coins"></i>
-      <div class="value" id="totalAmountStats">0.00 ر.س</div>
-      <div class="label">الإجمالي قبل الخصم</div>
-    </div>
-    <div class="stat-card">
-      <i class="fas fa-percentage"></i>
-      <div class="value" id="savings">0.00 ر.س</div>
-      <div class="label">المدخرات</div>
+    
+    <div class="address-display" id="addressDisplay">
+      <div class="address-display-header">
+        <div class="address-name-display">
+          <i class="fas fa-home"></i>
+          <span id="displayAddressName">عنوان التوصيل</span>
+        </div>
+        <div class="address-type-badge" id="addressSourceBadge">
+          <i class="fas fa-map-pin"></i> GPS
+        </div>
+      </div>
+      
+      <div class="address-grid">
+        <div class="address-card">
+          <h4><i class="fas fa-city"></i> المدينة</h4>
+          <p id="displayCity">-</p>
+        </div>
+        <div class="address-card">
+          <h4><i class="fas fa-neighborhood"></i> الحي</h4>
+          <p id="displayDistrict">-</p>
+        </div>
+        <div class="address-card">
+          <h4><i class="fas fa-road"></i> الشارع</h4>
+          <p id="displayStreet">-</p>
+        </div>
+        <div class="address-card">
+          <h4><i class="fas fa-building"></i> العنوان التفصيلي</h4>
+          <p id="displayFullAddress">-</p>
+        </div>
+      </div>
+      
+      <div class="address-coordinates" id="coordinatesDisplay">
+        <i class="fas fa-globe"></i> الإحداثيات: غير محدد
+      </div>
+      
+      <div class="address-actions-footer">
+        <button class="btn btn-secondary" onclick="editCurrentAddress()">
+          <i class="fas fa-edit"></i> تعديل
+        </button>
+        <button class="btn btn-success" onclick="saveAddressWithName()">
+          <i class="fas fa-save"></i> حفظ باسم
+        </button>
+      </div>
     </div>
   </div>
 
-  <!-- قسم كود الخصم -->
+  <!-- إحصائيات السلة -->
+  <div class="cart-stats">
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-shopping-basket"></i></div>
+      <div class="stat-value" id="totalItems">0</div>
+      <div class="stat-label">عدد المنتجات</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-boxes"></i></div>
+      <div class="stat-value" id="totalQuantity">0</div>
+      <div class="stat-label">إجمالي الكمية</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
+      <div class="stat-value" id="totalAmountStats">0.00 ر.س</div>
+      <div class="stat-label">المجموع الفرعي</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-percentage"></i></div>
+      <div class="stat-value" id="savings">0.00 ر.س</div>
+      <div class="stat-label">الخصومات</div>
+    </div>
+  </div>
+
+  <!-- المنتجات في السلة -->
+  <div id="cartItemsContainer">
+    <!-- سيتم ملؤها ديناميكياً -->
+  </div>
+
+  <!-- قسم الخصومات -->
   <div class="discount-section">
-    <h3><i class="fas fa-tag"></i> كود الخصم</h3>
-    <div class="discount-input-group">
-      <input type="text" id="discountCode" placeholder="أدخل كود الخصم هنا..." />
-      <button id="applyDiscount">
-        <i class="fas fa-check-circle"></i>
-        تطبيق الخصم
+    <div class="discount-header">
+      <div class="discount-title">
+        <i class="fas fa-tags"></i> كود الخصم
+      </div>
+      <button class="view-discounts-btn" onclick="openDiscountsPage()">
+        <i class="fas fa-tag"></i> إدارة الخصومات
       </button>
     </div>
+    
+    <div class="discount-input-group">
+      <input type="text" class="discount-input" id="discountCode" placeholder="أدخل كود الخصم هنا..." />
+      <button class="apply-discount-btn" onclick="applyDiscount()">
+        <i class="fas fa-check-circle"></i> تطبيق الخصم
+      </button>
+    </div>
+    
     <div class="discount-info">
       <i class="fas fa-info-circle"></i>
       يمكنك استخدام كود خصم واحد لكل عملية شراء
@@ -1172,7 +1568,7 @@ header h1 {
   </div>
 
   <!-- ملخص الفاتورة -->
-  <div class="invoice-summary" id="invoiceSummary" style="display: none;">
+  <div class="invoice-summary">
     <div class="invoice-row">
       <span class="invoice-label">المجموع الفرعي:</span>
       <span class="invoice-value" id="subtotal">0.00 ر.س</span>
@@ -1182,114 +1578,280 @@ header h1 {
       <span class="invoice-value discount-applied" id="discountAmount">0.00 ر.س</span>
     </div>
     <div class="invoice-row">
+      <span class="invoice-label">رسوم الشحن:</span>
+      <span class="invoice-value" id="shippingFee">0.00 ر.س</span>
+    </div>
+    <div class="invoice-row">
       <span class="invoice-label">المجموع النهائي:</span>
       <span class="invoice-value" id="finalTotal">0.00 ر.س</span>
     </div>
   </div>
-
-  <!-- أزرار التحكم -->
-  <div class="controls-section">
-    <div class="control-buttons">
-      <button class="control-btn" onclick="goBack()">
-        <i class="fas fa-arrow-right"></i>
-        العودة للتسوق
-      </button>
-      <button class="control-btn clear-btn" onclick="clearCart()">
-        <i class="fas fa-trash"></i>
-        تفريغ السلة
-      </button>
-    </div>
-    <div style="color: var(--netflix-light-gray); font-size: 0.85em;">
-      <i class="fas fa-info-circle"></i>
-      يمكنك تعديل الكميات أو إزالة المنتجات
-    </div>
-  </div>
-
-  <!-- قائمة المنتجات -->
-  <div class="cart-list" id="cartList">
-    <!-- سيتم ملؤها ديناميكياً -->
-  </div>
 </div>
 
-<!-- الفوتر مع المجموع وزر الدفع -->
+<!-- الفوتر -->
 <div class="footer">
   <div class="total-section">
-    <div id="totalAmount">0.00 ر.س</div>
-    <div class="total-label">المجموع النهائي</div>
-    <div id="itemsCount">0 منتج</div>
-    <div id="balanceWarning" class="insufficient-balance" style="display: none;">
+    <div class="total-amount">
+      <i class="fas fa-receipt"></i>
+      <span id="totalAmount">0.00 ر.س</span>
+    </div>
+    <div class="total-label">المبلغ المستحق للدفع</div>
+    <div class="items-count" id="itemsCount">0 منتج في السلة</div>
+    <div class="warning-message" id="addressWarning" style="display: none;">
       <i class="fas fa-exclamation-triangle"></i>
+      العنوان مطلوب للمنتجات الورقية
+    </div>
+    <div class="warning-message" id="balanceWarning" style="display: none;">
+      <i class="fas fa-wallet"></i>
       رصيدك غير كافٍ
     </div>
   </div>
-  <button id="payBtn" disabled>
+  <button class="pay-btn" id="payBtn" disabled>
     <i class="fas fa-credit-card"></i> 
-    <span>دفع الآن</span>
+    <span>إتمام الشراء</span>
   </button>
 </div>
 
-<!-- صناديق الرسائل -->
-<div id="messageBox"></div>
+<!-- ===== النوافذ المنبثقة ===== -->
+
+<!-- نافذة الخريطة الذكية -->
+<div id="smartMapModal" class="modal">
+  <div class="modal-content xlarge">
+    <div class="modal-header">
+      <h3 class="modal-title"><i class="fas fa-map-marked-alt"></i> الخريطة الذكية</h3>
+      <button class="close-modal" onclick="closeSmartMap()">×</button>
+    </div>
+    
+    <div class="map-container">
+      <div class="map-search-box">
+        <input type="text" id="mapSearch" placeholder="ابحث عن موقع أو عنوان...">
+        <button class="btn btn-info" onclick="searchLocation()">
+          <i class="fas fa-search"></i> بحث
+        </button>
+      </div>
+      
+      <div id="smartMap"></div>
+      
+      <div class="map-controls">
+        <div class="map-coordinates">
+          <i class="fas fa-globe"></i> الإحداثيات:
+          <span id="mapLat">24.7136</span>°, 
+          <span id="mapLng">46.6753</span>°
+        </div>
+        <button class="btn btn-primary" onclick="useSmartMapLocation()">
+          <i class="fas fa-check-circle"></i> استخدام هذا الموقع
+        </button>
+      </div>
+      
+      <div class="address-preview" id="addressPreview">
+        <h4><i class="fas fa-map-marker-alt"></i> العنوان المستخرج</h4>
+        <p id="extractedAddress">قم بتحديد موقع على الخريطة أو البحث عن عنوان</p>
+      </div>
+      
+      <div class="address-name-input">
+        <label for="addressNameInput"><i class="fas fa-tag"></i> اسم لهذا العنوان:</label>
+        <input type="text" id="addressNameInput" placeholder="مثل: منزلي، مكتب، والدي...">
+      </div>
+    </div>
+    
+    <div class="form-actions">
+      <button class="btn btn-secondary" onclick="closeSmartMap()">
+        <i class="fas fa-times"></i> إلغاء
+      </button>
+      <button class="btn btn-success" onclick="saveSmartAddress()">
+        <i class="fas fa-save"></i> حفظ العنوان
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة العناوين المحفوظة -->
+<div id="savedAddressesModal" class="modal">
+  <div class="modal-content large">
+    <div class="modal-header">
+      <h3 class="modal-title"><i class="fas fa-address-book"></i> العناوين المحفوظة</h3>
+      <button class="close-modal" onclick="closeSavedAddressesModal()">×</button>
+    </div>
+    
+    <div id="savedAddressesList">
+      <!-- سيتم ملؤها ديناميكياً -->
+    </div>
+    
+    <div class="form-actions">
+      <button class="btn btn-secondary" onclick="closeSavedAddressesModal()">
+        <i class="fas fa-times"></i> إغلاق
+      </button>
+      <button class="btn btn-primary" onclick="openManualAddress()">
+        <i class="fas fa-plus"></i> إضافة عنوان جديد
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة إدخال العنوان يدوياً -->
+<div id="manualAddressModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title"><i class="fas fa-edit"></i> إدخال العنوان يدوياً</h3>
+      <button class="close-modal" onclick="closeManualAddress()">×</button>
+    </div>
+    
+    <form id="addressForm" class="address-form">
+      <div class="form-group">
+        <label for="addressName"><i class="fas fa-tag"></i> اسم العنوان</label>
+        <input type="text" id="addressName" placeholder="منزلي، مكتب، إلخ" required>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="addressCity"><i class="fas fa-city"></i> المدينة *</label>
+          <select id="addressCity" required>
+            <option value="">اختر المدينة</option>
+            <option value="الرياض">الرياض</option>
+            <option value="جدة">جدة</option>
+            <option value="مكة">مكة المكرمة</option>
+            <option value="المدينة">المدينة المنورة</option>
+            <option value="الدمام">الدمام</option>
+            <option value="الخبر">الخبر</option>
+            <option value="الطائف">الطائف</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="addressDistrict"><i class="fas fa-neighborhood"></i> الحي *</label>
+          <input type="text" id="addressDistrict" placeholder="اسم الحي" required>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="addressStreet"><i class="fas fa-road"></i> الشارع *</label>
+        <input type="text" id="addressStreet" placeholder="الشارع الرئيسي" required>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="addressBuilding"><i class="fas fa-building"></i> المبنى</label>
+          <input type="text" id="addressBuilding" placeholder="رقم/اسم المبنى">
+        </div>
+        
+        <div class="form-group">
+          <label for="addressApartment"><i class="fas fa-door-closed"></i> الشقة</label>
+          <input type="text" id="addressApartment" placeholder="رقم الشقة">
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="addressPostalCode"><i class="fas fa-map-pin"></i> الرمز البريدي</label>
+          <input type="text" id="addressPostalCode" placeholder="12345" pattern="[0-9]{5}">
+        </div>
+        
+        <div class="form-group">
+          <label for="addressPhone"><i class="fas fa-phone"></i> هاتف التوصيل *</label>
+          <input type="tel" id="addressPhone" placeholder="05xxxxxxxx" pattern="05[0-9]{8}" required>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="addressNotes"><i class="fas fa-sticky-note"></i> ملاحظات إضافية</label>
+        <textarea id="addressNotes" rows="3" placeholder="تفاصيل إضافية للموصل"></textarea>
+      </div>
+    </form>
+    
+    <div class="form-actions">
+      <button class="btn btn-secondary" onclick="closeManualAddress()">
+        <i class="fas fa-times"></i> إلغاء
+      </button>
+      <button class="btn btn-success" onclick="saveManualAddress()">
+        <i class="fas fa-check"></i> حفظ العنوان
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- نافذة تسمية العنوان -->
+<div id="nameAddressModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title"><i class="fas fa-tag"></i> تسمية العنوان</h3>
+      <button class="close-modal" onclick="closeNameAddress()">×</button>
+    </div>
+    
+    <div class="form-group">
+      <label for="saveAddressName"><i class="fas fa-home"></i> اختر اسماً لهذا العنوان:</label>
+      <input type="text" id="saveAddressName" placeholder="منزلي، مكتب، والدي..." value="عنوان جديد">
+    </div>
+    
+    <div class="form-actions">
+      <button class="btn btn-secondary" onclick="closeNameAddress()">
+        <i class="fas fa-times"></i> إلغاء
+      </button>
+      <button class="btn btn-success" onclick="confirmSaveAddress()">
+        <i class="fas fa-save"></i> حفظ
+      </button>
+    </div>
+  </div>
+</div>
 
 <!-- نافذة اختيار البطاقة -->
-<div id="cardModal">
+<div id="cardModal" class="modal">
   <div class="modal-content">
-    <h3><i class="fas fa-credit-card"></i> اختر البطاقة للدفع</h3>
-    <div id="cardsContainer"></div>
-    <button id="cancelCard"><i class="fas fa-times"></i> إلغاء</button>
+    <div class="modal-header">
+      <h3 class="modal-title"><i class="fas fa-credit-card"></i> اختيار طريقة الدفع</h3>
+      <button class="close-modal" onclick="closeCardModal()">×</button>
+    </div>
+    
+    <div id="cardsContainer">
+      <!-- سيتم ملؤها ديناميكياً -->
+    </div>
+    
+    <div class="form-actions">
+      <button class="btn btn-secondary" onclick="closeCardModal()">
+        <i class="fas fa-times"></i> إلغاء
+      </button>
+      <button class="btn btn-primary" onclick="window.location.href='cards.html'">
+        <i class="fas fa-plus"></i> إضافة بطاقة جديدة
+      </button>
+    </div>
   </div>
 </div>
 
 <!-- نافذة سياسة الاسترجاع -->
-<div id="policyModal">
+<div id="policyModal" class="modal">
   <div class="modal-content">
-    <h3><i class="fas fa-file-contract"></i> سياسة الاسترجاع</h3>
-    <p>
-      يمكنك استرجاع المنتج خلال 7 أيام من تاريخ الشراء إذا لم يتم فتحه أو استخدامه.
-      بعد التأكيد، سيتم خصم الرصيد وإتمام عملية الشراء.
-      <br><br>
-      <strong>ملاحظة:</strong> المنتجات الرقمية لا يمكن استرجاعها بعد التنزيل.
-    </p>
-    <button id="confirmPolicy"><i class="fas fa-check"></i> تأكيد ودفع</button>
+    <div class="modal-header">
+      <h3 class="modal-title"><i class="fas fa-file-contract"></i> سياسة الاسترجاع</h3>
+      <button class="close-modal" onclick="closePolicyModal()">×</button>
+    </div>
+    
+    <div class="policy-content">
+      <p>📦 <strong>المنتجات الورقية:</strong> يمكنك استرجاعها خلال 7 أيام من تاريخ الاستلام بشرط أن تكون بحالة جيدة.</p>
+      <p>💻 <strong>المنتجات الرقمية:</strong> لا يمكن استرجاعها بعد التنزيل.</p>
+      <p>✅ <strong>تأكيد الطلب:</strong> بمجرد الضغط على تأكيد، سيتم خصم المبلغ وإتمام العملية.</p>
+    </div>
+    
+    <div class="form-actions">
+      <button class="btn btn-secondary" onclick="closePolicyModal()">
+        <i class="fas fa-times"></i> رجوع
+      </button>
+      <button class="btn btn-success" onclick="confirmPurchase()">
+        <i class="fas fa-check"></i> تأكيد الشراء
+      </button>
+    </div>
   </div>
 </div>
 
-<!-- نافذة تفاصيل الخصم -->
-<div id="discountModal">
-  <div class="modal-content">
-    <h3><i class="fas fa-tag"></i> تفاصيل الخصم</h3>
-    <div class="discount-details">
-      <div class="discount-row">
-        <span class="discount-label">كود الخصم:</span>
-        <span class="discount-value" id="discountCodeDisplay">-</span>
-      </div>
-      <div class="discount-row">
-        <span class="discount-label">نسبة الخصم:</span>
-        <span class="discount-value" id="discountPercentage">0%</span>
-      </div>
-      <div class="discount-row">
-        <span class="discount-label">قيمة الخصم:</span>
-        <span class="discount-value" id="discountValueDisplay">0.00 ر.س</span>
-      </div>
-      <div class="discount-row">
-        <span class="discount-label">المجموع بعد الخصم:</span>
-        <span class="discount-value" id="totalAfterDiscount">0.00 ر.س</span>
-      </div>
-    </div>
-    <button id="closeDiscountModal"><i class="fas fa-times"></i> إغلاق</button>
-  </div>
-</div>
+<!-- صندوق الرسائل -->
+<div id="messageBox" class="message-box"></div>
 
 <script>
-  // ====== بيانات المستخدم ======
-// الحصول على بيانات المستخدم المسجل
+// ====== التهيئة الأساسية ======
 const user = JSON.parse(localStorage.getItem('user') || 'null');
 let loggedInUser = null;
 
 if (user && user.email) {
   loggedInUser = user.email;
 } else {
-  // إذا لم يكن هناك مستخدم مسجل، توجيه إلى صفحة تسجيل الدخول
   setTimeout(() => {
     window.location.href = 'login.html';
   }, 1000);
@@ -1303,140 +1865,820 @@ if (user && user.email) {
   throw new Error('No user logged in');
 }
 
-// مفاتيح التخزين - الآن باستخدام البريد الإلكتروني فقط
+// مفاتيح التخزين
 const CART_KEY = `cart_${loggedInUser}`;
 const BALANCE_KEY = `balance_${loggedInUser}`;
 const LIBRARY_KEY = `library_${loggedInUser}`;
 const ORDERS_KEY = `orders_${loggedInUser}`;
 const CARDS_KEY = `cards_${loggedInUser}`;
+const ADDRESSES_KEY = `addresses_${loggedInUser}`;
+const CURRENT_ADDRESS_KEY = `current_address_${loggedInUser}`;
 
-// ====== هيكل بيانات البطاقات المحسّن ======
-function initializeUserData() {
-  // إذا كان المستخدم جديداً، إنشاء بياناته
-  if (!localStorage.getItem(CARDS_KEY)) {
-    // إنشاء بطاقات افتراضية إذا لم تكن موجودة
-    const defaultCards = [
-      {
-        id: 'card1_' + Date.now(),
-        name: user.username || "بطاقة افتراضية",
-        number: "**** **** **** 1234",
-        expiry: "12/26",
-        balance: 500.00,
-        isPrimary: true,
-        type: "بطاقة ائتمان",
-        currency: "SAR"
-      },
-      {
-        id: 'card2_' + Date.now(),
-        name: user.username || "بطاقة ثانوية",
-        number: "**** **** **** 5678",
-        expiry: "06/25",
-        balance: 300.00,
-        isPrimary: false,
-        type: "بطاقة خصم",
-        currency: "SAR"
-      }
-    ];
-    localStorage.setItem(CARDS_KEY, JSON.stringify(defaultCards));
-  }
-  
-  // تحميل البطاقات
-  cards = JSON.parse(localStorage.getItem(CARDS_KEY)) || [];
-  
-  // حساب الرصيد الكلي
-  const totalBalance = cards.reduce((sum, card) => sum + card.balance, 0);
-  
-  // حفظ الرصيد الكلي
-  localStorage.setItem(BALANCE_KEY, totalBalance.toFixed(2));
-  balance = totalBalance;
-}
-
-// ====== تهيئة البيانات ======
+// ====== المتغيرات العامة ======
 let balance = parseFloat(localStorage.getItem(BALANCE_KEY)) || 0;
 let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
 let library = JSON.parse(localStorage.getItem(LIBRARY_KEY)) || [];
 let orders = JSON.parse(localStorage.getItem(ORDERS_KEY)) || [];
 let cards = JSON.parse(localStorage.getItem(CARDS_KEY)) || [];
+let addresses = JSON.parse(localStorage.getItem(ADDRESSES_KEY)) || [];
+let currentAddress = JSON.parse(localStorage.getItem(CURRENT_ADDRESS_KEY)) || null;
 let currentDiscount = null;
 let discountCode = '';
-
-// تهيئة بيانات المستخدم إذا كان مسجلاً
-if (user && user.email) {
-  initializeUserData();
-}
+let smartMap = null;
+let smartMapMarker = null;
+let geocoder = null;
 
 // ====== عناصر DOM ======
-const cartList = document.getElementById('cartList');
-const totalAmountEl = document.getElementById('totalAmount');
+const globalBalanceEl = document.getElementById('globalBalance');
+const cartItemsContainer = document.getElementById('cartItemsContainer');
 const totalItemsEl = document.getElementById('totalItems');
 const totalQuantityEl = document.getElementById('totalQuantity');
 const totalAmountStatsEl = document.getElementById('totalAmountStats');
 const savingsEl = document.getElementById('savings');
+const subtotalEl = document.getElementById('subtotal');
+const discountAmountEl = document.getElementById('discountAmount');
+const shippingFeeEl = document.getElementById('shippingFee');
+const finalTotalEl = document.getElementById('finalTotal');
+const totalAmountEl = document.getElementById('totalAmount');
 const itemsCountEl = document.getElementById('itemsCount');
 const payBtn = document.getElementById('payBtn');
-const messageBox = document.getElementById('messageBox');
-const cardModal = document.getElementById('cardModal');
-const cardsContainer = document.getElementById('cardsContainer');
-const cancelCard = document.getElementById('cancelCard');
-const policyModal = document.getElementById('policyModal');
-const confirmPolicy = document.getElementById('confirmPolicy');
-const globalBalanceEl = document.getElementById('globalBalance');
-const discountCodeInput = document.getElementById('discountCode');
-const applyDiscountBtn = document.getElementById('applyDiscount');
-const discountModal = document.getElementById('discountModal');
-const closeDiscountModal = document.getElementById('closeDiscountModal');
-const invoiceSummary = document.getElementById('invoiceSummary');
+const addressWarning = document.getElementById('addressWarning');
 const balanceWarning = document.getElementById('balanceWarning');
-
-// ====== تحديث الرصيد ======
-globalBalanceEl.textContent = balance.toFixed(2);
+const addressDisplay = document.getElementById('addressDisplay');
+const discountCodeInput = document.getElementById('discountCode');
+const messageBox = document.getElementById('messageBox');
 
 // ====== وظائف المساعدة ======
 function showMessage(msg, type = 'success', duration = 4000) {
   messageBox.textContent = msg;
-  messageBox.className = type;
-  messageBox.classList.add('show');
+  messageBox.className = `message-box message-${type} show`;
   setTimeout(() => messageBox.classList.remove('show'), duration);
 }
 
-// دالة لتحويل سعر المنتج - الحفاظ على القيمة الرقمية فقط
 function parseProductPrice(priceString) {
   if (!priceString) return 0;
-  
-  // إذا كان السعر بالفعل رقم
   if (typeof priceString === 'number') return priceString;
-  
-  // استخراج الرقم فقط من أي نص
   const priceMatch = priceString.toString().match(/[\d.]+/);
   return priceMatch ? parseFloat(priceMatch[0]) : 0;
 }
 
-// تنسيق السعر للعرض
 function formatPrice(price) {
   return price.toFixed(2) + ' ر.س';
 }
 
-// دالة للتحقق من نوع المنتج
 function isDigitalProduct(product) {
-  // التحقق من حقل format
   if (product.format) {
     return product.format === 'رقمي' || 
-           product.format.toLowerCase().includes('digital') ||
-           product.format.toLowerCase().includes('رقمي');
+           product.format.toLowerCase().includes('digital');
   }
-  
-  // التحقق من حقل type
   if (product.type) {
     return product.type === 'قصة' || 
            product.type === 'مانجا' || 
-           product.type === 'فيديو' ||
-           product.type.toLowerCase().includes('story') ||
-           product.type.toLowerCase().includes('manga') ||
-           product.type.toLowerCase().includes('video');
+           product.type === 'فيديو';
+  }
+  return true;
+}
+
+// ====== نظام العناوين الذكي ======
+function updateAddressDisplay() {
+  if (currentAddress) {
+    // تحديث اسم العنوان
+    document.getElementById('displayAddressName').textContent = currentAddress.name || 'عنوان التوصيل';
+    
+    // تحديث بيانات العنوان
+    document.getElementById('displayCity').textContent = currentAddress.city || '-';
+    document.getElementById('displayDistrict').textContent = currentAddress.district || '-';
+    document.getElementById('displayStreet').textContent = currentAddress.street || '-';
+    
+    // بناء العنوان الكامل
+    const fullAddress = [];
+    if (currentAddress.building) fullAddress.push(`مبنى ${currentAddress.building}`);
+    if (currentAddress.apartment) fullAddress.push(`شقة ${currentAddress.apartment}`);
+    document.getElementById('displayFullAddress').textContent = fullAddress.join('، ') || '-';
+    
+    // تحديث الإحداثيات
+    const coordsDisplay = document.getElementById('coordinatesDisplay');
+    if (currentAddress.latitude && currentAddress.longitude) {
+      coordsDisplay.innerHTML = `<i class="fas fa-globe"></i> الإحداثيات: ${currentAddress.latitude.toFixed(6)}°, ${currentAddress.longitude.toFixed(6)}°`;
+    }
+    
+    // تحديث مصدر العنوان
+    const sourceBadge = document.getElementById('addressSourceBadge');
+    if (currentAddress.source === 'gps') {
+      sourceBadge.innerHTML = '<i class="fas fa-satellite"></i> GPS';
+    } else if (currentAddress.source === 'map') {
+      sourceBadge.innerHTML = '<i class="fas fa-map-marked-alt"></i> خريطة';
+    } else {
+      sourceBadge.innerHTML = '<i class="fas fa-edit"></i> يدوي';
+    }
+    
+    // إظهار قسم العرض
+    addressDisplay.classList.add('active');
+    
+    // تحديث التحذيرات
+    checkRequirements();
+  } else {
+    addressDisplay.classList.remove('active');
+    checkRequirements();
+  }
+}
+
+function checkRequirements() {
+  const hasPhysicalProducts = cart.some(item => !isDigitalProduct(item));
+  const stats = updateCartStats();
+  const hasEnoughBalance = balance >= stats.finalTotal;
+  
+  // التحقق من العنوان
+  if (hasPhysicalProducts && !currentAddress) {
+    addressWarning.style.display = 'flex';
+    payBtn.disabled = true;
+    payBtn.title = "العنوان مطلوب للمنتجات الورقية";
+  } else {
+    addressWarning.style.display = 'none';
   }
   
-  // الافتراضي: منتج رقمي
-  return true;
+  // التحقق من الرصيد
+  if (cart.length > 0 && !hasEnoughBalance) {
+    balanceWarning.style.display = 'flex';
+    payBtn.disabled = true;
+    payBtn.title = `رصيدك غير كافٍ (المطلوب: ${formatPrice(stats.finalTotal)})`;
+  } else {
+    balanceWarning.style.display = 'none';
+  }
+  
+  // تمكين/تعطيل زر الدفع
+  if (cart.length === 0) {
+    payBtn.disabled = true;
+    payBtn.title = "السلة فارغة";
+  } else if (!hasEnoughBalance) {
+    payBtn.disabled = true;
+  } else if (hasPhysicalProducts && !currentAddress) {
+    payBtn.disabled = true;
+  } else {
+    payBtn.disabled = false;
+    payBtn.title = "إتمام عملية الشراء";
+  }
+}
+
+// ====== GPS: الموقع الحالي ======
+function getCurrentLocation() {
+  if (!navigator.geolocation) {
+    showMessage('متصفحك لا يدعم تحديد الموقع', 'error');
+    return;
+  }
+  
+  showMessage('جاري تحديد موقعك الحالي...', 'info', 2000);
+  
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const { latitude, longitude } = position.coords;
+      
+      try {
+        // ترجمة الإحداثيات إلى عنوان باستخدام Nominatim
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1&accept-language=ar`
+        );
+        
+        const data = await response.json();
+        
+        if (data.address) {
+          const addr = data.address;
+          
+          currentAddress = {
+            name: 'موقعي الحالي',
+            city: addr.city || addr.town || addr.village || addr.municipality || 'غير محدد',
+            district: addr.suburb || addr.neighbourhood || addr.quarter || 'غير محدد',
+            street: addr.road || 'غير محدد',
+            building: '',
+            apartment: '',
+            postalCode: addr.postcode || '',
+            phone: user.phone || '',
+            latitude: latitude,
+            longitude: longitude,
+            source: 'gps',
+            timestamp: new Date().toISOString()
+          };
+          
+          localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
+          updateAddressDisplay();
+          
+          // فتح نافذة التسمية
+          openNameAddressModal();
+          
+          showMessage('تم تحديد موقعك بنجاح!', 'success');
+        } else {
+          throw new Error('لا يمكن تحديد العنوان');
+        }
+        
+      } catch (error) {
+        console.error('Geocoding error:', error);
+        currentAddress = {
+          name: 'موقع GPS',
+          city: 'غير محدد',
+          district: 'غير محدد',
+          street: 'غير محدد',
+          latitude: latitude,
+          longitude: longitude,
+          source: 'gps',
+          timestamp: new Date().toISOString()
+        };
+        
+        localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
+        updateAddressDisplay();
+        openNameAddressModal();
+        
+        showMessage('تم تحديد الموقع، يرجى إكمال العنوان يدوياً', 'warning');
+      }
+    },
+    (error) => {
+      let errorMessage = 'تعذر تحديد الموقع. ';
+      switch(error.code) {
+        case error.PERMISSION_DENIED:
+          errorMessage += 'تم رفض الإذن. يرجى السماح بالوصول للموقع';
+          break;
+        case error.POSITION_UNAVAILABLE:
+          errorMessage += 'معلومات الموقع غير متوفرة.';
+          break;
+        case error.TIMEOUT:
+          errorMessage += 'انتهت المهلة.';
+          break;
+        default:
+          errorMessage += 'حدث خطأ غير معروف.';
+      }
+      showMessage(errorMessage, 'error');
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 0
+    }
+  );
+}
+
+// ====== الخريطة الذكية ======
+function openSmartMap() {
+  document.getElementById('smartMapModal').style.display = 'flex';
+  
+  setTimeout(() => {
+    if (!smartMap) {
+      initSmartMap();
+    }
+    
+    // إذا كان هناك عنوان حالي، ضع المؤشر عليه
+    if (currentAddress && currentAddress.latitude && currentAddress.longitude) {
+      smartMap.setView([currentAddress.latitude, currentAddress.longitude], 15);
+      updateMapMarker(currentAddress.latitude, currentAddress.longitude);
+      reverseGeocode(currentAddress.latitude, currentAddress.longitude);
+    } else {
+      // محاولة الحصول على الموقع الحالي
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            smartMap.setView([latitude, longitude], 15);
+            updateMapMarker(latitude, longitude);
+            reverseGeocode(latitude, longitude);
+          },
+          () => {
+            smartMap.setView([24.7136, 46.6753], 6);
+          }
+        );
+      } else {
+        smartMap.setView([24.7136, 46.6753], 6);
+      }
+    }
+  }, 100);
+}
+
+function initSmartMap() {
+  smartMap = L.map('smartMap').setView([24.7136, 46.6753], 6);
+  
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19
+  }).addTo(smartMap);
+  
+  // إضافة Geocoder للبحث
+  geocoder = L.Control.geocoder({
+    defaultMarkGeocode: false,
+    placeholder: 'ابحث عن موقع...',
+    errorMessage: 'لم يتم العثور على الموقع'
+  }).addTo(smartMap);
+  
+  geocoder.on('markgeocode', function(e) {
+    const { center, name } = e.geocode;
+    smartMap.setView(center, 16);
+    updateMapMarker(center.lat, center.lng);
+    updateAddressFromGeocode(name, center.lat, center.lng);
+  });
+  
+  // إضافة مؤشر قابل للسحب
+  smartMapMarker = L.marker([0, 0], {
+    draggable: true
+  }).addTo(smartMap);
+  
+  smartMapMarker.on('dragend', function() {
+    const latLng = smartMapMarker.getLatLng();
+    updateCoordinates(latLng.lat, latLng.lng);
+    reverseGeocode(latLng.lat, latLng.lng);
+  });
+  
+  // حدث النقر على الخريطة
+  smartMap.on('click', function(e) {
+    updateMapMarker(e.latlng.lat, e.latlng.lng);
+    reverseGeocode(e.latlng.lat, e.latlng.lng);
+  });
+}
+
+function updateMapMarker(lat, lng) {
+  smartMapMarker.setLatLng([lat, lng]);
+  updateCoordinates(lat, lng);
+}
+
+function updateCoordinates(lat, lng) {
+  document.getElementById('mapLat').textContent = lat.toFixed(6);
+  document.getElementById('mapLng').textContent = lng.toFixed(6);
+}
+
+async function reverseGeocode(lat, lng) {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1&accept-language=ar`
+    );
+    
+    const data = await response.json();
+    
+    if (data.display_name) {
+      document.getElementById('extractedAddress').textContent = data.display_name;
+      
+      // تحديث حقول العنوان تلقائياً إذا أمكن
+      if (data.address) {
+        const addr = data.address;
+        currentAddress = {
+          city: addr.city || addr.town || addr.village || addr.municipality || '',
+          district: addr.suburb || addr.neighbourhood || addr.quarter || '',
+          street: addr.road || '',
+          building: addr.house_number || '',
+          latitude: lat,
+          longitude: lng,
+          source: 'map'
+        };
+        
+        document.getElementById('addressNameInput').value = 'عنوان من الخريطة';
+      }
+    } else {
+      document.getElementById('extractedAddress').textContent = 'لا يمكن استخراج العنوان من هذا الموقع';
+    }
+  } catch (error) {
+    console.error('Reverse geocoding error:', error);
+    document.getElementById('extractedAddress').textContent = 'خطأ في استخراج العنوان';
+  }
+}
+
+function updateAddressFromGeocode(addressText, lat, lng) {
+  document.getElementById('extractedAddress').textContent = addressText;
+  updateCoordinates(lat, lng);
+}
+
+function searchLocation() {
+  const query = document.getElementById('mapSearch').value.trim();
+  if (!query) return;
+  
+  fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1&accept-language=ar`)
+    .then(response => response.json())
+    .then(data => {
+      if (data.length > 0) {
+        const result = data[0];
+        smartMap.setView([result.lat, result.lon], 16);
+        updateMapMarker(parseFloat(result.lat), parseFloat(result.lon));
+        document.getElementById('extractedAddress').textContent = result.display_name;
+        document.getElementById('addressNameInput').value = query;
+      } else {
+        showMessage('لم يتم العثور على الموقع', 'error');
+      }
+    })
+    .catch(error => {
+      console.error('Search error:', error);
+      showMessage('حدث خطأ أثناء البحث', 'error');
+    });
+}
+
+function useSmartMapLocation() {
+  const lat = parseFloat(document.getElementById('mapLat').textContent);
+  const lng = parseFloat(document.getElementById('mapLng').textContent);
+  const addressName = document.getElementById('addressNameInput').value.trim() || 'عنوان من الخريطة';
+  
+  currentAddress = {
+    name: addressName,
+    city: currentAddress?.city || '',
+    district: currentAddress?.district || '',
+    street: currentAddress?.street || '',
+    building: currentAddress?.building || '',
+    apartment: '',
+    latitude: lat,
+    longitude: lng,
+    source: 'map',
+    timestamp: new Date().toISOString()
+  };
+  
+  localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
+  updateAddressDisplay();
+  closeSmartMap();
+  
+  showMessage(`تم حفظ العنوان "${addressName}"`, 'success');
+}
+
+function saveSmartAddress() {
+  useSmartMapLocation();
+}
+
+function closeSmartMap() {
+  document.getElementById('smartMapModal').style.display = 'none';
+}
+
+// ====== العناوين المحفوظة ======
+function openSavedAddresses() {
+  renderSavedAddresses();
+  document.getElementById('savedAddressesModal').style.display = 'flex';
+}
+
+function closeSavedAddressesModal() {
+  document.getElementById('savedAddressesModal').style.display = 'none';
+}
+
+function renderSavedAddresses() {
+  const container = document.getElementById('savedAddressesList');
+  if (!container) return;
+  
+  if (addresses.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 40px 20px; color: var(--netflix-light-gray);">
+        <i class="fas fa-map-marker-alt" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
+        <h4 style="color: var(--netflix-white); margin-bottom: 10px;">لا توجد عناوين محفوظة</h4>
+        <p>يمكنك إضافة عنوان جديد باستخدام الزر أدناه</p>
+      </div>
+    `;
+    return;
+  }
+  
+  container.innerHTML = addresses.map((addr, index) => `
+    <div class="address-item ${currentAddress?.id === addr.id ? 'selected' : ''}" 
+         onclick="selectAddress('${addr.id}')"
+         style="background: rgba(255,255,255,0.05); border-radius: 10px; padding: 15px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s ease; border: 1px solid ${currentAddress?.id === addr.id ? 'var(--netflix-red)' : 'rgba(255,255,255,0.1)'};">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-map-marker-alt" style="color: var(--netflix-red);"></i>
+          <strong style="color: var(--netflix-white);">${addr.name}</strong>
+          ${addr.isDefault ? '<span style="background: var(--netflix-red); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">افتراضي</span>' : ''}
+        </div>
+        <div>
+          <button onclick="event.stopPropagation(); setDefaultAddress('${addr.id}')" 
+                  style="background: none; border: none; color: ${addr.isDefault ? 'var(--netflix-red)' : 'var(--netflix-light-gray)'}; cursor: pointer; padding: 5px; margin-right: 5px;" title="تعيين كافتراضي">
+            <i class="fas fa-star"></i>
+          </button>
+          <button onclick="event.stopPropagation(); deleteAddress('${addr.id}')" 
+                  style="background: none; border: none; color: var(--netflix-light-gray); cursor: pointer; padding: 5px;" title="حذف">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+      <div style="color: var(--netflix-light-gray); font-size: 0.9em;">
+        <div>${addr.city} - ${addr.district}</div>
+        <div>${addr.street} ${addr.building ? ' - مبنى ' + addr.building : ''} ${addr.apartment ? ' - شقة ' + addr.apartment : ''}</div>
+        <div><i class="fas fa-phone"></i> ${addr.phone}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectAddress(addressId) {
+  const address = addresses.find(addr => addr.id === addressId);
+  if (address) {
+    currentAddress = { ...address };
+    localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
+    updateAddressDisplay();
+    closeSavedAddressesModal();
+    showMessage(`تم تحديد "${address.name}"`, 'success');
+  }
+}
+
+function setDefaultAddress(addressId) {
+  addresses.forEach(addr => {
+    addr.isDefault = addr.id === addressId;
+  });
+  
+  localStorage.setItem(ADDRESSES_KEY, JSON.stringify(addresses));
+  renderSavedAddresses();
+  showMessage('تم تحديث العنوان الافتراضي', 'success');
+}
+
+function deleteAddress(addressId) {
+  if (!confirm('هل أنت متأكد من حذف هذا العنوان؟')) return;
+  
+  addresses = addresses.filter(addr => addr.id !== addressId);
+  localStorage.setItem(ADDRESSES_KEY, JSON.stringify(addresses));
+  
+  if (currentAddress?.id === addressId) {
+    currentAddress = null;
+    localStorage.removeItem(CURRENT_ADDRESS_KEY);
+    updateAddressDisplay();
+  }
+  
+  renderSavedAddresses();
+  showMessage('تم حذف العنوان', 'warning');
+}
+
+// ====== العنوان اليدوي ======
+function openManualAddress() {
+  // تعبئة الحقول إذا كان هناك عنوان حالي
+  if (currentAddress) {
+    document.getElementById('addressName').value = currentAddress.name || '';
+    document.getElementById('addressCity').value = currentAddress.city || '';
+    document.getElementById('addressDistrict').value = currentAddress.district || '';
+    document.getElementById('addressStreet').value = currentAddress.street || '';
+    document.getElementById('addressBuilding').value = currentAddress.building || '';
+    document.getElementById('addressApartment').value = currentAddress.apartment || '';
+    document.getElementById('addressPostalCode').value = currentAddress.postalCode || '';
+    document.getElementById('addressPhone').value = currentAddress.phone || user.phone || '';
+    document.getElementById('addressNotes').value = currentAddress.notes || '';
+  } else {
+    // إعادة التعيين
+    document.getElementById('addressName').value = '';
+    document.getElementById('addressCity').value = '';
+    document.getElementById('addressDistrict').value = '';
+    document.getElementById('addressStreet').value = '';
+    document.getElementById('addressBuilding').value = '';
+    document.getElementById('addressApartment').value = '';
+    document.getElementById('addressPostalCode').value = '';
+    document.getElementById('addressPhone').value = user.phone || '';
+    document.getElementById('addressNotes').value = '';
+  }
+  
+  document.getElementById('manualAddressModal').style.display = 'flex';
+}
+
+function closeManualAddress() {
+  document.getElementById('manualAddressModal').style.display = 'none';
+}
+
+function saveManualAddress() {
+  const name = document.getElementById('addressName').value.trim();
+  const city = document.getElementById('addressCity').value.trim();
+  const district = document.getElementById('addressDistrict').value.trim();
+  const street = document.getElementById('addressStreet').value.trim();
+  const phone = document.getElementById('addressPhone').value.trim();
+  
+  if (!name || !city || !district || !street || !phone) {
+    showMessage('يرجى ملء جميع الحقول المطلوبة', 'error');
+    return;
+  }
+  
+  if (!phone.match(/^05[0-9]{8}$/)) {
+    showMessage('رقم الهاتف غير صحيح. يجب أن يكون 05xxxxxxxx', 'error');
+    return;
+  }
+  
+  const address = {
+    id: 'addr_' + Date.now(),
+    name: name,
+    city: city,
+    district: district,
+    street: street,
+    building: document.getElementById('addressBuilding').value.trim(),
+    apartment: document.getElementById('addressApartment').value.trim(),
+    postalCode: document.getElementById('addressPostalCode').value.trim(),
+    phone: phone,
+    notes: document.getElementById('addressNotes').value.trim(),
+    latitude: currentAddress?.latitude || null,
+    longitude: currentAddress?.longitude || null,
+    source: 'manual',
+    createdAt: new Date().toISOString(),
+    isDefault: addresses.length === 0
+  };
+  
+  // حفظ كعنوان حالي
+  currentAddress = address;
+  localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
+  
+  // إضافة للعناوين المحفوظة
+  addresses.push({ ...address });
+  localStorage.setItem(ADDRESSES_KEY, JSON.stringify(addresses));
+  
+  updateAddressDisplay();
+  closeManualAddress();
+  
+  showMessage(`تم حفظ "${name}"`, 'success');
+}
+
+function editCurrentAddress() {
+  if (!currentAddress) return;
+  openManualAddress();
+}
+
+// ====== تسمية العنوان ======
+function openNameAddressModal() {
+  document.getElementById('saveAddressName').value = currentAddress?.name || 'عنوان جديد';
+  document.getElementById('nameAddressModal').style.display = 'flex';
+}
+
+function closeNameAddress() {
+  document.getElementById('nameAddressModal').style.display = 'none';
+}
+
+function confirmSaveAddress() {
+  const name = document.getElementById('saveAddressName').value.trim();
+  if (!name) {
+    showMessage('يرجى إدخال اسم للعنوان', 'error');
+    return;
+  }
+  
+  if (!currentAddress) {
+    showMessage('لا يوجد عنوان لحفظه', 'error');
+    return;
+  }
+  
+  currentAddress.name = name;
+  
+  // إضافة ID إذا لم يكن موجوداً
+  if (!currentAddress.id) {
+    currentAddress.id = 'addr_' + Date.now();
+    currentAddress.createdAt = new Date().toISOString();
+    currentAddress.isDefault = addresses.length === 0;
+  }
+  
+  // التحقق من التكرار
+  const existingIndex = addresses.findIndex(addr => addr.id === currentAddress.id);
+  if (existingIndex === -1) {
+    addresses.push({ ...currentAddress });
+  } else {
+    addresses[existingIndex] = { ...currentAddress };
+  }
+  
+  localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
+  localStorage.setItem(ADDRESSES_KEY, JSON.stringify(addresses));
+  
+  updateAddressDisplay();
+  closeNameAddress();
+  
+  showMessage(`تم حفظ "${name}"`, 'success');
+}
+
+function saveAddressWithName() {
+  if (!currentAddress) {
+    showMessage('لا يوجد عنوان لحفظه', 'error');
+    return;
+  }
+  
+  openNameAddressModal();
+}
+
+// ====== نظام السلة ======
+function renderCart() {
+  const container = document.getElementById('cartItemsContainer');
+  
+  if (cart.length === 0) {
+    container.innerHTML = `
+      <div style="text-align: center; padding: 60px 20px; color: var(--netflix-light-gray);">
+        <i class="fas fa-shopping-basket" style="font-size: 64px; margin-bottom: 20px; opacity: 0.5;"></i>
+        <h3 style="color: var(--netflix-white); margin-bottom: 15px;">سلة الشراء فارغة</h3>
+        <p style="max-width: 500px; margin: 0 auto 30px; line-height: 1.6;">
+          لم تقم بإضافة أي منتجات إلى سلة الشراء بعد.
+          تصفح المتجر وأضف المنتجات التي تريدها.
+        </p>
+        <a href="index.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(45deg, var(--netflix-red), #ff416c); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease;">
+          <i class="fas fa-store"></i> تصفح المتجر
+        </a>
+      </div>
+    `;
+    updateCartStats();
+    return;
+  }
+  
+  container.innerHTML = `
+    <h3 style="color: var(--netflix-white); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+      <i class="fas fa-box-open"></i> المنتجات في سلتك (${cart.length})
+    </h3>
+    <div class="cart-items">
+      ${cart.map((item, index) => {
+        const isDigital = isDigitalProduct(item);
+        const price = parseProductPrice(item.price);
+        const total = price * (item.quantity || 1);
+        
+        return `
+          <div class="cart-item">
+            <div style="position: relative;">
+              <img src="${item.image || 'https://via.placeholder.com/300x180/222/fff?text=No+Image'}" 
+                   alt="${item.title}" 
+                   class="cart-item-image">
+              <div class="product-badge">
+                ${isDigital ? 'رقمي' : 'ورقي'}
+              </div>
+            </div>
+            <div class="cart-item-content">
+              <div class="cart-item-header">
+                <div class="cart-item-title">${item.title || 'منتج بدون عنوان'}</div>
+                <div class="cart-item-type">
+                  ${item.category || 'عام'}
+                </div>
+              </div>
+              
+              <div class="cart-item-details">
+                ${item.description ? `
+                <div class="cart-item-detail">
+                  <i class="fas fa-info-circle"></i>
+                  <span>${item.description.substring(0, 50)}${item.description.length > 50 ? '...' : ''}</span>
+                </div>
+                ` : ''}
+                
+                ${item.rating ? `
+                <div class="cart-item-detail">
+                  <i class="fas fa-star"></i>
+                  <span>${item.rating}</span>
+                </div>
+                ` : ''}
+              </div>
+              
+              <div class="quantity-control">
+                <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">
+                  <i class="fas fa-minus"></i>
+                </button>
+                <span class="quantity-display">${item.quantity || 1}</span>
+                <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">
+                  <i class="fas fa-plus"></i>
+                </button>
+              </div>
+              
+              <div class="cart-item-footer">
+                <div class="item-total-price">
+                  ${formatPrice(total)}
+                </div>
+                <div class="item-actions">
+                  <button class="btn btn-secondary" onclick="saveForLater(${index})" style="padding: 8px 15px; font-size: 0.9em;">
+                    <i class="far fa-bookmark"></i> حفظ
+                  </button>
+                  <button class="btn btn-secondary" onclick="removeFromCart(${index})" style="padding: 8px 15px; font-size: 0.9em; background: rgba(244, 67, 54, 0.2); border-color: rgba(244, 67, 54, 0.4);">
+                    <i class="fas fa-trash"></i> حذف
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+  
+  updateCartStats();
+}
+
+function updateQuantity(index, change) {
+  if (!cart[index]) return;
+  
+  const newQuantity = (cart[index].quantity || 1) + change;
+  
+  if (newQuantity < 1) {
+    showMessage('الكمية لا يمكن أن تكون أقل من 1', 'error');
+    return;
+  }
+  
+  cart[index].quantity = newQuantity;
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  renderCart();
+  
+  const itemName = cart[index].title || 'المنتج';
+  showMessage(`تم ${change > 0 ? 'زيادة' : 'تقليل'} كمية "${itemName}" إلى ${newQuantity}`, 'success');
+}
+
+function removeFromCart(index) {
+  if (!cart[index]) return;
+  
+  const itemName = cart[index].title || 'المنتج';
+  
+  if (confirm(`هل تريد حذف "${itemName}" من السلة؟`)) {
+    cart.splice(index, 1);
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    renderCart();
+    showMessage(`تم حذف "${itemName}" من السلة`, 'warning');
+  }
+}
+
+function saveForLater(index) {
+  const item = cart[index];
+  let savedItems = JSON.parse(localStorage.getItem('savedItems') || '[]');
+  
+  if (savedItems.find(saved => saved.id === item.id)) {
+    showMessage('هذا المنتج محفوظ بالفعل', 'warning');
+    return;
+  }
+  
+  savedItems.push(item);
+  localStorage.setItem('savedItems', JSON.stringify(savedItems));
+  
+  cart.splice(index, 1);
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  
+  renderCart();
+  showMessage(`تم حفظ "${item.title}" للمستقبل`, 'success');
 }
 
 function updateCartStats() {
@@ -1450,221 +2692,38 @@ function updateCartStats() {
     discountAmount = subtotal * (currentDiscount.percentage / 100);
   }
   
-  const finalTotal = subtotal - discountAmount;
+  // حساب رسوم الشحن للمنتجات الورقية
+  const hasPhysicalProducts = cart.some(item => !isDigitalProduct(item));
+  const shippingFee = hasPhysicalProducts ? 15.00 : 0.00; // 15 ريال للمنتجات الورقية
   
+  const finalTotal = subtotal - discountAmount + shippingFee;
+  
+  // تحديث الإحصائيات
   totalItemsEl.textContent = totalItems;
   totalQuantityEl.textContent = totalQuantity;
   totalAmountStatsEl.textContent = formatPrice(subtotal);
   savingsEl.textContent = formatPrice(discountAmount);
-  itemsCountEl.textContent = `${totalQuantity} منتج`;
-  
-  return { totalItems, totalQuantity, subtotal, discountAmount, finalTotal };
-}
-
-function updateTotal() {
-  const stats = updateCartStats();
   
   // تحديث الفاتورة
-  document.getElementById('subtotal').textContent = formatPrice(stats.subtotal);
-  document.getElementById('discountAmount').textContent = formatPrice(stats.discountAmount);
-  document.getElementById('finalTotal').textContent = formatPrice(stats.finalTotal);
+  subtotalEl.textContent = formatPrice(subtotal);
+  discountAmountEl.textContent = formatPrice(discountAmount);
+  shippingFeeEl.textContent = formatPrice(shippingFee);
+  finalTotalEl.textContent = formatPrice(finalTotal);
   
-  // إظهار/إخفاء قسم الفاتورة
-  invoiceSummary.style.display = cart.length > 0 ? 'block' : 'none';
+  // تحديث الفوتر
+  totalAmountEl.textContent = formatPrice(finalTotal);
+  itemsCountEl.textContent = `${totalQuantity} منتج في السلة`;
   
-  // تحديث المجموع النهائي في الفوتر
-  totalAmountEl.innerHTML = `<span>${formatPrice(stats.finalTotal)}</span>`;
+  // تحديث الرصيد
+  globalBalanceEl.textContent = balance.toFixed(2);
   
-  // التحقق من الرصيد الكلي
-  const hasEnoughBalance = balance >= stats.finalTotal;
-  balanceWarning.style.display = hasEnoughBalance ? 'none' : 'block';
+  checkRequirements();
   
-  payBtn.disabled = (cart.length === 0 || !hasEnoughBalance);
-  
-  // تحديث سمة title لزر الدفع
-  if (cart.length === 0) {
-    payBtn.title = "السلة فارغة";
-  } else if (!hasEnoughBalance) {
-    payBtn.title = `رصيدك غير كافٍ (المطلوب: ${formatPrice(stats.finalTotal)})`;
-  } else {
-    payBtn.title = "إتمام عملية الدفع";
-  }
+  return { subtotal, discountAmount, shippingFee, finalTotal, hasPhysicalProducts };
 }
 
-function renderCart() {
-  cartList.innerHTML = '';
-  
-  if (cart.length === 0) {
-    cartList.innerHTML = `
-      <div class="empty-cart">
-        <i class="fas fa-shopping-cart"></i>
-        <h3>سلة الشراء فارغة</h3>
-        <p>لم تقم بإضافة أي منتجات إلى سلة الشراء بعد. تصفح المتجر وأضف المنتجات التي تريدها.</p>
-        <a href="index.html" class="browse-btn"><i class="fas fa-store"></i> تصفح المتجر</a>
-      </div>`;
-    updateTotal();
-    return;
-  }
-  
-  cart.forEach((item, idx) => {
-    const itemPrice = parseProductPrice(item.price);
-    const itemTotal = itemPrice * (item.quantity || 1);
-    const isDigital = isDigitalProduct(item);
-    
-    const div = document.createElement('div');
-    div.className = 'item';
-    div.innerHTML = `
-      <img src="${item.image || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzIyMjIyMiIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5ubyBpbWFnZTwvdGV4dD48L3N2Zz4='}" alt="${item.title}" loading="lazy">
-      <div class="item-content">
-        <div class="item-info">
-          <div class="title">${item.title || 'منتج بدون عنوان'}</div>
-          
-          <div class="item-details">
-            <span class="detail-badge">
-              <i class="fas fa-box"></i>
-              ${isDigital ? 'رقمي' : 'ورقي'}
-            </span>
-            <span class="detail-badge">
-              <i class="fas fa-tag"></i>
-              ${item.category || 'عام'}
-            </span>
-            ${item.rating ? `
-            <span class="detail-badge">
-              <i class="fas fa-star"></i>
-              ${item.rating}
-            </span>` : ''}
-          </div>
-          
-          <div class="price-section">
-            <div class="quantity-controls">
-              <button class="decrease-btn" data-index="${idx}" title="تقليل الكمية">
-                <i class="fas fa-minus"></i>
-              </button>
-              <span class="quantity">${item.quantity || 1}</span>
-              <button class="increase-btn" data-index="${idx}" title="زيادة الكمية">
-                <i class="fas fa-plus"></i>
-              </button>
-            </div>
-            
-            <div>
-              <div class="item-price">
-                <i class="fas fa-tag"></i> 
-                ${formatPrice(itemPrice)}
-              </div>
-              <div class="total-price">
-                الإجمالي: ${formatPrice(itemTotal)}
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="item-actions">
-          <button class="save-btn" data-index="${idx}" title="حفظ للمستقبل">
-            <i class="far fa-bookmark"></i> 
-            حفظ
-          </button>
-          <button class="delete-btn" data-index="${idx}" title="حذف المنتج">
-            <i class="fas fa-trash"></i> 
-            إزالة
-          </button>
-        </div>
-      </div>
-    `;
-    cartList.appendChild(div);
-  });
-  
-  updateTotal();
-}
-
-// ====== أحداث التحكم بالكمية ======
-cartList.addEventListener('click', e => {
-  const btn = e.target.closest('button');
-  if (!btn) return;
-  
-  const idx = parseInt(btn.dataset.index);
-  if (isNaN(idx)) return;
-  
-  const item = cart[idx];
-  if (!item) return;
-  
-  if (btn.classList.contains('decrease-btn')) {
-    if (item.quantity > 1) {
-      item.quantity--;
-      localStorage.setItem(CART_KEY, JSON.stringify(cart));
-      renderCart();
-      showMessage(`تم تقليل كمية "${item.title}" إلى ${item.quantity}`, 'warning');
-    } else {
-      showMessage('الكمية لا يمكن أن تكون أقل من 1', 'error');
-    }
-  } 
-  else if (btn.classList.contains('increase-btn')) {
-    item.quantity++;
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
-    renderCart();
-    showMessage(`تم زيادة كمية "${item.title}" إلى ${item.quantity}`, 'success');
-  }
-  else if (btn.classList.contains('delete-btn')) {
-    const removedItem = cart[idx];
-    cart.splice(idx, 1);
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
-    renderCart();
-    showMessage(`تم حذف "${removedItem.title}" من السلة`, 'warning');
-  }
-  else if (btn.classList.contains('save-btn')) {
-    saveForLater(idx);
-  }
-});
-
-// ====== حفظ المنتج للمستقبل ======
-function saveForLater(index) {
-  const item = cart[index];
-  let savedItems = JSON.parse(localStorage.getItem('savedItems') || '[]');
-  
-  // التحقق إذا كان المنتج محفوظاً مسبقاً
-  const existingIndex = savedItems.findIndex(saved => saved.id === item.id);
-  
-  if (existingIndex === -1) {
-    savedItems.push(item);
-    localStorage.setItem('savedItems', JSON.stringify(savedItems));
-    
-    // إزالة المنتج من السلة
-    cart.splice(index, 1);
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
-    
-    renderCart();
-    showMessage(`تم حفظ "${item.title}" للمستقبل`, 'success');
-  } else {
-    showMessage('هذا المنتج محفوظ بالفعل', 'warning');
-  }
-}
-
-// ====== تفريغ السلة ======
-function clearCart() {
-  if (cart.length === 0) {
-    showMessage('السلة فارغة بالفعل', 'warning');
-    return;
-  }
-  
-  if (confirm('هل أنت متأكد من تفريغ سلة الشراء بالكامل؟')) {
-    cart = [];
-    currentDiscount = null;
-    discountCode = '';
-    if (discountCodeInput) discountCodeInput.value = '';
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
-    renderCart();
-    showMessage('تم تفريغ سلة الشراء', 'warning');
-  }
-}
-
-// ====== العودة للتسوق ======
-function goBack() {
-  window.location.href = 'index.html';
-}
-
-// ====== تطبيق خصم ======
-async function applyDiscount() {
-  if (!discountCodeInput) return;
-  
+// ====== الخصومات ======
+function applyDiscount() {
   const code = discountCodeInput.value.trim().toUpperCase();
   
   if (!code) {
@@ -1677,233 +2736,260 @@ async function applyDiscount() {
     return;
   }
   
-  showMessage('جاري التحقق من كود الخصم...', 'warning', 2000);
+  showMessage('جاري التحقق من كود الخصم...', 'info', 2000);
   
-  try {
-    // خصومات محلية
-    const localDiscounts = {
-      'SAVE10': { percentage: 10, min_purchase: 0 },
-      'SAVE20': { percentage: 20, min_purchase: 50 },
-      'WELCOME15': { percentage: 15, min_purchase: 0 },
-      'NEW25': { percentage: 25, min_purchase: 100 }
-    };
-    
-    if (localDiscounts[code]) {
-      const discount = localDiscounts[code];
-      const stats = updateCartStats();
-      
-      if (stats.subtotal < discount.min_purchase) {
-        showMessage(`الحد الأدنى للشراء لتطبيق هذا الخصم هو ${formatPrice(discount.min_purchase)}`, 'error');
-        return;
-      }
-      
-      currentDiscount = {
-        code: code,
-        percentage: discount.percentage,
-        min_purchase: discount.min_purchase
-      };
-      discountCode = code;
-      
-      updateTotal();
-      
-      const updatedStats = updateCartStats();
-      
-      // تحديث نافذة الخصم
-      if (document.getElementById('discountCodeDisplay')) {
-        document.getElementById('discountCodeDisplay').textContent = code;
-        document.getElementById('discountPercentage').textContent = `${discount.percentage}%`;
-        document.getElementById('discountValueDisplay').textContent = formatPrice(updatedStats.discountAmount);
-        document.getElementById('totalAfterDiscount').textContent = formatPrice(updatedStats.finalTotal);
-        
-        discountModal.style.display = 'flex';
-      }
-      
-      showMessage(`تم تطبيق خصم ${discount.percentage}% بنجاح!`, 'success');
-    } else {
-      showMessage('كود الخصم غير صالح', 'error');
+  // تحميل الخصومات من التخزين المحلي
+  const allDiscounts = JSON.parse(localStorage.getItem('admin_discounts') || '[]');
+  const userDiscounts = JSON.parse(localStorage.getItem('user_discounts') || '[]');
+  
+  // البحث عن الخصم في قائمة المسؤول
+  const adminDiscount = allDiscounts.find(d => d.code === code && d.isActive);
+  
+  // البحث عن الخصم في قائمة المستخدم
+  const userDiscount = userDiscounts.find(d => d.code === code && d.isActive);
+  
+  let discount = adminDiscount || userDiscount;
+  
+  if (discount) {
+    // التحقق من تاريخ الانتهاء
+    if (discount.expiryDate && new Date(discount.expiryDate) < new Date()) {
+      showMessage('كود الخصم منتهي الصلاحية', 'error');
+      return;
     }
     
-  } catch (error) {
-    console.error('Error applying discount:', error);
-    showMessage('حدث خطأ أثناء تطبيق الخصم', 'error');
+    // التحقق من الحد الأدنى للشراء
+    const stats = updateCartStats();
+    if (stats.subtotal < discount.minPurchase) {
+      showMessage(`الحد الأدنى للشراء لتطبيق هذا الخصم هو ${formatPrice(discount.minPurchase)}`, 'error');
+      return;
+    }
+    
+    // التحقق من عدد مرات الاستخدام
+    if (discount.maxUses && discount.usedCount >= discount.maxUses) {
+      showMessage('تم استخدام كود الخصم لأقصى عدد من المرات', 'error');
+      return;
+    }
+    
+    // التحقق من المستخدمين المحددين
+    if (discount.targetUsers && discount.targetUsers.length > 0) {
+      if (!discount.targetUsers.includes(loggedInUser)) {
+        showMessage('كود الخصم غير متاح لحسابك', 'error');
+        return;
+      }
+    }
+    
+    // تطبيق الخصم
+    currentDiscount = {
+      code: discount.code,
+      percentage: discount.percentage,
+      amount: discount.amount,
+      type: discount.type,
+      minPurchase: discount.minPurchase
+    };
+    
+    discountCode = code;
+    
+    // تحديث عدد مرات الاستخدام
+    if (discount.maxUses) {
+      discount.usedCount = (discount.usedCount || 0) + 1;
+      
+      if (adminDiscount) {
+        localStorage.setItem('admin_discounts', JSON.stringify(allDiscounts));
+      } else {
+        localStorage.setItem('user_discounts', JSON.stringify(userDiscounts));
+      }
+    }
+    
+    updateCartStats();
+    
+    showMessage(`تم تطبيق خصم ${discount.percentage}% بنجاح!`, 'success');
+    
+  } else {
+    showMessage('كود الخصم غير صالح', 'error');
   }
+}
+
+function openDiscountsPage() {
+  window.location.href = 'discounts.html';
 }
 
 // ====== عملية الدفع ======
 payBtn.addEventListener('click', () => {
-  if (cart.length === 0) {
-    showMessage('السلة فارغة! أضف منتجات أولاً', 'error', 3000);
-    return;
-  }
-  
   const stats = updateCartStats();
   
-  if (balance < stats.finalTotal) {
-    showMessage(`رصيدك غير كافٍ! المطلوب: ${formatPrice(stats.finalTotal)}`, 'error', 3000);
+  if (cart.length === 0) {
+    showMessage('السلة فارغة! أضف منتجات أولاً', 'error');
     return;
   }
-
-  // التحقق من وجود بطاقات
+  
+  if (balance < stats.finalTotal) {
+    showMessage(`رصيدك غير كافٍ! المطلوب: ${formatPrice(stats.finalTotal)}`, 'error');
+    return;
+  }
+  
+  if (stats.hasPhysicalProducts && !currentAddress) {
+    showMessage('يرجى تحديد عنوان التوصيل للمنتجات الورقية', 'error');
+    return;
+  }
+  
+  // التحقق من البطاقات
   if (cards.length === 0) {
-    // إذا لم يكن هناك بطاقات، اطلب من المستخدم إضافة بطاقة أولاً
-    if (confirm('لا توجد بطاقات في محفظتك. هل تريد الذهاب إلى صفحة المحفظة لإضافة بطاقة أولاً؟')) {
+    if (confirm('لا توجد بطاقات في محفظتك. هل تريد إضافة بطاقة أولاً؟')) {
       window.location.href = 'cards.html';
       return;
     }
+    return;
   }
-
-  // عرض خيارات الدفع
-  showPaymentOptions();
+  
+  // عرض نافذة اختيار البطاقة
+  showCardSelection();
 });
 
-function showPaymentOptions() {
-  if (!cardsContainer) return;
-  
+function showCardSelection() {
+  const container = document.getElementById('cardsContainer');
   const stats = updateCartStats();
-  const total = stats.finalTotal;
-  
-  cardsContainer.innerHTML = '';
   
   if (cards.length === 0) {
-    cardsContainer.innerHTML = `
-      <div style="text-align: center; padding: 20px; color: var(--netflix-light-gray);">
+    container.innerHTML = `
+      <div style="text-align: center; padding: 30px 20px; color: var(--netflix-light-gray);">
         <i class="fas fa-credit-card" style="font-size: 48px; margin-bottom: 15px;"></i>
-        <p>لا توجد بطاقات في محفظتك</p>
-        <p style="margin: 10px 0; color: #ff6b6b;">
+        <p style="margin-bottom: 15px;">لا توجد بطاقات في محفظتك</p>
+        <p style="margin: 15px 0; color: var(--netflix-red); font-weight: 600;">
           <i class="fas fa-exclamation-triangle"></i>
-          إجمالي المطلوب: ${formatPrice(total)}
+          إجمالي المطلوب: ${formatPrice(stats.finalTotal)}
         </p>
-        <button onclick="window.location.href='cards.html'" style="padding: 10px 20px; background: var(--netflix-red); color: white; border: none; border-radius: 20px; margin-top: 10px; cursor: pointer;">
-          <i class="fas fa-plus"></i> إضافة بطاقة
-        </button>
       </div>
     `;
   } else {
-    // عرض معلومات الدفع أولاً
-    cardsContainer.innerHTML = `
+    container.innerHTML = `
       <div style="background: rgba(229, 9, 20, 0.1); border: 1px solid rgba(229, 9, 20, 0.3); border-radius: 10px; padding: 15px; margin-bottom: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-          <span style="font-weight: bold; color: white;">إجمالي المبلغ:</span>
-          <span style="font-weight: bold; color: var(--netflix-red); font-size: 1.2em;">${formatPrice(total)}</span>
+          <span style="font-weight: 600; color: white;">إجمالي المبلغ:</span>
+          <span style="font-weight: 700; color: var(--netflix-red); font-size: 1.3em;">${formatPrice(stats.finalTotal)}</span>
         </div>
         <div style="color: var(--netflix-light-gray); font-size: 0.9em;">
           <i class="fas fa-info-circle"></i>
           اختر بطاقة للدفع من القائمة أدناه
         </div>
       </div>
+      ${cards.map((card, index) => {
+        const hasEnoughBalance = card.balance >= stats.finalTotal;
+        return `
+          <div class="card-option" onclick="${hasEnoughBalance ? `selectCard(${index})` : ''}" 
+               style="background: rgba(255,255,255,0.05); border-radius: 10px; padding: 15px; margin-bottom: 10px; cursor: ${hasEnoughBalance ? 'pointer' : 'not-allowed'}; opacity: ${hasEnoughBalance ? '1' : '0.7'}; border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s ease;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-credit-card" style="color: var(--netflix-red);"></i>
+                <strong style="color: var(--netflix-white);">${card.name || 'بطاقة'}</strong>
+                ${card.isPrimary ? '<span style="background: var(--netflix-red); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">رئيسية</span>' : ''}
+              </div>
+              <div style="color: ${hasEnoughBalance ? 'var(--success-green)' : 'var(--error-red)'};">
+                ${hasEnoughBalance ? '🟢' : '🔴'}
+              </div>
+            </div>
+            <div style="color: var(--netflix-light-gray); font-size: 0.9em; margin-bottom: 8px;">
+              ${card.number || '**** **** **** ****'}
+            </div>
+            <div style="color: var(--netflix-light-gray); font-size: 0.9em; margin-bottom: 8px;">
+              انتهاء الصلاحية: ${card.expiry || 'MM/YY'}
+            </div>
+            <div style="color: var(--netflix-light-gray); font-size: 0.9em;">
+              الرصيد: <strong style="color: var(--netflix-white);">${formatPrice(card.balance)}</strong>
+            </div>
+            ${!hasEnoughBalance ? `
+            <div style="color: var(--error-red); font-size: 0.85em; margin-top: 10px; padding: 8px; background: rgba(244, 67, 54, 0.1); border-radius: 5px;">
+              <i class="fas fa-exclamation-triangle"></i>
+              رصيد غير كافٍ (المطلوب: ${formatPrice(stats.finalTotal)})
+            </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('')}
     `;
-    
-    cards.forEach((card, index) => {
-      const cardDiv = document.createElement('div');
-      cardDiv.className = 'card-option';
-      
-      // التحقق إذا كان رصيد البطاقة كافٍ
-      const hasEnoughBalance = card.balance >= total;
-      const balanceStatus = hasEnoughBalance ? '🟢' : '🔴';
-      
-      cardDiv.innerHTML = `
-        <div>
-          <i class="fas fa-credit-card"></i> 
-          ${card.name || 'بطاقة'}
-          ${card.isPrimary ? '<span style="background: var(--netflix-red); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7em; margin-right: 10px;">رئيسية</span>' : ''}
-        </div>
-        <div>${card.number || '**** **** **** ****'}</div>
-        <div>انتهاء الصلاحية: ${card.expiry || 'MM/YY'}</div>
-        <div>
-          <span>رصيد البطاقة: ${formatPrice(card.balance)}</span>
-          <span style="margin-right: 15px;">${balanceStatus}</span>
-        </div>
-        ${!hasEnoughBalance ? `
-        <div style="color: #ff6b6b; font-size: 0.9em; margin-top: 8px;">
-          <i class="fas fa-exclamation-triangle"></i>
-          رصيد غير كافٍ (المطلوب: ${formatPrice(total)})
-        </div>
-        ` : ''}
-      `;
-      
-      // تمكين/تعطيل البطاقة بناءً على الرصيد
-      if (hasEnoughBalance) {
-        cardDiv.addEventListener('click', () => {
-          // طلب تأكيد البطاقة
-          if (confirm(`هل تريد الدفع باستخدام البطاقة ${card.number}؟\nالمبلغ: ${formatPrice(total)}`)) {
-            cardModal.style.display = 'none';
-            policyModal.style.display = 'flex';
-            confirmPolicy.onclick = () => {
-              policyModal.style.display = 'none';
-              processPaymentWithCard(card, index);
-            };
-          }
-        });
-      } else {
-        cardDiv.style.opacity = '0.7';
-        cardDiv.style.cursor = 'not-allowed';
-        cardDiv.title = 'رصيد البطاقة غير كافٍ';
-      }
-      
-      cardsContainer.appendChild(cardDiv);
-    });
   }
   
-  cardModal.style.display = 'flex';
+  document.getElementById('cardModal').style.display = 'flex';
 }
 
-function processPaymentWithCard(selectedCard, cardIndex) {
+function selectCard(cardIndex) {
+  const selectedCard = cards[cardIndex];
   const stats = updateCartStats();
-  const total = stats.finalTotal;
   
-  // التحقق من رصيد البطاقة المحددة
-  if (selectedCard.balance < total) {
-    showMessage(`رصيد البطاقة غير كافٍ! المطلوب: ${formatPrice(total)}`, 'error', 3000);
+  if (selectedCard.balance < stats.finalTotal) {
+    showMessage('رصيد البطاقة غير كافٍ', 'error');
     return;
   }
   
-  // خصم المبلغ من البطاقة المحددة
-  cards[cardIndex].balance -= total;
+  closeCardModal();
+  document.getElementById('policyModal').style.display = 'flex';
+  
+  // تخزين معلومات الدفع
+  window.selectedCardIndex = cardIndex;
+}
+
+function closeCardModal() {
+  document.getElementById('cardModal').style.display = 'none';
+}
+
+function closePolicyModal() {
+  document.getElementById('policyModal').style.display = 'none';
+}
+
+function confirmPurchase() {
+  const cardIndex = window.selectedCardIndex;
+  if (cardIndex === undefined) {
+    showMessage('لم يتم اختيار بطاقة', 'error');
+    return;
+  }
+  
+  const selectedCard = cards[cardIndex];
+  const stats = updateCartStats();
+  
+  if (selectedCard.balance < stats.finalTotal) {
+    showMessage('رصيد البطاقة غير كافٍ', 'error');
+    return;
+  }
+  
+  // خصم المبلغ من البطاقة
+  selectedCard.balance -= stats.finalTotal;
+  cards[cardIndex] = selectedCard;
   localStorage.setItem(CARDS_KEY, JSON.stringify(cards));
   
   // تحديث الرصيد الكلي
-  const newTotalBalance = cards.reduce((sum, card) => sum + card.balance, 0);
-  balance = newTotalBalance;
+  balance = cards.reduce((sum, card) => sum + card.balance, 0);
   localStorage.setItem(BALANCE_KEY, balance.toFixed(2));
-  globalBalanceEl.textContent = balance.toFixed(2);
   
-  // تقسيم المنتجات إلى رقمية وورقية
+  // معالجة المنتجات
   const digitalProducts = [];
   const physicalProducts = [];
   const today = new Date().toLocaleString('ar-SA');
-  const transactionId = 'TXN' + Date.now() + Math.floor(Math.random() * 1000);
+  const transactionId = 'TXN' + Date.now();
   
   cart.forEach(item => {
     const isDigital = isDigitalProduct(item);
-    const itemPrice = parseProductPrice(item.price);
+    const price = parseProductPrice(item.price);
     
     for (let i = 0; i < (item.quantity || 1); i++) {
       const productData = {
         id: item.id,
         title: item.title,
-        price: itemPrice,
+        price: price,
         image: item.image,
         category: item.category,
         type: item.type,
         format: item.format,
-        rating: item.rating,
-        description: item.description,
-        quantity: 1,
         purchaseDate: today,
         transactionId: transactionId,
-        purchaseMethod: `بطاقة ${selectedCard.number || '****'}`,
+        paymentMethod: `بطاقة ${selectedCard.number || '****'}`,
         discountApplied: currentDiscount ? `${currentDiscount.percentage}%` : 'لا يوجد',
-        finalPrice: itemPrice,
-        deliveryStatus: isDigital ? 'تم التوصيل رقمياً' : 'قيد التجهيز',
-        cardUsed: selectedCard.number
+        finalPrice: price
       };
       
       if (isDigital) {
-        productData.activated = true;
         productData.downloadLink = `download/${item.id}.zip`;
         digitalProducts.push(productData);
       } else {
-        productData.shippingAddress = user.shippingAddress || 'لم يتم تحديد عنوان';
+        productData.shippingAddress = currentAddress;
         productData.trackingNumber = generateTrackingNumber();
         productData.estimatedDelivery = getEstimatedDeliveryDate();
         physicalProducts.push(productData);
@@ -1911,22 +2997,22 @@ function processPaymentWithCard(selectedCard, cardIndex) {
     }
   });
   
-  // إضافة المنتجات الرقمية إلى المكتبة
+  // حفظ المنتجات الرقمية في المكتبة
   if (digitalProducts.length > 0) {
     library = [...library, ...digitalProducts];
     localStorage.setItem(LIBRARY_KEY, JSON.stringify(library));
   }
   
-  // إضافة المنتجات الورقية إلى الطلبات
+  // حفظ المنتجات الورقية في الطلبات
   if (physicalProducts.length > 0) {
     const order = {
       orderId: transactionId,
       orderDate: today,
-      totalAmount: total,
+      totalAmount: stats.finalTotal,
       products: physicalProducts,
+      shippingAddress: currentAddress,
       paymentMethod: `بطاقة ${selectedCard.number || '****'}`,
       status: 'قيد التجهيز',
-      shippingAddress: user.shippingAddress || 'لم يتم تحديد عنوان',
       trackingNumber: generateTrackingNumber()
     };
     
@@ -1934,229 +3020,160 @@ function processPaymentWithCard(selectedCard, cardIndex) {
     localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
   }
   
-  // تفريغ السلة وإعادة تعيين الخصم
+  // إعادة تعيين السلة
   cart = [];
   currentDiscount = null;
   discountCode = '';
-  if (discountCodeInput) discountCodeInput.value = '';
+  discountCodeInput.value = '';
   localStorage.setItem(CART_KEY, JSON.stringify(cart));
   
   // تحديث الواجهة
   renderCart();
+  updateAddressDisplay();
   
-  // عرض رسالة النجاح مع تفاصيل
-  let successMessage = `تم الدفع بنجاح! المبلغ: ${formatPrice(total)}<br>`;
+  // رسالة النجاح
+  let successMessage = `تم الدفع بنجاح! المبلغ: ${formatPrice(stats.finalTotal)}<br>`;
   successMessage += `بطاقة الدفع: ${selectedCard.number}<br>`;
-  successMessage += `رصيد البطاقة الجديد: ${formatPrice(cards[cardIndex].balance)}<br>`;
   
   if (digitalProducts.length > 0 && physicalProducts.length > 0) {
     successMessage += `تمت إضافة ${digitalProducts.length} منتج رقمي إلى المكتبة<br>`;
-    successMessage += `وتم إنشاء طلب لـ ${physicalProducts.length} منتج ورقي<br>`;
-    successMessage += 'سيتم توجيهك إلى المكتبة...';
+    successMessage += `وتم إنشاء طلب لـ ${physicalProducts.length} منتج ورقي`;
+    
+    showMessage(successMessage, 'success', 5000);
+    
+    setTimeout(() => {
+      window.location.href = "library.html";
+    }, 3000);
+    
+  } else if (digitalProducts.length > 0) {
+    successMessage += `تمت إضافة ${digitalProducts.length} منتج رقمي إلى المكتبة`;
     
     showMessage(successMessage, 'success', 4000);
     
-    // الانتقال إلى المكتبة بعد 4 ثواني
     setTimeout(() => {
       window.location.href = "library.html";
-    }, 4000);
-    
-  } else if (digitalProducts.length > 0) {
-    successMessage += `تمت إضافة ${digitalProducts.length} منتج رقمي إلى المكتبة<br>`;
-    successMessage += 'سيتم توجيهك إلى المكتبة...';
-    
-    showMessage(successMessage, 'success', 3500);
-    
-    setTimeout(() => {
-      window.location.href = "library.html";
-    }, 3500);
+    }, 2500);
     
   } else if (physicalProducts.length > 0) {
-    successMessage += `تم إنشاء طلب لـ ${physicalProducts.length} منتج ورقي<br>`;
-    successMessage += 'سيتم توجيهك إلى صفحة الطلبات...';
+    successMessage += `تم إنشاء طلب لـ ${physicalProducts.length} منتج ورقي`;
     
-    showMessage(successMessage, 'success', 3500);
+    showMessage(successMessage, 'success', 4000);
     
     setTimeout(() => {
       window.location.href = "Orders.html";
-    }, 3500);
+    }, 2500);
   }
+  
+  closePolicyModal();
 }
 
-// ====== دالة لإنشاء رقم تتبع ======
 function generateTrackingNumber() {
-  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const numbers = '0123456789';
-  let tracking = 'TRK';
-  
-  for (let i = 0; i < 4; i++) {
-    tracking += letters.charAt(Math.floor(Math.random() * letters.length));
-  }
-  
-  for (let i = 0; i < 6; i++) {
-    tracking += numbers.charAt(Math.floor(Math.random() * numbers.length));
-  }
-  
-  return tracking;
+  return 'TRK' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substr(2, 4).toUpperCase();
 }
 
-// ====== دالة لحساب تاريخ التوصيل المتوقع ======
 function getEstimatedDeliveryDate() {
-  const today = new Date();
-  const deliveryDate = new Date(today);
-  deliveryDate.setDate(today.getDate() + 7); // 7 أيام من الآن
-  
-  return deliveryDate.toLocaleDateString('ar-SA', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  const date = new Date();
+  date.setDate(date.getDate() + 7);
+  return date.toLocaleDateString('ar-SA');
 }
 
-// ====== أحداث الخصم ======
-if (applyDiscountBtn) {
-  applyDiscountBtn.addEventListener('click', applyDiscount);
-}
-
-if (discountCodeInput) {
-  discountCodeInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      applyDiscount();
-    }
-  });
-}
-
-if (closeDiscountModal) {
-  closeDiscountModal.addEventListener('click', () => {
-    discountModal.style.display = 'none';
-  });
-}
-
-// ====== تحميل السلة المحفوظة ======
-function loadSavedItems() {
-  const savedItems = JSON.parse(localStorage.getItem('savedItems') || '[]');
-  if (savedItems.length > 0) {
-    if (confirm(`لديك ${savedItems.length} منتجات محفوظة. هل تريد إضافتها للسلة؟`)) {
-      savedItems.forEach(item => {
-        const existingIndex = cart.findIndex(cartItem => cartItem.id === item.id);
-        if (existingIndex === -1) {
-          cart.push({ ...item, quantity: 1 });
-        }
-      });
-      localStorage.setItem(CART_KEY, JSON.stringify(cart));
-      localStorage.removeItem('savedItems');
-      renderCart();
-      showMessage('تم إضافة المنتجات المحفوظة إلى السلة', 'success');
-    }
-  }
-}
-
-// ====== تهيئة الصفحة ======
+// ====== التهيئة ======
 function initializePage() {
-  // التحقق من وجود المستخدم
-  if (!loggedInUser) {
-    return;
-  }
+  if (!loggedInUser) return;
   
-  // التحقق من السلة المحفوظة
-  loadSavedItems();
+  // تحديث الرصيد
+  globalBalanceEl.textContent = balance.toFixed(2);
   
   // عرض السلة
   renderCart();
   
-  // تحديث الرصيد بانتظام
-  setInterval(() => {
-    const newBalance = parseFloat(localStorage.getItem(BALANCE_KEY)) || 0;
-    if (newBalance !== balance) {
-      balance = newBalance;
-      globalBalanceEl.textContent = balance.toFixed(2);
-      updateTotal();
-    }
-  }, 1000);
+  // عرض العنوان الحالي
+  updateAddressDisplay();
+  
+  // تحميل العناوين
+  addresses = JSON.parse(localStorage.getItem(ADDRESSES_KEY)) || [];
   
   // استماع لتغييرات التخزين
   window.addEventListener('storage', (e) => {
     if (e.key === CART_KEY) {
-      const newCart = JSON.parse(e.newValue || "[]");
-      if (JSON.stringify(newCart) !== JSON.stringify(cart)) {
-        cart = newCart;
-        renderCart();
-      }
+      cart = JSON.parse(e.newValue || '[]');
+      renderCart();
     }
     if (e.key === BALANCE_KEY) {
-      const newBalance = parseFloat(e.newValue || 0);
-      if (newBalance !== balance) {
-        balance = newBalance;
-        globalBalanceEl.textContent = balance.toFixed(2);
-        updateTotal();
-      }
+      balance = parseFloat(e.newValue || 0);
+      globalBalanceEl.textContent = balance.toFixed(2);
+      updateCartStats();
+    }
+    if (e.key === ADDRESSES_KEY) {
+      addresses = JSON.parse(e.newValue || '[]');
     }
   });
   
-  // إضافة اختصارات لوحة المفاتيح
+  // اختصارات لوحة المفاتيح
   document.addEventListener('keydown', (e) => {
-    // Esc لإغلاق النوافذ
     if (e.key === 'Escape') {
-      if (cardModal.style.display === 'flex') {
-        cardModal.style.display = 'none';
-      }
-      if (policyModal.style.display === 'flex') {
-        policyModal.style.display = 'none';
-      }
-      if (discountModal.style.display === 'flex') {
-        discountModal.style.display = 'none';
-      }
-    }
-    // Ctrl+Backspace لتفريغ السلة
-    if (e.ctrlKey && e.key === 'Backspace') {
-      e.preventDefault();
-      clearCart();
-    }
-  });
-}
-
-// ====== جعل الدوال متاحة عالمياً ======
-window.goBack = goBack;
-window.clearCart = clearCart;
-window.applyDiscount = applyDiscount;
-
-// تشغيل تهيئة الصفحة عند تحميل DOM
-document.addEventListener('DOMContentLoaded', initializePage);
-
-// تهيئة إضافية عند تحميل الصفحة
-window.addEventListener('load', () => {
-  // تحديث الرصيد فور التحميل
-  balance = parseFloat(localStorage.getItem(BALANCE_KEY)) || 0;
-  globalBalanceEl.textContent = balance.toFixed(2);
-  
-  // تحديث السلة من التخزين
-  cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-  renderCart();
-  
-  // إضافة حدث للنقر خارج النوافذ المنبثقة
-  const modals = [cardModal, policyModal, discountModal];
-  modals.forEach(modal => {
-    if (modal) {
-      modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
+      const modals = document.querySelectorAll('.modal');
+      modals.forEach(modal => {
+        if (modal.style.display === 'flex') {
           modal.style.display = 'none';
         }
       });
     }
+    if (e.ctrlKey && e.key === 'Enter' && !payBtn.disabled) {
+      payBtn.click();
+    }
   });
+}
+
+// جعل الدوال متاحة عالمياً
+window.updateQuantity = updateQuantity;
+window.removeFromCart = removeFromCart;
+window.saveForLater = saveForLater;
+window.getCurrentLocation = getCurrentLocation;
+window.openSmartMap = openSmartMap;
+window.closeSmartMap = closeSmartMap;
+window.searchLocation = searchLocation;
+window.useSmartMapLocation = useSmartMapLocation;
+window.saveSmartAddress = saveSmartAddress;
+window.openSavedAddresses = openSavedAddresses;
+window.closeSavedAddressesModal = closeSavedAddressesModal;
+window.selectAddress = selectAddress;
+window.setDefaultAddress = setDefaultAddress;
+window.deleteAddress = deleteAddress;
+window.openManualAddress = openManualAddress;
+window.closeManualAddress = closeManualAddress;
+window.saveManualAddress = saveManualAddress;
+window.editCurrentAddress = editCurrentAddress;
+window.saveAddressWithName = saveAddressWithName;
+window.openNameAddressModal = openNameAddressModal;
+window.closeNameAddress = closeNameAddress;
+window.confirmSaveAddress = confirmSaveAddress;
+window.applyDiscount = applyDiscount;
+window.openDiscountsPage = openDiscountsPage;
+window.selectCard = selectCard;
+window.closeCardModal = closeCardModal;
+window.closePolicyModal = closePolicyModal;
+window.confirmPurchase = confirmPurchase;
+
+// تشغيل التهيئة عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', initializePage);
+
+// تحديث عند العودة للصفحة
+window.addEventListener('pageshow', () => {
+  cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+  currentAddress = JSON.parse(localStorage.getItem(CURRENT_ADDRESS_KEY)) || null;
+  addresses = JSON.parse(localStorage.getItem(ADDRESSES_KEY)) || [];
+  balance = parseFloat(localStorage.getItem(BALANCE_KEY)) || 0;
+  
+  renderCart();
+  updateAddressDisplay();
+  globalBalanceEl.textContent = balance.toFixed(2);
 });
 
-// حفظ السلة عند الخروج
+// حفظ البيانات عند الخروج
 window.addEventListener('beforeunload', () => {
   localStorage.setItem(CART_KEY, JSON.stringify(cart));
 });
-
-// تحديث سريع عند العودة للصفحة
-window.addEventListener('pageshow', () => {
-  cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-  renderCart();
-});
 </script>
-
 </body>
 </html>

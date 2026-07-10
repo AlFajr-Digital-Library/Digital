@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>الدعم الفني | مكتبة الفجر الرقمية</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --accent: #ff6b35;
+            --accent-light: #ff8e53;
+            --bg: #f5f7fa;
+            --surface: #ffffff;
+            --text: #1a1a2e;
+            --text-light: #64748b;
+            --border: #e8ecf1;
+            --success: #10b981;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #f5f7fa;
+            height: 100dvh;
+            width: 100dvw;
+            overflow: hidden;
+            position: fixed;
+            inset: 0;
+        }
+
+        .app {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            background: #fff;
+        }
+
+        /* Top Bar */
+        .topbar {
+            background: #fff;
+            border-bottom: 1px solid #e8ecf1;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-shrink: 0;
+            min-height: 60px;
+        }
+
+        .topbar .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .topbar .brand .icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ff6b35, #ff8e53);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 18px;
+        }
+
+        .topbar .brand .title {
+            font-weight: 700;
+            font-size: 16px;
+            color: #1a1a2e;
+        }
+
+        .topbar .brand .subtitle {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .online-badge {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #065f46;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .online-badge .dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+        }
+
+        /* Messages */
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 20px;
+            background: #fafbfc;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .messages::-webkit-scrollbar { width: 4px; }
+        .messages::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+
+        .date-separator {
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .date-separator::before,
+        .date-separator::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e8ecf1;
+        }
+
+        .msg-row {
+            display: flex;
+            flex-direction: column;
+            animation: popIn 0.25s ease;
+        }
+        .msg-row.sent { align-items: flex-end; }
+        .msg-row.received { align-items: flex-start; }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bubble {
+            max-width: 72%;
+            padding: 10px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.6;
+            word-break: break-word;
+        }
+
+        .bubble.sent {
+            background: linear-gradient(135deg, #ff6b35, #ff8e53);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 3px 10px rgba(255,107,53,0.2);
+        }
+
+        .bubble.received {
+            background: #fff;
+            color: #1a1a2e;
+            border-bottom-left-radius: 4px;
+            border: 1px solid #e8ecf1;
+        }
+
+        .bubble .time {
+            font-size: 10px;
+            opacity: 0.7;
+            margin-top: 3px;
+            display: block;
+            text-align: left;
+        }
+
+        .bubble .sender-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: #ff6b35;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .bubble .sender-name i {
+            font-size: 14px;
+        }
+
+        .empty-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            gap: 8px;
+            text-align: center;
+        }
+        .empty-state .circle {
+            width: 72px;
+            height: 72px;
+            background: #e8ecf1;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+        .empty-state h5 { color: #64748b; }
+        .empty-state .supervisors-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 12px;
+            max-width: 400px;
+        }
+        .empty-state .supervisor-chip {
+            background: #fff;
+            border: 1px solid #e8ecf1;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .empty-state .supervisor-chip i {
+            color: #10b981;
+            font-size: 8px;
+        }
+
+        /* Input */
+        .input-area {
+            background: #fff;
+            padding: 10px 16px;
+            border-top: 1px solid #e8ecf1;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .input-area input {
+            flex: 1;
+            border: 2px solid #e8ecf1;
+            border-radius: 14px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-family: 'Cairo', sans-serif;
+            outline: none;
+            background: #f8fafc;
+            transition: 0.2s;
+        }
+
+        .input-area input:focus {
+            border-color: #ff6b35;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(255,107,53,0.08);
+        }
+
+        .btn-send {
+            background: linear-gradient(135deg, #ff6b35, #ff8e53);
+            border: none;
+            color: #fff;
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.2s;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(255,107,53,0.25);
+        }
+
+        .btn-send:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(255,107,53,0.35);
+        }
+
+        .btn-send:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app">
+    <!-- Top Bar -->
+    <div class="topbar">
+        <div class="brand">
+            <div class="icon"><i class="fas fa-headset"></i></div>
+            <div>
+                <div class="title">الدعم الفني</div>
+                <div class="subtitle">مكتبة الفجر الرقمية · فريق الدعم متاح لمساعدتك</div>
+            </div>
+        </div>
+        <div class="online-badge">
+            <span class="dot"></span> فريق الدعم متصل
+        </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="messages" id="messagesContainer">
+        <div class="empty-state">
+            <div class="circle"><i class="fas fa-comments"></i></div>
+            <h5>مرحباً بك في الدعم الفني</h5>
+            <p>اكتب رسالتك وسيرد عليك أحد المشرفين</p>
+            <div class="supervisors-list" id="supervisorsList">
+                <!-- Will be populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Input -->
+    <div class="input-area">
+        <input type="text" id="messageInput" placeholder="اكتب رسالتك هنا..." />
+        <button class="btn-send" id="sendBtn">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+    import { getDatabase, ref, push, onValue, set, query, orderByChild, limitToLast, off, onChildAdded } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBlcKC2ncX9mTOPlhDOnfmyzdJ5mLinWYY",
+        authDomain: "al-fajr-digital-library.firebaseapp.com",
+        databaseURL: "https://al-fajr-digital-library-default-rtdb.firebaseio.com",
+        projectId: "al-fajr-digital-library",
+        storageBucket: "al-fajr-digital-library.firebasestorage.app",
+        messagingSenderId: "739899495618",
+        appId: "1:739899495618:web:8e60409193ec1408b4d75b"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Get current user from localStorage
+    function getUser() {
+        try {
+            const u = JSON.parse(localStorage.getItem('user') || 'null');
+            if (u?.uid) return u;
+        } catch (e) {}
+        return { uid: 'user_' + Date.now(), username: 'زائر', email: '', phone: '' };
+    }
+
+    const user = getUser();
+    const USER_ID = user.uid;
+    const USER_NAME = user.username;
+    const USER_EMAIL = user.email;
+    const USER_PHONE = user.phone;
+
+    // DOM
+    const messagesContainer = document.getElementById('messagesContainer');
+    const messageInput = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const supervisorsList = document.getElementById('supervisorsList');
+
+    const supervisorNames = {
+        'supervisor_hussain': 'حسين العصاري',
+        'supervisor_ahmed_j': 'أحمد الجويد',
+        'supervisor_hassan': 'حسن مالك',
+        'supervisor_rayan': 'ريان',
+        'supervisor_moayad': 'مؤيد رضا',
+        'supervisor_mohammed_a': 'محمد علي',
+        'supervisor_mohammed_t': 'محمد طاهر',
+        'supervisor_abdulaziz': 'عبد العزيز'
+    };
+
+    // Show supervisors list in empty state
+    function showSupervisorsList() {
+        let html = '';
+        Object.entries(supervisorNames).forEach(([id, name]) => {
+            html += `<span class="supervisor-chip"><i class="fas fa-circle"></i> ${name}</span>`;
+        });
+        if (supervisorsList) supervisorsList.innerHTML = html;
+    }
+    showSupervisorsList();
+
+    function fmtTime(ts) {
+        if (!ts) return '';
+        return new Date(ts).toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit', hour12: true });
+    }
+
+    function fmtDate(ts) {
+        const d = new Date(ts);
+        const now = new Date();
+        const diff = Math.floor((now - d) / 86400000);
+        if (diff === 0) return 'اليوم';
+        if (diff === 1) return 'أمس';
+        return d.toLocaleDateString('ar-SA', { weekday: 'long', month: 'long', day: 'numeric' });
+    }
+
+    // Listen to all messages for this user (from all supervisors)
+    function subscribeToMessages() {
+        const userChatRef = ref(db, `users/${USER_ID}/messages`);
+        const q = query(userChatRef, orderByChild('timestamp'), limitToLast(100));
+
+        onValue(q, (snapshot) => {
+            const data = snapshot.val();
+            if (!data) {
+                messagesContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="circle"><i class="fas fa-comments"></i></div>
+                        <h5>مرحباً بك في الدعم الفني</h5>
+                        <p>اكتب رسالتك وسيرد عليك أحد المشرفين</p>
+                        <div class="supervisors-list">${Object.entries(supervisorNames).map(([id, name]) => `<span class="supervisor-chip"><i class="fas fa-circle"></i> ${name}</span>`).join('')}</div>
+                    </div>`;
+                return;
+            }
+
+            const list = Object.keys(data).map(k => ({ id: k, ...data[k] }));
+            list.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+            let html = '';
+            let lastDate = '';
+
+            list.forEach(m => {
+                const md = m.timestamp ? fmtDate(m.timestamp) : '';
+                const isSent = m.sender === 'client';
+                const t = fmtTime(m.timestamp);
+                const supervisorName = m.supervisorName || '';
+
+                if (md && md !== lastDate) {
+                    html += `<div class="date-separator">${md}</div>`;
+                    lastDate = md;
+                }
+
+                html += `
+                    <div class="msg-row ${isSent ? 'sent' : 'received'}">
+                        <div class="bubble ${isSent ? 'sent' : 'received'}">
+                            ${!isSent && supervisorName ? `<span class="sender-name"><i class="fas fa-user-tie"></i> ${supervisorName}</span>` : ''}
+                            ${m.text}
+                            <span class="time">${t} ${isSent ? '✓' : ''}</span>
+                        </div>
+                    </div>`;
+            });
+
+            messagesContainer.innerHTML = html;
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        });
+    }
+
+    async function sendMessage() {
+        const text = messageInput.value.trim();
+        if (!text) return;
+
+        sendBtn.disabled = true;
+        messageInput.disabled = true;
+
+        try {
+            // Save message under user's chat
+            const userMsgRef = ref(db, `users/${USER_ID}/messages`);
+            await set(push(userMsgRef), {
+                text: text,
+                sender: 'client',
+                senderId: USER_ID,
+                senderName: USER_NAME,
+                senderEmail: USER_EMAIL,
+                senderPhone: USER_PHONE,
+                timestamp: Date.now(),
+                read: false,
+                repliedBy: null,
+                supervisorName: null
+            });
+
+            // Also notify all supervisors by adding to a general support queue
+            const supportRef = ref(db, `support_queue/${USER_ID}`);
+            await set(supportRef, {
+                userId: USER_ID,
+                userName: USER_NAME,
+                userEmail: USER_EMAIL,
+                userPhone: USER_PHONE,
+                lastMessage: text,
+                lastTimestamp: Date.now(),
+                unreadCount: 1,
+                status: 'waiting'
+            });
+
+            messageInput.value = '';
+            messageInput.focus();
+        } catch (error) {
+            console.error('Send error:', error);
+            alert('فشل إرسال الرسالة. حاول مرة أخرى.');
+        } finally {
+            sendBtn.disabled = false;
+            messageInput.disabled = false;
+        }
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    messageInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    // Start listening
+    subscribeToMessages();
+    console.log('✅ نظام الدعم الفني جاهز | المستخدم:', USER_NAME);
+</script>
+</body>
+</html>

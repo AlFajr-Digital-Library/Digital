@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الأسئلة الشائعة | مكتبة الفجر الرقمية</title>
+    <link rel="icon" type="image/x-icon" href="img/icon1.jpg">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0a0a14;
+            --surface: rgba(20,20,40,0.7);
+            --surface2: rgba(30,30,55,0.8);
+            --border: rgba(255,255,255,0.08);
+            --text: #e8e8f0;
+            --muted: #8888aa;
+            --purple: #a29bfe;
+            --cyan: #81ecec;
+            --gold: #ffeaa7;
+            --green: #00b894;
+            --red: #e17055;
+            --grad1: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            --grad2: linear-gradient(135deg, #00cec9, #81ecec);
+            --grad3: linear-gradient(135deg, #fd79a8, #fab1a0);
+            --grad4: linear-gradient(135deg, #fdcb6e, #ffeaa7);
+            --radius: 20px;
+            --transition: 0.35s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(150deg, #0a0a1a 0%, #12122a 30%, #0d0d24 60%, #0a0a1a 100%);
+            color: var(--text);
+            min-height: 100vh;
+            direction: rtl;
+            overflow-x: hidden;
+        }
+
+        /* خلفية متحركة */
+        .bg-animation { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+        .bg-orb {
+            position: absolute; border-radius: 50%; filter: blur(140px);
+            animation: orbFloat 18s infinite alternate;
+        }
+        .bg-orb:nth-child(1) { width: 500px; height: 500px; background: rgba(108,92,231,0.15); top: -180px; right: -120px; }
+        .bg-orb:nth-child(2) { width: 450px; height: 450px; background: rgba(0,206,201,0.10); bottom: -150px; left: -100px; animation-delay: -9s; }
+        .bg-orb:nth-child(3) { width: 350px; height: 350px; background: rgba(253,121,168,0.08); top: 50%; left: 30%; animation-delay: -15s; }
+        @keyframes orbFloat {
+            0% { transform: translate(0,0) scale(1); }
+            33% { transform: translate(60px,-50px) scale(1.2); }
+            66% { transform: translate(-40px,40px) scale(0.85); }
+            100% { transform: translate(20px,-20px) scale(1.05); }
+        }
+
+        /* شارة مركز المساعدة في أعلى اليمين */
+        .help-badge-top {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(15,15,30,0.85);
+            backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(108,92,231,0.4);
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #fff;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 0 0 2px rgba(108,92,231,0.1);
+            pointer-events: none;
+            transition: var(--transition);
+        }
+        .help-badge-top .badge-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #a29bfe;
+            box-shadow: 0 0 12px #a29bfe;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.2); }
+        }
+
+        /* هيدر */
+        .hero {
+            position: relative; z-index: 1;
+            text-align: center; padding: 60px 20px 30px;
+        }
+        .hero-badge {
+            display: inline-block; background: rgba(108,92,231,0.15);
+            border: 1px solid rgba(108,92,231,0.3); padding: 6px 18px;
+            border-radius: 50px; font-size: 0.82em; color: #a29bfe; margin-bottom: 18px;
+        }
+        .hero h1 {
+            font-size: clamp(2em, 5vw, 3em); font-weight: 900;
+            margin-bottom: 12px; line-height: 1.3;
+        }
+        .hero h1 .g1 { background: var(--grad1); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .hero h1 .g2 { background: var(--grad2); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .hero p { color: var(--muted); font-size: 1.05em; max-width: 550px; margin: 0 auto; }
+
+        /* شريط البحث */
+        .search-container {
+            max-width: 650px; margin: 0 auto 35px;
+            padding: 0 22px; position: relative; z-index: 1;
+        }
+        .search-box {
+            position: relative;
+        }
+        .search-box input {
+            width: 100%; padding: 16px 50px 16px 20px;
+            border-radius: 60px; border: 2px solid rgba(255,255,255,0.12);
+            background: var(--surface); color: #fff;
+            font-family: 'Cairo', sans-serif; font-size: 1em;
+            transition: var(--transition); backdrop-filter: blur(10px);
+        }
+        .search-box input:focus {
+            outline: none; border-color: #6c5ce7;
+            box-shadow: 0 0 0 4px rgba(108,92,231,0.15);
+        }
+        .search-box input::placeholder { color: rgba(255,255,255,0.4); }
+        .search-box .search-icon {
+            position: absolute; right: 18px; top: 50%;
+            transform: translateY(-50%); color: #a29bfe; font-size: 1.2em;
+        }
+        .search-results-count {
+            text-align: center; color: var(--muted); font-size: 0.85em;
+            margin-top: 8px; display: none;
+        }
+
+        /* قائمة الأسئلة */
+        .container { max-width: 880px; margin: 0 auto; padding: 0 22px 60px; position: relative; z-index: 1; }
+
+        .faq-list { display: flex; flex-direction: column; gap: 12px; }
+
+        .faq-item {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 18px; overflow: hidden;
+            transition: var(--transition);
+        }
+        .faq-item:hover { border-color: rgba(255,255,255,0.15); }
+        .faq-item.open {
+            border-color: rgba(108,92,231,0.4);
+            box-shadow: 0 8px 30px rgba(108,92,231,0.15);
+        }
+
+        .faq-question {
+            padding: 18px 22px; cursor: pointer;
+            display: flex; align-items: center; gap: 14px;
+            transition: var(--transition); user-select: none;
+        }
+        .faq-item.open .faq-question { background: rgba(108,92,231,0.05); }
+
+        .faq-icon {
+            width: 44px; height: 44px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2em; flex-shrink: 0;
+            transition: var(--transition);
+        }
+        .faq-item:nth-child(5n+1) .faq-icon { background: rgba(108,92,231,0.15); color: #a29bfe; }
+        .faq-item:nth-child(5n+2) .faq-icon { background: rgba(0,206,201,0.15); color: #81ecec; }
+        .faq-item:nth-child(5n+3) .faq-icon { background: rgba(253,121,168,0.15); color: #fab1a0; }
+        .faq-item:nth-child(5n+4) .faq-icon { background: rgba(253,203,110,0.15); color: #ffeaa7; }
+        .faq-item:nth-child(5n+5) .faq-icon { background: rgba(0,184,148,0.15); color: #55efc4; }
+
+        .faq-question-text {
+            flex: 1; font-weight: 600; font-size: 1em;
+            color: #fff; line-height: 1.5;
+        }
+        .faq-arrow {
+            width: 32px; height: 32px; border-radius: 50%;
+            background: rgba(255,255,255,0.05); display: flex;
+            align-items: center; justify-content: center;
+            transition: var(--transition); flex-shrink: 0;
+            color: var(--muted); font-size: 0.8em;
+        }
+        .faq-item.open .faq-arrow {
+            transform: rotate(180deg);
+            background: rgba(108,92,231,0.2); color: #a29bfe;
+        }
+
+        .faq-answer {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.4s ease;
+        }
+        .faq-item.open .faq-answer {
+            max-height: 600px;
+        }
+        .faq-answer-content {
+            padding: 0 22px 20px 22px;
+            color: var(--muted); font-size: 0.9em;
+            line-height: 1.9;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin: 0 22px;
+        }
+        .faq-answer-content ul {
+            list-style: none; padding: 0; margin: 10px 0;
+        }
+        .faq-answer-content ul li {
+            padding: 5px 0; display: flex; align-items: center; gap: 8px;
+        }
+        .faq-answer-content ul li::before {
+            content: '▸'; color: #a29bfe; font-size: 0.8em;
+        }
+        .faq-answer-content .highlight {
+            color: #ffeaa7; font-weight: 500;
+        }
+        .faq-answer-content a {
+            color: #81ecec; text-decoration: none;
+            border-bottom: 1px dashed rgba(129,236,236,0.3);
+        }
+        .faq-answer-content a:hover { color: #a29bfe; }
+
+        .no-results {
+            text-align: center; padding: 60px 20px;
+        }
+        .no-results .icon { font-size: 4em; opacity: 0.2; margin-bottom: 15px; }
+        .no-results h3 { color: #fff; margin-bottom: 6px; }
+        .no-results p { color: var(--muted); }
+
+        /* قسم اتصل بنا */
+        .contact-section {
+            text-align: center; padding: 40px 20px;
+            margin-top: 20px;
+            background: linear-gradient(145deg, rgba(25,25,50,0.6), rgba(20,20,40,0.4));
+            border: 1px solid rgba(108,92,231,0.2);
+            border-radius: var(--radius);
+            position: relative; z-index: 1;
+        }
+        .contact-section .icon-circle {
+            width: 60px; height: 60px; border-radius: 50%;
+            background: var(--grad1); display: flex; align-items: center; justify-content: center;
+            font-size: 1.5em; margin: 0 auto 15px; box-shadow: 0 10px 25px rgba(108,92,231,0.35);
+            color: #fff;
+        }
+        .contact-section h2 { font-size: 1.4em; font-weight: 800; margin-bottom: 6px; }
+        .contact-section p { color: var(--muted); margin-bottom: 18px; }
+        .btn-contact {
+            padding: 12px 28px; border-radius: 50px;
+            background: var(--grad2); color: #000; border: none;
+            cursor: pointer; font-family: 'Cairo', sans-serif;
+            font-weight: 700; font-size: 0.9em; transition: var(--transition);
+            text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-contact:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,206,201,0.3); }
+
+        /* زر العودة للأعلى */
+        .scroll-top-btn {
+            position: fixed; bottom: 25px; left: 25px;
+            width: 48px; height: 48px; border-radius: 50%;
+            background: var(--grad1); border: none; cursor: pointer;
+            color: #fff; font-size: 1.2em; z-index: 50;
+            box-shadow: 0 8px 25px rgba(108,92,231,0.4);
+            transition: var(--transition); opacity: 0; pointer-events: none;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .scroll-top-btn.visible { opacity: 1; pointer-events: auto; }
+        .scroll-top-btn:hover { transform: translateY(-3px); }
+
+        @media (max-width: 768px) {
+            .help-badge-top { top: 12px; right: 12px; padding: 6px 14px; font-size: 0.8em; }
+            .hero { padding: 50px 16px 20px; }
+            .faq-question { padding: 14px 16px; gap: 10px; }
+            .faq-icon { width: 36px; height: 36px; font-size: 1em; }
+            .faq-question-text { font-size: 0.9em; }
+            .faq-answer-content { padding: 0 16px 16px 16px; margin: 0 16px; font-size: 0.82em; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-animation">
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+    </div>
+
+    <!-- شارة مركز المساعدة في أعلى اليمين -->
+    <div class="help-badge-top">
+        <div class="badge-dot"></div>
+        💡 مركز المساعدة
+    </div>
+
+    <!-- الهيدر -->
+    <div class="hero">
+        <div class="hero-badge"> الأسئلة المتكررة</div>
+        <h1><span class="g1">الأسئلة</span> <span class="g2">الشائعة</span></h1>
+        <p>اعثر على إجابات لأكثر الأسئلة شيوعاً حول مكتبة الفجر الرقمية وخدماتنا المتنوعة</p>
+    </div>
+
+    <!-- شريط البحث -->
+    <div class="search-container">
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="searchInput" placeholder="ابحث عن سؤال..." autocomplete="off" />
+        </div>
+        <div class="search-results-count" id="searchCount"></div>
+    </div>
+
+    <!-- قائمة الأسئلة -->
+    <div class="container">
+        <div class="faq-list" id="faqList"></div>
+        <div class="no-results" id="noResults" style="display:none;">
+            <div class="icon">🔍</div>
+            <h3>لا توجد نتائج</h3>
+            <p>لم نجد أسئلة تطابق بحثك. جرب كلمات مختلفة.</p>
+        </div>
+    </div>
+
+    <!-- قسم اتصل بنا -->
+    <div class="container">
+        <div class="contact-section">
+            <div class="icon-circle"><i class="fa-solid fa-headset"></i></div>
+            <h2>لم تجد إجابتك؟</h2>
+            <p>فريق الدعم الفني جاهز لمساعدتك على مدار الساعة</p>
+            <a href="Encrypted communication between the two parties.html" class="btn-contact">
+                <i class="fa-solid fa-comment-dots"></i> تواصل مع الدعم الفني
+            </a>
+        </div>
+    </div>
+
+    <!-- زر العودة للأعلى -->
+    <button class="scroll-top-btn" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+        <i class="fa-solid fa-chevron-up"></i>
+    </button>
+
+    <script>
+        // ========================================
+        // بيانات الأسئلة الشائعة - 38 سؤال متنوع
+        // ========================================
+        const faqData = [
+            {
+                id: 1,
+                icon: "fa-solid fa-circle-question",
+                question: "ما هي مكتبة الفجر الرقمية؟",
+                answer: `مكتبة الفجر الرقمية هي منصة إلكترونية شاملة تهدف إلى نشر المعرفة والثقافة في العالم العربي. نوفر مجموعة واسعة من <span class="highlight">الكتب الرقمية، المقالات، الأبحاث، والمواد التعليمية</span> بشكل مجاني ومدفوع.`
+            },
+            {
+                id: 2,
+                icon: "fa-solid fa-user-plus",
+                question: "كيف يمكنني التسجيل في المكتبة؟",
+                answer: `يمكنك التسجيل بسهولة عبر:
+                <ul>
+                    <li>الذهاب إلى صفحة <a href="login.html">تسجيل الدخول</a></li>
+                    <li>اختيار "إنشاء حساب جديد"</li>
+                    <li>إدخال بريدك الإلكتروني وكلمة المرور واسم المستخدم ورقم الهاتف</li>
+                    <li>تأكيد التسجيل عبر البريد الإلكتروني</li>
+                </ul>
+                بعد التسجيل، ستحصل على <span class="highlight">إمكانية الوصول الكامل</span> لجميع ميزات المكتبة.`
+            },
+            {
+                id: 3,
+                icon: "fa-solid fa-key",
+                question: "نسيت كلمة المرور، ماذا أفعل؟",
+                answer: `لا تقلق! يمكنك استعادة كلمة المرور بسهولة:
+                <ul>
+                    <li>اذهب إلى صفحة تسجيل الدخول</li>
+                    <li>اضغط على "نسيت كلمة المرور؟"</li>
+                    <li>أدخل بريدك الإلكتروني المسجل</li>
+                    <li>سيصلك رابط إعادة تعيين كلمة المرور</li>
+                </ul>
+                تأكد من فحص <span class="highlight">صندوق البريد المزعج (Spam)</span> إذا لم تجد الرسالة.`
+            },
+            {
+                id: 4,
+                icon: "fa-solid fa-shield-halved",
+                question: "كيف أحمي حسابي من الاختراق؟",
+                answer: `ننصحك باتباع إجراءات الأمان التالية:
+                <ul>
+                    <li>استخدم <span class="highlight">كلمة مرور قوية</span> تحتوي على أحرف كبيرة وصغيرة وأرقام ورموز</li>
+                    <li>لا تشارك كلمة المرور مع أي شخص</li>
+                    <li>قم بتغيير كلمة المرور بشكل دوري</li>
+                    <li>تأكد من تسجيل الخروج عند استخدام أجهزة مشتركة</li>
+                    <li>فعّل <span class="highlight">المصادقة الثنائية</span> إن كانت متاحة</li>
+                </ul>`
+            },
+            {
+                id: 5,
+                icon: "fa-solid fa-magnifying-glass",
+                question: "كيف أبحث عن كتاب معين؟",
+                answer: `يمكنك البحث عن الكتب بعدة طرق:
+                <ul>
+                    <li>استخدم <span class="highlight">شريط البحث</span> في الأعلى واكتب اسم الكتاب أو المؤلف</li>
+                    <li>تصفح <span class="highlight">الفئات والأقسام</span> المختلفة</li>
+                    <li>استخدم <span class="highlight">الفلاتر</span> لتصفية النتائج حسب اللغة، السنة، أو التصنيف</li>
+                </ul>
+                نوفر أيضاً خاصية <span class="highlight">البحث المتقدم</span> للوصول الدقيق للكتب.`
+            },
+            {
+                id: 6,
+                icon: "fa-solid fa-download",
+                question: "هل يمكنني تحميل الكتب للقراءة بدون إنترنت؟",
+                answer: `نعم! نوفر إمكانية تحميل الكتب بصيغ متعددة:
+                <ul>
+                    <li><span class="highlight">PDF</span> - للقراءة على أي جهاز</li>
+                    <li><span class="highlight">EPUB</span> - للقراءة على الأجهزة اللوحية والقارئات الإلكترونية</li>
+                    <li><span class="highlight">MOBI</span> - لأجهزة Kindle</li>
+                </ul>
+                بعض الكتب المجانية متاحة للتحميل المباشر، بينما الكتب المدفوعة تتطلب الشراء أولاً.`
+            },
+            {
+                id: 7,
+                icon: "fa-solid fa-briefcase",
+                question: "كيف أتقدم لوظيفة في مكتبة الفجر؟",
+                answer: `نرحب بانضمامك إلينا! للتقديم على وظيفة:
+                <ul>
+                    <li>اذهب إلى صفحة <a href="careers.html">انضم إلينا</a></li>
+                    <li>اختر الوظائف التي تناسب مهاراتك</li>
+                    <li>اضغط على "طلب الانضمام"</li>
+                    <li>سيقوم فريق التوظيف بمراجعة طلبك والتواصل معك</li>
+                </ul>
+                يمكنك <span class="highlight">تعديل طلبك أو إلغائه</span> في أي وقت قبل البت فيه.`
+            },
+            {
+                id: 8,
+                icon: "fa-solid fa-clock",
+                question: "متى سأحصل على رد بعد تقديم طلب التوظيف؟",
+                answer: `بعد تقديم طلبك:
+                <ul>
+                    <li>يتم مراجعة الطلب خلال <span class="highlight">3-7 أيام عمل</span></li>
+                    <li>ستصلك رسالة من فريق التوظيف بحالة طلبك</li>
+                    <li>يمكنك متابعة حالة طلبك من صفحة التوظيف</li>
+                </ul>
+                في حال وجود أي استفسار، يمكنك <a href="support-chat.html">التواصل مع الدعم الفني</a>.`
+            },
+            {
+                id: 9,
+                icon: "fa-solid fa-credit-card",
+                question: "ما هي طرق الدفع المتاحة؟",
+                answer: `نوفر خيارات دفع متعددة تناسب الجميع:
+                <ul>
+                    <li><span class="highlight">البطاقات الائتمانية</span> (فيزا، ماستركارد، مدى)</li>
+                    <li><span class="highlight">Apple Pay / Google Pay</span></li>
+                    <li><span class="highlight">التحويل البنكي</span> المباشر</li>
+                    <li>المحافظ الإلكترونية مثل <span class="highlight">STC Pay</span></li>
+                </ul>
+                جميع المعاملات <span class="highlight">مشفرة وآمنة</span> بالكامل.`
+            },
+            {
+                id: 10,
+                icon: "fa-solid fa-rotate-left",
+                question: "هل يمكنني استرداد المبلغ بعد الشراء؟",
+                answer: `نعم، نوفر سياسة استرداد مرنة:
+                <ul>
+                    <li>يمكنك طلب استرداد خلال <span class="highlight">7 أيام</span> من تاريخ الشراء</li>
+                    <li>يجب ألا يكون الكتاب قد تم تحميله بالكامل</li>
+                    <li>يتم إعادة المبلغ خلال <span class="highlight">5-10 أيام عمل</span></li>
+                </ul>
+                للكتب التي بها <span class="highlight">مشاكل تقنية</span>، نضمن استرداد كامل المبلغ.`
+            },
+            {
+                id: 11,
+                icon: "fa-solid fa-headset",
+                question: "كيف أتواصل مع الدعم الفني؟",
+                answer: `يمكنك التواصل معنا عبر:
+                <ul>
+                    <li><span class="highlight">المحادثة المباشرة</span> من خلال صفحة <a href="support-chat.html">الدعم الفني</a></li>
+                    <li><span class="highlight">البريد الإلكتروني</span>: support@alfajr.com</li>
+                    <li><span class="highlight">نظام التذاكر</span>: افتح تذكرة دعم وسنتواصل معك</li>
+                </ul>
+                فريق الدعم متاح <span class="highlight">24/7</span> للإجابة على استفساراتك.`
+            },
+            {
+                id: 12,
+                icon: "fa-solid fa-triangle-exclamation",
+                question: "وجدت مشكلة تقنية في الموقع، ماذا أفعل؟",
+                answer: `نأسف لأي إزعاج! الرجاء:
+                <ul>
+                    <li><span class="highlight">التقاط لقطة شاشة</span> للمشكلة</li>
+                    <li>وصف المشكلة بالتفصيل (ماذا كنت تفعل؟ ماذا حدث؟)</li>
+                    <li>إرسال التقرير عبر <a href="support-chat.html">الدعم الفني</a> أو البريد الإلكتروني</li>
+                </ul>
+                فريقنا التقني سيعمل على <span class="highlight">حل المشكلة في أسرع وقت</span>.`
+            },
+            {
+                id: 13,
+                icon: "fa-solid fa-pen-to-square",
+                question: "هل يمكنني نشر كتابي في المكتبة؟",
+                answer: `بالتأكيد! نرحب بالمؤلفين والكتّاب:
+                <ul>
+                    <li>تواصل معنا عبر <span class="highlight">البريد الإلكتروني</span> لنشر كتابك</li>
+                    <li>يرجى إرسال <span class="highlight">ملخص الكتاب ونبذة عنك</span></li>
+                    <li>سيقوم فريق المحتوى بمراجعة الطلب</li>
+                    <li>نوفر <span class="highlight">عقود نشر مرنة</span> تناسب المؤلفين</li>
+                </ul>`
+            },
+            {
+                id: 14,
+                icon: "fa-solid fa-language",
+                question: "ما هي اللغات المدعومة في المكتبة؟",
+                answer: `مكتبة الفجر تدعم عدة لغات:
+                <ul>
+                    <li><span class="highlight">العربية</span> - المحتوى الأساسي</li>
+                    <li><span class="highlight">الإنجليزية</span> - مجموعة كبيرة من الكتب</li>
+                    <li><span class="highlight">الفرنسية، الإسبانية، التركية</span> - مجموعات مختارة</li>
+                </ul>
+                نعمل باستمرار على <span class="highlight">إضافة المزيد من اللغات</span> والمحتوى المترجم.`
+            },
+            {
+                id: 15,
+                icon: "fa-solid fa-mobile-screen",
+                question: "هل يوجد تطبيق للجوال؟",
+                answer: `نعمل حالياً على تطوير تطبيق للجوال! 
+                <br><br>حالياً، الموقع <span class="highlight">متجاوب بالكامل</span> ويعمل على جميع الأجهزة:
+                <ul>
+                    <li>الهواتف الذكية (Android / iOS)</li>
+                    <li>الأجهزة اللوحية</li>
+                    <li>أجهزة الكمبيوتر</li>
+                </ul>
+                سيتم الإعلان عن التطبيق قريباً. تابعنا ليصلك كل جديد!`
+            },
+            {
+                id: 16,
+                icon: "fa-solid fa-gift",
+                question: "هل توجد خطة اشتراك مجانية؟",
+                answer: `نعم، نوفر <span class="highlight">خطة مجانية</span> تتضمن:
+                <ul>
+                    <li>الوصول إلى آلاف الكتب المجانية</li>
+                    <li>قراءة محدودة لبعض الكتب المميزة</li>
+                    <li>إمكانية حفظ المفضلة</li>
+                </ul>
+                للوصول الكامل، يمكنك الترقية إلى <span class="highlight">الخطة المميزة</span> برسوم شهرية رمزية.`
+            },
+            {
+                id: 17,
+                icon: "fa-solid fa-star",
+                question: "كيف يمكنني تقييم كتاب؟",
+                answer: `تقييم الكتب يساعد المجتمع! بعد قراءة أي كتاب:
+                <ul>
+                    <li>اذهب إلى صفحة الكتاب</li>
+                    <li>اضغط على <span class="highlight">النجوم</span> أسفل الغلاف</li>
+                    <li>يمكنك أيضاً كتابة <span class="highlight">مراجعة نصية</span> مفصلة</li>
+                </ul>
+                تقييماتك تساعد القراء الآخرين على اختيار الكتب المناسبة.`
+            },
+            {
+                id: 18,
+                icon: "fa-solid fa-bookmark",
+                question: "كيف أحفظ كتاباً في المفضلة؟",
+                answer: `لحفظ كتاب في قائمة المفضلة:
+                <ul>
+                    <li>اضغط على أيقونة <span class="highlight">القلب أو الإشارة المرجعية</span> بجانب الكتاب</li>
+                    <li>ستجد جميع كتبك المفضلة في <span class="highlight">صفحة المكتبة الشخصية</span></li>
+                    <li>يمكنك تنظيمها في مجلدات مخصصة</li>
+                </ul>`
+            },
+            {
+                id: 19,
+                icon: "fa-solid fa-globe",
+                question: "هل المكتبة متاحة خارج العالم العربي؟",
+                answer: `نعم! مكتبة الفجر الرقمية متاحة <span class="highlight">لجميع دول العالم</span>. أينما كنت، يمكنك:
+                <ul>
+                    <li>التسجيل والوصول إلى المحتوى</li>
+                    <li>شراء الكتب بأي عملة (يتم التحويل تلقائياً)</li>
+                    <li>الاستفادة من جميع الميزات دون قيود جغرافية</li>
+                </ul>`
+            },
+            {
+                id: 20,
+                icon: "fa-solid fa-print",
+                question: "هل يمكنني طباعة الكتب؟",
+                answer: `الطباعة متاحة <span class="highlight">للكتب المجانية</span> وللاستخدام الشخصي فقط. الكتب المدفوعة تخضع لحقوق النشر، ولكن يمكنك:
+                <ul>
+                    <li>طباعة صفحات محددة للمراجعة</li>
+                    <li>طلب نسخة مطبوعة عبر خدمة <span class="highlight">الطباعة حسب الطلب</span></li>
+                </ul>`
+            },
+            {
+                id: 21,
+                icon: "fa-solid fa-users",
+                question: "هل يمكنني مشاركة حسابي مع العائلة؟",
+                answer: `نوفر <span class="highlight">خطة عائلية</span> تسمح بمشاركة المكتبة مع:
+                <ul>
+                    <li>حتى 5 أفراد من العائلة</li>
+                    <li>لكل فرد ملفه الشخصي وتوصياته الخاصة</li>
+                    <li>سعر مخفض مقارنة بالاشتراكات المنفردة</li>
+                </ul>
+                مشاركة كلمة المرور لحساب فردي <span class="highlight">تخالف شروط الاستخدام</span>.`
+            },
+            {
+                id: 22,
+                icon: "fa-solid fa-bell",
+                question: "كيف أتلقى تنبيهات بالكتب الجديدة؟",
+                answer: `لتصلك آخر الإصدارات:
+                <ul>
+                    <li>فعّل <span class="highlight">الإشعارات</span> من إعدادات حسابك</li>
+                    <li>اشترك في <span class="highlight">النشرة البريدية</span> الأسبوعية</li>
+                    <li>تابعنا على <span class="highlight">وسائل التواصل الاجتماعي</span></li>
+                </ul>
+                يمكنك تخصيص التنبيهات حسب <span class="highlight">المؤلفين أو الفئات</span> المفضلة.`
+            },
+            {
+                id: 23,
+                icon: "fa-solid fa-moon",
+                question: "هل يدعم الموقع الوضع الليلي؟",
+                answer: `بالتأكيد! الوضع الليلي <span class="highlight">مفعل تلقائياً</span> في التصميم الحالي. يمكنك أيضاً:
+                <ul>
+                    <li>التبديل بين الوضع الفاتح والداكن من الإعدادات</li>
+                    <li>ضبط <span class="highlight">درجة السطوع</span> داخل قارئ الكتب</li>
+                    <li>تغيير <span class="highlight">لون الخلفية وحجم الخط</span> أثناء القراءة</li>
+                </ul>`
+            },
+            {
+                id: 24,
+                icon: "fa-solid fa-file-pdf",
+                question: "ما هي صيغ الكتب المدعومة للتحميل؟",
+                answer: `ندعم الصيغ الأكثر شيوعاً:
+                <ul>
+                    <li><span class="highlight">PDF</span> - متوافق مع جميع الأجهزة</li>
+                    <li><span class="highlight">EPUB</span> - مثالي للقارئات الإلكترونية</li>
+                    <li><span class="highlight">MOBI</span> - لأجهزة Kindle</li>
+                    <li><span class="highlight">AZW3</span> - صيغة أمازون المتقدمة</li>
+                </ul>
+                يمكنك اختيار الصيغة المناسبة عند تحميل أي كتاب.`
+            },
+            {
+                id: 25,
+                icon: "fa-solid fa-trash-can",
+                question: "كيف أحذف كتاباً من مكتبتي؟",
+                answer: `لإزالة كتاب من مكتبتك الشخصية:
+                <ul>
+                    <li>اذهب إلى <span class="highlight">مكتبتي</span></li>
+                    <li>اضغط على النقاط الثلاث بجانب الكتاب</li>
+                    <li>اختر <span class="highlight">"إزالة من المكتبة"</span></li>
+                </ul>
+                الكتب المشتراة تبقى متاحة للتحميل مجدداً في أي وقت من <span class="highlight">سجل المشتريات</span>.`
+            },
+            {
+                id: 26,
+                icon: "fa-solid fa-tag",
+                question: "كيف تعمل الخصومات والعروض؟",
+                answer: `نقدم عروضاً متنوعة على مدار السنة:
+                <ul>
+                    <li><span class="highlight">خصم 50%</span> على الكتب الجديدة في أول أسبوع</li>
+                    <li><span class="highlight">عروض موسمية</span> في رمضان، العيد، والجمعة البيضاء</li>
+                    <li><span class="highlight">كود خصم</span> للمستخدمين الجدد</li>
+                    <li>برنامج <span class="highlight">الولاء</span> بنقاط مكافأة</li>
+                </ul>`
+            },
+            {
+                id: 27,
+                icon: "fa-solid fa-wifi",
+                question: "هل يمكنني القراءة بدون اتصال بالإنترنت؟",
+                answer: `نعم! <span class="highlight">بعد تحميل الكتاب</span> على جهازك، يمكنك قراءته كاملاً بدون إنترنت. نوفر أيضاً:
+                <ul>
+                    <li>قارئ مدمج يعمل <span class="highlight">أوفلاين</span> داخل الموقع</li>
+                    <li>حفظ تلقائي لآخر صفحة قرأتها</li>
+                    <li>مزامنة التقدم عند عودة الاتصال</li>
+                </ul>`
+            },
+            {
+                id: 28,
+                icon: "fa-solid fa-child",
+                question: "هل يوجد قسم خاص للأطفال؟",
+                answer: `بكل سرور! مكتبة الفجر تهتم بالقراء الصغار:
+                <ul>
+                    <li><span class="highlight">قسم كامل لأدب الطفل</span> بقصص مصورة وتفاعلية</li>
+                    <li>كتب تعليمية <span class="highlight">مصنفة حسب العمر</span> (3-6، 7-12، 13+)</li>
+                    <li>خاصية <span class="highlight">القراءة المسموعة</span> للصغار</li>
+                    <li>بيئة آمنة خالية من الإعلانات</li>
+                </ul>`
+            },
+            {
+                id: 29,
+                icon: "fa-solid fa-headphones",
+                question: "هل تتوفر كتب صوتية؟",
+                answer: `نعم، المكتبة الصوتية في توسع مستمر:
+                <ul>
+                    <li>آلاف <span class="highlight">الكتب الصوتية</span> بالعربية والإنجليزية</li>
+                    <li>رواية <span class="highlight">بأصوات محترفين</span></li>
+                    <li>إمكانية <span class="highlight">الاستماع بسرعات مختلفة</span></li>
+                    <li>تنزيل الملفات الصوتية للاستماع أوفلاين</li>
+                </ul>`
+            },
+            {
+                id: 30,
+                icon: "fa-solid fa-graduation-cap",
+                question: "هل يوجد محتوى أكاديمي للباحثين؟",
+                answer: `نوفر للباحثين والطلاب:
+                <ul>
+                    <li><span class="highlight">رسائل ماجستير ودكتوراه</span> منشورة</li>
+                    <li>قاعدة بيانات <span class="highlight">للأوراق البحثية</span></li>
+                    <li>أدوات <span class="highlight">اقتباس وتوثيق</span> آلية</li>
+                    <li>خصم خاص <span class="highlight">للطلاب</span> عند التحقق من البريد الجامعي</li>
+                </ul>`
+            },
+            {
+                id: 31,
+                icon: "fa-solid fa-lock",
+                question: "كيف أغير كلمة المرور؟",
+                answer: `لتغيير كلمة المرور من داخل حسابك:
+                <ul>
+                    <li>اذهب إلى <span class="highlight">إعدادات الحساب</span></li>
+                    <li>اختر <span class="highlight">"تغيير كلمة المرور"</span></li>
+                    <li>أدخل كلمة المرور الحالية ثم الجديدة</li>
+                </ul>
+                ستتلقى تأكيداً بالبريد الإلكتروني بعد التغيير.`
+            },
+            {
+                id: 32,
+                icon: "fa-solid fa-envelope",
+                question: "لماذا لا تصلني رسائل البريد الإلكتروني؟",
+                answer: `إذا لم تصل الرسائل، تحقق من:
+                <ul>
+                    <li>مجلد <span class="highlight">البريد المزعج (Spam)</span></li>
+                    <li>صحة عنوان البريد الإلكتروني المسجل</li>
+                    <li>إضافة <span class="highlight">support@alfajr.com</span> إلى جهات الاتصال</li>
+                </ul>
+                يمكنك <a href="support-chat.html">التواصل مع الدعم</a> إذا استمرت المشكلة.`
+            },
+            {
+                id: 33,
+                icon: "fa-solid fa-circle-info",
+                question: "كيف أتحقق من حالة طلب التوظيف؟",
+                answer: `لمتابعة حالة طلبك:
+                <ul>
+                    <li>سجل الدخول إلى حسابك</li>
+                    <li>اذهب إلى <span class="highlight">"طلباتي"</span> في صفحة التوظيف</li>
+                    <li>ستظهر حالة الطلب (قيد المراجعة، مقبول، مرفوض)</li>
+                </ul>
+                يمكنك <span class="highlight">سحب الطلب</span> إذا أردت التعديل عليه.`
+            },
+            {
+                id: 34,
+                icon: "fa-solid fa-layer-group",
+                question: "ما هي الفئات المتوفرة في المكتبة؟",
+                answer: `مكتبتنا تغطي مجالات واسعة:
+                <ul>
+                    <li>📖 <span class="highlight">الروايات والأدب</span> (عربي، عالمي، خيال علمي)</li>
+                    <li>📚 <span class="highlight">العلوم والتكنولوجيا</span> (برمجة، هندسة، طب)</li>
+                    <li>📈 <span class="highlight">تطوير الذات والأعمال</span> (ريادة، تسويق، قيادة)</li>
+                    <li>🎨 <span class="highlight">الفنون والتصميم</span> (رسم، موسيقى، عمارة)</li>
+                    <li>🕌 <span class="highlight">الدراسات الإسلامية</span> (تفسير، فقه، سيرة)</li>
+                </ul>
+                والفئات في <span class="highlight">توسع مستمر</span> حسب طلب القراء.`
+            },
+            {
+                id: 35,
+                icon: "fa-solid fa-earth-africa",
+                question: "هل يمكنني تغيير لغة واجهة الموقع؟",
+                answer: `حالياً الواجهة <span class="highlight">بالعربية</span> بشكل افتراضي. نعمل على:
+                <ul>
+                    <li>دعم <span class="highlight">اللغة الإنجليزية</span> قريباً</li>
+                    <li>إمكانية التبديل بين اللغات من أعلى الصفحة</li>
+                </ul>
+                المحتوى الداخلي (الكتب) متوفر بلغات متعددة كما ذكرنا.`
+            },
+            {
+                id: 36,
+                icon: "fa-solid fa-person-cane",
+                question: "هل الموقع مهيأ لذوي الاحتياجات الخاصة؟",
+                answer: `نعم، نحرص على سهولة الوصول:
+                <ul>
+                    <li>دعم <span class="highlight">قارئات الشاشة</span> (Screen Readers)</li>
+                    <li>إمكانية <span class="highlight">تكبير الخط</span> وتغيير التباين</li>
+                    <li>تصميم يتوافق مع معايير <span class="highlight">WCAG 2.1</span></li>
+                </ul>
+                نرحب بملاحظاتكم لتحسين التجربة للجميع.`
+            },
+            {
+                id: 37,
+                icon: "fa-solid fa-calendar-check",
+                question: "ما هي مدة الاشتراك المميز؟",
+                answer: `الاشتراك المميز متوفر بعدة باقات:
+                <ul>
+                    <li><span class="highlight">شهري</span> - يتم التجديد تلقائياً</li>
+                    <li><span class="highlight">ربع سنوي</span> - خصم 10%</li>
+                    <li><span class="highlight">سنوي</span> - خصم 30% (الأكثر توفيراً)</li>
+                </ul>
+                يمكنك <span class="highlight">إلغاء التجديد التلقائي</span> في أي وقت من الإعدادات.`
+            },
+            {
+                id: 38,
+                icon: "fa-solid fa-right-from-bracket",
+                question: "كيف أحذف حسابي نهائياً؟",
+                answer: `نحزن لرحيلك! لحذف الحساب:
+                <ul>
+                    <li>اذهب إلى <span class="highlight">إعدادات الحساب</span></li>
+                    <li>اختر <span class="highlight">"حذف الحساب"</span> من الأسفل</li>
+                    <li>ستحتاج لتأكيد هويتك بكلمة المرور</li>
+                </ul>
+                <span class="highlight">تحذير:</span> الحذف نهائي ولا يمكن استعادة البيانات أو المشتريات.`
+            }
+        ];
+
+        // ========================================
+        // عرض الأسئلة
+        // ========================================
+        function renderFAQ(items) {
+            const container = document.getElementById('faqList');
+            const noResults = document.getElementById('noResults');
+
+            if (items.length === 0) {
+                container.innerHTML = '';
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+                container.innerHTML = items.map((faq) => `
+                    <div class="faq-item" data-id="${faq.id}">
+                        <div class="faq-question" onclick="toggleFAQ(this)">
+                            <div class="faq-icon"><i class="${faq.icon}"></i></div>
+                            <div class="faq-question-text">${faq.question}</div>
+                            <div class="faq-arrow"><i class="fa-solid fa-chevron-down"></i></div>
+                        </div>
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">${faq.answer}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // ========================================
+        // فتح/إغلاق السؤال
+        // ========================================
+        window.toggleFAQ = function(questionElement) {
+            const item = questionElement.parentElement;
+            const isOpen = item.classList.contains('open');
+            
+            // إغلاق جميع الأسئلة المفتوحة
+            document.querySelectorAll('.faq-item.open').forEach(el => {
+                if (el !== item) el.classList.remove('open');
+            });
+            
+            // فتح/إغلاق السؤال المحدد
+            item.classList.toggle('open');
+            
+            // التمرير للسؤال إذا تم فتحه
+            if (!isOpen) {
+                setTimeout(() => {
+                    item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
+        };
+
+        // ========================================
+        // البحث
+        // ========================================
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const query = e.target.value.trim().toLowerCase();
+            const searchCount = document.getElementById('searchCount');
+            
+            if (query === '') {
+                searchCount.style.display = 'none';
+                renderFAQ(faqData);
+                return;
+            }
+
+            const results = faqData.filter(faq => 
+                faq.question.toLowerCase().includes(query) ||
+                faq.answer.replace(/<[^>]*>/g, '').toLowerCase().includes(query)
+            );
+
+            renderFAQ(results);
+            searchCount.style.display = 'block';
+            searchCount.textContent = `تم العثور على ${results.length} نتيجة من ${faqData.length}`;
+        });
+
+        // ========================================
+        // زر العودة للأعلى
+        // ========================================
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('scrollTopBtn');
+            if (window.scrollY > 400) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        });
+
+        // ========================================
+        // فتح سؤال من الرابط (مثلاً: faq.html#question-3)
+        // ========================================
+        function openQuestionFromHash() {
+            const hash = window.location.hash;
+            if (hash && hash.startsWith('#question-')) {
+                const id = parseInt(hash.replace('#question-', ''));
+                setTimeout(() => {
+                    const item = document.querySelector(`.faq-item[data-id="${id}"]`);
+                    if (item) {
+                        const question = item.querySelector('.faq-question');
+                        if (question) toggleFAQ(question);
+                        item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 300);
+            }
+        }
+
+        // ========================================
+        // تهيئة الصفحة
+        // ========================================
+        function init() {
+            renderFAQ(faqData);
+            openQuestionFromHash();
+        }
+
+        init();
+    </script>
+</body>
+</html>

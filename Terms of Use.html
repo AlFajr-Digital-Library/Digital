@@ -4,873 +4,732 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>سياسة الاستخدام - المكتبة الرقمية</title>
-        <link rel="icon" type="image/x-icon" href="img//icon1.jpg">
+  
+  <link rel="icon" type="image/x-icon" href="img/icon1.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
   <style>
-    /* ====== المتغيرات والألوان الأساسية من المكتبة ====== */
+    /* ==========================================================================
+       1. VARIABLES & DESIGN SYSTEM (نظام التصميم والألوان)
+       ========================================================================== */
     :root {
-      --primary-color: #ff6b35;
-      --secondary-color: #1a73e8;
-      --accent-color: #ffab00;
-      --dark-bg: #121212;
-      --darker-bg: #0d0d0d;
-      --card-bg: #1e1e1e;
-      --card-hover: #2a2a2a;
-      --text-primary: #ffffff;
-      --text-secondary: #b0b0b0;
-      --text-muted: #888888;
-      --success-color: #4caf50;
-      --warning-color: #ff9800;
-      --danger-color: #f44336;
-      --border-color: #333333;
-      --shadow-light: rgba(255, 107, 53, 0.1);
-      --shadow-medium: rgba(0, 0, 0, 0.3);
-      --gradient-primary: linear-gradient(135deg, #ff6b35, #ff8e53);
-      --gradient-secondary: linear-gradient(135deg, #1a73e8, #4285f4);
-      --gradient-accent: linear-gradient(135deg, #ffab00, #ffca28);
-      --gradient-dark: linear-gradient(135deg, #1e1e1e, #2d2d2d);
-      --border-radius-sm: 8px;
-      --border-radius-md: 12px;
-      --border-radius-lg: 16px;
-      --transition-speed: 0.3s;
+      /* Colors */
+      --clr-primary: #ff6b35;
+      --clr-secondary: #1a73e8;
+      --clr-accent: #ffab00;
+      --clr-bg-main: #121212;
+      --clr-bg-deep: #0d0d0d;
+      --clr-bg-card: #1e1e1e;
+      --clr-bg-hover: #2a2a2a;
+      
+      /* Text Colors */
+      --txt-primary: #ffffff;
+      --txt-secondary: #b0b0b0;
+      --txt-muted: #757575;
+      
+      /* Status Colors */
+      --status-success: rgba(76, 175, 80, 0.1);
+      --status-warning: rgba(255, 152, 0, 0.1);
+      --status-info: rgba(26, 115, 232, 0.1);
+      --border-success: #4caf50;
+      --border-warning: #ff9800;
+      --border-info: #1a73e8;
+
+      /* Layout & Utilities */
+      --border-color: #2d2d2d;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      
+      /* Gradients */
+      --grad-primary: linear-gradient(135deg, #ff6b35, #ff8e53);
+      --grad-dark: linear-gradient(135deg, #1e1e1e, #252525);
     }
 
+    /* ==========================================================================
+       2. GLOBAL STYLES & RESET (إعادة التعيين والتنسيقات العامة)
+       ========================================================================== */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    /* ====== الجسم العام ====== */
     body {
-      font-family: 'Cairo', 'Amiri', sans-serif;
-      background: var(--dark-bg);
-      color: var(--text-primary);
+      font-family: 'Cairo', sans-serif;
+      background-color: var(--clr-bg-main);
+      color: var(--txt-primary);
+      line-height: 1.7;
       overflow-x: hidden;
       min-height: 100vh;
       background-image: 
-        radial-gradient(circle at 10% 20%, rgba(255, 107, 53, 0.05) 0%, transparent 20%),
-        radial-gradient(circle at 90% 80%, rgba(26, 115, 232, 0.05) 0%, transparent 20%);
+        radial-gradient(circle at 10% 20%, rgba(255, 107, 53, 0.03) 0%, transparent 30%),
+        radial-gradient(circle at 90% 80%, rgba(26, 115, 232, 0.03) 0%, transparent 30%);
     }
 
-    /* ====== الشريط العلوي ====== */
-    .top {
+    a {
+      color: var(--clr-primary);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* ==========================================================================
+       3. SITE HEADER / NAVBAR (الشريط العلوي للموقع)
+       ========================================================================== */
+    .site-header {
       position: fixed;
-      width: 100%;
       top: 0;
       left: 0;
-      height: 70px;
-      z-index: 100;
-      background: rgba(18, 18, 18, 0.95);
-      backdrop-filter: blur(10px);
+      width: 100%;
+      height: 75px;
+      z-index: 1000;
+      background: rgba(18, 18, 18, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 20px;
-      box-shadow: 0 4px 12px var(--shadow-medium);
+      padding: 0 1.5rem;
+      box-shadow: var(--shadow);
     }
 
-    .logo {
+    .brand {
       display: flex;
       align-items: center;
       gap: 12px;
     }
 
-    .logo-icon {
-      width: 40px;
-      height: 40px;
-      background: var(--gradient-primary);
-      border-radius: 10px;
+    .brand__icon {
+      width: 42px;
+      height: 42px;
+      background: var(--grad-primary);
+      border-radius: var(--radius-sm);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
-      color: white;
+      font-size: 1.25rem;
+      color: #fff;
     }
 
-    .logo-text {
-      font-size: 22px;
-      font-weight: bold;
-      background: var(--gradient-primary);
+    .brand__text {
+      font-size: 1.35rem;
+      font-weight: 700;
+      background: var(--grad-primary);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    .top-icons {
+    .nav-actions {
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 12px;
     }
 
-    .icon-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 40px;
-      height: 40px;
-      background: var(--gradient-dark);
-      border-radius: 50%;
-      transition: all var(--transition-speed);
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-
-    .icon-wrapper:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      background: var(--gradient-primary);
-    }
-
-    .icon-wrapper i {
-      font-size: 18px;
-      color: var(--text-primary);
-    }
-
-    .back-button {
-      background: var(--gradient-primary);
-      color: white;
+    /* Buttons */
+    .btn-back {
+      background: var(--grad-primary);
+      color: #fff;
       border: none;
-      padding: 10px 20px;
-      border-radius: var(--border-radius-md);
-      font-weight: bold;
+      padding: 0.6rem 1.2rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.9rem;
       cursor: pointer;
-      transition: all var(--transition-speed);
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 14px;
+      transition: var(--transition);
     }
 
-    .back-button:hover {
+    .btn-back:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+      box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
     }
 
-    /* ====== رأس الصفحة ====== */
-    .policy-header {
-      position: relative;
-      top: 70px;
-      width: 100%;
-      padding: 40px 20px;
-      background: var(--gradient-dark);
+    .btn-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--clr-bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 50%;
+      color: var(--txt-primary);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .btn-icon:hover {
+      background: var(--grad-primary);
+      color: #fff;
+      border-color: transparent;
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+       4. HERO PROFILE HEADER (رأس الصفحة والعنوان)
+       ========================================================================== */
+    .hero-header {
+      margin-top: 75px;
+      padding: 5rem 1.5rem 3rem;
+      background: var(--grad-dark);
       border-bottom: 1px solid var(--border-color);
       text-align: center;
-      overflow: hidden;
-    }
-
-    .policy-header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: var(--gradient-primary);
-    }
-
-    .policy-title {
-      font-size: 36px;
-      font-weight: bold;
-      margin-bottom: 15px;
-      background: var(--gradient-primary);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
       position: relative;
-      display: inline-block;
     }
 
-    .policy-title::after {
+    .hero-header::after {
       content: '';
       position: absolute;
-      bottom: -10px;
+      bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      width: 80px;
+      width: 100px;
       height: 4px;
-      background: var(--gradient-primary);
+      background: var(--grad-primary);
       border-radius: 2px;
     }
 
-    .policy-subtitle {
-      color: var(--text-secondary);
-      font-size: 16px;
-      max-width: 600px;
-      margin: 0 auto;
-      line-height: 1.6;
+    .hero-header__title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      letter-spacing: -0.5px;
     }
 
-    /* ====== المحتوى الرئيسي ====== */
-    .main-content {
-      padding: 140px 20px 60px;
-      max-width: 1000px;
+    .hero-header__subtitle {
+      color: var(--txt-secondary);
+      font-size: 1.1rem;
+      max-width: 650px;
       margin: 0 auto;
     }
 
-    .policy-section {
-      background: var(--gradient-dark);
-      border-radius: var(--border-radius-lg);
-      padding: 30px;
-      margin-bottom: 25px;
-      transition: all var(--transition-speed);
+    /* ==========================================================================
+       5. MAIN CONTENT & SECTIONS (المحتوى الرئيسي والبنود)
+       ========================================================================== */
+    .main-layout {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+    }
+
+    /* Components: Custom Alerts */
+    .custom-alert {
+      padding: 1.25rem;
+      border-radius: var(--radius-md);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      border-right: 4px solid;
+    }
+
+    .custom-alert--warning { background: var(--status-warning); border-right-color: var(--border-warning); }
+    .custom-alert--info { background: var(--status-info); border-right-color: var(--border-info); }
+    .custom-alert--success { background: var(--status-success); border-right-color: var(--border-success); }
+
+    .custom-alert__icon {
+      font-size: 1.25rem;
+      margin-top: 2px;
+    }
+    .custom-alert--warning .custom-alert__icon { color: var(--border-warning); }
+    .custom-alert--info .custom-alert__icon { color: var(--border-info); }
+    .custom-alert--success .custom-alert__icon { color: var(--border-success); }
+
+    .custom-alert__title {
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .custom-alert__text {
+      color: var(--txt-secondary);
+      font-size: 0.95rem;
+    }
+
+    /* Components: Policy Cards */
+    .policy-card {
+      background: var(--clr-bg-card);
       border: 1px solid var(--border-color);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow);
       position: relative;
       overflow: hidden;
+      transition: var(--transition);
+      
+      /* Animation Triggered via CSS Loading */
+      animation: fadeInUp 0.6s ease forwards;
+      opacity: 0;
     }
 
-    .policy-section:hover {
+    .policy-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-      border-color: var(--primary-color);
+      border-color: var(--clr-primary);
+      box-shadow: 0 8px 30px rgba(255, 107, 53, 0.15);
     }
 
-    .policy-section::before {
+    .policy-card::before {
       content: '';
       position: absolute;
       top: 0;
       right: 0;
-      width: 5px;
+      width: 6px;
       height: 100%;
-      background: var(--gradient-primary);
+      background: var(--grad-primary);
       opacity: 0;
-      transition: opacity var(--transition-speed);
+      transition: var(--transition);
     }
 
-    .policy-section:hover::before {
+    .policy-card:hover::before {
       opacity: 1;
     }
 
-    .section-header {
+    .card-header {
       display: flex;
       align-items: center;
-      gap: 15px;
-      margin-bottom: 20px;
-      padding-bottom: 15px;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
       border-bottom: 1px solid var(--border-color);
     }
 
-    .section-icon {
-      width: 50px;
-      height: 50px;
-      background: var(--gradient-primary);
+    .card-header__icon {
+      width: 46px;
+      height: 46px;
+      background: rgba(255, 107, 53, 0.1);
+      color: var(--clr-primary);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
-      color: white;
-      flex-shrink: 0;
+      font-size: 1.2rem;
     }
 
-    .section-title {
-      font-size: 22px;
-      font-weight: bold;
-      color: var(--text-primary);
+    .card-header__title {
+      font-size: 1.4rem;
+      font-weight: 600;
       flex: 1;
     }
 
-    .section-number {
-      background: var(--gradient-accent);
-      color: white;
-      width: 35px;
-      height: 35px;
+    .card-header__number {
+      font-size: 0.95rem;
+      font-weight: 700;
+      background: var(--clr-bg-deep);
+      border: 1px solid var(--border-color);
+      color: var(--clr-accent);
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
-      font-size: 16px;
-      flex-shrink: 0;
     }
 
-    .section-content {
-      padding: 0 10px;
-    }
-
-    .section-text {
-      color: var(--text-secondary);
-      font-size: 16px;
-      line-height: 1.8;
-      margin-bottom: 15px;
+    .card-body__text {
+      color: var(--txt-secondary);
+      margin-bottom: 1.25rem;
     }
 
     .policy-list {
       list-style: none;
-      margin: 20px 0;
-      padding-right: 20px;
     }
 
-    .policy-list li {
+    .policy-list__item {
       position: relative;
-      margin-bottom: 12px;
-      padding-right: 30px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      font-size: 15px;
+      padding-right: 2rem;
+      margin-bottom: 0.75rem;
+      color: var(--txt-secondary);
+      font-size: 0.95rem;
     }
 
-    .policy-list li::before {
-      content: '✓';
+    .policy-list__item::before {
+      content: "\f00c";
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
       position: absolute;
       right: 0;
-      top: 0;
-      width: 24px;
-      height: 24px;
-      background: var(--gradient-primary);
-      border-radius: 50%;
+      top: 2px;
+      color: var(--clr-primary);
+      font-size: 0.85rem;
+    }
+
+    .highlight-panel {
+      background: rgba(255, 107, 53, 0.05);
+      border-right: 4px solid var(--clr-primary);
+      padding: 1.25rem;
+      border-radius: var(--radius-md);
+      margin-top: 1.5rem;
+    }
+
+    .highlight-panel__text {
+      font-weight: 600;
+      font-size: 0.95rem;
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      color: white;
+      gap: 10px;
     }
 
-    .highlight-box {
-      background: rgba(255, 107, 53, 0.1);
-      border-right: 4px solid var(--primary-color);
-      padding: 20px;
-      border-radius: var(--border-radius-md);
-      margin: 20px 0;
-    }
-
-    .highlight-box p {
-      color: var(--text-primary);
-      font-weight: bold;
-      margin: 0;
-      font-size: 15px;
-    }
-
-    /* ====== أزرار ====== */
-    .action-buttons {
+    /* Footer Action Control */
+    .cta-group {
       display: flex;
-      gap: 15px;
-      margin-top: 30px;
-      padding: 20px;
-      background: var(--card-bg);
-      border-radius: var(--border-radius-lg);
-      border: 1px solid var(--border-color);
+      gap: 1rem;
+      margin-top: 3rem;
     }
 
-    .btn {
+    .btn-main {
       flex: 1;
-      padding: 15px;
+      padding: 1rem;
       border: none;
-      border-radius: var(--border-radius-md);
-      font-weight: bold;
-      font-size: 16px;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 1rem;
       cursor: pointer;
-      transition: all var(--transition-speed);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
+      transition: var(--transition);
     }
 
-    .btn-primary {
-      background: var(--gradient-primary);
-      color: white;
+    .btn-main--primary {
+      background: var(--grad-primary);
+      color: #fff;
     }
 
-    .btn-primary:hover {
+    .btn-main--primary:hover {
       transform: translateY(-3px);
       box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
     }
 
-    .btn-secondary {
-      background: var(--gradient-dark);
-      color: var(--text-primary);
+    .btn-main--secondary {
+      background: var(--clr-bg-card);
+      color: var(--txt-primary);
       border: 1px solid var(--border-color);
     }
 
-    .btn-secondary:hover {
-      background: var(--card-hover);
+    .btn-main--secondary:hover {
+      background: var(--clr-bg-hover);
       transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
     }
 
-    /* ====== التذييل ====== */
-    .footer {
-      background: var(--darker-bg);
-      padding: 40px 20px;
-      margin-top: 60px;
+    /* ==========================================================================
+       6. GLOBAL SITE FOOTER (تذييل الصفحة)
+       ========================================================================== */
+    .site-footer {
+      background: var(--clr-bg-deep);
       border-top: 1px solid var(--border-color);
+      padding: 4rem 1.5rem 2rem;
+      margin-top: 5rem;
     }
 
-    .footer-content {
+    .footer-grid {
       max-width: 1200px;
       margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2.5rem;
     }
 
-    .footer-section h3 {
-      color: var(--text-primary);
-      margin-bottom: 20px;
-      font-size: 18px;
+    .footer-col__title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
       display: flex;
       align-items: center;
       gap: 10px;
+      color: var(--txt-primary);
     }
 
-    .footer-section h3 i {
-      color: var(--primary-color);
+    .footer-col__title i {
+      color: var(--clr-primary);
+    }
+
+    .footer-col__text {
+      color: var(--txt-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
     }
 
     .footer-links {
       list-style: none;
     }
 
-    .footer-links li {
-      margin-bottom: 10px;
+    .footer-links__item {
+      margin-bottom: 0.75rem;
     }
 
-    .footer-links a {
-      color: var(--text-secondary);
-      text-decoration: none;
-      transition: color var(--transition-speed);
+    .footer-links__link {
+      color: var(--txt-secondary);
+      font-size: 0.9rem;
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .footer-links a:hover {
-      color: var(--primary-color);
+    .footer-links__link:hover {
+      color: var(--clr-primary);
+      transform: translateX(-4px);
     }
 
-    .copyright {
+    .footer-bottom {
       text-align: center;
-      padding-top: 30px;
-      margin-top: 30px;
+      max-width: 1200px;
+      margin: 3rem auto 0;
+      padding-top: 2rem;
       border-top: 1px solid var(--border-color);
-      color: var(--text-muted);
-      font-size: 14px;
+      color: var(--txt-muted);
+      font-size: 0.85rem;
     }
 
-    /* ====== التنبيهات ====== */
-    .alert {
-      padding: 20px;
-      border-radius: var(--border-radius-md);
-      margin: 20px 0;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      border-right: 4px solid;
+    .footer-bottom__meta {
+      display: block;
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
     }
 
-    .alert-warning {
-      background: rgba(255, 152, 0, 0.1);
-      border-right-color: var(--warning-color);
+    /* ==========================================================================
+       7. ANIMATIONS & RESPONSIVE DESIGN (الحركات والجاذبية)
+       ========================================================================== */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(25px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .alert-info {
-      background: rgba(26, 115, 232, 0.1);
-      border-right-color: var(--secondary-color);
-    }
+    /* تطبيق أوقات تأخيرية مختلفة للبطاقات لتبدو احترافية عند التحميل */
+    .policy-card:nth-child(2) { animation-delay: 0.1s; }
+    .policy-card:nth-child(3) { animation-delay: 0.2s; }
+    .policy-card:nth-child(4) { animation-delay: 0.3s; }
+    .policy-card:nth-child(5) { animation-delay: 0.4s; }
+    .policy-card:nth-child(6) { animation-delay: 0.5s; }
 
-    .alert-success {
-      background: rgba(76, 175, 80, 0.1);
-      border-right-color: var(--success-color);
-    }
-
-    .alert-icon {
-      width: 40px;
-      height: 40px;
-      background: currentColor;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      flex-shrink: 0;
-    }
-
-    .alert-content {
-      flex: 1;
-    }
-
-    .alert-title {
-      font-weight: bold;
-      margin-bottom: 5px;
-      color: var(--text-primary);
-    }
-
-    .alert-text {
-      color: var(--text-secondary);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    /* ====== الوسائط المتجاوبة ====== */
+    /* Media Queries */
     @media (max-width: 768px) {
-      .policy-header {
-        padding: 30px 15px;
-      }
-
-      .policy-title {
-        font-size: 28px;
-      }
-
-      .main-content {
-        padding: 120px 15px 40px;
-      }
-
-      .policy-section {
-        padding: 20px;
-      }
-
-      .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-      }
-
-      .section-title {
-        font-size: 20px;
-      }
-
-      .action-buttons {
-        flex-direction: column;
-      }
-
-      .btn {
-        width: 100%;
-      }
-
-      .top {
-        height: 60px;
-        padding: 0 15px;
-      }
-
-      .logo-text {
-        font-size: 18px;
-      }
+      .hero-header { padding: 4rem 1rem 2rem; }
+      .hero-header__title { font-size: 2rem; }
+      .main-layout { padding: 2rem 1rem; }
+      .policy-card { padding: 1.5rem; }
+      .card-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .cta-group { flex-direction: column; }
     }
 
-    @media (max-width: 480px) {
-      .policy-title {
-        font-size: 24px;
-      }
-
-      .policy-section {
-        padding: 15px;
-      }
-
-      .section-icon {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
-      }
-
-      .policy-list li {
-        padding-right: 25px;
-        font-size: 14px;
-      }
-    }
-
-    /* ====== الطباعة ====== */
+    /* Print View Optimization */
     @media print {
-      .top,
-      .action-buttons,
-      .footer,
-      .icon-wrapper {
-        display: none;
-      }
-
-      .policy-header {
-        position: static;
-        padding: 20px 0;
-      }
-
-      .main-content {
-        padding: 0;
-      }
-
-      body {
-        background: white;
-        color: black;
-      }
-
-      .policy-section {
-        border: 1px solid #ddd;
-        box-shadow: none;
-        page-break-inside: avoid;
-      }
+      .site-header, .cta-group, .site-footer { display: none !important; }
+      .hero-header { margin-top: 0; padding: 20px 0; }
+      body { background: #fff; color: #000; }
+      .policy-card { opacity: 1 !important; transform: none !important; border: 1px solid #ccc; page-break-inside: avoid; box-shadow: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- الشريط العلوي -->
-  <div class="top">
-    <div class="logo">
-      <div class="logo-icon">
+  <header class="site-header">
+    <div class="brand">
+      <div class="brand__icon">
         <i class="fas fa-book"></i>
       </div>
-      <span class="logo-text">المكتبة الرقمية</span>
+      <span class="brand__text">المكتبة الرقمية</span>
     </div>
 
-    <div class="top-icons">
-      <button class="back-button" onclick="window.history.back()">
+    <nav class="nav-actions">
+      <button class="btn-back" onclick="window.history.back()">
         <i class="fas fa-arrow-right"></i> العودة
       </button>
-      <div class="icon-wrapper" onclick="window.print()" title="طباعة الصفحة">
+      <button class="btn-icon" onclick="window.print()" title="طباعة الصفحة">
         <i class="fas fa-print"></i>
-      </div>
-      <div class="icon-wrapper" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="الانتقال للأعلى">
+      </button>
+      <button class="btn-icon" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="الانتقال للأعلى">
         <i class="fas fa-arrow-up"></i>
-      </div>
-    </div>
-  </div>
+      </button>
+    </nav>
+  </header>
 
-  <!-- رأس الصفحة -->
-  <div class="policy-header">
-    <h1 class="policy-title">سياسة الاستخدام</h1>
-    <p class="policy-subtitle">
-      وثيقة تنظيمية توضح شروط استخدام خدمات المكتبة الرقمية، يرجى قراءتها بعناية قبل استخدام المنصة
+  <section class="hero-header">
+    <h1 class="hero-header__title">سياسة الاستخدام</h1>
+    <p class="hero-header__subtitle">
+      وثيقة تنظيمية توضح شروط استخدام خدمات المكتبة الرقمية، يرجى قراءتها بعناية قبل استخدام المنصة.
     </p>
-  </div>
+  </section>
 
-  <!-- المحتوى الرئيسي -->
-  <div class="main-content">
-    <!-- التنبيه المهم -->
-    <div class="alert alert-warning">
-      <div class="alert-icon">
-        <i class="fas fa-exclamation-triangle"></i>
-      </div>
-      <div class="alert-content">
-        <div class="alert-title">ملاحظة هامة</div>
-        <div class="alert-text">
-          باستخدامك خدمات المكتبة الرقمية، فإنك تؤكد موافقتك الكاملة على كافة الشروط والسياسات المذكورة أدناه.
-        </div>
+  <main class="main-layout">
+    
+    <div class="custom-alert custom-alert--warning">
+      <i class="fas fa-exclamation-triangle custom-alert__icon"></i>
+      <div class="custom-alert__content">
+        <h4 class="custom-alert__title">ملاحظة هامة</h4>
+        <p class="custom-alert__text">باستخدامك خدمات المكتبة الرقمية، فإنك تؤكد موافقتك الكاملة على كافة الشروط والسياسات المذكورة أدناه.</p>
       </div>
     </div>
 
-    <!-- القسم 1 -->
-    <div class="policy-section">
-      <div class="section-header">
-        <div class="section-icon">
-          <i class="fas fa-copyright"></i>
-        </div>
-        <div class="section-title">حقوق الملكية الفكرية</div>
-        <div class="section-number">1</div>
-      </div>
-      <div class="section-content">
-        <p class="section-text">
-          تحافظ المكتبة الرقمية على حقوق الملكية الفكرية لجميع المحتويات المنشورة على المنصة.
-        </p>
+    <section class="policy-card">
+      <header class="card-header">
+        <div class="card-header__icon"><i class="fas fa-copyright"></i></div>
+        <h3 class="card-header__title">حقوق الملكية الفكرية</h3>
+        <span class="card-header__number">1</span>
+      </header>
+      <div class="card-body">
+        <p class="card-body__text">تحافظ المكتبة الرقمية على حقوق الملكية الفكرية لجميع المحتويات المنشورة على المنصة.</p>
         <ul class="policy-list">
-          <li>جميع المحتويات محفوظة الحقوق للمكتبة الرقمية.</li>
-          <li>يُمنع النسخ أو التعديل أو إعادة النشر دون إذن خطي مسبق.</li>
-          <li>يُمنع استخدام المحتوى لأغراض تجارية دون ترخيص.</li>
-          <li>المحتوى مخصص للاستخدام الشخصي والتعليمي فقط.</li>
+          <li class="policy-list__item">جميع المحتويات محفوظة الحقوق للمكتبة الرقمية.</li>
+          <li class="policy-list__item">يُمنع النسخ أو التعديل أو إعادة النشر دون إذن خطي مسبق.</li>
+          <li class="policy-list__item">يُمنع استخدام المحتوى لأغراض تجارية دون ترخيص.</li>
+          <li class="policy-list__item">المحتوى مخصص للاستخدام الشخصي والتعليمي فقط.</li>
         </ul>
-        <div class="highlight-box">
-          <p>
-            <i class="fas fa-info-circle" style="margin-left: 8px;"></i>
+        <div class="highlight-panel">
+          <p class="highlight-panel__text">
+            <i class="fas fa-info-circle"></i>
             أي انتهاك لحقوق الملكية الفكرية قد يؤدي إلى إيقاف الحساب واتخاذ الإجراءات القانونية.
           </p>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- القسم 2 -->
-    <div class="policy-section">
-      <div class="section-header">
-        <div class="section-icon">
-          <i class="fas fa-user-cog"></i>
-        </div>
-        <div class="section-title">إدارة الحسابات</div>
-        <div class="section-number">2</div>
-      </div>
-      <div class="section-content">
-        <p class="section-text">
-          إدارة الحسابات تحمي خصوصيتك وتحافظ على أمان المنصة لجميع المستخدمين.
-        </p>
+    <section class="policy-card">
+      <header class="card-header">
+        <div class="card-header__icon"><i class="fas fa-user-cog"></i></div>
+        <h3 class="card-header__title">إدارة الحسابات</h3>
+        <span class="card-header__number">2</span>
+      </header>
+      <div class="card-body">
+        <p class="card-body__text">إدارة الحسابات تحمي خصوصيتك وتحافظ على أمان المنصة لجميع المستخدمين.</p>
         <ul class="policy-list">
-          <li>المستخدم مسؤول عن سرية بيانات تسجيل الدخول الخاصة به.</li>
-          <li>يحق للمكتبة إيقاف أو حذف أي حساب يخالف هذه السياسة.</li>
-          <li>يجب تحديث المعلومات الشخصية عند أي تغيير.</li>
-          <li>يُمنع مشاركة الحساب مع أشخاص آخرين.</li>
+          <li class="policy-list__item">المستخدم مسؤول عن سرية بيانات تسجيل الدخول الخاصة به.</li>
+          <li class="policy-list__item">يحق للمكتبة إيقاف أو حذف أي حساب يخالف هذه السياسة.</li>
+          <li class="policy-list__item">يجب تحديث المعلومات الشخصية عند أي تغيير.</li>
+          <li class="policy-list__item">يُمنع مشاركة الحساب مع أشخاص آخرين.</li>
         </ul>
-        <div class="alert alert-info">
-          <div class="alert-icon">
-            <i class="fas fa-shield-alt"></i>
-          </div>
-          <div class="alert-content">
-            <div class="alert-title">نصائح الأمان</div>
-            <div class="alert-text">
-              ننصح بتغيير كلمة المرور بشكل دوري وعدم استخدام نفس كلمة المرور في منصات متعددة.
-            </div>
+        <div class="custom-alert custom-alert--info" style="margin-top: 1.5rem; margin-bottom: 0;">
+          <i class="fas fa-shield-alt custom-alert__icon"></i>
+          <div class="custom-alert__content">
+            <h4 class="custom-alert__title">نصائح الأمان</h4>
+            <p class="custom-alert__text">ننصح بتغيير كلمة المرور بشكل دوري وعدم استخدام نفس كلمة المرور في منصات متعددة.</p>
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- القسم 3 -->
-    <div class="policy-section">
-      <div class="section-header">
-        <div class="section-icon">
-          <i class="fas fa-check-circle"></i>
-        </div>
-        <div class="section-title">الاستخدام المقبول</div>
-        <div class="section-number">3</div>
-      </div>
-      <div class="section-content">
-        <p class="section-text">
-          نلتزم بتوفير بيئة آمنة ومحترمة لجميع المستخدمين، ويجب الالتزام بشروط الاستخدام المقبول.
-        </p>
+    <section class="policy-card">
+      <header class="card-header">
+        <div class="card-header__icon"><i class="fas fa-check-circle"></i></div>
+        <h3 class="card-header__title">الاستخدام المقبول</h3>
+        <span class="card-header__number">3</span>
+      </header>
+      <div class="card-body">
+        <p class="card-body__text">نلتزم بتوفير بيئة آمنة ومحترمة لجميع المستخدمين، ويجب الالتزام بشروط الاستخدام المقبول.</p>
         <ul class="policy-list">
-          <li>يُحظر استخدام المنصة لأغراض غير قانونية أو ضارة.</li>
-          <li>الالتزام باحترام بيئة الاستخدام الرقمية وقوانين الدولة.</li>
-          <li>منع نشر أي محتوى مسيء أو غير أخلاقي.</li>
-          <li>احترام حقوق ومشاعر المستخدمين الآخرين.</li>
+          <li class="policy-list__item">يُحظر استخدام المنصة لأغراض غير قانونية أو ضارة.</li>
+          <li class="policy-list__item">الالتزام باحترام بيئة الاستخدام الرقمية وقوانين الدولة.</li>
+          <li class="policy-list__item">منع نشر أي محتوى مسيء أو غير أخلاقي.</li>
+          <li class="policy-list__item">احترام حقوق ومشاعر المستخدمين الآخرين.</li>
         </ul>
       </div>
-    </div>
+    </section>
 
-    <!-- القسم 4 -->
-    <div class="policy-section">
-      <div class="section-header">
-        <div class="section-icon">
-          <i class="fas fa-sync-alt"></i>
-        </div>
-        <div class="section-title">تعديلات السياسة</div>
-        <div class="section-number">4</div>
-      </div>
-      <div class="section-content">
-        <p class="section-text">
-          نحن نعمل باستمرار على تحسين خدماتنا، وقد نحتاج إلى تحديث سياسة الاستخدام بين الحين والآخر.
-        </p>
+    <section class="policy-card">
+      <header class="card-header">
+        <div class="card-header__icon"><i class="fas fa-sync-alt"></i></div>
+        <h3 class="card-header__title">تعديلات السياسة</h3>
+        <span class="card-header__number">4</span>
+      </header>
+      <div class="card-body">
+        <p class="card-body__text">نحن نعمل باستمرار على تحسين خدماتنا، وقد نحتاج إلى تحديث سياسة الاستخدام بين الحين والآخر.</p>
         <ul class="policy-list">
-          <li>يحق للمكتبة تعديل أو تحديث هذه السياسة في أي وقت.</li>
-          <li>سيتم إعلام المستخدمين بأي تغييرات جوهرية عبر البريد الإلكتروني.</li>
-          <li>يستمر استخدام المنصة بعد التعديلات يعني الموافقة عليها.</li>
-          <li>ننصح بمراجعة السياسة بشكل دوري للاطلاع على التحديثات.</li>
+          <li class="policy-list__item">يحق للمكتبة تعديل أو تحديث هذه السياسة في أي وقت.</li>
+          <li class="policy-list__item">سيتم إعلام المستخدمين بأي تغييرات جوهرية عبر البريد الإلكتروني.</li>
+          <li class="policy-list__item">يستمر استخدام المنصة بعد التعديلات يعني الموافقة عليها.</li>
+          <li class="policy-list__item">ننصح بمراجعة السياسة بشكل دوري للاطلاع على التحديثات.</li>
         </ul>
-        <div class="alert alert-success">
-          <div class="alert-icon">
-            <i class="fas fa-bell"></i>
-          </div>
-          <div class="alert-content">
-            <div class="alert-title">آخر تحديث</div>
-            <div class="alert-text">
-              تم تحديث هذه السياسة في 15 يناير 2025. سيتم إعلامك بأي تغييرات مستقبلية.
-            </div>
+        <div class="custom-alert custom-alert--success" style="margin-top: 1.5rem; margin-bottom: 0;">
+          <i class="fas fa-bell custom-alert__icon"></i>
+          <div class="custom-alert__content">
+            <h4 class="custom-alert__title">آخر تحديث</h4>
+            <p class="custom-alert__text">تم تحديث هذه السياسة في 15 يناير 2025. سيتم إعلامك بأي تغييرات مستقبلية.</p>
           </div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- القسم 5 -->
-    <div class="policy-section">
-      <div class="section-header">
-        <div class="section-icon">
-          <i class="fas fa-headset"></i>
-        </div>
-        <div class="section-title">التواصل معنا</div>
-        <div class="section-number">5</div>
-      </div>
-      <div class="section-content">
-        <p class="section-text">
-          نرحب بملاحظاتكم واستفساراتكم ونسعد بتلقيها من أجل تحسين تجربتكم مع المكتبة الرقمية.
-        </p>
+    <section class="policy-card">
+      <header class="card-header">
+        <div class="card-header__icon"><i class="fas fa-headset"></i></div>
+        <h3 class="card-header__title">التواصل معنا</h3>
+        <span class="card-header__number">5</span>
+      </header>
+      <div class="card-body">
+        <p class="card-body__text">نرحب بملاحظاتكم واستفساراتكم ونسعد بتلقيها من أجل تحسين تجربتكم مع المكتبة الرقمية.</p>
         <ul class="policy-list">
-          <li>للاستفسارات أو الملاحظات، يرجى التواصل عبر <a href="#" style="color: var(--primary-color);">نموذج الاتصال الرسمي</a>.</li>
-          <li>ساعات الدعم: من الأحد إلى الخميس، 9 صباحاً - 5 مساءً.</li>
-          <li>وقت الاستجابة: خلال 24-48 ساعة عمل.</li>
-          <li>للحالات الطارئة: تواصل عبر <a href="#" style="color: var(--primary-color);">الدردشة المباشرة</a>.</li>
+          <li class="policy-list__item">للاستفسارات يرجى التواصل عبر <a href="#">نموذج الاتصال الرسمي</a>.</li>
+          <li class="policy-list__item">ساعات الدعم: من الأحد إلى الخميس، 9 صباحاً - 5 مساءً.</li>
+          <li class="policy-list__item">وقت الاستجابة: خلال 24-48 ساعة عمل.</li>
+          <li class="policy-list__item">للحالات الطارئة: تواصل عبر <a href="#">الدردشة المباشرة</a>.</li>
         </ul>
       </div>
-    </div>
+    </section>
 
-    <!-- أزرار الإجراءات -->
-    <div class="action-buttons">
-      <button class="btn btn-primary" onclick="window.print()">
+    <div class="cta-group">
+      <button class="btn-main btn-main--primary" onclick="window.print()">
         <i class="fas fa-print"></i> طباعة السياسة
       </button>
-      <button class="btn btn-secondary" onclick="window.location.href='index.html'">
+      <button class="btn-main btn-main--secondary" onclick="window.location.href='index.html'">
         <i class="fas fa-home"></i> العودة للرئيسية
       </button>
     </div>
-  </div>
 
-  <!-- التذييل -->
-  <footer class="footer">
-    <div class="footer-content">
-      <div class="footer-section">
-        <h3><i class="fas fa-info-circle"></i> معلومات عنا</h3>
-        <p style="color: var(--text-secondary); line-height: 1.6; font-size: 14px;">
-          المكتبة الرقمية تهدف إلى توفير محتوى تعليمي وترفيهي عالي الجودة للمستخدمين العرب، مع الالتزام بأعلى معايير الجودة والأمان.
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3 class="footer-col__title"><i class="fas fa-info-circle"></i> معلومات عنا</h3>
+        <p class="footer-col__text">
+          المكتبة الرقمية تهدف إلى توفير محتوى تعليمي وترفيهي عالي الجودة للمستخدمين العرب، مع الالتزام بأعلى معايير الجودة والأمان الرقمي.
         </p>
       </div>
 
-      <div class="footer-section">
-        <h3><i class="fas fa-link"></i> روابط سريعة</h3>
+      <div class="footer-col">
+        <h3 class="footer-col__title"><i class="fas fa-link"></i> روابط سريعة</h3>
         <ul class="footer-links">
-          <li><a href="index.html"><i class="fas fa-home"></i> الصفحة الرئيسية</a></li>
-          <li><a href="#"><i class="fas fa-book"></i> المكتبة</a></li>
-          <li><a href="#"><i class="fas fa-question-circle"></i> الأسئلة الشائعة</a></li>
-          <li><a href="#"><i class="fas fa-envelope"></i> اتصل بنا</a></li>
+          <li class="footer-links__item"><a href="index.html" class="footer-links__link"><i class="fas fa-home"></i> الصفحة الرئيسية</a></li>
+          <li class="footer-links__item"><a href="#" class="footer-links__link"><i class="fas fa-book"></i> المكتبة الرقمية</a></li>
+          <li class="footer-links__item"><a href="#" class="footer-links__link"><i class="fas fa-question-circle"></i> الأسئلة الشائعة</a></li>
         </ul>
       </div>
 
-      <div class="footer-section">
-        <h3><i class="fas fa-shield-alt"></i> سياسات أخرى</h3>
+      <div class="footer-col">
+        <h3 class="footer-col__title"><i class="fas fa-shield-alt"></i> سياسات أخرى</h3>
         <ul class="footer-links">
-          <li><a href="#"><i class="fas fa-user-shield"></i> سياسة الخصوصية</a></li>
-          <li><a href="#"><i class="fas fa-cookie"></i> سياسة الكوكيز</a></li>
-          <li><a href="#"><i class="fas fa-exchange-alt"></i> سياسة الاسترجاع</a></li>
-          <li><a href="#"><i class="fas fa-gavel"></i> الشروط والأحكام</a></li>
+          <li class="footer-links__item"><a href="#" class="footer-links__link"><i class="fas fa-user-shield"></i> سياسة الخصوصية</a></li>
+          <li class="footer-links__item"><a href="#" class="footer-links__link"><i class="fas fa-cookie"></i> سياسة الكوكيز</a></li>
+          <li class="footer-links__item"><a href="#" class="footer-links__link"><i class="fas fa-gavel"></i> الشروط والأحكام</a></li>
         </ul>
       </div>
     </div>
 
-    <div class="copyright">
-      جميع الحقوق محفوظة © 2025 - المكتبة الرقمية
-      <br>
-      <span style="font-size: 12px; color: var(--text-muted); margin-top: 5px; display: block;">
-        آخر تحديث: 15 يناير 2025 | الإصدار: 2.1.0
-      </span>
+    <div class="footer-bottom">
+      <p>جميع الحقوق محفوظة © 2026 - المكتبة الرقمية</p>
+      <span class="footer-bottom__meta">آخر تحديث: 15 يناير 2025 | الإصدار المطور: 3.0.0</span>
     </div>
   </footer>
 
-  <script>
-    // إضافة تأثيرات تفاعلية
-    document.addEventListener('DOMContentLoaded', function() {
-      // إضافة تأثير عند التمرير للسياسات
-      const policySections = document.querySelectorAll('.policy-section');
-      
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-          }
-        });
-      }, { threshold: 0.1 });
-      
-      policySections.forEach(section => {
-        section.style.opacity = '0';
-        section.style.transform = 'translateY(20px)';
-        section.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        observer.observe(section);
-      });
-
-      // إضافة تأثير النقر على الأزرار
-      const buttons = document.querySelectorAll('.btn, .icon-wrapper');
-      buttons.forEach(button => {
-        button.addEventListener('click', function(e) {
-          // تأثير النقر
-          this.style.transform = 'scale(0.95)';
-          setTimeout(() => {
-            this.style.transform = '';
-          }, 200);
-        });
-      });
-    });
-  </script>
 </body>
 </html>

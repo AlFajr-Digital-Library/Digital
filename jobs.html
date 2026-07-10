@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>انضم إلينا - وظائف المستقبل | مكتبة الفجر الرقمية</title>
+    <link rel="icon" type="image/x-icon" href="img/icon1.jpg">
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+        import { getDatabase, ref, get, push, set, update, remove, onValue } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBlcKC2ncX9mTOPlhDOnfmyzdJ5mLinWYY",
+            authDomain: "al-fajr-digital-library.firebaseapp.com",
+            databaseURL: "https://al-fajr-digital-library-default-rtdb.firebaseio.com",
+            projectId: "al-fajr-digital-library",
+            storageBucket: "al-fajr-digital-library.firebasestorage.app",
+            messagingSenderId: "739899495618",
+            appId: "1:739899495618:web:8e60409193ec1408b4d75b"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+        
+        window.db = database;
+        window.dbRef = ref;
+        window.dbGet = get;
+        window.dbPush = push;
+        window.dbSet = set;
+        window.dbUpdate = update;
+        window.dbRemove = remove;
+        window.dbOnValue = onValue;
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+            } else {
+                document.getElementById('userEmail').textContent = user.email;
+                window.currentUser = user;
+                loadUserData(user.uid);
+                checkExistingApplication(user.uid);
+            }
+        });
+
+        async function loadUserData(uid) {
+            try {
+                const userRef = ref(database, 'users/' + uid);
+                const snapshot = await get(userRef);
+                if (snapshot.exists()) {
+                    document.getElementById('userDisplayName').textContent = snapshot.val().username || 'مستخدم';
+                }
+            } catch(e) {}
+        }
+
+        async function checkExistingApplication(uid) {
+            try {
+                const appsRef = ref(database, 'jobApplications');
+                const snapshot = await get(appsRef);
+                if (snapshot.exists()) {
+                    let found = null;
+                    snapshot.forEach(child => {
+                        const data = child.val();
+                        if (data.userId === uid && data.status !== 'deleted') {
+                            found = { id: child.key, ...data };
+                        }
+                    });
+                    if (found) {
+                        window.existingApplication = found;
+                        updateApplicationUI(found);
+                        // الاستماع للتغييرات
+                        listenForChanges(found.id);
+                    }
+                }
+            } catch(e) {
+                console.error('Error:', e);
+            }
+        }
+
+        function listenForChanges(appId) {
+            const appRef = ref(database, 'jobApplications/' + appId);
+            onValue(appRef, (snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    if (data.userId === window.currentUser?.uid) {
+                        window.existingApplication = { id: appId, ...data };
+                        updateApplicationUI(window.existingApplication);
+                    }
+                }
+            });
+        }
+
+        function updateApplicationUI(app) {
+            const statusSection = document.getElementById('applicationStatus');
+            const statusBadge = document.getElementById('statusBadge');
+            const adminMessageBox = document.getElementById('adminMessageBox');
+            const adminMessageText = document.getElementById('adminMessageText');
+            const adminMessageSender = document.getElementById('adminMessageSender');
+            const adminMessageTime = document.getElementById('adminMessageTime');
+            const btnCancel = document.getElementById('btnCancelApplication');
+            const btnEdit = document.getElementById('btnEditApplication');
+            
+            statusSection.style.display = 'block';
+            
+            const statusLabels = {
+                'new': { text: '🆕 جديد - قيد الانتظار', class: 'badge-new' },
+                'reviewing': { text: '🔍 قيد المراجعة', class: 'badge-reviewing' },
+                'accepted': { text: '✅ مقبول - مبروك! 🎉', class: 'badge-accepted' },
+                'rejected': { text: '❌ مرفوض', class: 'badge-rejected' }
+            };
+            
+            const label = statusLabels[app.status] || statusLabels['new'];
+            statusBadge.textContent = label.text;
+            statusBadge.className = 'status-badge ' + label.class;
+            
+            // إظهار رسالة المشرف
+            if (app.adminMessage) {
+                adminMessageBox.style.display = 'block';
+                adminMessageText.textContent = app.adminMessage;
+                adminMessageSender.textContent = 'من: ' + (app.adminName || 'فريق التوظيف');
+                adminMessageTime.textContent = app.messageTimestamp ? 
+                    new Date(app.messageTimestamp).toLocaleDateString('ar-SA', {
+                        year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                    }) : '';
+            } else {
+                adminMessageBox.style.display = 'none';
+            }
+            
+            // أزرار حسب الحالة
+            if (app.status === 'new' || app.status === 'reviewing') {
+                btnCancel.style.display = 'inline-flex';
+                btnEdit.style.display = 'inline-flex';
+            } else if (app.status === 'accepted' || app.status === 'rejected') {
+                btnCancel.style.display = 'none';
+                btnEdit.style.display = 'none';
+            }
+            
+            // تعطيل اختيار الوظائف إذا كان هناك طلب
+            if (!window.isEditing) {
+                document.querySelectorAll('.job-card').forEach(c => c.classList.add('disabled'));
+                document.getElementById('btnApply').disabled = true;
+                document.getElementById('applyNote').textContent = 'لديك طلب قيد المعالجة. يمكنك تعديله أو إلغائه من الأعلى.';
+            }
+        }
+
+        window.updateApplicationUI = updateApplicationUI;
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0a0a14;
+            --surface: rgba(20,20,40,0.7);
+            --surface2: rgba(30,30,55,0.8);
+            --border: rgba(255,255,255,0.08);
+            --text: #e8e8f0;
+            --muted: #8888aa;
+            --grad1: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            --grad2: linear-gradient(135deg, #00cec9, #81ecec);
+            --grad3: linear-gradient(135deg, #fd79a8, #fab1a0);
+            --radius: 20px;
+            --transition: 0.35s cubic-bezier(0.25, 0.8, 0.25, 1.2);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(150deg, #0a0a1a 0%, #12122a 30%, #0d0d24 60%, #0a0a1a 100%);
+            color: var(--text);
+            min-height: 100vh;
+            direction: rtl;
+            overflow-x: hidden;
+            padding-bottom: 100px;
+        }
+
+        .bg-animation { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+        .bg-orb {
+            position: absolute; border-radius: 50%; filter: blur(140px);
+            animation: orbFloat 18s infinite alternate;
+        }
+        .bg-orb:nth-child(1) { width: 500px; height: 500px; background: rgba(108,92,231,0.18); top: -180px; right: -120px; }
+        .bg-orb:nth-child(2) { width: 450px; height: 450px; background: rgba(0,206,201,0.14); bottom: -150px; left: -100px; animation-delay: -9s; }
+        .bg-orb:nth-child(3) { width: 350px; height: 350px; background: rgba(253,121,168,0.12); top: 40%; left: 40%; animation-delay: -15s; }
+        @keyframes orbFloat {
+            0% { transform: translate(0,0) scale(1); }
+            33% { transform: translate(60px,-50px) scale(1.2); }
+            66% { transform: translate(-40px,40px) scale(0.85); }
+            100% { transform: translate(20px,-20px) scale(1.05); }
+        }
+
+        .topbar {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(15,15,28,0.8); backdrop-filter: blur(30px);
+            border-bottom: 1px solid var(--border); padding: 12px 28px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .topbar-brand {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 1.2em; font-weight: 800;
+        }
+        .brand-icon {
+            width: 40px; height: 40px; border-radius: 12px;
+            background: var(--grad1); display: flex; align-items: center; justify-content: center;
+            font-size: 1.1em; color: #fff; box-shadow: 0 8px 20px rgba(108,92,231,0.4);
+        }
+        .brand-text { background: var(--grad1); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .topbar-user {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--surface2); padding: 8px 16px;
+            border-radius: 50px; border: 1px solid var(--border);
+        }
+        .user-avatar {
+            width: 30px; height: 30px; border-radius: 50%;
+            background: var(--grad2); display: flex; align-items: center; justify-content: center;
+            font-size: 0.8em; color: #000;
+        }
+        .user-details { font-size: 0.78em; color: var(--muted); }
+        .user-details strong { color: #fff; display: block; font-size: 1em; }
+
+        .hero { position: relative; z-index: 1; text-align: center; padding: 40px 20px 30px; }
+        .hero h1 { font-size: clamp(1.8em, 4vw, 2.8em); font-weight: 900; }
+        .hero h1 .g1 { background: var(--grad1); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .hero h1 .g2 { background: var(--grad2); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .hero h1 .g3 { background: var(--grad3); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+
+        .container { max-width: 1150px; margin: 0 auto; padding: 0 22px; position: relative; z-index: 1; }
+
+        /* Application Status Section */
+        .app-status-section {
+            display: none;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 25px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+        .app-status-section h2 { font-size: 1.3em; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .app-status-section h2 i { color: #00cec9; }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.9em;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .badge-new { background: rgba(0,206,201,0.2); color: #81ecec; border: 1px solid rgba(0,206,201,0.4); }
+        .badge-reviewing { background: rgba(253,203,110,0.2); color: #ffeaa7; border: 1px solid rgba(253,203,110,0.4); }
+        .badge-accepted { background: rgba(0,184,148,0.2); color: #55efc4; border: 1px solid rgba(0,184,148,0.4); }
+        .badge-rejected { background: rgba(225,112,85,0.2); color: #fab1a0; border: 1px solid rgba(225,112,85,0.4); }
+
+        .admin-message-box {
+            display: none;
+            background: rgba(108,92,231,0.1);
+            border: 1px solid rgba(108,92,231,0.3);
+            border-radius: 16px;
+            padding: 18px;
+            margin: 15px 0;
+        }
+        .admin-message-box .msg-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #a29bfe;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+        }
+        .admin-message-box .msg-header i {
+            font-size: 1.2em;
+        }
+        .admin-message-box .msg-content {
+            color: #e8e8f0;
+            font-size: 0.95em;
+            line-height: 1.7;
+            margin-bottom: 8px;
+            background: rgba(0,0,0,0.2);
+            padding: 12px;
+            border-radius: 10px;
+        }
+        .admin-message-box .msg-footer {
+            display: flex;
+            justify-content: space-between;
+            color: var(--muted);
+            font-size: 0.75em;
+        }
+
+        .app-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        .btn-app {
+            padding: 10px 20px;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 0.82em;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-cancel-app {
+            background: rgba(225,112,85,0.2);
+            color: #fab1a0;
+            border: 1px solid rgba(225,112,85,0.3);
+        }
+        .btn-cancel-app:hover { background: rgba(225,112,85,0.3); }
+        .btn-edit-app {
+            background: rgba(253,203,110,0.2);
+            color: #ffeaa7;
+            border: 1px solid rgba(253,203,110,0.3);
+        }
+        .btn-edit-app:hover { background: rgba(253,203,110,0.3); }
+
+        .section-head { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        .section-head .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--grad2); box-shadow: 0 0 12px #00cec9; }
+        .section-head h2 { font-size: 1.4em; font-weight: 700; }
+
+        .job-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+        .job-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 22px; position: relative;
+            cursor: pointer; transition: var(--transition); overflow: hidden;
+        }
+        .job-card:hover:not(.disabled) { transform: translateY(-6px); border-color: rgba(255,255,255,0.18); box-shadow: 0 20px 60px rgba(108,92,231,0.25); }
+        .job-card.selected {
+            border-color: #00cec9;
+            box-shadow: 0 0 0 3px rgba(0,206,201,0.2);
+            background: var(--surface2);
+        }
+        .job-card.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+        .job-checkbox {
+            position: absolute; top: 16px; left: 16px;
+            width: 32px; height: 32px; border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.2);
+            display: flex; align-items: center; justify-content: center;
+            transition: var(--transition); z-index: 2; background: rgba(20,20,40,0.9);
+        }
+        .job-card.selected .job-checkbox {
+            border-color: #00cec9; background: #00cec9;
+            box-shadow: 0 0 16px rgba(0,206,201,0.5);
+        }
+        .job-checkbox i { font-size: 0.7em; color: transparent; }
+        .job-card.selected .job-checkbox i { color: #000; }
+        .job-icon-wrap {
+            width: 50px; height: 50px; border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5em; margin-bottom: 12px;
+        }
+        .job-card:nth-child(3n+1) .job-icon-wrap { background: rgba(108,92,231,0.15); color: #a29bfe; }
+        .job-card:nth-child(3n+2) .job-icon-wrap { background: rgba(0,206,201,0.15); color: #81ecec; }
+        .job-card:nth-child(3n+3) .job-icon-wrap { background: rgba(253,121,168,0.15); color: #fab1a0; }
+        .job-card h3 { font-size: 1.1em; font-weight: 700; margin-bottom: 3px; }
+        .job-card .en-title { font-size: 0.68em; color: var(--muted); letter-spacing: 2px; margin-bottom: 8px; }
+        .job-card .desc { font-size: 0.82em; color: var(--muted); line-height: 1.6; margin-bottom: 10px; }
+        .tags-row { display: flex; flex-wrap: wrap; gap: 5px; }
+        .tag { font-size: 0.68em; padding: 4px 10px; border-radius: 15px; font-weight: 500; }
+        .job-card:nth-child(3n+1) .tag { background: rgba(108,92,231,0.1); color: #a29bfe; border: 1px solid rgba(108,92,231,0.2); }
+        .job-card:nth-child(3n+2) .tag { background: rgba(0,206,201,0.1); color: #81ecec; border: 1px solid rgba(0,206,201,0.2); }
+        .job-card:nth-child(3n+3) .tag { background: rgba(253,121,168,0.1); color: #fab1a0; border: 1px solid rgba(253,121,168,0.2); }
+
+        .apply-section {
+            margin: 45px 0 25px;
+            background: linear-gradient(145deg, rgba(25,25,50,0.8), rgba(20,20,40,0.6));
+            border: 1px solid rgba(108,92,231,0.2);
+            border-radius: var(--radius);
+            padding: 35px 25px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        .apply-section .icon-circle {
+            width: 60px; height: 60px; border-radius: 50%;
+            background: var(--grad1); display: flex; align-items: center; justify-content: center;
+            font-size: 1.6em; margin: 0 auto 15px; box-shadow: 0 10px 30px rgba(108,92,231,0.4);
+        }
+        .apply-section h2 { font-size: 1.5em; font-weight: 800; margin-bottom: 6px; }
+        .apply-section .sub { color: var(--muted); margin-bottom: 14px; font-size: 0.9em; }
+        .btn {
+            padding: 13px 30px; border-radius: 50px; border: none; cursor: pointer;
+            font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.9em;
+            transition: var(--transition); display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-primary {
+            background: var(--grad1); color: #fff;
+            box-shadow: 0 8px 25px rgba(108,92,231,0.35);
+        }
+        .btn-primary:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(108,92,231,0.5); }
+        .btn-primary:disabled { background: #3a3a50; color: #777; cursor: not-allowed; box-shadow: none; }
+
+        .toast {
+            position: fixed; top: 25px; left: 50%;
+            transform: translateX(-50%) translateY(-120px);
+            padding: 12px 26px; border-radius: 50px; font-weight: 700;
+            z-index: 300; transition: var(--transition); font-size: 0.85em;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast.success { background: #00b894; color: #fff; }
+        .toast.error { background: #e17055; color: #fff; }
+
+        @media (max-width: 768px) {
+            .job-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-animation">
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+        <div class="bg-orb"></div>
+    </div>
+
+    <div class="topbar">
+        <div class="topbar-brand">
+            <div class="brand-icon"><i class="fa-solid fa-book-open"></i></div>
+            <span class="brand-text">مكتبة الفجر الرقمية</span>
+        </div>
+        <div class="topbar-user">
+            <div class="user-avatar"><i class="fa-solid fa-circle-user"></i></div>
+            <div class="user-details">
+                <strong id="userDisplayName">مستخدم</strong>
+                <span id="userEmail">...</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero">
+        <h1><span class="g1">انضم</span> إلى <span class="g2">طاقم</span> <span class="g3">المستقبل</span></h1>
+        <p style="color:var(--muted);margin-top:10px;">اختر الوظائف التي تناسب مهاراتك وقدّم طلبك الآن</p>
+    </div>
+
+    <div class="container">
+        <!-- Application Status -->
+        <div class="app-status-section" id="applicationStatus">
+            <h2><i class="fa-solid fa-clipboard-list"></i> حالة طلب التوظيف الخاص بك</h2>
+            <div class="status-badge badge-new" id="statusBadge">جديد - قيد الانتظار</div>
+            
+            <div class="admin-message-box" id="adminMessageBox">
+                <div class="msg-header">
+                    <i class="fa-solid fa-envelope"></i>
+                    رسالة من فريق التوظيف
+                </div>
+                <div class="msg-content" id="adminMessageText"></div>
+                <div class="msg-footer">
+                    <span id="adminMessageSender"></span>
+                    <span id="adminMessageTime"></span>
+                </div>
+            </div>
+
+            <div class="app-actions">
+                <button class="btn-app btn-edit-app" id="btnEditApplication" onclick="editApplication()">
+                    <i class="fa-solid fa-pen-to-square"></i> تعديل الطلب
+                </button>
+                <button class="btn-app btn-cancel-app" id="btnCancelApplication" onclick="cancelApplication()">
+                    <i class="fa-solid fa-trash"></i> إلغاء الطلب
+                </button>
+            </div>
+        </div>
+
+        <div class="section-head"><div class="dot"></div><h2>اختر الوظائف المناسبة لك</h2></div>
+        <div class="job-grid" id="jobGrid"></div>
+
+        <div class="apply-section" id="applySection">
+            <div class="icon-circle"><i class="fa-solid fa-paper-plane"></i></div>
+            <h2 id="applyTitle">مستعد للانضمام؟</h2>
+            <p class="sub" id="applySub">بعد اختيارك للوظائف، اضغط على الزر أدناه لتقديم طلبك</p>
+            <button class="btn btn-primary" id="btnApply" disabled onclick="submitApplication()">
+                <i class="fa-solid fa-paper-plane"></i> <span id="btnApplyText">طلب الانضمام</span>
+            </button>
+            <p style="color:var(--muted);font-size:0.75em;margin-top:10px;" id="applyNote"></p>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const jobs = [
+            { id:1, icon:"fa-solid fa-shield-halved", title:"مهندس الأمن السيبراني", en:"Cyber Security", desc:"حماية البنية التحتية الرقمية وكشف الثغرات ومنع الاختراقات.", tags:["Python","شبكات","OSCP"] },
+            { id:2, icon:"fa-solid fa-code", title:"مبرمج ويب", en:"Web Developer", desc:"بناء منصات ويب عالية الأداء وتجارب مستخدم استثنائية.", tags:["React","Node.js","PHP"] },
+            { id:3, icon:"fa-brands fa-android", title:"مبرمج تطبيقات أندرويد", en:"Android Developer", desc:"تطوير تطبيقات أصلية لملايين المستخدمين بأداء سلس.", tags:["Kotlin","Java","Jetpack"] },
+            { id:4, icon:"fa-brands fa-apple", title:"مبرمج تطبيقات iOS", en:"iOS Developer", desc:"بناء تجارب استثنائية على أجهزة آبل بأعلى المعايير.", tags:["Swift","SwiftUI","CoreData"] },
+            { id:5, icon:"fa-solid fa-truck-fast", title:"مندوب توصيل الطلبات", en:"Delivery Courier", desc:"توصيل سريع وآمن مع ابتسامة وخدمة ممتازة.", tags:["رخصة","خرائط","لباقة"] },
+            { id:6, icon:"fa-solid fa-feather-pointed", title:"مؤلف أنمي وقصص", en:"Story Writer", desc:"كتابة عوالم ساحرة وشخصيات خالدة تلامس القلوب.", tags:["كتابة","حبكة","إبداع"] },
+            { id:7, icon:"fa-solid fa-gamepad", title:"مطور ومؤلف ألعاب", en:"Game Developer", desc:"تصميم ألعاب بميكانيكيات مبتكرة وتجربة لا تُنسى.", tags:["Unity","Unreal","C#"] },
+            { id:8, icon:"fa-solid fa-clapperboard", title:"صانع أفلام ورسوم متحركة", en:"Animator", desc:"إخراج وإنتاج أفلام ورسوم متحركة تبهر المشاهدين.", tags:["Blender","Maya","AE"] },
+            { id:9, icon:"fa-solid fa-brain", title:"مهندس الذكاء الاصطناعي", en:"AI Engineer", desc:"تطوير نماذج ذكاء اصطناعي توليدية متطورة.", tags:["Python","TensorFlow","NLP"] },
+            { id:10, icon:"fa-solid fa-paintbrush", title:"مصمم شخصيات وبيئات", en:"Character Artist", desc:"تصميم شخصيات وعوالم تخطف الأنفاس بجودة عالمية.", tags:["Photoshop","Procreate"] },
+            { id:11, icon:"fa-solid fa-bullhorn", title:"مدير مجتمع ومسوق رقمي", en:"Community Manager", desc:"بناء مجتمع متفاعل وإدارة الحملات التسويقية.", tags:["تسويق","سوشيال","تحليلات"] }
+        ];
+
+        const selected = new Set();
+        const jobGrid = document.getElementById('jobGrid');
+        const btnApply = document.getElementById('btnApply');
+        const btnApplyText = document.getElementById('btnApplyText');
+        const applyTitle = document.getElementById('applyTitle');
+        const applySub = document.getElementById('applySub');
+        const applyNote = document.getElementById('applyNote');
+        const toast = document.getElementById('toast');
+
+        window.isEditing = false;
+        let editingAppId = null;
+
+        function renderJobs() {
+            jobGrid.innerHTML = '';
+            jobs.forEach(job => {
+                const card = document.createElement('div');
+                card.className = 'job-card';
+                card.dataset.id = job.id;
+                
+                if (window.existingApplication && !window.isEditing) {
+                    card.classList.add('disabled');
+                }
+                
+                card.innerHTML = `
+                    <div class="job-checkbox"><i class="fa-solid fa-check"></i></div>
+                    <div class="job-icon-wrap"><i class="${job.icon}"></i></div>
+                    <h3>${job.title}</h3>
+                    <div class="en-title">${job.en}</div>
+                    <div class="desc">${job.desc}</div>
+                    <div class="tags-row">${job.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+                `;
+                card.addEventListener('click', () => {
+                    if (!window.existingApplication || window.isEditing) {
+                        toggle(job.id, card);
+                    }
+                });
+                jobGrid.appendChild(card);
+            });
+        }
+
+        function toggle(id, card) {
+            if (selected.has(id)) {
+                selected.delete(id);
+                card.classList.remove('selected');
+            } else {
+                selected.add(id);
+                card.classList.add('selected');
+            }
+            updateApplyButton();
+        }
+
+        function updateApplyButton() {
+            const n = selected.size;
+            btnApply.disabled = n === 0;
+            if (window.isEditing) {
+                btnApplyText.textContent = 'تحديث الطلب';
+                applyTitle.textContent = 'تحديث طلبك';
+                applySub.textContent = 'عدّل اختياراتك ثم اضغط تحديث';
+            } else {
+                btnApplyText.textContent = 'طلب الانضمام';
+                applyTitle.textContent = 'مستعد للانضمام؟';
+                applySub.textContent = 'بعد اختيارك للوظائف، اضغط على الزر أدناه لتقديم طلبك';
+            }
+        }
+
+        window.submitApplication = async function() {
+            if (!window.currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+            if (selected.size === 0) {
+                showToast('اختر وظيفة واحدة على الأقل', true);
+                return;
+            }
+
+            const selectedJobs = jobs.filter(j => selected.has(j.id)).map(j => ({ id: j.id, title: j.title }));
+
+            try {
+                if (window.isEditing && editingAppId) {
+                    // تحديث الطلب الموجود - سيظهر التعديل عند المشرفين أيضاً
+                    await window.dbUpdate(window.dbRef(window.db, 'jobApplications/' + editingAppId), {
+                        jobs: selectedJobs,
+                        jobCount: selectedJobs.length,
+                        updatedAt: new Date().toISOString(),
+                        status: 'new'
+                    });
+                    showToast('✅ تم تحديث طلبك بنجاح!');
+                    window.isEditing = false;
+                    editingAppId = null;
+                    window.existingApplication = null;
+                    location.reload();
+                } else {
+                    // طلب جديد
+                    const newRef = window.dbPush(window.dbRef(window.db, 'jobApplications'));
+                    await window.dbSet(newRef, {
+                        userId: window.currentUser.uid,
+                        userEmail: window.currentUser.email,
+                        userName: document.getElementById('userDisplayName').textContent,
+                        jobs: selectedJobs,
+                        jobCount: selectedJobs.length,
+                        timestamp: new Date().toISOString(),
+                        status: 'new'
+                    });
+                    showToast('✅ تم تقديم طلبك بنجاح!');
+                    location.reload();
+                }
+            } catch(e) {
+                console.error('Error:', e);
+                showToast('❌ حدث خطأ: ' + e.message, true);
+            }
+        };
+
+        window.editApplication = function() {
+            if (!window.existingApplication) return;
+            window.isEditing = true;
+            editingAppId = window.existingApplication.id;
+            
+            selected.clear();
+            if (window.existingApplication.jobs) {
+                window.existingApplication.jobs.forEach(j => selected.add(j.id));
+            }
+            
+            document.querySelectorAll('.job-card').forEach(card => {
+                card.classList.remove('disabled', 'selected');
+            });
+            
+            document.querySelectorAll('.job-card').forEach(card => {
+                const jobId = parseInt(card.dataset.id);
+                if (selected.has(jobId)) {
+                    card.classList.add('selected');
+                }
+            });
+            
+            updateApplyButton();
+            document.getElementById('applySection').scrollIntoView({ behavior: 'smooth' });
+            showToast('يمكنك الآن تعديل اختياراتك', false);
+        };
+
+        window.cancelApplication = async function() {
+            if (!confirm('هل أنت متأكد من إلغاء طلب التوظيف؟')) return;
+            if (!window.existingApplication) return;
+
+            try {
+                await window.dbRemove(window.dbRef(window.db, 'jobApplications/' + window.existingApplication.id));
+                showToast('✅ تم إلغاء طلبك بنجاح');
+                window.existingApplication = null;
+                location.reload();
+            } catch(e) {
+                showToast('❌ حدث خطأ: ' + e.message, true);
+            }
+        };
+
+        function showToast(msg, err = false) {
+            toast.textContent = msg;
+            toast.className = `toast ${err ? 'error' : 'success'} show`;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        renderJobs();
+        updateApplyButton();
+
+        if (window.existingApplication) {
+            applyNote.textContent = 'لديك طلب قيد المعالجة. يمكنك تعديله أو إلغائه من الأعلى.';
+            document.querySelectorAll('.job-card').forEach(c => c.classList.add('disabled'));
+            btnApply.disabled = true;
+        }
+    </script>
+</body>
+</html>

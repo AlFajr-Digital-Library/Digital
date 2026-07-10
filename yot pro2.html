@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>يوت برو | الجيل القديم بعقلية جديدة</title>
+    <link rel="icon" type="image/x-icon" href="img/YoT Pro.jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* إعدادات عامة للهوية السينمائية الفاخرة */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #020408;
+            /* إضاءة خلفية تحاكي توهج شاشات العرض */
+            background-image: 
+                radial-gradient(circle at 50% -20%, #1a264d 0%, transparent 50%),
+                radial-gradient(circle at 10% 40%, #0c1224 0%, transparent 40%),
+                radial-gradient(circle at 90% 70%, #111a36 0%, transparent 40%);
+            color: #eef2ff;
+            line-height: 1.8;
+            padding-bottom: 3rem;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* ---------------------------------- */
+        /* القسم الرئيسي (Hero Section) */
+        /* ---------------------------------- */
+        .hero-section {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            min-height: 90vh;
+            padding: 3rem 0;
+        }
+
+        /* الشعار والهوية السينمائية */
+        .logo-area {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(0, 0, 0, 0.4));
+            padding: 0.6rem 1.8rem;
+            border-radius: 50px;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
+        }
+        .logo-img img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #d4af37;
+            box-shadow: 0 0 10px #d4af37;
+        }
+        .logo-text {
+            font-weight: 800;
+            font-size: 1.5rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .logo-text span {
+            color: #d4af37;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: rgba(229, 9, 20, 0.1);
+            color: #ff3e46;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(229, 9, 20, 0.3);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(229, 9, 20, 0.2);
+        }
+
+        .hero-section h1 {
+            font-size: 3.8rem;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+        .hero-section h1 span {
+            color: #ffffff;
+            background: linear-gradient(120deg, #d4af37 0%, #f7d054 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 8px rgba(212, 175, 55, 0.3));
+        }
+
+        .hero-desc {
+            color: #a3aed0;
+            font-size: 1.15rem;
+            margin-bottom: 2.5rem;
+            max-width: 580px;
+        }
+
+        /* تذكرة السعر السينمائية VIP Ticket */
+        .price-ticket {
+            background: linear-gradient(135deg, #111726 0%, #070a12 100%);
+            padding: 1rem 2.5rem;
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 1.5rem;
+            border: 2px dashed #2c3a5e;
+            margin-bottom: 2.5rem;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        /* فتحات التذكرة الجانبية */
+        .price-ticket::before, .price-ticket::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            background: #020408;
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+        .price-ticket::before { left: -11px; border-right: 2px dashed #2c3a5e; }
+        .price-ticket::after { right: -11px; border-left: 2px dashed #2c3a5e; }
+
+        .price-amount {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #d4af37;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+        .price-currency {
+            font-size: 1.1rem;
+            color: #ffffff;
+            font-weight: 700;
+        }
+        .price-period {
+            font-size: 0.95rem;
+            color: #8c9ba5;
+            border-right: 1px solid #233157;
+            padding-right: 1.5rem;
+        }
+
+        /* أزرار لافتات النيون */
+        .cta-group {
+            display: flex;
+            gap: 1.5rem;
+        }
+        .btn {
+            padding: 1.1rem 2.5rem;
+            border-radius: 12px;
+            font-weight: 800;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 1.05rem;
+            text-transform: uppercase;
+        }
+        .btn-main {
+            background: #d4af37;
+            color: #03060c;
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+        }
+        .btn-main:hover {
+            background: #ffffff;
+            color: #020408;
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 10px 25px rgba(215, 215, 215, 0.5);
+        }
+        .btn-sub {
+            border: 2px solid #2a3450;
+            color: #eef2ff;
+            background: rgba(255,255,255,0.02);
+        }
+        .btn-sub:hover {
+            border-color: #ff3e46;
+            color: #ff3e46;
+            transform: translateY(-4px);
+            box-shadow: 0 5px 20px rgba(229, 9, 20, 0.3);
+        }
+
+        /* شبكة العرض والبوسترات الفخمة (Theater Screen Effect) */
+        .poster-section {
+            position: relative;
+        }
+        /* تأثير إسقاط الضوء من أعلى كأنه بروجيكتور سينما */
+        .poster-section::before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            left: 10%;
+            right: 10%;
+            height: 400px;
+            background: radial-gradient(rgba(212, 175, 55, 0.15) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .poster-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        .poster-card {
+            background: #090d1a;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .poster-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(2,4,8,0.9) 0%, transparent 40%);
+            pointer-events: none;
+        }
+        .poster-card:hover {
+            transform: translateY(-8px) scale(1.04) rotate(1deg);
+            border-color: #d4af37;
+            box-shadow: 0 20px 40px rgba(212, 175, 55, 0.25);
+        }
+        .poster-card img {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.7s ease;
+        }
+        .poster-card:hover img {
+            transform: scale(1.1);
+        }
+        .poster-title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.2rem;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: #ffffff;
+            z-index: 2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        /* ---------------------------------- */
+        /* الأقسام والميزات المتطورة */
+        /* ---------------------------------- */
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 900;
+            margin-bottom: 3rem;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+        .section-title span {
+            color: #d4af37;
+        }
+
+        /* علبة التوصيل والأقراص - تصميم الصندوق المعدني */
+        .hardware-delivery-box {
+            background: linear-gradient(135deg, #090e1a 0%, #03050a 100%);
+            border-radius: 24px;
+            padding: 3.5rem;
+            margin: 6rem 0;
+            border: 1px solid #1a2542;
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 25px 50px rgba(0,0,0,0.5);
+        }
+        .delivery-text h3 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1.2rem;
+            color: #ffffff;
+        }
+        .delivery-text p {
+            color: #a3aed0;
+            font-size: 1.1rem;
+        }
+        .delivery-status-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        .status-node {
+            background: rgba(14, 22, 44, 0.5);
+            padding: 1.8rem;
+            border-radius: 16px;
+            border: 1px solid #16223d;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .status-node:hover {
+            border-color: #d4af37;
+            transform: translateY(-3px);
+            background: #0f1830;
+        }
+        .status-node i {
+            color: #d4af37;
+            font-size: 2rem;
+            margin-bottom: 0.8rem;
+            filter: drop-shadow(0 0 8px rgba(212,175,55,0.4));
+        }
+        .status-node h5 {
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+        }
+        .status-node .tag-upcoming {
+            background: #ff3e46;
+            color: #ffffff;
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-top: 0.8rem;
+            font-weight: 800;
+            box-shadow: 0 0 10px rgba(229,9,20,0.4);
+        }
+
+        /* بطاقات امتيازات السينما الممتازة */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 6rem;
+        }
+        .feature-card {
+            background: linear-gradient(180deg, #0b1124 0%, #050812 100%);
+            border: 1px solid #16203a;
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at top right, rgba(212,175,55,0.1), transparent 50%);
+            pointer-events: none;
+        }
+        .feature-card:hover {
+            border-color: #d4af37;
+            transform: translateY(-6px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+        }
+        .feature-card i {
+            color: #d4af37;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+        .feature-card h4 {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 0.8rem;
+            color: #ffffff;
+        }
+        .feature-card p {
+            color: #8c9ba5;
+            font-size: 1rem;
+        }
+
+        /* نظام تذاكر الهدايا الذكي */
+        .gifts-section {
+            background: radial-gradient(ellipse at center, #0e162e 0%, #030612 100%);
+            padding: 4rem 3rem;
+            border-radius: 24px;
+            border: 1px solid #1b284f;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+        }
+        .gifts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+        .gift-plan {
+            background: #050812;
+            border-right: 4px solid #d4af37;
+            border-left: none;
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .gift-plan:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        }
+        .gift-plan h5 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 0.8rem;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .gift-plan h5 i {
+            color: #d4af37;
+            font-size: 1.5rem;
+        }
+        .gift-plan p {
+            color: #a3aed0;
+            font-size: 1rem;
+        }
+
+        /* الفوتر الفاخر */
+        footer {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #636f8a;
+            margin-top: 6rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(255,255,255,0.03);
+        }
+
+        /* التوافق الكامل مع الشاشات المتنوعة والهواتف ذكية */
+        @media (max-width: 968px) {
+            .hero-section {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 4rem;
+                padding-top: 5rem;
+            }
+            .hero-section h1 {
+                font-size: 2.8rem;
+            }
+            .hero-desc {
+                margin: 0 auto 2.5rem;
+            }
+            .cta-group {
+                justify-content: center;
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .price-ticket {
+                flex-direction: column;
+                padding: 2rem 1.5rem;
+                width: 100%;
+            }
+            .price-period {
+                border-right: none;
+                border-top: 1px solid #233157;
+                padding-right: 0;
+                padding-top: 1rem;
+                width: 100%;
+            }
+            .hardware-delivery-box {
+                grid-template-columns: 1fr;
+                padding: 2rem;
+                gap: 2.5rem;
+            }
+            .delivery-status-grid {
+                grid-template-columns: 1fr;
+            }
+            .gifts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <section class="hero-section">
+        
+        <div class="hero-text">
+            <div class="logo-area">
+                <div class="logo-img">
+                    <img src="img/YoT Pro.jpeg" alt="يوت برو" onerror="this.src='https://placehold.co/45x45/0e1424/ffffff?text=Y'">
+                </div>
+                <div class="logo-text">يوت <span>برو</span></div>
+            </div>
+            
+            <div>
+                <span class="hero-badge"><i class="fas fa-ticket-alt"></i> تجربة VIP سينمائية حصرية</span>
+            </div>
+            
+            <h1>صالة العرض الخاصة بك <br><span>تبدأ من باب منزلك</span></h1>
+            <p class="hero-desc">امتلك أضخم الأفلام والسلاسل بدقة فائقة وبدون انقطاع. ندمج عراقة الماضي الملموس في الأقراص الصلبة، مع سرعة ورفاهية الحاضر.</p>
+            
+            <div class="price-ticket">
+                <span class="price-amount">٥٠٠</span>
+                <span class="price-currency">ر.س</span>
+                <span class="price-period"><i class="fas fa-crown" style="color: #d4af37;"></i> نفاذ كامل للمكتبة السينمائية سنوياً</span>
+            </div>
+            
+            <div class="cta-group">
+                <a href="#" class="btn btn-main"><i class="fas fa-ticket-alt"></i> احجز تذكرتك الآن</a>
+                <a href="#" class="btn btn-sub"><i class="fas fa-box"></i> استكشف صندق الهدايا</a>
+            </div>
+        </div>
+
+        <div class="poster-section">
+            <div class="poster-grid">
+                <div class="poster-card">
+                    <img src="https://images.pexels.com/photos/2873486/pexels-photo-2873486.jpeg?auto=compress&cs=tinysrgb&w=600" alt="مغامرة">
+                    <div class="poster-title">⚔️ مغامرات ملحمية</div>
+                </div>
+                <div class="poster-card">
+                    <img src="https://tse3.mm.bing.net/th/id/OIP.pTJt8NzK9mW5jzRCi4VW6QHaEK?r=0&rs=1&pid=ImgDetMain&o=7&rm=3" alt="أكشن">
+                    <div class="poster-title">🔥 حماس وإثارة</div>
+                </div>
+                <div class="poster-card">
+                    <img src="https://i.ytimg.com/vi/9cZ5Gf-NdZo/hqdefault.jpg" alt="علمي">
+                    <div class="poster-title">🎬 غموض وتشويق</div>
+                </div>
+                <div class="poster-card">
+                    <img src="https://images.pexels.com/photos/2602370/pexels-photo-2602370.jpeg?auto=compress&cs=tinysrgb&w=600" alt="دراما">
+                    <div class="poster-title">💥 مواجهات كبرى</div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="hardware-delivery-box">
+        <div class="delivery-text">
+            <h3><i class="fas fa-film" style="color: #d4af37; margin-left: 10px;"></i> العودة للأقراص الصلبة الحقيقية</h3>
+            <p>نعيد صياغة مفهوم المشاهدة التناظرية الفخمة. لا حاجة للقلق بشأن جودة الاتصال أو سيرفرات البث الضعيفة، مكتبتك السينمائية مخزنة على وسائط ملموسة تُسلم ليدك كعلب الأفلام القديمة.</p>
+        </div>
+        <div class="delivery-status-grid">
+            <div class="status-node">
+                <i class="fas fa-truck-ramp-box"></i>
+                <h5>شحن فاخر ومباشر</h5>
+                <p style="font-size: 0.85rem; color: #8c9ba5; margin-top: 5px;">توصيل فعلي لباب المنزل فور تفعيل الاشتراك السنوي.</p>
+            </div>
+            <div class="status-node">
+                <i class="fas fa-jedi"></i>
+                <h5>المفاجأة المنتظرة</h5>
+                <p style="font-size: 0.85rem; color: #8c9ba5; margin-top: 5px;">نعمل على تحضير مفاجأة خاصة إضافية لكافة المشتركين.</p>
+                <span class="tag-upcoming">قريباً جداً</span>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2 class="section-title">امتيازات صالة <span>يوت برو</span></h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fas fa-bolt"></i>
+                <h4>مشاهدة غير محدودة للـ VIP</h4>
+                <p>ادفع لمرة واحدة في السنة واحمِ نفسك من الاشتراكات الشهرية المتكررة والفواتير المفاجئة.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-mountain"></i>
+                <h4>سينما أوفلاين بالكامل</h4>
+                <p>تابع أفلامك المفضلة في أقصى الكهوف، أو أثناء رحلات البراري وبدون الحاجة لنقطة إنترنت واحدة.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-compact-disc"></i>
+                <h4>جودة سينمائية خام (Blu-Ray)</h4>
+                <p>ملفات بدون ضغط وبأعلى معدل نقل بيانات (Bitrate) لتجربة بصرية وصوتية محيطية حقيقية.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="gifts-section">
+        <h2 class="section-title">نظام التذاكر <span>والهدايا الذكي</span></h2>
+        <p style="text-align: center; color: #a3aed0; max-width: 600px; margin: -1rem auto 2rem;">مرونة كاملة في تخصيص الهدايا السنوية التابعة لاشتراكك، سواءً كنت تفضل توزيعها أو استلامها دفعة واحدة.</p>
+        
+        <div class="gifts-grid">
+            <div class="gift-plan">
+                <h5><i class="fas fa-hourglass-half"></i> نظام التوزيع التدريجي</h5>
+                <p style="margin-top: 0.5rem;">نظام يتيح لك إرسال أو استقبال هدية مخصصة بشكل دوري كل 3 أسابيع، لتضمن تجديد المحتوى والتشويق المستمر لك ولأصدقائك.</p>
+            </div>
+            <div class="gift-plan">
+                <h5><i class="fas fa-fire-alt"></i> نظام السحب الفوري السريع</h5>
+                <p style="margin-top: 0.5rem;">احصل على كامل ميزاتك مباشرة؛ يمكنك طلب سحب الهدايا دفعة واحدة بحد أقصى يصل إلى 7 تذاكر هدايا كاملة مباشرة بحسابك.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© ٢٠٢٦ يوت برو. كل الحقوق محفوظة – التجربة السينمائية من الجيل القديم ولكن بعقلية وتكنولوجيا جديدة.</p>
+    </footer>
+
+</div>
+
+</body>
+</html>

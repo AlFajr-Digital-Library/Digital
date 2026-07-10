@@ -1,2156 +1,1491 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>المحفظة الرقمية - بطاقاتي</title>
-<link rel="icon" type="image/x-icon" href="img//icon1.jpg">
-<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-  /* ====== المتغيرات والألوان الأساسية ====== */
-  :root {
-    --primary: #00d0c2;
-    --primary-dark: #00a9b8;
-    --secondary: #ff6b35;
-    --secondary-light: #ff8e53;
-    --dark-bg: #0a1514;
-    --darker-bg: #06191a;
-    --card-bg: #0d2325;
-    --card-hover: #102c2e;
-    --text-primary: #ffffff;
-    --text-secondary: #b0b0b0;
-    --text-muted: #888888;
-    --success: #4caf50;
-    --warning: #ff9800;
-    --danger: #f44336;
-    --border: #1a3a3d;
-    --shadow: rgba(0, 0, 0, 0.3);
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-    --radius-xl: 20px;
-    --transition: 0.3s ease;
-    --card-width: 320px;
-    --card-height: 200px;
-  }
-
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  html {
-    font-size: 16px;
-  }
-
-  body {
-    font-family: 'Almarai', sans-serif;
-    background: var(--dark-bg);
-    color: var(--text-primary);
-    line-height: 1.6;
-    min-height: 100vh;
-    padding: 0;
-    overflow-x: hidden;
-  }
-
-  /* ====== التصميم العام ====== */
-  .app-container {
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 20px;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  /* ====== الهيدر ====== */
-  .header {
-    background: var(--darker-bg);
-    border-radius: var(--radius-lg);
-    padding: 20px;
-    border: 1px solid var(--border);
-    box-shadow: 0 4px 20px var(--shadow);
-    margin-bottom: 10px;
-  }
-
-  .header-content {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .header h1 {
-    font-size: 1.5rem;
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .user-info {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    align-items: center;
-  }
-
-  .info-box {
-    background: rgba(0, 0, 0, 0.3);
-    padding: 12px 20px;
-    border-radius: var(--radius-md);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex: 1;
-    min-width: 200px;
-    border: 1px solid rgba(0, 208, 194, 0.2);
-  }
-
-  .info-box i {
-    color: var(--primary);
-    font-size: 1.2rem;
-  }
-
-  .info-box span {
-    font-weight: 600;
-  }
-
-  /* ====== المحتوى الرئيسي ====== */
-  .main-content {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 25px;
-  }
-
-  @media (min-width: 992px) {
-    .main-content {
-      grid-template-columns: 2fr 1fr;
-    }
-  }
-
-  /* ====== قسم البطاقات ====== */
-  .cards-section {
-    background: var(--darker-bg);
-    border-radius: var(--radius-lg);
-    padding: 25px;
-    border: 1px solid var(--border);
-  }
-
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid var(--border);
-  }
-
-  .section-header h2 {
-    font-size: 1.3rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .section-header i {
-    color: var(--primary);
-  }
-
-  /* ====== شبكة البطاقات ====== */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-  }
-
-  @media (max-width: 768px) {
-    .cards-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  /* ====== تصميم البطاقة ====== */
-  .card-item {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    border-radius: var(--radius-lg);
-    padding: 25px;
-    color: white;
-    position: relative;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: all var(--transition);
-    height: 200px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    overflow: hidden;
-  }
-
-  .card-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-
-  .card-item.selected {
-    border-color: var(--secondary);
-    box-shadow: 0 0 25px rgba(255, 107, 53, 0.3);
-  }
-
-  .card-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary), rgba(255, 255, 255, 0.8));
-  }
-
-  .card-badge {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    background: rgba(0, 0, 0, 0.4);
-    color: white;
-    padding: 6px 15px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .card-badge i {
-    font-size: 0.9rem;
-  }
-
-  .selected-badge {
-    position: absolute;
-    top: 50px;
-    left: 15px;
-    background: var(--secondary);
-    color: white;
-    padding: 4px 12px;
-    border-radius: 15px;
-    font-size: 0.75rem;
-    font-weight: 600;
-  }
-
-  .card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 30px;
-  }
-
-  .card-chip {
-    width: 55px;
-    height: 40px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #f5d76e, #e0ac00);
-    box-shadow: inset 0 -2px 6px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.3);
-    position: relative;
-  }
-
-  .card-chip::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 70%;
-    height: 2px;
-    background: rgba(0, 0, 0, 0.3);
-  }
-
-  .bank-name {
-    font-weight: 700;
-    font-size: 1.1rem;
-    background: rgba(255, 255, 255, 0.15);
-    padding: 8px 15px;
-    border-radius: var(--radius-sm);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .card-number {
-    font-size: 1.4rem;
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-align: center;
-    padding: 15px 0;
-    font-family: 'Courier New', monospace;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: var(--radius-sm);
-    margin: 10px 0;
-  }
-
-  .card-details {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.9rem;
-    margin: 15px 0;
-  }
-
-  .card-holder {
-    font-weight: 700;
-    font-size: 1rem;
-  }
-
-  .card-expiry {
-    text-align: left;
-  }
-
-  .card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 15px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 0.85rem;
-  }
-
-  .card-brand {
-    width: 50px;
-    height: 35px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 0.8rem;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-  }
-
-  /* ====== حالة لا توجد بطاقات ====== */
-  .empty-state {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text-secondary);
-  }
-
-  .empty-state i {
-    font-size: 4rem;
-    color: var(--border);
-    margin-bottom: 20px;
-    opacity: 0.5;
-  }
-
-  .empty-state h3 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    color: var(--text-primary);
-  }
-
-  /* ====== لوحة التحكم الجانبية ====== */
-  .control-panel {
-    background: var(--darker-bg);
-    border-radius: var(--radius-lg);
-    padding: 25px;
-    border: 1px solid var(--border);
-    height: fit-content;
-    position: sticky;
-    top: 20px;
-  }
-
-  .control-group {
-    margin-bottom: 25px;
-  }
-
-  .control-group h3 {
-    font-size: 1.2rem;
-    margin-bottom: 15px;
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .control-group h3 i {
-    color: var(--primary);
-  }
-
-  .input-group {
-    margin-bottom: 15px;
-  }
-
-  .input-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: var(--text-secondary);
-    font-weight: 500;
-    font-size: 0.9rem;
-  }
-
-  .input-with-icons {
-    position: relative;
-  }
-
-  .input-with-icons input {
-    width: 100%;
-    padding: 15px 15px 15px 50px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    color: var(--text-primary);
-    font-size: 1rem;
-    transition: var(--transition);
-  }
-
-  .input-with-icons input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(0, 208, 194, 0.1);
-  }
-
-  .input-icons {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    display: flex;
-    gap: 10px;
-  }
-
-  .input-icons button {
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    font-size: 1.2rem;
-    cursor: pointer;
-    padding: 5px;
-    transition: var(--transition);
-  }
-
-  .input-icons button:hover {
-    color: var(--primary);
-  }
-
-  .info-note {
-    background: rgba(255, 107, 53, 0.1);
-    border: 1px solid rgba(255, 107, 53, 0.2);
-    border-radius: var(--radius-md);
-    padding: 15px;
-    margin: 15px 0;
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-  }
-
-  .info-note i {
-    color: var(--secondary);
-    margin-right: 8px;
-  }
-
-  /* ====== أزرار التحكم ====== */
-  .button-group {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-    margin-bottom: 15px;
-  }
-
-  .btn {
-    padding: 14px 20px;
-    border-radius: var(--radius-md);
-    border: none;
-    font-weight: 700;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all var(--transition);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .btn i {
-    font-size: 1.1rem;
-  }
-
-  .btn-primary {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    color: white;
-  }
-
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 208, 194, 0.3);
-  }
-
-  .btn-secondary {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-
-  .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-  }
-
-  .btn-danger {
-    background: linear-gradient(135deg, var(--danger), #c62828);
-    color: white;
-  }
-
-  .btn-danger:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(244, 67, 54, 0.3);
-  }
-
-  .btn-success {
-    background: linear-gradient(135deg, var(--success), #2e7d32);
-    color: white;
-  }
-
-  .btn-success:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);
-  }
-
-  .btn-full {
-    grid-column: 1 / -1;
-    width: 100%;
-  }
-
-  .info-text {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    margin-top: 15px;
-    padding: 15px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: var(--radius-md);
-    border-left: 3px solid var(--primary);
-  }
-
-  .info-text p {
-    margin-bottom: 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .info-text i {
-    color: var(--primary);
-  }
-
-  /* ====== نافذة تفاصيل البطاقة (معدلة) ====== */
-  .card-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(10px);
-    z-index: 1000;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    animation: fadeIn 0.3s ease-out;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  .card-modal {
-    background: var(--darker-bg);
-    border-radius: var(--radius-xl);
-    padding: 25px;
-    width: 100%;
-    max-width: 500px;
-    border: 1px solid var(--border);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-    animation: slideUp 0.4s ease-out;
-    max-height: 90vh;
-    overflow-y: auto;
-  }
-
-  @media (max-width: 768px) {
-    .card-modal {
-      max-width: 95%;
-      padding: 20px;
-    }
-  }
-
-  @keyframes slideUp {
-    from {
-      transform: translateY(50px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid var(--border);
-  }
-
-  .modal-header h3 {
-    font-size: 1.3rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--text-primary);
-  }
-
-  .modal-header h3 i {
-    color: var(--primary);
-  }
-
-  .close-modal {
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    font-size: 1.5rem;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    transition: var(--transition);
-  }
-
-  .close-modal:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--primary);
-  }
-
-  .modal-card-preview {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    border-radius: var(--radius-lg);
-    padding: 20px;
-    margin-bottom: 20px;
-    position: relative;
-    height: 170px;
-  }
-
-  .modal-details {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: var(--radius-md);
-    padding: 15px;
-    margin-bottom: 20px;
-  }
-
-  .detail-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    font-size: 0.95rem;
-  }
-
-  .detail-row:last-child {
-    border-bottom: none;
-  }
-
-  .detail-label {
-    color: var(--text-secondary);
-    font-weight: 500;
-    min-width: 120px;
-  }
-
-  .detail-value {
-    color: var(--text-primary);
-    font-weight: 600;
-    text-align: left;
-    direction: ltr;
-  }
-
-  .detail-value.balance {
-    color: var(--primary);
-    font-size: 1.1rem;
-  }
-
-  .modal-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  /* ====== نافذة تحويل الرصيد ====== */
-  .transfer-modal {
-    max-width: 450px;
-  }
-
-  .transfer-amount-input {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: var(--radius-md);
-    padding: 20px;
-    margin: 15px 0;
-    text-align: center;
-  }
-
-  .transfer-amount-input .label {
-    color: var(--text-secondary);
-    margin-bottom: 10px;
-    font-size: 0.9rem;
-  }
-
-  .transfer-amount-input .amount-input {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 15px;
-  }
-
-  .amount-input input {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--primary);
-    font-size: 1.8rem;
-    font-weight: 700;
-    padding: 10px 15px;
-    width: 180px;
-    text-align: center;
-    direction: ltr;
-  }
-
-  .amount-input input:focus {
-    outline: none;
-    border-color: var(--primary);
-  }
-
-  .amount-input .currency {
-    color: var(--primary);
-    font-size: 1.8rem;
-    font-weight: 700;
-  }
-
-  .amount-options {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-top: 15px;
-  }
-
-  .amount-option {
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 8px 15px;
-    cursor: pointer;
-    transition: var(--transition);
-    font-size: 0.9rem;
-  }
-
-  .amount-option:hover {
-    background: rgba(0, 208, 194, 0.1);
-    border-color: var(--primary);
-  }
-
-  .transfer-options {
-    margin: 15px 0;
-  }
-
-  .transfer-card {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: var(--radius-md);
-    padding: 15px;
-    margin-bottom: 10px;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: var(--transition);
-  }
-
-  .transfer-card:hover {
-    background: rgba(0, 0, 0, 0.4);
-  }
-
-  .transfer-card.selected {
-    border-color: var(--primary);
-    background: rgba(0, 208, 194, 0.1);
-  }
-
-  .transfer-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-  }
-
-  .transfer-card-number {
-    font-family: 'Courier New', monospace;
-    font-weight: 600;
-    color: var(--text-primary);
-    font-size: 0.95rem;
-  }
-
-  .transfer-card-balance {
-    color: var(--primary);
-    font-weight: 600;
-    font-size: 0.95rem;
-  }
-
-  .transfer-card-details {
-    display: flex;
-    justify-content: space-between;
-    color: var(--text-secondary);
-    font-size: 0.85rem;
-  }
-
-  /* ====== نافذة تغيير الاسم ====== */
-  .name-change-modal {
-    max-width: 400px;
-  }
-
-  .name-input-group {
-    margin: 20px 0;
-  }
-
-  .name-input-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: var(--text-secondary);
-    font-weight: 500;
-    font-size: 0.9rem;
-  }
-
-  .name-input-group input {
-    width: 100%;
-    padding: 15px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    color: var(--text-primary);
-    font-size: 1rem;
-    transition: var(--transition);
-  }
-
-  .name-input-group input:focus {
-    outline: none;
-    border-color: var(--primary);
-  }
-
-  /* ====== التنبيهات ====== */
-  .toast-container {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1001;
-    width: 90%;
-    max-width: 400px;
-  }
-
-  .toast {
-    background: var(--darker-bg);
-    border-radius: var(--radius-md);
-    padding: 20px;
-    margin-bottom: 10px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--primary);
-    display: none;
-    animation: slideDown 0.3s ease-out;
-  }
-
-  @keyframes slideDown {
-    from {
-      transform: translateY(-20px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-
-  .toast.success {
-    border-left-color: var(--success);
-  }
-
-  .toast.error {
-    border-left-color: var(--danger);
-  }
-
-  .toast.warning {
-    border-left-color: var(--warning);
-  }
-
-  .toast-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-
-  .toast-header i {
-    font-size: 1.2rem;
-  }
-
-  .toast.success .toast-header i {
-    color: var(--success);
-  }
-
-  .toast.error .toast-header i {
-    color: var(--danger);
-  }
-
-  .toast.warning .toast-header i {
-    color: var(--warning);
-  }
-
-  .toast-header h4 {
-    font-size: 1rem;
-    color: var(--text-primary);
-  }
-
-  .toast-body {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    line-height: 1.5;
-  }
-
-  /* ====== تصميم متجاوب ====== */
-  @media (max-width: 768px) {
-    .app-container {
-      padding: 15px;
-    }
-    
-    .header {
-      padding: 15px;
-    }
-    
-    .user-info {
-      flex-direction: column;
-    }
-    
-    .info-box {
-      min-width: 100%;
-    }
-    
-    .cards-section,
-    .control-panel {
-      padding: 20px;
-    }
-    
-    .card-item {
-      height: 180px;
-      padding: 20px;
-    }
-    
-    .card-number {
-      font-size: 1.2rem;
-    }
-    
-    .modal-header h3 {
-      font-size: 1.2rem;
-    }
-    
-    .card-modal {
-      padding: 20px;
-    }
-    
-    .modal-card-preview {
-      height: 160px;
-      padding: 15px;
-    }
-    
-    .detail-row {
-      font-size: 0.9rem;
-    }
-  }
-
-  @media (max-width: 480px) {
-    html {
-      font-size: 14px;
-    }
-    
-    .app-container {
-      padding: 10px;
-    }
-    
-    .cards-grid {
-      gap: 15px;
-    }
-    
-    .card-item {
-      height: 170px;
-      padding: 15px;
-    }
-    
-    .card-number {
-      font-size: 1.1rem;
-    }
-    
-    .btn {
-      padding: 12px 15px;
-      font-size: 0.9rem;
-    }
-    
-    .modal-details {
-      padding: 12px;
-    }
-    
-    .detail-row {
-      flex-direction: column;
-      gap: 5px;
-    }
-    
-    .detail-label {
-      min-width: auto;
-    }
-    
-    .detail-value {
-      text-align: right;
-    }
-  }
-
-  /* ====== تأثيرات إضافية ====== */
-  .pulse {
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0% {
-      box-shadow: 0 0 0 0 rgba(0, 208, 194, 0.4);
-    }
-    70% {
-      box-shadow: 0 0 0 10px rgba(0, 208, 194, 0);
-    }
-    100% {
-      box-shadow: 0 0 0 0 rgba(0, 208, 194, 0);
-    }
-  }
-
-  .shake {
-    animation: shake 0.5s;
-  }
-
-  @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-    20%, 40%, 60%, 80% { transform: translateX(5px); }
-  }
-
-  /* ====== أزرار إضافية في التفاصيل ====== */
-  .modal-buttons {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-  }
-
-  .modal-buttons button {
-    flex: 1;
-  }
-</style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>المحفظة الذكية | بطاقاتي الرقمية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js">
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #0a0f1a 0%, #0d1525 100%);
+            color: #eef2ff;
+            direction: rtl;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f1222, #1a1f35);
+            border-radius: 24px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(0, 208, 194, 0.2);
+        }
+
+        .header h1 {
+            font-size: 1.6rem;
+            background: linear-gradient(135deg, #00d0c2, #00a9b8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .info-box {
+            background: rgba(0, 208, 194, 0.1);
+            padding: 12px 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 200px;
+            border: 1px solid rgba(0, 208, 194, 0.2);
+        }
+
+        .info-box i {
+            color: #00d0c2;
+            font-size: 1.3rem;
+        }
+
+        /* الإشعارات */
+        .notifications-panel {
+            background: #0f1222;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            border: 1px solid #2a2f45;
+            overflow: hidden;
+        }
+
+        .notifications-header {
+            padding: 15px 20px;
+            background: rgba(0, 208, 194, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            border-bottom: 1px solid #2a2f45;
+        }
+
+        .notifications-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+
+        .badge {
+            background: #ef4444;
+            color: white;
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 0.7rem;
+        }
+
+        .notifications-list {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .notifications-list.open {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 12px 20px;
+            border-bottom: 1px solid #2a2f45;
+            display: flex;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .notification-item.unread {
+            background: rgba(0, 208, 194, 0.05);
+            border-right: 3px solid #00d0c2;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 25px;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .cards-section {
+            background: #0f1222;
+            border-radius: 24px;
+            padding: 25px;
+            border: 1px solid #2a2f45;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #2a2f45;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card-item {
+            background: linear-gradient(135deg, #00d0c2, #008a7a);
+            border-radius: 20px;
+            padding: 20px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 208, 194, 0.3);
+        }
+
+        .card-item.selected {
+            border: 2px solid #ff6b35;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .card-number {
+            font-family: monospace;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .card-details {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .card-balance {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .control-panel {
+            background: #0f1222;
+            border-radius: 24px;
+            padding: 25px;
+            border: 1px solid #2a2f45;
+            height: fit-content;
+        }
+
+        .control-group {
+            margin-bottom: 25px;
+        }
+
+        .control-group h3 {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #b0b0b0;
+            font-size: 0.85rem;
+        }
+
+        .input-with-camera {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .input-with-camera input {
+            flex: 1;
+            padding: 12px;
+            background: #0a0e18;
+            border: 1px solid #2a2f45;
+            border-radius: 12px;
+            color: white;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .input-with-camera input:focus {
+            outline: none;
+            border-color: #00d0c2;
+        }
+
+        .camera-icon-btn {
+            background: #00d0c2;
+            border: none;
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .camera-icon-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 208, 194, 0.3);
+        }
+
+        .camera-icon-btn.scanning {
+            background: #ef4444;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+
+        /* كاميرا المسح المنبثقة الصغيرة */
+        .scanner-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .scanner-popup.active {
+            display: flex;
+        }
+
+        .scanner-popup .scanner-container {
+            width: 100%;
+            max-width: 500px;
+            background: #0f1222;
+            border-radius: 24px;
+            padding: 20px;
+            border: 1px solid #00d0c2;
+            position: relative;
+        }
+
+        .scanner-popup .scanner-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .scanner-popup .scanner-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .scanner-popup .close-scanner {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        #reader {
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .scanner-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .scanner-actions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .scanner-actions .btn-primary {
+            background: linear-gradient(135deg, #00d0c2, #00a9b8);
+            color: white;
+        }
+
+        .scanner-actions .btn-secondary {
+            background: #2a2f45;
+            color: white;
+        }
+
+        .scanner-actions .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .scanner-actions button:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00d0c2, #00a9b8);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 208, 194, 0.3);
+        }
+
+        .btn-secondary {
+            background: #2a2f45;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #3a4055;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .info-text {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 208, 194, 0.05);
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: #b0b0b0;
+        }
+
+        .info-text p {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* نافذة البطاقة (النقر المزدوج) */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: 0.2s;
+        }
+
+        .modal.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: #0f1222;
+            border-radius: 24px;
+            padding: 30px;
+            width: 90%;
+            max-width: 550px;
+            border-top: 4px solid #00d0c2;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .modal-card-info {
+            background: linear-gradient(135deg, #00d0c2, #008a7a);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .modal-card-info .card-number-display {
+            font-family: monospace;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin: 10px 0;
+        }
+
+        .modal-card-info .balance-display {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin: 10px 0;
+        }
+
+        .modal-divider {
+            border: none;
+            border-top: 1px solid #2a2f45;
+            margin: 20px 0;
+        }
+
+        .modal .input-group {
+            margin-bottom: 15px;
+        }
+
+        .modal .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #b0b0b0;
+            font-size: 0.85rem;
+        }
+
+        .modal .input-group input,
+        .modal .input-group select {
+            width: 100%;
+            padding: 12px;
+            background: #0a0e18;
+            border: 1px solid #2a2f45;
+            border-radius: 12px;
+            color: white;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .modal .input-group select option {
+            background: #0a0e18;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .modal-actions button {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            padding: 12px 24px;
+            border-radius: 12px;
+            display: none;
+            z-index: 1100;
+            font-weight: 500;
+            max-width: 90%;
+        }
+
+        .toast.success {
+            background: #065f46;
+            color: white;
+        }
+
+        .toast.error {
+            background: #7f1a1a;
+            color: white;
+        }
+
+        .toast.info {
+            background: #1e3a5f;
+            color: white;
+        }
+
+        .loading {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            visibility: hidden;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #2a2f45;
+            border-top-color: #00d0c2;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* زر رفع صورة */
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.2rem;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .modal-content {
+                padding: 20px;
+            }
+            .modal-actions button {
+                min-width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
-
-<div class="app-container">
-  
-  <!-- الهيدر -->
-  <header class="header">
-    <div class="header-content">
-      <h1>
-        <i class="fas fa-wallet"></i>
-        المحفظة الرقمية
-      </h1>
-      
-      <div class="user-info">
-        <div class="info-box">
-          <i class="fas fa-user"></i>
-          <div>
-            <div style="font-size: 0.9rem; color: var(--text-secondary);">المستخدم</div>
-            <span id="userNameDisplay">جار التحميل...</span>
-          </div>
-        </div>
-        
-        <div class="info-box">
-          <i class="fas fa-coins"></i>
-          <div>
-            <div style="font-size: 0.9rem; color: var(--text-secondary);">الرصيد الإجمالي</div>
-            <span id="globalBalance">0.00</span> ر.س
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- المحتوى الرئيسي -->
-  <div class="main-content">
-    
-    <!-- قسم البطاقات -->
-    <section class="cards-section">
-      <div class="section-header">
-        <h2>
-          <i class="fas fa-credit-card"></i>
-          بطاقاتي
-        </h2>
-        <div style="color: var(--text-secondary); font-size: 0.9rem;">
-          انقر مرتين لاختيار بطاقة للشحن
-        </div>
-      </div>
-      
-      <!-- شبكة البطاقات -->
-      <div id="cardsGrid" class="cards-grid">
-        <!-- البطاقات ستظهر هنا -->
-      </div>
-      
-      <!-- حالة لا توجد بطاقات -->
-      <div id="noCards" class="empty-state" style="display: none;">
-        <i class="fas fa-credit-card-blank"></i>
-        <h3>لا توجد بطاقات بعد</h3>
-        <p>اضغط "إضافة بطاقة جديدة" لإنشاء بطاقتك الأولى</p>
-      </div>
-    </section>
-    
-    <!-- لوحة التحكم -->
-    <aside class="control-panel">
-      <div class="control-group">
-        <h3><i class="fas fa-tools"></i> أدوات المحفظة</h3>
-        
-        <div class="input-group">
-          <label for="codeInput">
-            <i class="fas fa-ticket-alt"></i> كود الشحن / باركود
-          </label>
-          <div class="input-with-icons">
-            <input type="text" id="codeInput" placeholder="أدخل الكود أو المسح باركود" />
-            <div class="input-icons">
-              <button id="scanBtn" title="مسح باركود">
-                <i class="fas fa-camera"></i>
-              </button>
-              <button id="uploadBtn" title="رفع صورة باركود">
-                <i class="fas fa-image"></i>
-              </button>
+    <div class="app-container">
+        <header class="header">
+            <h1><i class="fas fa-wallet"></i> المحفظة الرقمية</h1>
+            <div class="user-info">
+                <div class="info-box">
+                    <i class="fas fa-user"></i>
+                    <div>
+                        <div style="font-size: 0.8rem; color: #b0b0b0;">مرحباً</div>
+                        <span id="userNameDisplay">...</span>
+                    </div>
+                </div>
+                <div class="info-box">
+                    <i class="fas fa-coins"></i>
+                    <div>
+                        <div style="font-size: 0.8rem; color: #b0b0b0;">الرصيد الإجمالي</div>
+                        <span id="totalBalance">0.00</span> ر.س
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-        
-        <div class="info-note">
-          <i class="fas fa-info-circle"></i>
-          المبلغ يضاف تلقائياً حسب قيمة الكود المسجلة في النظام
-        </div>
-        
-        <div class="button-group">
-          <button id="rechargeBtn" class="btn btn-primary">
-            <i class="fas fa-bolt"></i> شحن الآن
-          </button>
-          <button id="addCardBtn" class="btn btn-secondary">
-            <i class="fas fa-plus-circle"></i> بطاقة جديدة
-          </button>
-        </div>
-        
-        <div class="button-group">
-          <button id="refreshBtn" class="btn btn-secondary">
-            <i class="fas fa-sync-alt"></i> تحديث
-          </button>
-        </div>
-      </div>
-      
-      <div class="info-text">
-        <p><i class="fas fa-info-circle"></i> كل بطاقة لها رصيد مستقل خاص بها</p>
-        <p><i class="fas fa-exclamation-triangle"></i> المبلغ يضاف حسب قيمة الكود المسجلة</p>
-        <p><i class="fas fa-qrcode"></i> الكود أو الباركود صالح للاستخدام مرة واحدة فقط</p>
-        <p><i class="fas fa-mouse-pointer"></i> انقر مرتين على البطاقة لاختيارها للشحن</p>
-      </div>
-    </aside>
-  </div>
-</div>
+        </header>
 
-<!-- نافذة تفاصيل البطاقة -->
-<div id="cardModal" class="card-modal-overlay">
-  <div class="card-modal">
-    <div class="modal-header">
-      <h3><i class="fas fa-id-card"></i> تفاصيل البطاقة</h3>
-      <button class="close-modal" id="closeCardModal">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    
-    <div id="modalCardPreview" class="modal-card-preview">
-      <!-- معاينة البطاقة -->
-    </div>
-    
-    <div class="modal-details">
-      <div class="detail-row">
-        <span class="detail-label">المالك</span>
-        <span class="detail-value" id="modalOwner">—</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">رقم البطاقة</span>
-        <span class="detail-value" id="modalNumber">—</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">آخر 4 أرقام</span>
-        <span class="detail-value" id="modalLast4">—</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">تاريخ الانتهاء</span>
-        <span class="detail-value" id="modalExpiry">—</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">تاريخ الإنشاء</span>
-        <span class="detail-value" id="modalCreated">—</span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">رصيد البطاقة</span>
-        <span class="detail-value balance" id="modalBalance">0.00 ر.س</span>
-      </div>
-    </div>
-    
-    <div class="modal-buttons">
-      <button id="changeNameBtn" class="btn btn-secondary">
-        <i class="fas fa-user-edit"></i> تغيير الاسم
-      </button>
-      <button id="transferBtn" class="btn btn-success">
-        <i class="fas fa-exchange-alt"></i> تحويل الرصيد
-      </button>
-    </div>
-    
-    <div class="modal-actions">
-      <button id="backBtn" class="btn btn-secondary btn-full">
-        <i class="fas fa-arrow-right"></i> رجوع
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- نافذة تحويل الرصيد -->
-<div id="transferModal" class="card-modal-overlay">
-  <div class="card-modal transfer-modal">
-    <div class="modal-header">
-      <h3><i class="fas fa-exchange-alt"></i> تحويل الرصيد</h3>
-      <button class="close-modal" id="closeTransferModal">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    
-    <div class="transfer-amount-input">
-      <div class="label">المبلغ المراد تحويله</div>
-      <div class="amount-input">
-        <input type="number" id="transferAmountInput" min="0.01" step="0.01" value="0.00" />
-        <span class="currency">ر.س</span>
-      </div>
-      <div class="amount-options" id="amountOptions">
-        <!-- أزرار القيم السريعة -->
-      </div>
-      <div style="margin-top: 10px; color: var(--text-secondary); font-size: 0.85rem;">
-        الرصيد المتاح: <span id="availableBalance" style="color: var(--primary); font-weight: bold;">0.00 ر.س</span>
-      </div>
-    </div>
-    
-    <div class="transfer-options" id="transferCardsList">
-      <!-- قائمة البطاقات المتاحة للتحويل -->
-    </div>
-    
-    <div class="info-note" style="margin: 20px 0;">
-      <i class="fas fa-info-circle"></i>
-      اختر البطاقة التي تريد تحويل الرصيد إليها
-    </div>
-    
-    <div class="modal-actions">
-      <button id="confirmTransferBtn" class="btn btn-success btn-full" disabled>
-        <i class="fas fa-check-circle"></i> تأكيد التحويل
-      </button>
-      <button id="cancelTransferBtn" class="btn btn-secondary btn-full">
-        <i class="fas fa-times"></i> إلغاء
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- نافذة تغيير اسم البطاقة -->
-<div id="changeNameModal" class="card-modal-overlay">
-  <div class="card-modal name-change-modal">
-    <div class="modal-header">
-      <h3><i class="fas fa-user-edit"></i> تغيير اسم البطاقة</h3>
-      <button class="close-modal" id="closeChangeNameModal">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    
-    <div class="name-input-group">
-      <label for="cardNameInput">اسم مالك البطاقة</label>
-      <input type="text" id="cardNameInput" placeholder="أدخل اسم صاحب البطاقة" />
-    </div>
-    
-    <div class="info-note" style="margin: 20px 0;">
-      <i class="fas fa-info-circle"></i>
-      يمكنك إضافة أسماء أبنائك لتسهيل إدارة البطاقات. مثال: "أحمد"، "محمد"، "سارة"
-    </div>
-    
-    <div class="modal-actions">
-      <button id="saveNameBtn" class="btn btn-success btn-full">
-        <i class="fas fa-save"></i> حفظ التغييرات
-      </button>
-      <button id="cancelNameBtn" class="btn btn-secondary btn-full">
-        <i class="fas fa-times"></i> إلغاء
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- حقل رفع الصور المخفي -->
-<input type="file" id="barcodeUpload" accept="image/*" style="display: none;" />
-
-<!-- حاوية التنبيهات -->
-<div class="toast-container" id="toastContainer"></div>
-
-<!-- Firebase SDK -->
-<script type="module">
-  // Import Firebase SDK
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-  import { getDatabase, ref, set, get, query, orderByChild, equalTo } 
-    from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
-
-  // Firebase Configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyBlcKC2ncX9mTOPlhDOnfmyzdJ5mLinWYY",
-    authDomain: "al-fajr-digital-library.firebaseapp.com",
-    databaseURL: "https://al-fajr-digital-library-default-rtdb.firebaseio.com",
-    projectId: "al-fajr-digital-library",
-    storageBucket: "al-fajr-digital-library.firebasestorage.app",
-    messagingSenderId: "739899495618",
-    appId: "1:739899495618:web:8e60409193ec1408b4d75b",
-    measurementId: "G-FFRQP9CXYK"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-  const codesRef = ref(db, 'voucher_codes');
-
-  // ======== نظام إدارة المحفظة ========
-  class WalletSystem {
-    constructor() {
-      this.user = null;
-      this.loggedInUser = null;
-      this.cards = [];
-      this.balance = 0;
-      this.selectedCardIndex = null;
-      this.currentModalCardIndex = null;
-      this.transferTargetIndex = null;
-      this.usedCodes = new Set();
-      this.clickCount = 0;
-      this.clickTimer = null;
-      
-      this.init();
-    }
-    
-    init() {
-      this.checkAuth();
-      this.loadData();
-      this.setupEventListeners();
-      this.initializePage();
-    }
-    
-    checkAuth() {
-      try {
-        const userData = localStorage.getItem('user');
-        if (!userData) throw new Error('No user data');
-        
-        this.user = JSON.parse(userData);
-        if (!this.user || !this.user.email) throw new Error('Invalid user data');
-        
-        this.loggedInUser = this.user.email;
-        document.getElementById('userNameDisplay').textContent = 
-          this.user.username || this.user.email.split('@')[0];
-          
-      } catch (error) {
-        console.error('Auth error:', error);
-        setTimeout(() => window.location.href = 'login.html', 1000);
-        
-        document.body.innerHTML = `
-          <div style="padding:40px;text-align:center;background:#0a1514;color:white;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-            <div style="background:rgba(0,208,194,0.1);padding:30px;border-radius:16px;border:1px solid rgba(0,208,194,0.3);max-width:500px;">
-              <h2 style="color:#00d0c2;margin-bottom:20px;">
-                <i class="fas fa-exclamation-triangle"></i> لم يتم العثور على مستخدم مسجل
-              </h2>
-              <p style="margin-bottom:25px;color:#b0b0b0;">
-                يرجى تسجيل الدخول أولاً من صفحة الدخول.
-              </p>
-              <a href="login.html" style="background:linear-gradient(135deg, #00d0c2, #00a9b8);color:white;padding:12px 30px;border-radius:8px;text-decoration:none;font-weight:bold;display:inline-flex;align-items:center;gap:8px;">
-                <i class="fas fa-sign-in-alt"></i> اذهب إلى صفحة الدخول
-              </a>
+        <!-- لوحة الإشعارات -->
+        <div class="notifications-panel">
+            <div class="notifications-header" id="notificationsToggle">
+                <h3><i class="fas fa-bell"></i> الإشعارات</h3>
+                <span id="unreadCount" class="badge" style="display: none;">0</span>
+                <i class="fas fa-chevron-down"></i>
             </div>
-          </div>
-        `;
-        
-        throw error;
-      }
-    }
-    
-    loadData() {
-      const CARDS_KEY = `cards_${this.loggedInUser}`;
-      const BALANCE_KEY = `balance_${this.loggedInUser}`;
-      const USED_CODES_KEY = `used_codes_${this.loggedInUser}`;
-      
-      this.cards = JSON.parse(localStorage.getItem(CARDS_KEY)) || [];
-      this.balance = parseFloat(localStorage.getItem(BALANCE_KEY)) || 0;
-      
-      const usedCodes = JSON.parse(localStorage.getItem(USED_CODES_KEY)) || [];
-      this.usedCodes = new Set(usedCodes);
-    }
-    
-    saveData() {
-      const CARDS_KEY = `cards_${this.loggedInUser}`;
-      const BALANCE_KEY = `balance_${this.loggedInUser}`;
-      const USED_CODES_KEY = `used_codes_${this.loggedInUser}`;
-      
-      localStorage.setItem(CARDS_KEY, JSON.stringify(this.cards));
-      localStorage.setItem(BALANCE_KEY, this.balance.toString());
-      localStorage.setItem(USED_CODES_KEY, JSON.stringify(Array.from(this.usedCodes)));
-      
-      window.dispatchEvent(new StorageEvent('storage', {
-        key: BALANCE_KEY,
-        newValue: this.balance.toString()
-      }));
-    }
-    
-    setupEventListeners() {
-      document.getElementById('addCardBtn').addEventListener('click', () => this.addCard());
-      document.getElementById('rechargeBtn').addEventListener('click', () => this.rechargeCard());
-      document.getElementById('refreshBtn').addEventListener('click', () => this.refreshData());
-      
-      document.getElementById('scanBtn').addEventListener('click', () => this.showToast('ميزة المسح الضوئي قيد التطوير', 'warning'));
-      document.getElementById('uploadBtn').addEventListener('click', () => document.getElementById('barcodeUpload').click());
-      document.getElementById('barcodeUpload').addEventListener('change', (e) => this.handleBarcodeUpload(e));
-      
-      document.getElementById('codeInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') this.rechargeCard();
-      });
-      
-      document.getElementById('closeCardModal').addEventListener('click', () => this.closeCardModal());
-      document.getElementById('backBtn').addEventListener('click', () => this.closeCardModal());
-      document.getElementById('transferBtn').addEventListener('click', () => this.showTransferModal());
-      document.getElementById('changeNameBtn').addEventListener('click', () => this.showChangeNameModal());
-      
-      document.getElementById('closeTransferModal').addEventListener('click', () => this.closeTransferModal());
-      document.getElementById('cancelTransferBtn').addEventListener('click', () => this.closeTransferModal());
-      document.getElementById('confirmTransferBtn').addEventListener('click', () => this.confirmTransfer());
-      
-      document.getElementById('closeChangeNameModal').addEventListener('click', () => this.closeChangeNameModal());
-      document.getElementById('cancelNameBtn').addEventListener('click', () => this.closeChangeNameModal());
-      document.getElementById('saveNameBtn').addEventListener('click', () => this.saveCardName());
-      
-      document.getElementById('transferAmountInput').addEventListener('input', () => this.updateTransferButton());
-      
-      document.getElementById('cardModal').addEventListener('click', (e) => {
-        if (e.target === e.currentTarget) this.closeCardModal();
-      });
-      
-      document.getElementById('transferModal').addEventListener('click', (e) => {
-        if (e.target === e.currentTarget) this.closeTransferModal();
-      });
-      
-      document.getElementById('changeNameModal').addEventListener('click', (e) => {
-        if (e.target === e.currentTarget) this.closeChangeNameModal();
-      });
-    }
-    
-    initializePage() {
-      this.renderCards();
-      this.updateGlobalBalance();
-      
-      if (this.cards.length === 0) {
-        this.addDefaultCard();
-      }
-      
-      this.showToast('مرحباً بك في المحفظة الرقمية', 'success');
-    }
-    
-    addDefaultCard() {
-      const defaultCard = {
-        id: 'default_' + Date.now(),
-        number: this.generateCardNumber([]),
-        last4: Date.now().toString().slice(-4),
-        expiry: this.generateExpiry(),
-        balance: 100,
-        createdAt: new Date().toISOString(),
-        name: this.user.username || this.loggedInUser
-      };
-      
-      this.cards.push(defaultCard);
-      this.selectedCardIndex = 0;
-      this.saveData();
-      this.renderCards();
-    }
-    
-    addCard() {
-      // نافذة إضافة بطاقة جديدة مع إدخال الاسم
-      const modalHTML = `
-        <div id="addCardModal" class="card-modal-overlay" style="display: flex;">
-          <div class="card-modal name-change-modal">
-            <div class="modal-header">
-              <h3><i class="fas fa-plus-circle"></i> إضافة بطاقة جديدة</h3>
-              <button class="close-modal" id="closeAddCardModal">
-                <i class="fas fa-times"></i>
-              </button>
+            <div class="notifications-list" id="notificationsList"></div>
+        </div>
+
+        <div class="main-content">
+            <section class="cards-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-credit-card"></i> بطاقاتي</h2>
+                    <button class="btn-secondary" id="addCardBtn" style="width: auto; padding: 8px 16px;">
+                        <i class="fas fa-plus"></i> بطاقة جديدة
+                    </button>
+                </div>
+                <div id="cardsGrid" class="cards-grid"></div>
+            </section>
+
+            <aside class="control-panel">
+                <div class="control-group">
+                    <h3><i class="fas fa-ticket-alt"></i> شحن البطاقة</h3>
+                    <div class="input-group">
+                        <label>كود الشحن</label>
+                        <div class="input-with-camera">
+                            <input type="text" id="voucherCode" placeholder="أدخل كود الشحن يدوياً">
+                            <button class="camera-icon-btn" id="openScannerBtn" title="مسح باركود / QR">
+                                <i class="fas fa-camera"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button id="rechargeBtn" class="btn-primary">
+                        <i class="fas fa-bolt"></i> شحن البطاقة
+                    </button>
+                </div>
+
+                <div class="info-text">
+                    <p><i class="fas fa-info-circle"></i> انقر على البطاقة لاختيارها للشحن</p>
+                    <p><i class="fas fa-exchange-alt"></i> انقر مرتين على البطاقة للتحويل أو الحذف</p>
+                    <p><i class="fas fa-camera"></i> اضغط على أيقونة الكاميرا لمسح الباركود أو رفع صورة</p>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- نافذة الماسح الضوئي المنبثقة -->
+    <div id="scannerPopup" class="scanner-popup">
+        <div class="scanner-container">
+            <div class="scanner-header">
+                <h3><i class="fas fa-camera" style="color: #00d0c2;"></i> مسح الباركود / QR</h3>
+                <button class="close-scanner" id="closeScannerBtn">&times;</button>
             </div>
-            
-            <div class="name-input-group">
-              <label for="newCardNameInput">اسم مالك البطاقة</label>
-              <input type="text" id="newCardNameInput" placeholder="أدخل اسم صاحب البطاقة (مثال: أحمد، محمد، سارة)" />
+            <div id="reader"></div>
+            <div class="scanner-actions">
+                <button class="file-input-wrapper btn-secondary">
+                    <i class="fas fa-image"></i> رفع صورة
+                    <input type="file" id="fileInput" accept="image/*">
+                </button>
+                <button class="btn-danger" id="stopScannerBtn"><i class="fas fa-stop"></i> إيقاف</button>
             </div>
-            
-            <div class="info-note" style="margin: 20px 0;">
-              <i class="fas fa-info-circle"></i>
-              يمكنك إضافة بطاقات بأسماء أبنائك لتسهيل إدارة المصروفات
+        </div>
+    </div>
+
+    <!-- نافذة البطاقة (النقر المزدوج) -->
+    <div id="cardModal" class="modal">
+        <div class="modal-content">
+            <h3><i class="fas fa-id-card" style="color: #00d0c2;"></i> تفاصيل البطاقة</h3>
+            <div id="modalCardInfo" class="modal-card-info"></div>
+
+            <hr class="modal-divider">
+
+            <h4 style="margin-bottom: 15px; color: #f59e0b;"><i class="fas fa-exchange-alt"></i> تحويل داخلي (بين البطاقات)</h4>
+            <div class="input-group">
+                <label>تحويل إلى بطاقة</label>
+                <select id="transferToCard">
+                    <option value="">اختر بطاقة</option>
+                </select>
             </div>
-            
+            <div class="input-group">
+                <label>المبلغ (ر.س)</label>
+                <input type="number" id="internalTransferAmount" step="0.01" placeholder="0.00">
+            </div>
+            <button id="confirmInternalTransferBtn" class="btn btn-warning">
+                <i class="fas fa-exchange-alt"></i> تحويل داخلي
+            </button>
+
+            <hr class="modal-divider">
+
+            <h4 style="margin-bottom: 15px; color: #10b981;"><i class="fas fa-paper-plane"></i> تحويل خارجي (لمستخدم آخر)</h4>
+            <div class="input-group">
+                <label>اسم المستلم (البريد الإلكتروني أو اسم المستخدم)</label>
+                <input type="text" id="externalTargetUser" placeholder="مثال: ahmed@example.com">
+            </div>
+            <div class="input-group">
+                <label>المبلغ (ر.س)</label>
+                <input type="number" id="externalTransferAmount" step="0.01" placeholder="0.00">
+            </div>
+            <div class="input-group">
+                <label>رسالة (اختياري)</label>
+                <input type="text" id="externalTransferMessage" placeholder="رسالة قصيرة">
+            </div>
+            <button id="confirmExternalTransferBtn" class="btn btn-success">
+                <i class="fas fa-paper-plane"></i> تحويل خارجي
+            </button>
+
+            <hr class="modal-divider">
+
             <div class="modal-actions">
-              <button id="confirmAddCardBtn" class="btn btn-success btn-full">
-                <i class="fas fa-check-circle"></i> إضافة البطاقة
-              </button>
-              <button id="cancelAddCardBtn" class="btn btn-secondary btn-full">
-                <i class="fas fa-times"></i> إلغاء
-              </button>
+                <button id="deleteCardBtn" class="btn-danger" style="flex: 1;">
+                    <i class="fas fa-trash"></i> حذف البطاقة
+                </button>
+                <button id="closeModalBtn" class="btn-secondary" style="flex: 1;">
+                    <i class="fas fa-times"></i> إغلاق
+                </button>
             </div>
-          </div>
         </div>
-      `;
-      
-      const modalContainer = document.createElement('div');
-      modalContainer.innerHTML = modalHTML;
-      document.body.appendChild(modalContainer.firstElementChild);
-      
-      const closeModal = () => {
-        document.getElementById('addCardModal').remove();
-      };
-      
-      document.getElementById('closeAddCardModal').addEventListener('click', closeModal);
-      document.getElementById('cancelAddCardBtn').addEventListener('click', closeModal);
-      
-      document.getElementById('confirmAddCardBtn').addEventListener('click', () => {
-        const nameInput = document.getElementById('newCardNameInput');
-        const name = nameInput.value.trim() || this.user.username || this.loggedInUser;
-        
-        const existingNumbers = this.cards.map(card => card.number);
-        const newCard = {
-          id: 'card_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-          number: this.generateCardNumber(existingNumbers),
-          last4: '',
-          expiry: this.generateExpiry(),
-          balance: 0,
-          createdAt: new Date().toISOString(),
-          name: name
-        };
-        
-        newCard.last4 = newCard.number.slice(-4);
-        
-        this.cards.unshift(newCard);
-        this.selectedCardIndex = 0;
-        this.saveData();
-        this.renderCards();
-        
-        closeModal();
-        this.showToast(`تم إضافة بطاقة جديدة باسم "${name}" بنجاح`, 'success');
-      });
-      
-      // التركيز على حقل الإدخال
-      setTimeout(() => {
-        document.getElementById('newCardNameInput').focus();
-      }, 100);
-    }
-    
-    generateCardNumber(existing) {
-      let tries = 0;
-      while (tries < 100) {
-        let parts = [];
-        for (let i = 0; i < 4; i++) {
-          parts.push(String(Math.floor(1000 + Math.random() * 9000)));
-        }
-        let num = parts.join('');
-        if (!existing.includes(num)) return num;
-        tries++;
-      }
-      return '4' + Date.now().toString().slice(0, 15);
-    }
-    
-    generateExpiry() {
-      const now = new Date();
-      const year = (now.getFullYear() + 3) % 100;
-      const month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
-      return `${month}/${year}`;
-    }
-    
-    formatCardNumber(num) {
-      return num.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
-    }
-    
-    handleCardDoubleClick(index) {
-      const card = this.cards[index];
-      this.selectedCardIndex = index;
-      this.renderCards();
-      
-      if (card.balance > 0 && this.cards.length > 1) {
-        this.showTransferChoiceModal(index);
-      } else {
-        this.showToast(`تم اختيار البطاقة ${card.last4 || card.number.slice(-4)} للشحن`, 'success');
-      }
-    }
-    
-    showTransferChoiceModal(cardIndex) {
-      const card = this.cards[cardIndex];
-      
-      const modalHTML = `
-        <div id="transferChoiceModal" class="card-modal-overlay" style="display: flex;">
-          <div class="card-modal transfer-choice-modal">
-            <div class="modal-header">
-              <h3><i class="fas fa-exchange-alt"></i> البطاقة تحتوي على رصيد</h3>
-              <button class="close-modal" id="closeTransferChoice">
-                <i class="fas fa-times"></i>
-              </button>
-            </div>
-            
-            <div class="info-note" style="margin: 20px 0; text-align: center;">
-              <i class="fas fa-info-circle"></i>
-              <div style="margin-top: 10px; font-size: 1.1rem; font-weight: bold; color: var(--text-primary);">
-                رصيد البطاقة: ${card.balance.toFixed(2)} ر.س
-              </div>
-              <div style="margin-top: 5px; color: var(--text-secondary);">
-                هل تريد تحويل الرصيد إلى بطاقة أخرى قبل الشحن؟
-              </div>
-            </div>
-            
-            <div class="modal-actions" style="gap: 10px;">
-              <button id="proceedToTransferBtn" class="btn btn-success btn-full">
-                <i class="fas fa-exchange-alt"></i> نعم، أريد تحويل الرصيد
-              </button>
-              <button id="keepForRechargeBtn" class="btn btn-primary btn-full">
-                <i class="fas fa-bolt"></i> لا، أريد شحن هذه البطاقة
-              </button>
-              <button id="backChoiceBtn" class="btn btn-secondary btn-full">
-                <i class="fas fa-arrow-right"></i> رجوع
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-      
-      const modalContainer = document.createElement('div');
-      modalContainer.innerHTML = modalHTML;
-      document.body.appendChild(modalContainer.firstElementChild);
-      
-      const closeModal = () => {
-        const modal = document.getElementById('transferChoiceModal');
-        if (modal) modal.remove();
-        this.selectedCardIndex = null;
-        this.renderCards();
-      };
-      
-      document.getElementById('closeTransferChoice').addEventListener('click', closeModal);
-      document.getElementById('backChoiceBtn').addEventListener('click', closeModal);
-      
-      document.getElementById('keepForRechargeBtn').addEventListener('click', () => {
-        document.getElementById('transferChoiceModal').remove();
-        this.showToast(`تم اختيار البطاقة ${card.last4 || card.number.slice(-4)} للشحن`, 'success');
-      });
-      
-      document.getElementById('proceedToTransferBtn').addEventListener('click', () => {
-        document.getElementById('transferChoiceModal').remove();
-        this.currentModalCardIndex = cardIndex;
-        this.showTransferModal();
-      });
-      
-      document.getElementById('transferChoiceModal').addEventListener('click', (e) => {
-        if (e.target === e.currentTarget) closeModal();
-      });
-    }
-    
-    showCardDetails(index) {
-      this.currentModalCardIndex = index;
-      const card = this.cards[index];
-      
-      document.getElementById('modalCardPreview').innerHTML = `
-        <div class="card-badge">
-          <i class="fas fa-coins"></i> ${card.balance.toFixed(2)} ر.س
-        </div>
-        <div class="card-top">
-          <div class="card-chip"></div>
-          <div class="bank-name">
-            <i class="fas fa-university"></i> ${card.name || 'Digital Bank'}
-          </div>
-        </div>
-        <div class="card-number">${this.formatCardNumber(card.number)}</div>
-        <div class="card-details">
-          <div>
-            <div class="card-holder">${card.name}</div>
-            <div style="font-size:0.8rem;opacity:0.9">مالك البطاقة</div>
-          </div>
-          <div class="card-expiry">
-            <div>${card.expiry}</div>
-            <div style="font-size:0.8rem;opacity:0.9">انتهاء الصلاحية</div>
-          </div>
-        </div>
-      `;
-      
-      document.getElementById('modalOwner').textContent = card.name;
-      document.getElementById('modalNumber').textContent = this.formatCardNumber(card.number);
-      document.getElementById('modalLast4').textContent = card.last4 || card.number.slice(-4);
-      document.getElementById('modalExpiry').textContent = card.expiry;
-      document.getElementById('modalCreated').textContent = new Date(card.createdAt).toLocaleDateString('ar-SA');
-      document.getElementById('modalBalance').textContent = `${card.balance.toFixed(2)} ر.س`;
-      
-      const transferBtn = document.getElementById('transferBtn');
-      if (card.balance > 0 && this.cards.length > 1) {
-        transferBtn.style.display = 'block';
-      } else {
-        transferBtn.style.display = 'none';
-      }
-      
-      document.getElementById('cardModal').style.display = 'flex';
-    }
-    
-    closeCardModal() {
-      document.getElementById('cardModal').style.display = 'none';
-      this.currentModalCardIndex = null;
-    }
-    
-    showChangeNameModal() {
-      if (this.currentModalCardIndex === null) return;
-      
-      const card = this.cards[this.currentModalCardIndex];
-      document.getElementById('cardNameInput').value = card.name;
-      document.getElementById('changeNameModal').style.display = 'flex';
-    }
-    
-    closeChangeNameModal() {
-      document.getElementById('changeNameModal').style.display = 'none';
-    }
-    
-    saveCardName() {
-      if (this.currentModalCardIndex === null) return;
-      
-      const newName = document.getElementById('cardNameInput').value.trim();
-      if (!newName) {
-        this.showToast('الرجاء إدخال اسم', 'error');
-        return;
-      }
-      
-      const card = this.cards[this.currentModalCardIndex];
-      const oldName = card.name;
-      card.name = newName;
-      
-      this.saveData();
-      this.renderCards();
-      this.closeChangeNameModal();
-      this.showCardDetails(this.currentModalCardIndex);
-      
-      this.showToast(`تم تغيير اسم البطاقة من "${oldName}" إلى "${newName}"`, 'success');
-    }
-    
-    showTransferModal() {
-      if (this.currentModalCardIndex === null) return;
-      
-      const sourceCard = this.cards[this.currentModalCardIndex];
-      this.transferTargetIndex = null;
-      
-      // تعيين المبلغ الافتراضي (الرصيد الكامل)
-      document.getElementById('transferAmountInput').value = sourceCard.balance.toFixed(2);
-      document.getElementById('availableBalance').textContent = `${sourceCard.balance.toFixed(2)} ر.س`;
-      
-      // إنشاء أزرار القيم السريعة
-      const amountOptions = document.getElementById('amountOptions');
-      const quickAmounts = [10, 20, 50, 100, 200, sourceCard.balance];
-      amountOptions.innerHTML = '';
-      
-      quickAmounts.forEach(amount => {
-        if (amount > sourceCard.balance) return;
-        
-        const button = document.createElement('button');
-        button.className = 'amount-option';
-        button.textContent = amount === sourceCard.balance ? 'الرصيد الكامل' : `${amount} ر.س`;
-        button.addEventListener('click', () => {
-          document.getElementById('transferAmountInput').value = amount.toFixed(2);
-          this.updateTransferButton();
-        });
-        amountOptions.appendChild(button);
-      });
-      
-      // تحديث قائمة البطاقات
-      const cardsList = document.getElementById('transferCardsList');
-      cardsList.innerHTML = '';
-      
-      this.cards.forEach((card, index) => {
-        if (index === this.currentModalCardIndex) return;
-        
-        const cardElement = document.createElement('div');
-        cardElement.className = 'transfer-card';
-        cardElement.dataset.index = index;
-        
-        cardElement.innerHTML = `
-          <div class="transfer-card-header">
-            <div class="transfer-card-number">${this.formatCardNumber(card.number)}</div>
-            <div class="transfer-card-balance">${card.balance.toFixed(2)} ر.س</div>
-          </div>
-          <div class="transfer-card-details">
-            <div>${card.name}</div>
-            <div>${card.expiry}</div>
-          </div>
-        `;
-        
-        cardElement.addEventListener('click', () => {
-          document.querySelectorAll('.transfer-card').forEach(c => {
-            c.classList.remove('selected');
-          });
-          
-          cardElement.classList.add('selected');
-          this.transferTargetIndex = index;
-          this.updateTransferButton();
-        });
-        
-        cardsList.appendChild(cardElement);
-      });
-      
-      document.getElementById('confirmTransferBtn').disabled = true;
-      document.getElementById('transferModal').style.display = 'flex';
-    }
-    
-    updateTransferButton() {
-      const amountInput = parseFloat(document.getElementById('transferAmountInput').value) || 0;
-      const sourceCard = this.cards[this.currentModalCardIndex];
-      
-      let isValid = false;
-      let errorMessage = '';
-      
-      if (amountInput <= 0) {
-        errorMessage = 'المبلغ يجب أن يكون أكبر من الصفر';
-      } else if (amountInput > sourceCard.balance) {
-        errorMessage = 'المبلغ المطلوب أكبر من الرصيد المتاح';
-      } else if (this.transferTargetIndex === null) {
-        errorMessage = 'الرجاء اختيار بطاقة الوجهة';
-      } else {
-        isValid = true;
-      }
-      
-      const confirmBtn = document.getElementById('confirmTransferBtn');
-      confirmBtn.disabled = !isValid;
-      confirmBtn.innerHTML = isValid ? 
-        `<i class="fas fa-check-circle"></i> تحويل ${amountInput.toFixed(2)} ر.س` :
-        `<i class="fas fa-check-circle"></i> تأكيد التحويل`;
-    }
-    
-    closeTransferModal() {
-      document.getElementById('transferModal').style.display = 'none';
-      this.transferTargetIndex = null;
-    }
-    
-    confirmTransfer() {
-      if (this.currentModalCardIndex === null || this.transferTargetIndex === null) return;
-      
-      const sourceCard = this.cards[this.currentModalCardIndex];
-      const targetCard = this.cards[this.transferTargetIndex];
-      
-      const amountInput = parseFloat(document.getElementById('transferAmountInput').value) || 0;
-      
-      if (amountInput <= 0) {
-        this.showToast('المبلغ يجب أن يكون أكبر من الصفر', 'error');
-        return;
-      }
-      
-      if (amountInput > sourceCard.balance) {
-        this.showToast('المبلغ المطلوب أكبر من الرصيد المتاح', 'error');
-        return;
-      }
-      
-      const sourceLast4 = sourceCard.last4 || sourceCard.number.slice(-4);
-      const targetLast4 = targetCard.last4 || targetCard.number.slice(-4);
-      const sourceName = sourceCard.name;
-      const targetName = targetCard.name;
-      
-      if (!confirm(`هل تريد تحويل ${amountInput.toFixed(2)} ريال من بطاقة ${sourceName} (${sourceLast4}) إلى بطاقة ${targetName} (${targetLast4})؟`)) {
-        return;
-      }
-      
-      targetCard.balance += amountInput;
-      sourceCard.balance -= amountInput;
-      
-      this.saveData();
-      this.renderCards();
-      this.updateGlobalBalance();
-      
-      this.closeTransferModal();
-      this.closeCardModal();
-      
-      this.showToast(`تم تحويل ${amountInput.toFixed(2)} ريال بنجاح من بطاقة ${sourceName} إلى بطاقة ${targetName}`, 'success');
-    }
-    
-    async rechargeCard() {
-      const codeInput = document.getElementById('codeInput');
-      const code = codeInput.value.trim();
-      
-      if (!code) {
-        this.showToast('الرجاء إدخال كود الشحن', 'error');
-        return;
-      }
-      
-      if (this.selectedCardIndex === null) {
-        this.showToast('الرجاء اختيار بطاقة أولاً (انقر نقرتين على البطاقة)', 'error');
-        return;
-      }
-      
-      this.showToast('جاري التحقق من الكود...', 'warning');
-      
-      try {
-        const validation = await this.validateVoucherCode(code);
-        
-        if (!validation.valid) {
-          this.showToast(validation.message, 'error');
-          return;
-        }
-        
-        const card = this.cards[this.selectedCardIndex];
-        const oldBalance = card.balance;
-        card.balance += validation.amount;
-        
-        this.saveData();
-        this.renderCards();
-        this.updateGlobalBalance();
-        
-        codeInput.value = '';
-        
-        const last4 = card.last4 || card.number.slice(-4);
-        this.showToast(`✅ تم شحن ${validation.amount} ريال للبطاقة ${card.name} (${last4}) بنجاح! الرصيد الجديد: ${card.balance.toFixed(2)} ريال`, 'success');
-        
-      } catch (error) {
-        console.error('Error recharging:', error);
-        this.showToast('حدث خطأ أثناء عملية الشحن', 'error');
-      }
-    }
-    
-    async validateVoucherCode(code) {
-      try {
-        code = code.trim().toUpperCase();
-        
-        if (!code) {
-          return { valid: false, message: 'الرجاء إدخال كود الشحن' };
-        }
-        
-        if (this.usedCodes.has(code)) {
-          return { valid: false, message: '⚠️ هذا الكود تم استخدامه مسبقاً في هذه المحفظة!' };
-        }
-        
-        const snapshot = await get(codesRef);
-        
-        if (!snapshot.exists()) {
-          return { valid: false, message: 'قاعدة البيانات فارغة' };
-        }
-        
-        const codesData = snapshot.val();
-        let voucherData = null;
-        let voucherKey = null;
-        
-        for (const key in codesData) {
-          const item = codesData[key];
-          if (item.code && item.code.toUpperCase() === code) {
-            voucherData = item;
-            voucherKey = key;
-            break;
-          }
-        }
-        
-        if (!voucherData) {
-          return { valid: false, message: '❌ الكود غير صالح أو غير موجود' };
-        }
-        
-        if (voucherData.status === 'used') {
-          return { valid: false, message: '⚠️ هذا الكود تم استخدامه مسبقاً في النظام!' };
-        }
-        
-        const amount = parseFloat(voucherData.amount);
-        if (isNaN(amount) || amount <= 0) {
-          return { valid: false, message: '❌ قيمة الكود غير صالحة' };
-        }
-        
-        const updateData = {
-          ...voucherData,
-          status: 'used',
-          used_by: this.loggedInUser,
-          used_at: new Date().toISOString(),
-          wallet_user: this.user.username || this.loggedInUser
-        };
-        
-        await set(ref(db, `voucher_codes/${voucherKey}`), updateData);
-        
-        this.usedCodes.add(code);
-        this.saveData();
-        
-        return {
-          valid: true,
-          message: '✅ تم التحقق من الكود بنجاح',
-          amount: amount
-        };
-        
-      } catch (error) {
-        console.error('Validation error:', error);
-        return { valid: false, message: '❌ خطأ في التحقق من الكود' };
-      }
-    }
-    
-    renderCards() {
-      const cardsGrid = document.getElementById('cardsGrid');
-      const noCards = document.getElementById('noCards');
-      
-      if (!cardsGrid) return;
-      
-      cardsGrid.innerHTML = '';
-      
-      if (this.cards.length === 0) {
-        noCards.style.display = 'block';
-        return;
-      }
-      
-      noCards.style.display = 'none';
-      
-      this.cards.forEach((card, index) => {
-        const cardElement = document.createElement('div');
-        cardElement.className = 'card-item';
-        
-        if (this.selectedCardIndex === index) {
-          cardElement.classList.add('selected');
-        }
-        
-        const last4 = card.last4 || card.number.slice(-4);
-        
-        cardElement.innerHTML = `
-          <div class="card-badge">
-            <i class="fas fa-coins"></i> ${card.balance.toFixed(2)} ر.س
-          </div>
-          ${this.selectedCardIndex === index ? `
-          <div class="selected-badge">
-            <i class="fas fa-check"></i> مختارة للشحن
-          </div>` : ''}
-          <div class="card-top">
-            <div class="card-chip"></div>
-            <div class="bank-name">
-              <i class="fas fa-user"></i> ${card.name}
-            </div>
-          </div>
-          <div class="card-number">${this.formatCardNumber(card.number)}</div>
-          <div class="card-details">
-            <div>
-              <div class="card-holder">${card.name}</div>
-              <div style="font-size:0.8rem;opacity:0.9">مالك البطاقة</div>
-            </div>
-            <div class="card-expiry">
-              <div>${card.expiry}</div>
-              <div style="font-size:0.8rem;opacity:0.9">انتهاء الصلاحية</div>
-            </div>
-          </div>
-          <div class="card-footer">
-            <div style="font-size:0.8rem;opacity:0.9">آخر 4: ${last4}</div>
-            <div class="card-brand">مدى</div>
-          </div>
-        `;
-        
-        cardElement.addEventListener('click', (e) => {
-          if (e.target.closest('button')) return;
-          
-          this.clickCount++;
-          
-          if (this.clickCount === 1) {
-            this.clickTimer = setTimeout(() => {
-              this.showCardDetails(index);
-              this.clickCount = 0;
-            }, 300);
-          } else if (this.clickCount === 2) {
-            clearTimeout(this.clickTimer);
-            this.handleCardDoubleClick(index);
-            this.clickCount = 0;
-          }
-        });
-        
-        cardsGrid.appendChild(cardElement);
-      });
-    }
-    
-    updateGlobalBalance() {
-      const totalBalance = this.cards.reduce((sum, card) => sum + (card.balance || 0), 0);
-      this.balance = totalBalance;
-      document.getElementById('globalBalance').textContent = totalBalance.toFixed(2);
-    }
-    
-    refreshData() {
-      this.loadData();
-      this.renderCards();
-      this.updateGlobalBalance();
-      this.showToast('تم تحديث البيانات بنجاح', 'success');
-    }
-    
-    handleBarcodeUpload(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      
-      this.showToast('جاري قراءة الباركود...', 'warning');
-      
-      setTimeout(() => {
-        const fakeBarcode = 'VOUCHER' + Date.now().toString().slice(-8);
-        document.getElementById('codeInput').value = fakeBarcode;
-        this.showToast('تم قراءة الباركود بنجاح', 'success');
-      }, 1500);
-      
-      event.target.value = '';
-    }
-    
-    showToast(message, type = 'success') {
-      const toastContainer = document.getElementById('toastContainer');
-      
-      const toast = document.createElement('div');
-      toast.className = `toast ${type}`;
-      
-      const icon = type === 'success' ? 'fa-check-circle' : 
-                   type === 'error' ? 'fa-exclamation-circle' : 
-                   'fa-info-circle';
-      
-      toast.innerHTML = `
-        <div class="toast-header">
-          <i class="fas ${icon}"></i>
-          <h4>${type === 'success' ? 'نجاح' : type === 'error' ? 'خطأ' : 'تنبيه'}</h4>
-        </div>
-        <div class="toast-body">${message}</div>
-      `;
-      
-      toastContainer.appendChild(toast);
-      
-      setTimeout(() => {
-        toast.style.display = 'block';
-      }, 10);
-      
-      setTimeout(() => {
-        toast.style.animation = 'slideDown 0.3s ease-out reverse';
-        setTimeout(() => {
-          toast.remove();
-        }, 300);
-      }, 4000);
-    }
-  }
+    </div>
 
-  // ======== تشغيل النظام ========
-  document.addEventListener('DOMContentLoaded', () => {
-    window.walletSystem = new WalletSystem();
-  });
+    <div id="toast" class="toast"></div>
+    <div id="loading" class="loading"><div class="spinner"></div></div>
 
-</script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+        import { getDatabase, ref, get, set, update, push, remove, onValue } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBlcKC2ncX9mTOPlhDOnfmyzdJ5mLinWYY",
+            authDomain: "al-fajr-digital-library.firebaseapp.com",
+            databaseURL: "https://al-fajr-digital-library-default-rtdb.firebaseio.com",
+            projectId: "al-fajr-digital-library",
+            storageBucket: "al-fajr-digital-library.firebasestorage.app",
+            appId: "1:739899495618:web:8e60409193ec1408b4d75b"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        let currentUser = null;
+        let userCards = [];
+        let selectedCardId = null;
+        let currentModalCardId = null;
+        let html5QrCode = null;
+        let isScannerActive = false;
+
+        // ========== دالة الإشعارات ==========
+        function showToast(msg, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.className = 'toast ' + type;
+            toast.style.display = 'block';
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                toast.style.display = 'none';
+            }, 4000);
+        }
+
+        function showLoading(show) {
+            document.getElementById('loading').style.visibility = show ? 'visible' : 'hidden';
+        }
+
+        // ========== دالة المستخدم ==========
+        function getCurrentUser() {
+            try {
+                const userData = localStorage.getItem('user');
+                if (!userData) {
+                    window.location.href = 'login.html';
+                    return null;
+                }
+                currentUser = JSON.parse(userData);
+                document.getElementById('userNameDisplay').textContent = currentUser.username || currentUser.email.split('@')[0];
+                return currentUser;
+            } catch (e) {
+                window.location.href = 'login.html';
+                return null;
+            }
+        }
+
+        // ========== دوال البطاقات ==========
+        function generateCardNumber() {
+            let parts = [];
+            for (let i = 0; i < 4; i++) {
+                parts.push(Math.floor(1000 + Math.random() * 9000));
+            }
+            return parts.join('');
+        }
+
+        async function createDefaultCard() {
+            if (!currentUser) return;
+            const newCardId = `card_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
+            const cardNumber = generateCardNumber();
+            await set(ref(db, `digitalCards/${currentUser.uid}/${newCardId}`), {
+                cardNumber: cardNumber,
+                balance: 100,
+                name: currentUser.username || currentUser.email.split('@')[0],
+                expiry: "12/26",
+                createdAt: new Date().toISOString()
+            });
+        }
+
+        async function loadUserCards() {
+            if (!currentUser) return;
+            showLoading(true);
+            try {
+                const cardsRef = ref(db, `digitalCards/${currentUser.uid}`);
+                const snapshot = await get(cardsRef);
+                userCards = [];
+                if (snapshot.exists()) {
+                    const cards = snapshot.val();
+                    for (let cardId in cards) {
+                        userCards.push({ id: cardId, ...cards[cardId] });
+                    }
+                }
+                if (userCards.length === 0) {
+                    await createDefaultCard();
+                    return await loadUserCards();
+                }
+                renderCards();
+                updateTotalBalance();
+            } catch (err) {
+                console.error('خطأ في تحميل البطاقات:', err);
+                showToast('خطأ في تحميل البطاقات', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function renderCards() {
+            const grid = document.getElementById('cardsGrid');
+            if (!grid) return;
+            if (userCards.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:40px;">لا توجد بطاقات. أضف بطاقة جديدة</div>';
+                return;
+            }
+            grid.innerHTML = '';
+            userCards.forEach(card => {
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'card-item';
+                if (selectedCardId === card.id) {
+                    cardDiv.classList.add('selected');
+                }
+                const last4 = card.cardNumber ? card.cardNumber.slice(-4) : '****';
+                cardDiv.innerHTML = `
+                    <div class="card-badge"><i class="fas fa-coins"></i> ${(card.balance || 0).toFixed(2)} ر.س</div>
+                    <div class="card-number">•••• •••• •••• ${last4}</div>
+                    <div class="card-details">
+                        <div>${card.name || 'مالك البطاقة'}</div>
+                        <div class="card-balance">${(card.balance || 0).toFixed(2)} ر.س</div>
+                    </div>
+                `;
+                cardDiv.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    selectedCardId = card.id;
+                    renderCards();
+                    showToast(`تم اختيار بطاقة ${card.name || 'البطاقة'} للشحن`, 'info');
+                });
+                cardDiv.addEventListener('dblclick', () => {
+                    openCardModal(card.id);
+                });
+                grid.appendChild(cardDiv);
+            });
+        }
+
+        function updateTotalBalance() {
+            const total = userCards.reduce((sum, card) => sum + (card.balance || 0), 0);
+            document.getElementById('totalBalance').textContent = total.toFixed(2);
+        }
+
+        async function addNewCard() {
+            if (!currentUser) return;
+            const cardName = prompt('أدخل اسم البطاقة:', currentUser.username);
+            if (cardName === null) return;
+            showLoading(true);
+            try {
+                const newCardId = `card_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
+                const cardNumber = generateCardNumber();
+                await set(ref(db, `digitalCards/${currentUser.uid}/${newCardId}`), {
+                    cardNumber: cardNumber,
+                    balance: 0,
+                    name: cardName || currentUser.username,
+                    expiry: "12/26",
+                    createdAt: new Date().toISOString()
+                });
+                showToast('تم إضافة البطاقة الجديدة بنجاح', 'success');
+                await loadUserCards();
+            } catch (err) {
+                console.error('خطأ في إضافة البطاقة:', err);
+                showToast('حدث خطأ أثناء إضافة البطاقة', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // ========== نافذة البطاقة (النقر المزدوج) ==========
+        function openCardModal(cardId) {
+            const card = userCards.find(c => c.id === cardId);
+            if (!card) return;
+            currentModalCardId = cardId;
+
+            const modalInfo = document.getElementById('modalCardInfo');
+            modalInfo.innerHTML = `
+                <div class="card-number-display">رقم البطاقة: ${card.cardNumber || '----'}</div>
+                <div class="balance-display">${(card.balance || 0).toFixed(2)} ر.س</div>
+                <div>المالك: ${card.name || currentUser.username}</div>
+                <div>تاريخ الانتهاء: ${card.expiry || '12/26'}</div>
+            `;
+
+            // تعبئة قائمة التحويل الداخلي
+            const transferSelect = document.getElementById('transferToCard');
+            transferSelect.innerHTML = '<option value="">اختر بطاقة</option>';
+            userCards.forEach(c => {
+                if (c.id !== cardId) {
+                    transferSelect.innerHTML +=
+                        `<option value="${c.id}">${c.name || 'بطاقة'} - ${(c.balance || 0).toFixed(2)} ر.س</option>`;
+                }
+            });
+
+            document.getElementById('internalTransferAmount').value = '';
+            document.getElementById('externalTargetUser').value = '';
+            document.getElementById('externalTransferAmount').value = '';
+            document.getElementById('externalTransferMessage').value = '';
+
+            document.getElementById('cardModal').classList.add('active');
+        }
+
+        // ========== التحويل الداخلي ==========
+        async function internalTransfer() {
+            if (!currentModalCardId) {
+                showToast('خطأ في البيانات', 'error');
+                return;
+            }
+            const toCardId = document.getElementById('transferToCard').value;
+            const amount = parseFloat(document.getElementById('internalTransferAmount').value);
+
+            if (!toCardId) {
+                showToast('الرجاء اختيار البطاقة المراد التحويل إليها', 'error');
+                return;
+            }
+            if (!amount || amount <= 0) {
+                showToast('الرجاء إدخال مبلغ صحيح', 'error');
+                return;
+            }
+
+            const fromCard = userCards.find(c => c.id === currentModalCardId);
+            const toCard = userCards.find(c => c.id === toCardId);
+
+            if (!fromCard || !toCard) {
+                showToast('خطأ في البطاقات', 'error');
+                return;
+            }
+            if (fromCard.balance < amount) {
+                showToast(`الرصيد غير كافٍ. الرصيد المتاح: ${fromCard.balance.toFixed(2)} ر.س`, 'error');
+                return;
+            }
+
+            showLoading(true);
+            try {
+                await update(ref(db, `digitalCards/${currentUser.uid}/${currentModalCardId}`), {
+                    balance: fromCard.balance - amount
+                });
+                await update(ref(db, `digitalCards/${currentUser.uid}/${toCardId}`), {
+                    balance: toCard.balance + amount
+                });
+
+                const transferRef = ref(db, `transfers/${currentUser.uid}`);
+                await push(transferRef, {
+                    type: 'internal',
+                    fromCard: fromCard.cardNumber,
+                    toCard: toCard.cardNumber,
+                    amount: amount,
+                    timestamp: new Date().toISOString()
+                });
+
+                const notifRef = ref(db, `notifications/${currentUser.uid}`);
+                await push(notifRef, {
+                    type: 'transfer',
+                    title: '🔄 تحويل داخلي ناجح',
+                    message: `تم تحويل ${amount.toFixed(2)} ريال من بطاقة ${fromCard.name} إلى ${toCard.name}`,
+                    timestamp: new Date().toISOString(),
+                    read: false
+                });
+
+                showToast(`تم تحويل ${amount.toFixed(2)} ر.س بنجاح`, 'success');
+                document.getElementById('cardModal').classList.remove('active');
+                await loadUserCards();
+                await loadNotifications();
+            } catch (err) {
+                console.error('خطأ في التحويل الداخلي:', err);
+                showToast('حدث خطأ أثناء التحويل', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // ========== التحويل الخارجي ==========
+        async function externalTransfer() {
+            if (!currentModalCardId) {
+                showToast('خطأ في البيانات', 'error');
+                return;
+            }
+
+            const targetName = document.getElementById('externalTargetUser').value.trim();
+            const amount = parseFloat(document.getElementById('externalTransferAmount').value);
+            const message = document.getElementById('externalTransferMessage').value.trim();
+
+            if (!targetName) {
+                showToast('أدخل اسم المستلم', 'error');
+                return;
+            }
+            if (!amount || amount <= 0) {
+                showToast('أدخل مبلغ صحيح', 'error');
+                return;
+            }
+
+            const fromCard = userCards.find(c => c.id === currentModalCardId);
+            if (!fromCard) {
+                showToast('خطأ في البطاقة المصدر', 'error');
+                return;
+            }
+            if (fromCard.balance < amount) {
+                showToast(`الرصيد غير كافٍ (${fromCard.balance.toFixed(2)} ريال)`, 'error');
+                return;
+            }
+
+            showLoading(true);
+            try {
+                // البحث عن المستخدم المستلم
+                const usersSnapshot = await get(ref(db, 'users'));
+                let targetUid = null,
+                    targetUserData = null;
+                if (usersSnapshot.exists()) {
+                    for (let [uid, userData] of Object.entries(usersSnapshot.val())) {
+                        if ((userData.email && userData.email === targetName) ||
+                            (userData.username && userData.username === targetName)) {
+                            targetUid = uid;
+                            targetUserData = userData;
+                            break;
+                        }
+                    }
+                }
+                if (!targetUid) {
+                    showToast('المستخدم غير موجود. تأكد من الاسم أو البريد الإلكتروني', 'error');
+                    return;
+                }
+                if (targetUid === currentUser.uid) {
+                    showToast('لا يمكن التحويل لنفس المستخدم', 'error');
+                    return;
+                }
+
+                // خصم من المصدر
+                await update(ref(db, `digitalCards/${currentUser.uid}/${currentModalCardId}`), {
+                    balance: fromCard.balance - amount
+                });
+
+                // إضافة للمستلم (إنشاء بطاقة إذا لم توجد)
+                let targetCardsSnap = await get(ref(db, `digitalCards/${targetUid}`));
+                let targetCardId = null;
+                if (targetCardsSnap.exists()) {
+                    const cards = targetCardsSnap.val();
+                    targetCardId = Object.keys(cards)[0];
+                } else {
+                    targetCardId = `card_${Date.now()}`;
+                    await set(ref(db, `digitalCards/${targetUid}/${targetCardId}`), {
+                        cardNumber: generateCardNumber(),
+                        balance: 0,
+                        name: targetUserData.username || 'مستخدم',
+                        expiry: "12/26",
+                        createdAt: new Date().toISOString()
+                    });
+                }
+
+                const targetCardSnap = await get(ref(db, `digitalCards/${targetUid}/${targetCardId}`));
+                const targetBalance = targetCardSnap.exists() ? (targetCardSnap.val().balance || 0) : 0;
+                await update(ref(db, `digitalCards/${targetUid}/${targetCardId}`), {
+                    balance: targetBalance + amount
+                });
+
+                // تسجيل المعاملة
+                const transferRef = ref(db, `transfers/${currentUser.uid}`);
+                await push(transferRef, {
+                    type: 'external',
+                    to: targetUid,
+                    toEmail: targetUserData.email,
+                    amount: amount,
+                    message: message || '',
+                    timestamp: new Date().toISOString()
+                });
+
+                // إشعار للمستلم
+                await push(ref(db, `notifications/${targetUid}`), {
+                    type: 'transfer',
+                    title: '💰 استلام أموال',
+                    message: `استلمت ${amount.toFixed(2)} ريال من ${currentUser.username}${message ? ` مع رسالة: ${message}` : ''}`,
+                    timestamp: new Date().toISOString(),
+                    read: false
+                });
+
+                showToast(`تم تحويل ${amount.toFixed(2)} ريال بنجاح إلى ${targetUserData.username}`, 'success');
+                document.getElementById('cardModal').classList.remove('active');
+                await loadUserCards();
+                await loadNotifications();
+            } catch (err) {
+                console.error('خطأ في التحويل الخارجي:', err);
+                showToast('فشل التحويل: ' + err.message, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // ========== حذف البطاقة ==========
+        async function deleteCard() {
+            if (!currentModalCardId) return;
+            const card = userCards.find(c => c.id === currentModalCardId);
+            if (!card) return;
+
+            if (card.balance > 0) {
+                showToast('لا يمكن حذف البطاقة لأن رصيدها أكبر من صفر', 'error');
+                return;
+            }
+
+            if (!confirm(`هل أنت متأكد من حذف بطاقة ${card.name || 'البطاقة'}؟`)) return;
+
+            showLoading(true);
+            try {
+                await remove(ref(db, `digitalCards/${currentUser.uid}/${currentModalCardId}`));
+                showToast('تم حذف البطاقة بنجاح', 'success');
+                document.getElementById('cardModal').classList.remove('active');
+                await loadUserCards();
+            } catch (err) {
+                console.error('خطأ في حذف البطاقة:', err);
+                showToast('حدث خطأ أثناء حذف البطاقة', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // ========== شحن البطاقة ==========
+        async function rechargeCard() {
+            if (!selectedCardId) {
+                showToast('الرجاء اختيار بطاقة أولاً (انقر على البطاقة)', 'error');
+                return;
+            }
+            const code = document.getElementById('voucherCode').value.trim();
+            if (!code) {
+                showToast('الرجاء إدخال كود الشحن', 'error');
+                return;
+            }
+
+            showLoading(true);
+            try {
+                const codesRef = ref(db, 'voucher_codes');
+                const snapshot = await get(codesRef);
+                if (!snapshot.exists()) {
+                    showToast('الكود غير صالح', 'error');
+                    return;
+                }
+
+                let voucherData = null;
+                let voucherKey = null;
+                const codes = snapshot.val();
+                for (let key in codes) {
+                    if (codes[key].code === code) {
+                        voucherData = codes[key];
+                        voucherKey = key;
+                        break;
+                    }
+                }
+
+                if (!voucherData) {
+                    showToast('❌ الكود غير موجود', 'error');
+                    return;
+                }
+                if (voucherData.status === 'used') {
+                    showToast('⚠️ هذا الكود تم استخدامه مسبقاً!', 'error');
+                    return;
+                }
+
+                const amount = parseFloat(voucherData.amount);
+                if (isNaN(amount) || amount <= 0) {
+                    showToast('❌ قيمة الكود غير صالحة', 'error');
+                    return;
+                }
+
+                await update(ref(db, `voucher_codes/${voucherKey}`), {
+                    status: 'used',
+                    used_by: currentUser.uid,
+                    used_at: new Date().toISOString()
+                });
+
+                const card = userCards.find(c => c.id === selectedCardId);
+                if (!card) {
+                    showToast('خطأ في البطاقة', 'error');
+                    return;
+                }
+
+                await update(ref(db, `digitalCards/${currentUser.uid}/${selectedCardId}`), {
+                    balance: (card.balance || 0) + amount
+                });
+
+                await push(ref(db, `notifications/${currentUser.uid}`), {
+                    type: 'recharge',
+                    title: '💰 عملية شحن ناجحة',
+                    message: `تم شحن ${amount.toFixed(2)} ريال إلى بطاقة ${card.name || 'البطاقة'}`,
+                    timestamp: new Date().toISOString(),
+                    read: false
+                });
+
+                showToast(`✅ تم شحن ${amount.toFixed(2)} ر.س بنجاح`, 'success');
+                document.getElementById('voucherCode').value = '';
+                await loadUserCards();
+                await loadNotifications();
+            } catch (err) {
+                console.error('خطأ في الشحن:', err);
+                showToast('حدث خطأ أثناء الشحن', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // ========== الإشعارات ==========
+        async function loadNotifications() {
+            if (!currentUser) return;
+            try {
+                const notifRef = ref(db, `notifications/${currentUser.uid}`);
+                const snapshot = await get(notifRef);
+                const notificationsList = document.getElementById('notificationsList');
+                let unreadCount = 0;
+
+                if (snapshot.exists()) {
+                    const notifications = [];
+                    snapshot.forEach(child => {
+                        notifications.push({ id: child.key, ...child.val() });
+                    });
+                    notifications.reverse();
+
+                    notificationsList.innerHTML = '';
+                    notifications.forEach(notif => {
+                        if (!notif.read) unreadCount++;
+                        const div = document.createElement('div');
+                        div.className = `notification-item ${!notif.read ? 'unread' : ''}`;
+                        div.innerHTML = `
+                            <div><i class="fas ${notif.type === 'recharge' ? 'fa-bolt' : 'fa-exchange-alt'}"></i></div>
+                            <div><b>${notif.title || 'تحديث'}</b><br>${notif.message || ''}<br><small>${new Date(notif.timestamp).toLocaleString('ar')}</small></div>
+                        `;
+                        notificationsList.appendChild(div);
+                    });
+                } else {
+                    notificationsList.innerHTML = '<div style="padding:15px; text-align:center;">لا توجد إشعارات</div>';
+                }
+
+                const unreadSpan = document.getElementById('unreadCount');
+                if (unreadCount > 0) {
+                    unreadSpan.style.display = 'inline-block';
+                    unreadSpan.textContent = unreadCount;
+                } else {
+                    unreadSpan.style.display = 'none';
+                }
+            } catch (err) {
+                console.error('خطأ في تحميل الإشعارات:', err);
+            }
+        }
+
+        // ========== الماسح الضوئي (QR / باركود) ==========
+        function setupScanner() {
+            const openBtn = document.getElementById('openScannerBtn');
+            const closeBtn = document.getElementById('closeScannerBtn');
+            const stopBtn = document.getElementById('stopScannerBtn');
+            const fileInput = document.getElementById('fileInput');
+            const popup = document.getElementById('scannerPopup');
+
+            openBtn.addEventListener('click', () => {
+                popup.classList.add('active');
+                startScanner();
+            });
+
+            closeBtn.addEventListener('click', () => {
+                stopScanner();
+                popup.classList.remove('active');
+            });
+
+            stopBtn.addEventListener('click', () => {
+                stopScanner();
+            });
+
+            // رفع صورة من المعرض
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        // استخدام html5-qrcode لقراءة الصورة
+                        if (html5QrCode) {
+                            html5QrCode.scanFile(file, true)
+                                .then(decodedText => {
+                                    document.getElementById('voucherCode').value = decodedText;
+                                    showToast('✅ تم قراءة الكود بنجاح! اضغط "شحن"', 'success');
+                                    stopScanner();
+                                    popup.classList.remove('active');
+                                })
+                                .catch(err => {
+                                    showToast('❌ لم يتم التعرف على كود صالح في الصورة', 'error');
+                                });
+                        }
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+                fileInput.value = '';
+            });
+        }
+
+        function startScanner() {
+            if (isScannerActive) return;
+            const readerElement = document.getElementById('reader');
+            html5QrCode = new Html5Qrcode("reader");
+            const config = {
+                fps: 10,
+                qrbox: { width: 280, height: 280 },
+                aspectRatio: 1.0
+            };
+            html5QrCode.start({ facingMode: "environment" }, config,
+                (decodedText) => {
+                    document.getElementById('voucherCode').value = decodedText;
+                    showToast('✅ تم مسح الكود! اضغط "شحن"', 'success');
+                    stopScanner();
+                    document.getElementById('scannerPopup').classList.remove('active');
+                },
+                (err) => { console.warn(err); }
+            );
+            isScannerActive = true;
+            document.getElementById('openScannerBtn').classList.add('scanning');
+        }
+
+        function stopScanner() {
+            if (html5QrCode && isScannerActive) {
+                html5QrCode.stop()
+                    .then(() => {
+                        isScannerActive = false;
+                        document.getElementById('openScannerBtn').classList.remove('scanning');
+                    })
+                    .catch(() => {});
+            }
+        }
+
+        // ========== المستمعات الفورية ==========
+        function listenToRealTimeUpdates() {
+            if (!currentUser) return;
+            const cardsRef = ref(db, `digitalCards/${currentUser.uid}`);
+            onValue(cardsRef, async () => {
+                await loadUserCards();
+            });
+            const notifRef = ref(db, `notifications/${currentUser.uid}`);
+            onValue(notifRef, () => {
+                loadNotifications();
+            });
+        }
+
+        // ========== التبديل بين اللوحات ==========
+        function setupTogglePanels() {
+            const notifToggle = document.getElementById('notificationsToggle');
+            const notifList = document.getElementById('notificationsList');
+            notifToggle.addEventListener('click', () => {
+                notifList.classList.toggle('open');
+            });
+        }
+
+        // ========== التهيئة ==========
+        async function init() {
+            if (!getCurrentUser()) return;
+            setupTogglePanels();
+            setupScanner();
+            await loadUserCards();
+            await loadNotifications();
+            listenToRealTimeUpdates();
+
+            document.getElementById('addCardBtn').addEventListener('click', addNewCard);
+            document.getElementById('rechargeBtn').addEventListener('click', rechargeCard);
+            document.getElementById('confirmInternalTransferBtn').addEventListener('click', internalTransfer);
+            document.getElementById('confirmExternalTransferBtn').addEventListener('click', externalTransfer);
+            document.getElementById('deleteCardBtn').addEventListener('click', deleteCard);
+            document.getElementById('closeModalBtn').addEventListener('click', () => {
+                document.getElementById('cardModal').classList.remove('active');
+            });
+
+            showToast('مرحباً بك في المحفظة الرقمية', 'info');
+        }
+
+        init();
+    </script>
 </body>
 </html>

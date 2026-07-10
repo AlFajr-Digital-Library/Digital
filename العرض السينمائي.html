@@ -1,0 +1,2066 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>يوت برو | العرض السينمائي المتقدم</title>
+    <link rel="icon" type="image/x-icon" href="img/YoT Pro.jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* إصلاح المؤشر - استجابة فورية */
+        .custom-cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #d4af37;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: width 0.2s ease, height 0.2s ease, border-color 0.2s ease;
+            will-change: transform;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.5);
+        }
+
+        .cursor-trail {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+            will-change: transform;
+        }
+
+        .custom-cursor.hover {
+            width: 40px;
+            height: 40px;
+            border-color: #ffd700;
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .cursor-trail.hover {
+            width: 60px;
+            height: 60px;
+            opacity: 0.5;
+        }
+
+        /* شاشة البداية السينمائية */
+        .intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeOut 0.8s ease 2s forwards;
+        }
+
+        .intro-text {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #d4af37;
+            text-shadow: 0 0 50px rgba(212, 175, 55, 0.8);
+            animation: introPulse 0.5s ease infinite alternate;
+            letter-spacing: 10px;
+        }
+
+        @keyframes introPulse {
+            from { opacity: 0.7; transform: scale(1); }
+            to { opacity: 1; transform: scale(1.05); }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+
+        /* شريط التقدم العلوي */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, #d4af37, #ffd700, #d4af37);
+            z-index: 1000;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        /* القائمة العلوية الشفافة */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1rem 3rem;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.5);
+        }
+
+        .nav-logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #d4af37;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: #d4af37;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* البطل الرئيسي */
+        .hero-cinema {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 30% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(139, 0, 0, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 80%, rgba(0, 0, 139, 0.1) 0%, transparent 50%);
+            animation: bgShift 10s ease infinite alternate;
+        }
+
+        @keyframes bgShift {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particle {
+            position: absolute;
+            background: #d4af37;
+            border-radius: 50%;
+            animation: floatUp linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes floatUp {
+            from {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.2;
+            }
+            to {
+                transform: translateY(-10vh) scale(2);
+                opacity: 0;
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-title {
+            font-size: 5rem;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 50px rgba(212, 175, 55, 0.3);
+        }
+
+        .hero-title .gold {
+            background: linear-gradient(120deg, #d4af37, #ffd700, #d4af37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: goldShine 2s ease infinite;
+        }
+
+        @keyframes goldShine {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: #cccccc;
+            margin-bottom: 3rem;
+            animation: fadeInUp 1s ease 0.5s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            animation: fadeInUp 1s ease 0.8s both;
+        }
+
+        .btn-glow {
+            padding: 1.2rem 3rem;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary-glow {
+            background: linear-gradient(135deg, #d4af37, #b89324);
+            color: #000000;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+        }
+
+        .btn-primary-glow:hover {
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.8);
+            transform: translateY(-3px);
+        }
+
+        .btn-outline-glow {
+            background: transparent;
+            color: #ffffff;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .btn-outline-glow:hover {
+            border-color: #d4af37;
+            color: #d4af37;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+
+        /* معرض الأفلام التفاعلي */
+        .movies-showcase {
+            padding: 6rem 2rem;
+            background: #000000;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-tag {
+            display: inline-block;
+            color: #d4af37;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+        }
+
+        .section-title-glow {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .movie-card {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 2/3;
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            cursor: none;
+        }
+
+        .movie-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s ease;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+            z-index: 10;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+        }
+
+        .movie-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .movie-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%);
+        }
+
+        .movie-info h4 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .movie-meta {
+            display: flex;
+            gap: 1rem;
+            color: #d4af37;
+            font-size: 0.9rem;
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            color: #ffffff;
+            opacity: 0;
+            transition: all 0.3s ease;
+            text-shadow: 0 0 30px rgba(0,0,0,0.8);
+        }
+
+        .movie-card:hover .play-overlay {
+            opacity: 1;
+        }
+
+        /* ==================== */
+        /* مشغل السينما المتطور */
+        /* ==================== */
+        .cinema-player-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: 10001;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            animation: cinemaFadeIn 0.5s ease;
+        }
+
+        .cinema-player-overlay.active {
+            display: flex;
+        }
+
+        @keyframes cinemaFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* جدران السينما الرئيسية */
+        .cinema-hall {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* الجدار الأيسر */
+        .wall-left {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 12%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                #0a0000 0%,
+                #1a0000 20%,
+                #2d0000 40%,
+                #3d0000 60%,
+                #2d0000 80%,
+                #1a0000 100%
+            );
+            z-index: 5;
+            box-shadow: inset -10px 0 30px rgba(0,0,0,0.8);
+            border-right: 3px solid #4a0000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        /* مصابيح الجدار الأيسر */
+        .wall-left::before {
+            content: '';
+            position: absolute;
+            right: 10px;
+            top: 10%;
+            width: 8px;
+            height: 80%;
+            background: linear-gradient(180deg,
+                transparent 0%,
+                rgba(255, 200, 50, 0.3) 5%,
+                rgba(255, 200, 50, 0.3) 10%,
+                transparent 15%,
+                transparent 25%,
+                rgba(255, 200, 50, 0.3) 30%,
+                rgba(255, 200, 50, 0.3) 35%,
+                transparent 40%,
+                transparent 50%,
+                rgba(255, 200, 50, 0.3) 55%,
+                rgba(255, 200, 50, 0.3) 60%,
+                transparent 65%,
+                transparent 75%,
+                rgba(255, 200, 50, 0.3) 80%,
+                rgba(255, 200, 50, 0.3) 85%,
+                transparent 90%
+            );
+            box-shadow: 0 0 20px rgba(255, 200, 50, 0.2);
+        }
+
+        /* زخارف الجدار الأيسر */
+        .wall-ornaments-left {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+            z-index: 6;
+        }
+
+        .ornament-light {
+            width: 25px;
+            height: 25px;
+            background: radial-gradient(circle, #ffd700 0%, #b89324 50%, transparent 70%);
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.3);
+            animation: ornamentGlow 2s ease infinite alternate;
+        }
+
+        @keyframes ornamentGlow {
+            from { box-shadow: 0 0 15px rgba(255, 215, 0, 0.4), 0 0 30px rgba(255, 215, 0, 0.2); }
+            to { box-shadow: 0 0 25px rgba(255, 215, 0, 0.8), 0 0 50px rgba(255, 215, 0, 0.4); }
+        }
+
+        /* الجدار الأيمن */
+        .wall-right {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 12%;
+            height: 100%;
+            background: linear-gradient(270deg, 
+                #0a0000 0%,
+                #1a0000 20%,
+                #2d0000 40%,
+                #3d0000 60%,
+                #2d0000 80%,
+                #1a0000 100%
+            );
+            z-index: 5;
+            box-shadow: inset 10px 0 30px rgba(0,0,0,0.8);
+            border-left: 3px solid #4a0000;
+        }
+
+        /* مصابيح الجدار الأيمن */
+        .wall-right::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 10%;
+            width: 8px;
+            height: 80%;
+            background: linear-gradient(180deg,
+                transparent 0%,
+                rgba(255, 200, 50, 0.3) 5%,
+                rgba(255, 200, 50, 0.3) 10%,
+                transparent 15%,
+                transparent 25%,
+                rgba(255, 200, 50, 0.3) 30%,
+                rgba(255, 200, 50, 0.3) 35%,
+                transparent 40%,
+                transparent 50%,
+                rgba(255, 200, 50, 0.3) 55%,
+                rgba(255, 200, 50, 0.3) 60%,
+                transparent 65%,
+                transparent 75%,
+                rgba(255, 200, 50, 0.3) 80%,
+                rgba(255, 200, 50, 0.3) 85%,
+                transparent 90%
+            );
+            box-shadow: 0 0 20px rgba(255, 200, 50, 0.2);
+        }
+
+        /* زخارف الجدار الأيمن */
+        .wall-ornaments-right {
+            position: absolute;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+            z-index: 6;
+        }
+
+        /* السقف */
+        .ceiling {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10%;
+            background: linear-gradient(180deg, 
+                #0a0000 0%,
+                #1a0000 30%,
+                #2d0000 60%,
+                #1a0000 100%
+            );
+            z-index: 5;
+            box-shadow: inset 0 10px 30px rgba(0,0,0,0.8);
+            border-bottom: 3px solid #4a0000;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 10px;
+        }
+
+        /* أضواء السقف */
+        .ceiling-lights {
+            display: flex;
+            gap: 4rem;
+            z-index: 6;
+        }
+
+        .ceiling-light {
+            width: 50px;
+            height: 15px;
+            background: radial-gradient(ellipse at center, #ffd700 0%, #b89324 50%, transparent 70%);
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+            animation: ceilingGlow 3s ease infinite alternate;
+        }
+
+        @keyframes ceilingGlow {
+            from { opacity: 0.7; }
+            to { opacity: 1; }
+        }
+
+        /* الأرضية */
+        .floor {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10%;
+            background: linear-gradient(0deg, 
+                #0a0000 0%,
+                #1a0000 30%,
+                #2d0000 60%,
+                #1a0000 100%
+            );
+            z-index: 5;
+            box-shadow: inset 0 -10px 30px rgba(0,0,0,0.8);
+            border-top: 3px solid #4a0000;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 10px;
+        }
+
+        /* أضواء الممر الأرضي */
+        .floor-lights {
+            display: flex;
+            gap: 2rem;
+            z-index: 6;
+        }
+
+        .floor-light {
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #ffd700 0%, #b89324 50%, transparent 70%);
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            animation: floorGlow 2s ease infinite alternate;
+        }
+
+        @keyframes floorGlow {
+            from { opacity: 0.5; }
+            to { opacity: 1; }
+        }
+
+        /* الشاشة الرئيسية */
+        .cinema-container {
+            width: 70%;
+            max-width: 1200px;
+            position: relative;
+            background: #000000;
+            border: 3px solid rgba(212, 175, 55, 0.4);
+            border-radius: 10px;
+            overflow: hidden;
+            z-index: 10;
+            box-shadow: 
+                0 0 50px rgba(212, 175, 55, 0.3),
+                0 0 100px rgba(0, 0, 0, 0.8),
+                inset 0 0 50px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* ===== وضع البروجكتر على الجدار (Cinema Wall Projector Mode) ===== */
+        .cinema-container.projector-mode {
+            width: 90%;
+            max-width: 95%;
+            height: auto;
+            min-height: 80vh;
+            border-radius: 8px;
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            transform: perspective(1200px) rotateX(2deg) rotateY(-1deg) scale(1.02);
+            transition: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* خلفية الجدار مع نسيج */
+        .cinema-container.projector-mode::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            background: 
+                repeating-linear-gradient(
+                    45deg,
+                    rgba(60, 55, 50, 0.3) 0px,
+                    rgba(60, 55, 50, 0.3) 2px,
+                    rgba(40, 35, 30, 0.3) 2px,
+                    rgba(40, 35, 30, 0.3) 4px
+                ),
+                radial-gradient(ellipse at center, #1a1510 0%, #0a0805 100%);
+            border-radius: 12px;
+            z-index: -1;
+            box-shadow: 
+                inset 0 0 80px rgba(0,0,0,0.9),
+                0 0 60px rgba(212, 175, 55, 0.05);
+        }
+
+        /* تأثير شعاع البروجكتر الضوئي */
+        .cinema-container.projector-mode::after {
+            content: '';
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%) perspective(600px) rotateX(70deg);
+            width: 70%;
+            height: 100px;
+            background: radial-gradient(ellipse at center, 
+                rgba(212, 175, 55, 0.15) 0%,
+                rgba(212, 175, 55, 0.05) 40%,
+                transparent 70%
+            );
+            filter: blur(20px);
+            z-index: -1;
+            animation: projectorBeam 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes projectorBeam {
+            from { opacity: 0.5; transform: translateX(-50%) perspective(600px) rotateX(70deg) scale(1); }
+            to { opacity: 0.8; transform: translateX(-50%) perspective(600px) rotateX(70deg) scale(1.1); }
+        }
+
+        .cinema-container.projector-mode .video-wrapper {
+            padding-top: 0;
+            height: auto;
+            min-height: 70vh;
+            max-height: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 
+                0 10px 60px rgba(0,0,0,0.9),
+                inset 0 0 100px rgba(0,0,0,0.5);
+        }
+
+        .cinema-container.projector-mode .video-wrapper video {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 4px;
+            box-shadow: 
+                0 0 40px rgba(212, 175, 55, 0.1),
+                inset 0 0 60px rgba(0,0,0,0.3);
+        }
+
+        /* إطار فيلمي حول الفيديو في وضع البروجكتر */
+        .cinema-container.projector-mode .video-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border: 2px solid rgba(212, 175, 55, 0.15);
+            border-radius: 6px;
+            pointer-events: none;
+            z-index: 5;
+            animation: frameGlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes frameGlow {
+            from { border-color: rgba(212, 175, 55, 0.1); box-shadow: 0 0 20px rgba(212, 175, 55, 0.05); }
+            to { border-color: rgba(212, 175, 55, 0.25); box-shadow: 0 0 40px rgba(212, 175, 55, 0.1); }
+        }
+
+        /* إخفاء عناصر القاعة في وضع البروجكتر */
+        .cinema-container.projector-mode .wall-left,
+        .cinema-container.projector-mode .wall-right,
+        .cinema-container.projector-mode .ceiling,
+        .cinema-container.projector-mode .floor,
+        .cinema-container.projector-mode .cinema-curtains,
+        .cinema-container.projector-mode .wall-ornaments-left,
+        .cinema-container.projector-mode .wall-ornaments-right,
+        .cinema-container.projector-mode .ceiling-lights,
+        .cinema-container.projector-mode .floor-lights {
+            display: none;
+        }
+
+        /* تحكمات في وضع البروجكتر */
+        .cinema-container.projector-mode .player-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1000px;
+            background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, transparent 100%);
+            padding: 1.5rem 2rem 1rem;
+            border-radius: 16px;
+            z-index: 30;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        .cinema-container.projector-mode .close-cinema {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 30;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            width: 50px;
+            height: 50px;
+        }
+
+        .cinema-container.projector-mode .close-cinema:hover {
+            background: #cc0000;
+            border-color: #cc0000;
+        }
+
+        /* زر تبديل وضع البروجكتر */
+        .projector-toggle-btn {
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            color: #d4af37;
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .projector-toggle-btn:hover {
+            background: rgba(212, 175, 55, 0.25);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+        }
+
+        .projector-toggle-btn.active {
+            background: #d4af37;
+            color: #000000;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+            border-color: #d4af37;
+        }
+
+        .projector-toggle-btn i {
+            font-size: 1rem;
+        }
+
+        /* إطار الشاشة الذهبي */
+        .cinema-container::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border: 2px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            z-index: -1;
+            transition: all 0.5s ease;
+        }
+
+        .cinema-container.projector-mode::before {
+            display: none;
+        }
+
+        /* ستائر السينما */
+        .cinema-curtains {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        .curtain-left, .curtain-right {
+            position: absolute;
+            top: 0;
+            width: 10%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                #1a0000 0%, 
+                #8b0000 20%,
+                #cc0000 40%,
+                #8b0000 60%,
+                #4a0000 80%,
+                rgba(0,0,0,0) 100%);
+            z-index: 15;
+            transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .curtain-left {
+            left: 0;
+            transform: translateX(0);
+        }
+
+        .curtain-right {
+            right: 0;
+            transform: translateX(0);
+            background: linear-gradient(270deg, 
+                #1a0000 0%, 
+                #8b0000 20%,
+                #cc0000 40%,
+                #8b0000 60%,
+                #4a0000 80%,
+                rgba(0,0,0,0) 100%);
+        }
+
+        .cinema-container.playing .curtain-left {
+            transform: translateX(-100%);
+        }
+
+        .cinema-container.playing .curtain-right {
+            transform: translateX(100%);
+        }
+
+        .curtain-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8%;
+            background: linear-gradient(180deg, 
+                #1a0000 0%, 
+                #8b0000 40%,
+                #cc0000 70%,
+                rgba(0,0,0,0) 100%);
+            z-index: 15;
+            transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .cinema-container.playing .curtain-top {
+            transform: translateY(-100%);
+        }
+
+        .curtain-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 6%;
+            background: linear-gradient(0deg, 
+                #1a0000 0%, 
+                #8b0000 40%,
+                #cc0000 70%,
+                rgba(0,0,0,0) 100%);
+            z-index: 15;
+            transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .cinema-container.playing .curtain-bottom {
+            transform: translateY(100%);
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+            background: #000000;
+        }
+
+        .video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000000;
+        }
+
+        .video-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .video-placeholder i {
+            font-size: 5rem;
+            color: #d4af37;
+            margin-bottom: 1rem;
+            animation: playPulse 2s ease infinite;
+        }
+
+        @keyframes playPulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .video-placeholder h3 {
+            font-size: 1.5rem;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+        }
+
+        .video-placeholder p {
+            color: #999999;
+        }
+
+        /* عناصر تحكم المشغل */
+        .player-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, transparent 100%);
+            padding: 2rem 1.5rem 1rem;
+            z-index: 20;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .player-controls.hide-controls {
+            opacity: 0;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 5px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+
+        .progress-filled {
+            height: 100%;
+            background: linear-gradient(90deg, #d4af37, #ffd700);
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .controls-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .controls-left, .controls-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            border-radius: 50%;
+        }
+
+        .control-btn:hover {
+            color: #d4af37;
+            background: rgba(212, 175, 55, 0.1);
+        }
+
+        .time-display {
+            color: #cccccc;
+            font-size: 0.9rem;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .volume-slider {
+            width: 80px;
+            accent-color: #d4af37;
+        }
+
+        .movie-title-display {
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        /* زر الإغلاق */
+        .close-cinema {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0,0,0,0.7);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: #ffffff;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            cursor: pointer;
+            z-index: 30;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-cinema:hover {
+            background: #cc0000;
+            border-color: #cc0000;
+            transform: rotate(90deg);
+        }
+
+        /* شاشة بداية الفيلم */
+        .movie-intro {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 25;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .movie-intro h2 {
+            font-size: 2.5rem;
+            color: #d4af37;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
+        }
+
+        /* المميزات */
+        .features-advanced {
+            padding: 8rem 2rem;
+            background: #050505;
+        }
+
+        .features-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .feature-showcase-card {
+            background: #0a0a0a;
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-showcase-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .feature-showcase-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-showcase-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(212, 175, 55, 0.3);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .feature-icon-glow {
+            font-size: 3rem;
+            color: #d4af37;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.5));
+        }
+
+        .feature-showcase-card h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .feature-showcase-card p {
+            color: #999999;
+            line-height: 1.8;
+        }
+
+        /* الإحصائيات */
+        .stats-section {
+            padding: 6rem 2rem;
+            background: #050505;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: #d4af37;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #999999;
+            font-size: 1.1rem;
+        }
+
+        /* زر العودة */
+        .back-to-main {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid #d4af37;
+            color: #d4af37;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            z-index: 100;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-to-main:hover {
+            background: #d4af37;
+            color: #000000;
+        }
+
+        /* التوافق مع الجوال */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .navbar {
+                padding: 1rem 1.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .section-title-glow {
+                font-size: 2rem;
+            }
+            
+            .features-showcase {
+                grid-template-columns: 1fr;
+            }
+            
+            .movies-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            
+            .movie-intro h2 {
+                font-size: 1.5rem;
+            }
+            
+            .controls-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .wall-left, .wall-right {
+                width: 5%;
+            }
+            
+            .ceiling, .floor {
+                height: 5%;
+            }
+            
+            .cinema-container {
+                width: 85%;
+            }
+            
+            .cinema-container.projector-mode {
+                width: 98%;
+                min-height: 60vh;
+                transform: perspective(800px) rotateX(1deg) rotateY(0deg) scale(1.01);
+            }
+            
+            .cinema-container.projector-mode .video-wrapper {
+                min-height: 50vh;
+                max-height: 75vh;
+            }
+            
+            .curtain-left, .curtain-right {
+                width: 8%;
+            }
+            
+            .wall-ornaments-left, .wall-ornaments-right {
+                display: none;
+            }
+
+            .cinema-container.projector-mode .player-controls {
+                width: 96%;
+                padding: 1rem;
+                bottom: 10px;
+            }
+
+            .projector-toggle-btn {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.8rem;
+            }
+
+            .projector-toggle-btn span {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .control-btn {
+                font-size: 1rem;
+            }
+            
+            .volume-slider {
+                width: 60px;
+            }
+            
+            .wall-left, .wall-right {
+                width: 3%;
+            }
+
+            .cinema-container.projector-mode {
+                transform: perspective(600px) rotateX(0.5deg) rotateY(0deg) scale(1);
+                min-height: 50vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- شاشة البداية -->
+    <div class="intro-overlay">
+        <div class="intro-text">YOT PRO</div>
+    </div>
+
+    <!-- المؤشر المخصص -->
+    <div class="custom-cursor" id="cursor"></div>
+    <div class="cursor-trail" id="cursorTrail"></div>
+
+    <!-- شريط التقدم -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- القائمة العلوية -->
+    <nav class="navbar" id="navbar">
+        <a href="#" class="nav-logo">
+            <i class="fas fa-film"></i>
+            يوت برو
+        </a>
+        <ul class="nav-links">
+            <li><a href="#features">المميزات</a></li>
+            <li><a href="#movies">الأفلام</a></li>
+            <li><a href="#home">الرئيسية</a></li>
+        </ul>
+    </nav>
+
+    <!-- القسم الرئيسي -->
+    <section class="hero-cinema" id="home">
+        <div class="hero-bg"></div>
+        <div class="particles" id="particles"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span class="gold">السينما</span> في أوجها
+            </h1>
+            <p class="hero-subtitle">انقر على أي فيلم لتشغيله في وضع السينما المتكامل</p>
+            <div class="hero-cta">
+                <a href="#movies" class="btn-glow btn-primary-glow">
+                    <i class="fas fa-play"></i>
+                    تصفح الأفلام
+                </a>
+                <a href="#features" class="btn-glow btn-outline-glow">
+                    <i class="fas fa-info-circle"></i>
+                    اكتشف المزيد
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- المميزات -->
+    <section class="features-advanced" id="features">
+        <div class="section-header">
+            <div class="section-tag">لماذا يوت برو؟</div>
+            <h2 class="section-title-glow">مميزات <span class="gold">استثنائية</span></h2>
+        </div>
+        <div class="features-showcase">
+            <div class="feature-showcase-card">
+                <div class="feature-icon-glow">
+                    <i class="fas fa-tv"></i>
+                </div>
+                <h3>مشغل سينمائي متكامل</h3>
+                <p>استمتع بتجربة مشاهدة سينمائية كاملة مع جدران المسرح والمؤثرات البصرية المتقدمة</p>
+            </div>
+            <div class="feature-showcase-card">
+                <div class="feature-icon-glow">
+                    <i class="fas fa-projector"></i>
+                </div>
+                <h3>وضع بروجكتر الجدار</h3>
+                <p>حاكي تجربة البروجكتر الحقيقي على جدار غرفتك مع تأثيرات ضوئية وزاوية عرض واقعية</p>
+            </div>
+            <div class="feature-showcase-card">
+                <div class="feature-icon-glow">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h3>مكتبة لا محدودة</h3>
+                <p>الآلاف من الأفلام والمسلسلات الحصرية مع تحديثات أسبوعية</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- معرض الأفلام -->
+    <section class="movies-showcase" id="movies">
+        <div class="section-header">
+            <div class="section-tag">مكتبتنا</div>
+            <h2 class="section-title-glow">أفلام <span class="gold">مختارة</span></h2>
+            <p style="color: #999; margin-top: 1rem;">انقر على أي فيلم لبدء العرض السينمائي</p>
+        </div>
+        <div class="movies-grid">
+            <!-- فيلم 1 -->
+            <div class="movie-card" data-movie="المغامرة الكبرى" data-video="https://www.w3schools.com/html/mov_bbb.mp4">
+                <img src="https://images.pexels.com/photos/2873486/pexels-photo-2873486.jpeg?auto=compress&cs=tinysrgb&w=600" alt="المغامرة الكبرى">
+                <div class="play-overlay">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <div class="movie-info">
+                    <h4>المغامرة الكبرى</h4>
+                    <div class="movie-meta">
+                        <span><i class="fas fa-star"></i> 9.2</span>
+                        <span><i class="fas fa-clock"></i> 10 ث</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- فيلم 2 -->
+            <div class="movie-card" data-movie="ليلة الغموض" data-video="https://www.w3schools.com/html/movie.mp4">
+                <img src="https://images.pexels.com/photos/2602370/pexels-photo-2602370.jpeg?auto=compress&cs=tinysrgb&w=600" alt="ليلة الغموض">
+                <div class="play-overlay">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <div class="movie-info">
+                    <h4>ليلة الغموض</h4>
+                    <div class="movie-meta">
+                        <span><i class="fas fa-star"></i> 8.7</span>
+                        <span><i class="fas fa-clock"></i> 12 ث</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- فيلم 3 -->
+            <div class="movie-card" data-movie="الموعد الأخير" data-video="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4">
+                <img src="https://images.pexels.com/photos/7991579/pexels-photo-7991579.jpeg?auto=compress&cs=tinysrgb&w=600" alt="الموعد الأخير">
+                <div class="play-overlay">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <div class="movie-info">
+                    <h4>الموعد الأخير</h4>
+                    <div class="movie-meta">
+                        <span><i class="fas fa-star"></i> 9.5</span>
+                        <span><i class="fas fa-clock"></i> 15 ث</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- فيلم 4 -->
+            <div class="movie-card" data-movie="ما وراء النجوم" data-video="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4">
+                <img src="https://images.pexels.com/photos/5662857/pexels-photo-5662857.jpeg?auto=compress&cs=tinysrgb&w=600" alt="ما وراء النجوم">
+                <div class="play-overlay">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <div class="movie-info">
+                    <h4>ما وراء النجوم</h4>
+                    <div class="movie-meta">
+                        <span><i class="fas fa-star"></i> 8.9</span>
+                        <span><i class="fas fa-clock"></i> 15 ث</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- فيلم 5 -->
+            <div class="movie-card" data-movie="الكنز المفقود" data-video="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4">
+                <img src="https://images.pexels.com/photos/2873486/pexels-photo-2873486.jpeg?auto=compress&cs=tinysrgb&w=600" alt="الكنز المفقود">
+                <div class="play-overlay">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <div class="movie-info">
+                    <h4>الكنز المفقود</h4>
+                    <div class="movie-meta">
+                        <span><i class="fas fa-star"></i> 9.0</span>
+                        <span><i class="fas fa-clock"></i> 60 ث</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- فيلم 6 -->
+            <div class="movie-card" data-movie="الليلة الأخيرة" data-video="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4">
+                <img src="https://images.pexels.com/photos/2602370/pexels-photo-2602370.jpeg?auto=compress&cs=tinysrgb&w=600" alt="الليلة الأخيرة">
+                <div class="play-overlay">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <div class="movie-info">
+                    <h4>الليلة الأخيرة</h4>
+                    <div class="movie-meta">
+                        <span><i class="fas fa-star"></i> 8.5</span>
+                        <span><i class="fas fa-clock"></i> 15 ث</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- الإحصائيات -->
+    <section class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" data-target="5000">0</div>
+                <div class="stat-label">فيلم ومسلسل</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="100">0</div>
+                <div class="stat-label">ألف مشترك</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="99">0</div>
+                <div class="stat-label">نسبة الرضا</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-target="24">0</div>
+                <div class="stat-label">دعم فني</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== -->
+    <!-- مشغل السينما المتطور مع الجدران -->
+    <!-- ==================== -->
+    <div class="cinema-player-overlay" id="cinemaPlayer">
+        <div class="cinema-hall">
+            <!-- الجدار الأيسر -->
+            <div class="wall-left">
+                <div class="wall-ornaments-left">
+                    <div class="ornament-light"></div>
+                    <div class="ornament-light"></div>
+                    <div class="ornament-light"></div>
+                    <div class="ornament-light"></div>
+                    <div class="ornament-light"></div>
+                </div>
+            </div>
+
+            <!-- الجدار الأيمن -->
+            <div class="wall-right">
+                <div class="wall-ornaments-right">
+                    <div class="ornament-light"></div>
+                    <div class="ornament-light"></div>
+                    <div class="ornament-light"></div>
+                    <div class="ornament-light"></div>
+                    <div class="ornament-light"></div>
+                </div>
+            </div>
+
+            <!-- السقف -->
+            <div class="ceiling">
+                <div class="ceiling-lights">
+                    <div class="ceiling-light"></div>
+                    <div class="ceiling-light"></div>
+                    <div class="ceiling-light"></div>
+                    <div class="ceiling-light"></div>
+                    <div class="ceiling-light"></div>
+                </div>
+            </div>
+
+            <!-- الأرضية -->
+            <div class="floor">
+                <div class="floor-lights">
+                    <div class="floor-light"></div>
+                    <div class="floor-light"></div>
+                    <div class="floor-light"></div>
+                    <div class="floor-light"></div>
+                    <div class="floor-light"></div>
+                    <div class="floor-light"></div>
+                    <div class="floor-light"></div>
+                    <div class="floor-light"></div>
+                    <div class="floor-light"></div>
+                    <div class="floor-light"></div>
+                </div>
+            </div>
+
+            <!-- الشاشة الرئيسية -->
+            <div class="cinema-container" id="cinemaContainer">
+                <!-- زر الإغلاق -->
+                <button class="close-cinema" id="closeCinema">
+                    <i class="fas fa-times"></i>
+                </button>
+
+                <!-- ستائر السينما -->
+                <div class="cinema-curtains">
+                    <div class="curtain-left"></div>
+                    <div class="curtain-right"></div>
+                    <div class="curtain-top"></div>
+                    <div class="curtain-bottom"></div>
+                </div>
+
+                <!-- منطقة الفيديو -->
+                <div class="video-wrapper">
+                    <video id="cinemaVideo" preload="auto">
+                        <source src="" type="video/mp4">
+                        متصفحك لا يدعم تشغيل الفيديو
+                    </video>
+                    <div class="video-placeholder" id="videoPlaceholder">
+                        <i class="fas fa-film"></i>
+                        <h3 id="movieTitleDisplay">اختر فيلماً للعرض</h3>
+                        <p>انقر على أي فيلم من المعرض أعلاه</p>
+                    </div>
+                </div>
+
+                <!-- شاشة بداية الفيلم -->
+                <div class="movie-intro" id="movieIntro" style="display: none;">
+                    <h2 id="movieIntroTitle"></h2>
+                </div>
+
+                <!-- عناصر التحكم -->
+                <div class="player-controls" id="playerControls">
+                    <div class="progress-container" id="progressContainer">
+                        <div class="progress-filled" id="progressFilled"></div>
+                    </div>
+                    <div class="controls-row">
+                        <div class="controls-left">
+                            <button class="control-btn" id="playPauseBtn">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <button class="control-btn" id="stopBtn">
+                                <i class="fas fa-stop"></i>
+                            </button>
+                            <div class="time-display">
+                                <span id="currentTime">00:00</span> / 
+                                <span id="duration">00:00</span>
+                            </div>
+                        </div>
+                        <div class="controls-right">
+                            <span class="movie-title-display" id="controlMovieTitle"></span>
+                            <button class="projector-toggle-btn" id="projectorToggle">
+                                <i class="fas fa-projector"></i>
+                                <span id="projectorToggleText">بروجكتر الجدار</span>
+                            </button>
+                            <button class="control-btn" id="fullscreenBtn">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                            <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="80">
+                            <button class="control-btn" id="muteBtn">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- زر العودة -->
+    <a href="yot pro.html" class="back-to-main">
+        <i class="fas fa-arrow-left"></i>
+        عودة للصفحة الرئيسية
+    </a>
+
+    <script>
+        // ==================== المؤشر المخصص (إصلاح التأخير) ====================
+        const cursor = document.getElementById('cursor');
+        const cursorTrail = document.getElementById('cursorTrail');
+        let mouseX = 0, mouseY = 0;
+        let trailX = 0, trailY = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            cursor.style.left = mouseX + 'px';
+            cursor.style.top = mouseY + 'px';
+        });
+
+        function updateTrail() {
+            const speed = 0.15;
+            trailX += (mouseX - trailX) * speed;
+            trailY += (mouseY - trailY) * speed;
+            cursorTrail.style.left = trailX + 'px';
+            cursorTrail.style.top = trailY + 'px';
+            requestAnimationFrame(updateTrail);
+        }
+        updateTrail();
+
+        const hoverElements = document.querySelectorAll('a, button, .movie-card, input[type="range"], .progress-container');
+        hoverElements.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                cursor.classList.add('hover');
+                cursorTrail.classList.add('hover');
+            });
+            el.addEventListener('mouseleave', () => {
+                cursor.classList.remove('hover');
+                cursorTrail.classList.remove('hover');
+            });
+        });
+
+        // ==================== الجسيمات ====================
+        const particlesContainer = document.getElementById('particles');
+        
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            const size = Math.random() * 4 + 2;
+            particle.style.width = size + 'px';
+            particle.style.height = size + 'px';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = Math.random() * 10 + 10 + 's';
+            particle.style.animationDelay = Math.random() * 5 + 's';
+            particlesContainer.appendChild(particle);
+            setTimeout(() => { particle.remove(); }, 15000);
+        }
+        setInterval(createParticle, 300);
+
+        // ==================== شريط التقدم ====================
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            document.getElementById('progressBar').style.width = scrollPercent + '%';
+            const navbar = document.getElementById('navbar');
+            if (scrollTop > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // ==================== عدادات الإحصائيات ====================
+        const statNumbers = document.querySelectorAll('.stat-number');
+        const animateStats = () => {
+            statNumbers.forEach(stat => {
+                const target = parseInt(stat.getAttribute('data-target'));
+                const current = parseInt(stat.textContent);
+                const increment = target / 50;
+                if (current < target) {
+                    stat.textContent = Math.ceil(current + increment);
+                    requestAnimationFrame(animateStats);
+                } else {
+                    stat.textContent = target + '+';
+                }
+            });
+        };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateStats();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        const statsSection = document.querySelector('.stats-section');
+        if (statsSection) observer.observe(statsSection);
+
+        // ==================== مشغل السينما ====================
+        const cinemaPlayer = document.getElementById('cinemaPlayer');
+        const cinemaContainer = document.getElementById('cinemaContainer');
+        const cinemaVideo = document.getElementById('cinemaVideo');
+        const videoPlaceholder = document.getElementById('videoPlaceholder');
+        const movieIntro = document.getElementById('movieIntro');
+        const movieIntroTitle = document.getElementById('movieIntroTitle');
+        const movieTitleDisplay = document.getElementById('movieTitleDisplay');
+        const controlMovieTitle = document.getElementById('controlMovieTitle');
+        const playerControls = document.getElementById('playerControls');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const muteBtn = document.getElementById('muteBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFilled = document.getElementById('progressFilled');
+        const currentTimeDisplay = document.getElementById('currentTime');
+        const durationDisplay = document.getElementById('duration');
+        const closeCinema = document.getElementById('closeCinema');
+        const projectorToggle = document.getElementById('projectorToggle');
+        const projectorToggleText = document.getElementById('projectorToggleText');
+        let currentMovieTitle = '';
+        let hideControlsTimeout;
+        let isProjectorMode = false;
+
+        // فتح المشغل عند النقر على فيلم
+        document.querySelectorAll('.movie-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const movieTitle = this.getAttribute('data-movie');
+                const videoSrc = this.getAttribute('data-video');
+                openCinemaPlayer(movieTitle, videoSrc);
+            });
+        });
+
+        function openCinemaPlayer(title, videoSrc) {
+            currentMovieTitle = title;
+            cinemaPlayer.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            movieIntroTitle.textContent = title;
+            movieTitleDisplay.textContent = title;
+            controlMovieTitle.textContent = title;
+            movieIntro.style.display = 'block';
+            videoPlaceholder.style.display = 'none';
+            
+            // إعادة تعيين وضع البروجكتر عند فتح فيلم جديد
+            if (isProjectorMode) {
+                toggleProjectorMode();
+            }
+            
+            cinemaVideo.src = videoSrc;
+            cinemaVideo.load();
+            
+            setTimeout(() => {
+                cinemaContainer.classList.add('playing');
+                movieIntro.style.display = 'none';
+                setTimeout(() => {
+                    cinemaVideo.play();
+                    updatePlayPauseButton();
+                    videoPlaceholder.style.display = 'none';
+                }, 800);
+            }, 1500);
+        }
+
+        function closeCinemaPlayer() {
+            cinemaVideo.pause();
+            cinemaVideo.src = '';
+            cinemaContainer.classList.remove('playing');
+            cinemaPlayer.classList.remove('active');
+            document.body.style.overflow = '';
+            movieIntro.style.display = 'none';
+            videoPlaceholder.style.display = 'flex';
+            movieTitleDisplay.textContent = 'اختر فيلماً للعرض';
+            currentMovieTitle = '';
+            progressFilled.style.width = '0%';
+            currentTimeDisplay.textContent = '00:00';
+            durationDisplay.textContent = '00:00';
+            // إعادة تعيين وضع البروجكتر عند الإغلاق
+            if (isProjectorMode) {
+                toggleProjectorMode();
+            }
+        }
+
+        // ==================== وضع البروجكتر على الجدار (Projector Wall Mode) ====================
+        function toggleProjectorMode() {
+            isProjectorMode = !isProjectorMode;
+            cinemaContainer.classList.toggle('projector-mode');
+            
+            // تحديث مظهر الزر
+            if (isProjectorMode) {
+                projectorToggle.classList.add('active');
+                projectorToggleText.textContent = 'إلغاء البروجكتر';
+                // إخفاء عناصر التحكم مؤقتاً عند التبديل
+                playerControls.classList.remove('hide-controls');
+                // إظهار عناصر التحكم في وضع البروجكتر
+                setTimeout(() => {
+                    if (!cinemaVideo.paused) {
+                        playerControls.classList.remove('hide-controls');
+                    }
+                }, 100);
+            } else {
+                projectorToggle.classList.remove('active');
+                projectorToggleText.textContent = 'بروجكتر الجدار';
+            }
+        }
+
+        projectorToggle.addEventListener('click', toggleProjectorMode);
+
+        closeCinema.addEventListener('click', closeCinemaPlayer);
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && cinemaPlayer.classList.contains('active')) {
+                closeCinemaPlayer();
+            }
+        });
+
+        playPauseBtn.addEventListener('click', togglePlay);
+        function togglePlay() {
+            if (cinemaVideo.paused) {
+                cinemaVideo.play();
+            } else {
+                cinemaVideo.pause();
+            }
+            updatePlayPauseButton();
+        }
+        function updatePlayPauseButton() {
+            const icon = playPauseBtn.querySelector('i');
+            icon.className = cinemaVideo.paused ? 'fas fa-play' : 'fas fa-pause';
+        }
+
+        cinemaVideo.addEventListener('click', togglePlay);
+        stopBtn.addEventListener('click', () => {
+            cinemaVideo.pause();
+            cinemaVideo.currentTime = 0;
+            updatePlayPauseButton();
+        });
+
+        cinemaVideo.addEventListener('timeupdate', () => {
+            const percent = (cinemaVideo.currentTime / cinemaVideo.duration) * 100;
+            progressFilled.style.width = percent + '%';
+            currentTimeDisplay.textContent = formatTime(cinemaVideo.currentTime);
+        });
+
+        cinemaVideo.addEventListener('loadedmetadata', () => {
+            durationDisplay.textContent = formatTime(cinemaVideo.duration);
+        });
+
+        progressContainer.addEventListener('click', (e) => {
+            const rect = progressContainer.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            cinemaVideo.currentTime = percent * cinemaVideo.duration;
+        });
+
+        volumeSlider.addEventListener('input', () => {
+            cinemaVideo.volume = volumeSlider.value / 100;
+            updateMuteButton();
+        });
+
+        muteBtn.addEventListener('click', () => {
+            cinemaVideo.muted = !cinemaVideo.muted;
+            updateMuteButton();
+        });
+
+        function updateMuteButton() {
+            const icon = muteBtn.querySelector('i');
+            if (cinemaVideo.muted || cinemaVideo.volume === 0) {
+                icon.className = 'fas fa-volume-mute';
+                volumeSlider.value = 0;
+            } else if (cinemaVideo.volume < 0.5) {
+                icon.className = 'fas fa-volume-down';
+            } else {
+                icon.className = 'fas fa-volume-up';
+            }
+        }
+
+        fullscreenBtn.addEventListener('click', () => {
+            if (cinemaContainer.requestFullscreen) {
+                cinemaContainer.requestFullscreen();
+            } else if (cinemaContainer.webkitRequestFullscreen) {
+                cinemaContainer.webkitRequestFullscreen();
+            }
+        });
+
+        cinemaContainer.addEventListener('mousemove', () => {
+            playerControls.classList.remove('hide-controls');
+            clearTimeout(hideControlsTimeout);
+            hideControlsTimeout = setTimeout(() => {
+                if (!cinemaVideo.paused) {
+                    playerControls.classList.add('hide-controls');
+                }
+            }, 3000);
+        });
+
+        cinemaVideo.addEventListener('ended', () => {
+            updatePlayPauseButton();
+            playerControls.classList.remove('hide-controls');
+        });
+
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '00:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // ==================== تأثيرات الظهور التدريجي ====================
+        const revealElements = document.querySelectorAll('.feature-showcase-card, .movie-card');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        revealElements.forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(50px)';
+            el.style.transition = 'all 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+            revealObserver.observe(el);
+        });
+    </script>
+</body>
+</html>
