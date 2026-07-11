@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
       <link rel="icon" type="image/x-icon" href="img\Login library.jpg">
 
-  <style>/* ====== المتغيرات والألوان الأساسية ====== */
+  <style>
+    /* ====== المتغيرات والألوان الأساسية ====== */
 :root {
   --primary-color: #ff6b35;
   --secondary-color: #1a73e8;
@@ -659,7 +660,7 @@ body {
   gap: 5px;
 }
 
-/* ====== لوحة تفاصيل المنتج - نسخة محسنة ====== */
+/* ====== لوحة تفاصيل المنتج - نسخة محسنة مع تثبيت الصورة ====== */
 .product-detail-overlay {
   display: none;
   position: fixed;
@@ -737,17 +738,28 @@ body {
   margin: 0 auto;
 }
 
+/* ====== تثبيت الصورة على الأجهزة الكبيرة ====== */
+.product-detail-poster {
+  align-self: start;
+}
+
+@media (min-width: 769px) {
+  .product-detail-poster {
+    position: sticky;
+    top: 100px;
+  }
+}
+
 @media (max-width: 768px) {
   .product-detail-content {
     grid-template-columns: 1fr;
     gap: 20px;
   }
-}
-
-.product-detail-poster {
-  position: sticky;
-  top: 100px;
-  align-self: start;
+  
+  .product-detail-poster {
+    position: relative;
+    top: 0;
+  }
 }
 
 .product-detail-poster img {
@@ -1051,7 +1063,7 @@ body {
   }
 }
 
-/* ====== لوحة البحث مع المنتجات الصغيرة - نسخة محسنة ====== */
+/* ====== لوحة البحث - محسنة مع مربع بحث أصغر ====== */
 .search-overlay {
   display: none;
   position: fixed;
@@ -1075,7 +1087,7 @@ body {
 }
 
 .search-header {
-  padding: 30px;
+  padding: 20px 30px;
   background: var(--gradient-primary);
   position: sticky;
   top: 0;
@@ -1107,27 +1119,28 @@ body {
 }
 
 .search-title {
-  font-size: 32px;
+  font-size: 24px;
   font-weight: bold;
   color: white;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   text-align: center;
 }
 
+/* ====== مربع البحث المحسن - أصغر وأجمل ====== */
 .search-input-container {
   position: relative;
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
 }
 
 .search-input {
   width: 100%;
-  padding: 20px 70px 20px 30px;
+  padding: 14px 60px 14px 20px;
   background: rgba(255,255,255,0.15);
-  border: 3px solid rgba(255,255,255,0.3);
-  border-radius: var(--border-radius-lg);
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50px;
   color: white;
-  font-size: 20px;
+  font-size: 16px;
   outline: none;
   transition: all var(--transition-speed);
 }
@@ -1135,20 +1148,29 @@ body {
 .search-input:focus {
   border-color: white;
   background: rgba(255,255,255,0.2);
-  box-shadow: 0 0 30px rgba(255, 107, 53, 0.4);
+  box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
 }
 
 .search-input::placeholder {
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.6);
 }
 
 .search-icon {
   position: absolute;
-  right: 25px;
+  left: 20px;
   top: 50%;
   transform: translateY(-50%);
   color: rgba(255,255,255,0.7);
-  font-size: 20px;
+  font-size: 18px;
+}
+
+/* ====== عنوان البحث على اليمين ====== */
+.search-label {
+  text-align: right;
+  color: rgba(255,255,255,0.8);
+  font-size: 14px;
+  margin-bottom: 8px;
+  padding-right: 10px;
 }
 
 .search-main {
@@ -1618,6 +1640,80 @@ input:checked + .toggle-slider:before {
   border-color: var(--primary-color);
 }
 
+/* ====== نافذة عرض جميع القصص ====== */
+.all-stories-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.98);
+  z-index: 2000;
+  overflow-y: auto;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.all-stories-container {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--gradient-dark);
+  display: flex;
+  flex-direction: column;
+}
+
+.all-stories-header {
+  padding: 20px 30px;
+  background: var(--gradient-primary);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.close-all-stories {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  transition: all var(--transition-speed);
+}
+
+.close-all-stories:hover {
+  background: rgba(255,255,255,0.3);
+  transform: rotate(90deg);
+}
+
+.all-stories-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+.all-stories-body {
+  flex: 1;
+  padding: 30px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.all-stories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+}
+
 /* ====== التذييل ====== */
 .footer {
   background: var(--darker-bg);
@@ -1753,6 +1849,14 @@ input:checked + .toggle-slider:before {
   .product-detail-poster img {
     max-height: 400px;
   }
+  
+  .search-input-container {
+    max-width: 100%;
+  }
+  
+  .search-title {
+    font-size: 20px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1784,6 +1888,10 @@ input:checked + .toggle-slider:before {
 
   .search-products-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .all-stories-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -2027,7 +2135,8 @@ input:checked + .toggle-slider:before {
   border-color: #EA4335;
   background: rgba(234, 67, 53, 0.05);
   box-shadow: 0 4px 12px rgba(234, 67, 53, 0.15);
-} </style>
+}
+  </style>
 </head>
 
 <body>
@@ -2057,9 +2166,7 @@ input:checked + .toggle-slider:before {
 <!-- قسم الترحيب -->
 <div class="top2">
   <div class="welcome-banner">
-    <div class="welcome-icon">
-      <i class="fas fa-book-open" style="color: white; font-size: 24px;"></i>
-    </div>
+
     <div>
       <h1 class="welcome-text rtl-text">مكتبة الفجر ترحب بكم</h1>
       <h1 class="welcome-text ltr-text" style="display: none;">Fajr Library Welcomes You</h1>
@@ -2077,7 +2184,7 @@ input:checked + .toggle-slider:before {
       <i class="fas fa-star"></i>
       <span class="rtl-text">أحدث القصص</span>
       <span class="ltr-text" style="display: none;">Latest Stories</span>
-      <a href="javascript:void(0)" class="show-all" onclick="openSearch()" style="margin-right: auto; font-size: 14px; color: var(--primary-color); text-decoration: none;">
+      <a href="javascript:void(0)" class="show-all" onclick="openAllStories()" style="margin-right: auto; font-size: 14px; color: var(--primary-color); text-decoration: none;">
         <span class="rtl-text">إظهار الكل <i class="fas fa-arrow-left"></i></span>
         <span class="ltr-text" style="display: none;">Show All <i class="fas fa-arrow-right"></i></span>
       </a>
@@ -2411,6 +2518,24 @@ input:checked + .toggle-slider:before {
   </div>
 </div>
 
+<!-- ====== نافذة عرض جميع القصص ====== -->
+<div class="all-stories-overlay" id="all-stories-overlay">
+  <div class="all-stories-container">
+    <div class="all-stories-header">
+      <h2 class="all-stories-title rtl-text">جميع القصص</h2>
+      <h2 class="all-stories-title ltr-text" style="display: none;">All Stories</h2>
+      <button class="close-all-stories" onclick="closeAllStories()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="all-stories-body">
+      <div class="all-stories-grid" id="all-stories-grid">
+        <!-- سيتم ملؤها ديناميكياً -->
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- لوحة تفاصيل المنتج المحسنة -->
 <div class="product-detail-overlay" id="product-detail-overlay">
   <div class="product-detail-container">
@@ -2538,8 +2663,9 @@ input:checked + .toggle-slider:before {
       <button class="close-search" onclick="closeSearch()">
         <i class="fas fa-times"></i>
       </button>
-      <h2 class="search-title rtl-text">البحث عن المنتجات</h2>
-      <h2 class="search-title ltr-text" style="display: none;">Search Products</h2>
+      <!-- عنوان البحث على اليمين -->
+      <div class="search-label rtl-text">البحث عن المنتجات</div>
+      <div class="search-label ltr-text" style="display: none;">Search Products</div>
       
       <div class="search-input-container">
         <input type="text" class="search-input" id="search-input" 
@@ -4494,10 +4620,7 @@ input:checked + .toggle-slider:before {
         userRatingForCurrentProduct = null;
     }
     
-    // ====== دالة تشغيل الفيديو في نافذة منبثقة خاصة (تمنع الانتقال لليوتيوب) ======
-
-// ====== دالة تشغيل الفيديو - تفتح نافذة YouTube مصغرة ======
-// ====== دالة تشغيل الفيديو - تشغيل مباشر داخل iframe بدون الانتقال لليوتيوب ======
+    // ====== دالة تشغيل الفيديو - تشغيل مباشر داخل iframe بدون الانتقال لليوتيوب ======
 function watchChapter(chapterId, videoUrl, videoTitle) {
     // منع أي سلوك افتراضي
     if (event) {
@@ -4828,19 +4951,7 @@ function escapeHtml(str) {
         return c;
     });
 }
-    // ابحث عن الجزء الذي ينشئ عناصر "chapter-item" داخل openProductDetail وقم بتعديله كما يلي:
     
-    // داخل دالة openProductDetail، عند إنشاء الفصول (chapters)، قم بتغيير زر المشاهدة ليصبح:
-    /*
-    <button class="watch-button" onclick="watchChapter('${chapter.id}', '${chapter.videoUrl || product.videoUrl || ''}', '${chapter.title}')">
-        <i class="fas fa-play"></i>
-        <span class="rtl-text">مشاهدة</span>
-        <span class="ltr-text" style="display: none;">Watch</span>
-    </button>
-    */
-    
-    // ملاحظة: تأكد أن كل فصل (chapter) في قاعدة البيانات يحتوي على حقل videoUrl،
-    // أو استخدم رابط الفيديو الرئيسي للمنتج product.videoUrl كقيمة افتراضية.    
     // ====== إضافة تعليق مع Firebase ======
     async function addProductComment() {
         const user = checkAuthBeforeComment();
@@ -5241,6 +5352,40 @@ function escapeHtml(str) {
         updateLanguageElements();
     }
 
+    // ====== نافذة عرض جميع القصص ======
+    function openAllStories() {
+        const stories = allProducts.filter(p => p.category === 'قصص');
+        const sortedStories = sortProducts(stories);
+        
+        const grid = document.getElementById('all-stories-grid');
+        if (grid) {
+            grid.innerHTML = '';
+            
+            if (sortedStories.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-results" style="grid-column: 1 / -1;">
+                        <i class="fas fa-book"></i>
+                        <p class="rtl-text" style="margin-top: 20px;">لا توجد قصص متاحة حالياً</p>
+                        <p class="ltr-text" style="display: none; margin-top: 20px;">No stories available at the moment</p>
+                    </div>
+                `;
+            } else {
+                sortedStories.forEach(product => {
+                    const card = createProductCard(product);
+                    grid.appendChild(card);
+                });
+            }
+        }
+        
+        document.getElementById('all-stories-overlay').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeAllStories() {
+        document.getElementById('all-stories-overlay').style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
     // ====== وظائف مساعدة ======
     function scrollToTop() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -5381,6 +5526,16 @@ function escapeHtml(str) {
             searchOverlay.addEventListener('click', function(e) {
                 if (e.target === this) {
                     closeSearch();
+                }
+            });
+        }
+        
+        // إضافة حدث إغلاق لنافذة القصص
+        const allStoriesOverlay = document.getElementById('all-stories-overlay');
+        if (allStoriesOverlay) {
+            allStoriesOverlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeAllStories();
                 }
             });
         }
@@ -5554,6 +5709,8 @@ function escapeHtml(str) {
     window.closeSearch = closeSearch;
     window.searchProducts = searchProducts;
     window.scrollToTop = scrollToTop;
+    window.openAllStories = openAllStories;
+    window.closeAllStories = closeAllStories;
     window.openPrivacy = function() {
         alert(currentLanguage === 'ar' ? 'صفحة الخصوصية قيد التطوير' : 'Privacy page under development');
     };
