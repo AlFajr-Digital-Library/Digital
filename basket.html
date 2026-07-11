@@ -1018,6 +1018,26 @@ header h1 {
   box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
 }
 
+.remove-discount-btn {
+  padding: 15px 20px;
+  background: rgba(244, 67, 54, 0.2);
+  color: var(--error-red);
+  border: 1px solid rgba(244, 67, 54, 0.4);
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.remove-discount-btn:hover {
+  background: rgba(244, 67, 54, 0.4);
+  transform: translateY(-2px);
+}
+
 .discount-info {
   display: flex;
   align-items: center;
@@ -1168,11 +1188,12 @@ header h1 {
 }
 
 .pay-btn:disabled { 
-  background: var(--netflix-gray); 
-  color: var(--netflix-light-gray);
+  background: #555; 
+  color: #999;
   cursor: not-allowed; 
   transform: none !important;
   box-shadow: none !important;
+  opacity: 0.7;
 }
 
 /* ===== النوافذ المنبثقة ===== */
@@ -1370,7 +1391,8 @@ header h1 {
     flex-direction: column;
   }
   
-  .apply-discount-btn {
+  .apply-discount-btn,
+  .remove-discount-btn {
     width: 100%;
     justify-content: center;
   }
@@ -1556,12 +1578,15 @@ header h1 {
     
     <div class="discount-input-group">
       <input type="text" class="discount-input" id="discountCode" placeholder="أدخل كود الخصم هنا..." />
-      <button class="apply-discount-btn" onclick="applyDiscount()">
+      <button class="apply-discount-btn" onclick="applyDiscount()" id="applyDiscountBtn">
         <i class="fas fa-check-circle"></i> تطبيق الخصم
+      </button>
+      <button class="remove-discount-btn" onclick="removeDiscount()" id="removeDiscountBtn">
+        <i class="fas fa-times"></i> إزالة الخصم
       </button>
     </div>
     
-    <div class="discount-info">
+    <div class="discount-info" id="discountInfo">
       <i class="fas fa-info-circle"></i>
       يمكنك استخدام كود خصم واحد لكل عملية شراء
     </div>
@@ -1907,6 +1932,8 @@ const balanceWarning = document.getElementById('balanceWarning');
 const addressDisplay = document.getElementById('addressDisplay');
 const discountCodeInput = document.getElementById('discountCode');
 const messageBox = document.getElementById('messageBox');
+const discountInfo = document.getElementById('discountInfo');
+const removeDiscountBtn = document.getElementById('removeDiscountBtn');
 
 // ====== وظائف المساعدة ======
 function showMessage(msg, type = 'success', duration = 4000) {
@@ -1942,27 +1969,21 @@ function isDigitalProduct(product) {
 // ====== نظام العناوين الذكي ======
 function updateAddressDisplay() {
   if (currentAddress) {
-    // تحديث اسم العنوان
     document.getElementById('displayAddressName').textContent = currentAddress.name || 'عنوان التوصيل';
-    
-    // تحديث بيانات العنوان
     document.getElementById('displayCity').textContent = currentAddress.city || '-';
     document.getElementById('displayDistrict').textContent = currentAddress.district || '-';
     document.getElementById('displayStreet').textContent = currentAddress.street || '-';
     
-    // بناء العنوان الكامل
     const fullAddress = [];
     if (currentAddress.building) fullAddress.push(`مبنى ${currentAddress.building}`);
     if (currentAddress.apartment) fullAddress.push(`شقة ${currentAddress.apartment}`);
     document.getElementById('displayFullAddress').textContent = fullAddress.join('، ') || '-';
     
-    // تحديث الإحداثيات
     const coordsDisplay = document.getElementById('coordinatesDisplay');
     if (currentAddress.latitude && currentAddress.longitude) {
       coordsDisplay.innerHTML = `<i class="fas fa-globe"></i> الإحداثيات: ${currentAddress.latitude.toFixed(6)}°, ${currentAddress.longitude.toFixed(6)}°`;
     }
     
-    // تحديث مصدر العنوان
     const sourceBadge = document.getElementById('addressSourceBadge');
     if (currentAddress.source === 'gps') {
       sourceBadge.innerHTML = '<i class="fas fa-satellite"></i> GPS';
@@ -1972,52 +1993,62 @@ function updateAddressDisplay() {
       sourceBadge.innerHTML = '<i class="fas fa-edit"></i> يدوي';
     }
     
-    // إظهار قسم العرض
     addressDisplay.classList.add('active');
-    
-    // تحديث التحذيرات
-    checkRequirements();
   } else {
     addressDisplay.classList.remove('active');
-    checkRequirements();
   }
+  
+  checkRequirements();
 }
 
+// ====== دالة فحص المتطلبات المعدلة ======
 function checkRequirements() {
   const hasPhysicalProducts = cart.some(item => !isDigitalProduct(item));
   const stats = updateCartStats();
   const hasEnoughBalance = balance >= stats.finalTotal;
   
-  // التحقق من العنوان
+  // إخفاء جميع التحذيرات أولاً
+  addressWarning.style.display = 'none';
+  balanceWarning.style.display = 'none';
+  
+  // إذا كانت السلة فارغة
+  if (cart.length === 0) {
+    payBtn.disabled = true;
+    payBtn.style.background = '#555';
+    payBtn.style.cursor = 'not-allowed';
+    payBtn.style.opacity = '0.7';
+    payBtn.title = "السلة فارغة - أضف منتجات أولاً";
+    return;
+  }
+  
+  // التحقق من العنوان للمنتجات الورقية فقط
   if (hasPhysicalProducts && !currentAddress) {
     addressWarning.style.display = 'flex';
     payBtn.disabled = true;
-    payBtn.title = "العنوان مطلوب للمنتجات الورقية";
-  } else {
-    addressWarning.style.display = 'none';
+    payBtn.style.background = '#555';
+    payBtn.style.cursor = 'not-allowed';
+    payBtn.style.opacity = '0.7';
+    payBtn.title = "العنوان مطلوب للمنتجات الورقية - أضف عنوان التوصيل";
+    return;
   }
   
   // التحقق من الرصيد
-  if (cart.length > 0 && !hasEnoughBalance) {
+  if (!hasEnoughBalance) {
     balanceWarning.style.display = 'flex';
     payBtn.disabled = true;
-    payBtn.title = `رصيدك غير كافٍ (المطلوب: ${formatPrice(stats.finalTotal)})`;
-  } else {
-    balanceWarning.style.display = 'none';
+    payBtn.style.background = '#555';
+    payBtn.style.cursor = 'not-allowed';
+    payBtn.style.opacity = '0.7';
+    payBtn.title = `رصيدك غير كافٍ (المطلوب: ${formatPrice(stats.finalTotal)} - رصيدك: ${formatPrice(balance)})`;
+    return;
   }
   
-  // تمكين/تعطيل زر الدفع
-  if (cart.length === 0) {
-    payBtn.disabled = true;
-    payBtn.title = "السلة فارغة";
-  } else if (!hasEnoughBalance) {
-    payBtn.disabled = true;
-  } else if (hasPhysicalProducts && !currentAddress) {
-    payBtn.disabled = true;
-  } else {
-    payBtn.disabled = false;
-    payBtn.title = "إتمام عملية الشراء";
-  }
+  // جميع الشروط متحققة - تمكين الزر
+  payBtn.disabled = false;
+  payBtn.style.background = 'linear-gradient(45deg, var(--netflix-red), #ff416c)';
+  payBtn.style.cursor = 'pointer';
+  payBtn.style.opacity = '1';
+  payBtn.title = "إتمام عملية الشراء";
 }
 
 // ====== GPS: الموقع الحالي ======
@@ -2034,7 +2065,6 @@ function getCurrentLocation() {
       const { latitude, longitude } = position.coords;
       
       try {
-        // ترجمة الإحداثيات إلى عنوان باستخدام Nominatim
         const response = await fetch(
           `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1&accept-language=ar`
         );
@@ -2061,10 +2091,7 @@ function getCurrentLocation() {
           
           localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
           updateAddressDisplay();
-          
-          // فتح نافذة التسمية
           openNameAddressModal();
-          
           showMessage('تم تحديد موقعك بنجاح!', 'success');
         } else {
           throw new Error('لا يمكن تحديد العنوان');
@@ -2086,7 +2113,6 @@ function getCurrentLocation() {
         localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
         updateAddressDisplay();
         openNameAddressModal();
-        
         showMessage('تم تحديد الموقع، يرجى إكمال العنوان يدوياً', 'warning');
       }
     },
@@ -2124,13 +2150,11 @@ function openSmartMap() {
       initSmartMap();
     }
     
-    // إذا كان هناك عنوان حالي، ضع المؤشر عليه
     if (currentAddress && currentAddress.latitude && currentAddress.longitude) {
       smartMap.setView([currentAddress.latitude, currentAddress.longitude], 15);
       updateMapMarker(currentAddress.latitude, currentAddress.longitude);
       reverseGeocode(currentAddress.latitude, currentAddress.longitude);
     } else {
-      // محاولة الحصول على الموقع الحالي
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -2158,7 +2182,6 @@ function initSmartMap() {
     maxZoom: 19
   }).addTo(smartMap);
   
-  // إضافة Geocoder للبحث
   geocoder = L.Control.geocoder({
     defaultMarkGeocode: false,
     placeholder: 'ابحث عن موقع...',
@@ -2172,7 +2195,6 @@ function initSmartMap() {
     updateAddressFromGeocode(name, center.lat, center.lng);
   });
   
-  // إضافة مؤشر قابل للسحب
   smartMapMarker = L.marker([0, 0], {
     draggable: true
   }).addTo(smartMap);
@@ -2183,7 +2205,6 @@ function initSmartMap() {
     reverseGeocode(latLng.lat, latLng.lng);
   });
   
-  // حدث النقر على الخريطة
   smartMap.on('click', function(e) {
     updateMapMarker(e.latlng.lat, e.latlng.lng);
     reverseGeocode(e.latlng.lat, e.latlng.lng);
@@ -2211,7 +2232,6 @@ async function reverseGeocode(lat, lng) {
     if (data.display_name) {
       document.getElementById('extractedAddress').textContent = data.display_name;
       
-      // تحديث حقول العنوان تلقائياً إذا أمكن
       if (data.address) {
         const addr = data.address;
         currentAddress = {
@@ -2390,7 +2410,6 @@ function deleteAddress(addressId) {
 
 // ====== العنوان اليدوي ======
 function openManualAddress() {
-  // تعبئة الحقول إذا كان هناك عنوان حالي
   if (currentAddress) {
     document.getElementById('addressName').value = currentAddress.name || '';
     document.getElementById('addressCity').value = currentAddress.city || '';
@@ -2402,7 +2421,6 @@ function openManualAddress() {
     document.getElementById('addressPhone').value = currentAddress.phone || user.phone || '';
     document.getElementById('addressNotes').value = currentAddress.notes || '';
   } else {
-    // إعادة التعيين
     document.getElementById('addressName').value = '';
     document.getElementById('addressCity').value = '';
     document.getElementById('addressDistrict').value = '';
@@ -2456,11 +2474,9 @@ function saveManualAddress() {
     isDefault: addresses.length === 0
   };
   
-  // حفظ كعنوان حالي
   currentAddress = address;
   localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
   
-  // إضافة للعناوين المحفوظة
   addresses.push({ ...address });
   localStorage.setItem(ADDRESSES_KEY, JSON.stringify(addresses));
   
@@ -2499,14 +2515,12 @@ function confirmSaveAddress() {
   
   currentAddress.name = name;
   
-  // إضافة ID إذا لم يكن موجوداً
   if (!currentAddress.id) {
     currentAddress.id = 'addr_' + Date.now();
     currentAddress.createdAt = new Date().toISOString();
     currentAddress.isDefault = addresses.length === 0;
   }
   
-  // التحقق من التكرار
   const existingIndex = addresses.findIndex(addr => addr.id === currentAddress.id);
   if (existingIndex === -1) {
     addresses.push({ ...currentAddress });
@@ -2681,22 +2695,41 @@ function saveForLater(index) {
   showMessage(`تم حفظ "${item.title}" للمستقبل`, 'success');
 }
 
+// ====== دالة تحديث إحصائيات السلة المعدلة ======
 function updateCartStats() {
   const totalItems = cart.length;
   const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
   const subtotal = cart.reduce((sum, item) => sum + (parseProductPrice(item.price) * (item.quantity || 1)), 0);
   
-  // حساب الخصم
+  // حساب الخصم حسب نوعه
   let discountAmount = 0;
   if (currentDiscount) {
-    discountAmount = subtotal * (currentDiscount.percentage / 100);
+    if (currentDiscount.type === 'percentage') {
+      // خصم نسبة مئوية
+      discountAmount = subtotal * (currentDiscount.percentage / 100);
+    } else if (currentDiscount.type === 'fixed') {
+      // خصم مبلغ ثابت (لا يمكن أن يتجاوز المجموع الفرعي)
+      discountAmount = Math.min(currentDiscount.amount, subtotal);
+    } else if (currentDiscount.type === 'balance') {
+      // رصيد إضافي (يضاف للرصيد وليس خصم)
+      discountAmount = 0;
+    }
   }
   
   // حساب رسوم الشحن للمنتجات الورقية
   const hasPhysicalProducts = cart.some(item => !isDigitalProduct(item));
-  const shippingFee = hasPhysicalProducts ? 15.00 : 0.00; // 15 ريال للمنتجات الورقية
+  let shippingFee = 0;
   
-  const finalTotal = subtotal - discountAmount + shippingFee;
+  // إذا كان الخصم شحن مجاني، لا تضف رسوم الشحن
+  if (hasPhysicalProducts) {
+    if (currentDiscount && currentDiscount.type === 'free_shipping') {
+      shippingFee = 0;
+    } else {
+      shippingFee = 15.00; // 15 ريال للمنتجات الورقية
+    }
+  }
+  
+  const finalTotal = Math.max(0, subtotal - discountAmount + shippingFee);
   
   // تحديث الإحصائيات
   totalItemsEl.textContent = totalItems;
@@ -2706,7 +2739,7 @@ function updateCartStats() {
   
   // تحديث الفاتورة
   subtotalEl.textContent = formatPrice(subtotal);
-  discountAmountEl.textContent = formatPrice(discountAmount);
+  discountAmountEl.textContent = discountAmount > 0 ? `-${formatPrice(discountAmount)}` : formatPrice(0);
   shippingFeeEl.textContent = formatPrice(shippingFee);
   finalTotalEl.textContent = formatPrice(finalTotal);
   
@@ -2717,12 +2750,27 @@ function updateCartStats() {
   // تحديث الرصيد
   globalBalanceEl.textContent = balance.toFixed(2);
   
+  // تمكين/تعطيل زر الدفع
   checkRequirements();
+  
+  // تحديث معلومات الخصم
+  if (!currentDiscount) {
+    discountCodeInput.style.borderColor = 'rgba(255,255,255,0.2)';
+    discountCodeInput.style.boxShadow = 'none';
+    discountCodeInput.value = '';
+    if (discountInfo) {
+      discountInfo.innerHTML = `
+        <i class="fas fa-info-circle"></i>
+        يمكنك استخدام كود خصم واحد لكل عملية شراء
+      `;
+    }
+    removeDiscountBtn.style.display = 'none';
+  }
   
   return { subtotal, discountAmount, shippingFee, finalTotal, hasPhysicalProducts };
 }
 
-// ====== الخصومات ======
+// ====== دالة تطبيق الخصم المعدلة ======
 function applyDiscount() {
   const code = discountCodeInput.value.trim().toUpperCase();
   
@@ -2738,75 +2786,140 @@ function applyDiscount() {
   
   showMessage('جاري التحقق من كود الخصم...', 'info', 2000);
   
-  // تحميل الخصومات من التخزين المحلي
+  // تحميل الخصومات من نفس المفتاح المستخدم في صفحة إدارة الخصومات
   const allDiscounts = JSON.parse(localStorage.getItem('admin_discounts') || '[]');
-  const userDiscounts = JSON.parse(localStorage.getItem('user_discounts') || '[]');
   
-  // البحث عن الخصم في قائمة المسؤول
-  const adminDiscount = allDiscounts.find(d => d.code === code && d.isActive);
+  // البحث عن الخصم
+  const discount = allDiscounts.find(d => d.code === code && d.isActive);
   
-  // البحث عن الخصم في قائمة المستخدم
-  const userDiscount = userDiscounts.find(d => d.code === code && d.isActive);
-  
-  let discount = adminDiscount || userDiscount;
-  
-  if (discount) {
-    // التحقق من تاريخ الانتهاء
-    if (discount.expiryDate && new Date(discount.expiryDate) < new Date()) {
-      showMessage('كود الخصم منتهي الصلاحية', 'error');
-      return;
-    }
-    
-    // التحقق من الحد الأدنى للشراء
-    const stats = updateCartStats();
-    if (stats.subtotal < discount.minPurchase) {
-      showMessage(`الحد الأدنى للشراء لتطبيق هذا الخصم هو ${formatPrice(discount.minPurchase)}`, 'error');
-      return;
-    }
-    
-    // التحقق من عدد مرات الاستخدام
-    if (discount.maxUses && discount.usedCount >= discount.maxUses) {
-      showMessage('تم استخدام كود الخصم لأقصى عدد من المرات', 'error');
-      return;
-    }
-    
-    // التحقق من المستخدمين المحددين
-    if (discount.targetUsers && discount.targetUsers.length > 0) {
-      if (!discount.targetUsers.includes(loggedInUser)) {
-        showMessage('كود الخصم غير متاح لحسابك', 'error');
-        return;
-      }
-    }
-    
-    // تطبيق الخصم
-    currentDiscount = {
-      code: discount.code,
-      percentage: discount.percentage,
-      amount: discount.amount,
-      type: discount.type,
-      minPurchase: discount.minPurchase
-    };
-    
-    discountCode = code;
-    
-    // تحديث عدد مرات الاستخدام
-    if (discount.maxUses) {
-      discount.usedCount = (discount.usedCount || 0) + 1;
-      
-      if (adminDiscount) {
-        localStorage.setItem('admin_discounts', JSON.stringify(allDiscounts));
-      } else {
-        localStorage.setItem('user_discounts', JSON.stringify(userDiscounts));
-      }
-    }
-    
-    updateCartStats();
-    
-    showMessage(`تم تطبيق خصم ${discount.percentage}% بنجاح!`, 'success');
-    
-  } else {
-    showMessage('كود الخصم غير صالح', 'error');
+  if (!discount) {
+    showMessage('كود الخصم غير صالح أو غير مفعل', 'error');
+    return;
   }
+  
+  // التحقق من تاريخ الانتهاء
+  if (discount.expiryDate && new Date(discount.expiryDate) < new Date()) {
+    showMessage('عذراً، كود الخصم منتهي الصلاحية', 'error');
+    return;
+  }
+  
+  // التحقق من تاريخ البدء
+  if (discount.startDate && new Date(discount.startDate) > new Date()) {
+    showMessage('عذراً، كود الخصم لم يبدأ بعد', 'error');
+    return;
+  }
+  
+  // حساب المجموع الفرعي
+  const subtotal = cart.reduce((sum, item) => sum + (parseProductPrice(item.price) * (item.quantity || 1)), 0);
+  
+  // التحقق من الحد الأدنى للشراء
+  if (discount.minPurchase && subtotal < discount.minPurchase) {
+    showMessage(`الحد الأدنى للشراء لتطبيق هذا الخصم هو ${formatPrice(discount.minPurchase)}`, 'error');
+    return;
+  }
+  
+  // التحقق من عدد مرات الاستخدام
+  if (discount.maxUses && discount.usedCount >= discount.maxUses) {
+    showMessage('عذراً، تم استخدام كود الخصم لأقصى عدد من المرات', 'error');
+    return;
+  }
+  
+  // التحقق من المستخدمين المحددين
+  if (discount.targetType === 'specific' && discount.targetUsers && discount.targetUsers.length > 0) {
+    if (!discount.targetUsers.includes(loggedInUser)) {
+      showMessage('عذراً، كود الخصم غير متاح لحسابك', 'error');
+      return;
+    }
+  }
+  
+  // التحقق من نطاق المنتجات
+  if (discount.productScope && discount.productScope !== 'all') {
+    let applicable = true;
+    
+    if (discount.productScope === 'digital') {
+      applicable = cart.every(item => isDigitalProduct(item));
+    } else if (discount.productScope === 'physical') {
+      applicable = cart.every(item => !isDigitalProduct(item));
+    }
+    
+    if (!applicable) {
+      showMessage('كود الخصم لا ينطبق على المنتجات في سلتك', 'error');
+      return;
+    }
+  }
+  
+  // تطبيق الخصم
+  currentDiscount = {
+    code: discount.code,
+    type: discount.type,
+    percentage: discount.percentage || 0,
+    amount: discount.amount || 0,
+    balanceAmount: discount.balanceAmount || 0,
+    minPurchase: discount.minPurchase || 0
+  };
+  
+  discountCode = code;
+  
+  // تحديث عدد مرات الاستخدام
+  discount.usedCount = (discount.usedCount || 0) + 1;
+  localStorage.setItem('admin_discounts', JSON.stringify(allDiscounts));
+  
+  // تحديث عرض السلة
+  updateCartStats();
+  
+  // رسالة نجاح مع تفاصيل الخصم
+  let successMsg = `تم تطبيق الخصم بنجاح! `;
+  if (discount.type === 'percentage') {
+    successMsg += `(خصم ${discount.percentage}%)`;
+  } else if (discount.type === 'fixed') {
+    successMsg += `(خصم ${formatPrice(discount.amount)})`;
+  } else if (discount.type === 'free_shipping') {
+    successMsg += `(شحن مجاني)`;
+  } else if (discount.type === 'balance') {
+    successMsg += `(رصيد إضافي ${formatPrice(discount.balanceAmount)})`;
+  }
+  
+  showMessage(successMsg, 'success');
+  
+  // تغيير لون حقل الخصم للإشارة للنجاح
+  discountCodeInput.style.borderColor = 'var(--success-green)';
+  discountCodeInput.style.boxShadow = '0 0 0 3px rgba(76, 175, 80, 0.1)';
+  
+  // إظهار زر إزالة الخصم
+  removeDiscountBtn.style.display = 'flex';
+  
+  // تحديث معلومات الخصم
+  if (discountInfo) {
+    discountInfo.innerHTML = `
+      <i class="fas fa-check-circle" style="color: var(--success-green);"></i>
+      <span style="color: var(--success-green);">الخصم النشط: <strong>${discount.code}</strong> - ${successMsg}</span>
+    `;
+  }
+}
+
+// ====== دالة إزالة الخصم ======
+function removeDiscount() {
+  currentDiscount = null;
+  discountCode = '';
+  discountCodeInput.value = '';
+  
+  // إعادة تعيين لون الحقل
+  discountCodeInput.style.borderColor = 'rgba(255,255,255,0.2)';
+  discountCodeInput.style.boxShadow = 'none';
+  
+  // إخفاء زر الإزالة
+  removeDiscountBtn.style.display = 'none';
+  
+  // إعادة تعيين معلومات الخصم
+  if (discountInfo) {
+    discountInfo.innerHTML = `
+      <i class="fas fa-info-circle"></i>
+      يمكنك استخدام كود خصم واحد لكل عملية شراء
+    `;
+  }
+  
+  updateCartStats();
+  showMessage('تم إزالة الخصم', 'warning');
 }
 
 function openDiscountsPage() {
@@ -2981,7 +3094,7 @@ function confirmPurchase() {
         purchaseDate: today,
         transactionId: transactionId,
         paymentMethod: `بطاقة ${selectedCard.number || '****'}`,
-        discountApplied: currentDiscount ? `${currentDiscount.percentage}%` : 'لا يوجد',
+        discountApplied: currentDiscount ? `${currentDiscount.code} (${currentDiscount.type === 'percentage' ? currentDiscount.percentage + '%' : formatPrice(currentDiscount.amount)})` : 'لا يوجد',
         finalPrice: price
       };
       
@@ -3025,6 +3138,7 @@ function confirmPurchase() {
   currentDiscount = null;
   discountCode = '';
   discountCodeInput.value = '';
+  removeDiscountBtn.style.display = 'none';
   localStorage.setItem(CART_KEY, JSON.stringify(cart));
   
   // تحديث الواجهة
@@ -3033,7 +3147,6 @@ function confirmPurchase() {
   
   // رسالة النجاح
   let successMessage = `تم الدفع بنجاح! المبلغ: ${formatPrice(stats.finalTotal)}<br>`;
-  successMessage += `بطاقة الدفع: ${selectedCard.number}<br>`;
   
   if (digitalProducts.length > 0 && physicalProducts.length > 0) {
     successMessage += `تمت إضافة ${digitalProducts.length} منتج رقمي إلى المكتبة<br>`;
@@ -3149,6 +3262,7 @@ window.openNameAddressModal = openNameAddressModal;
 window.closeNameAddress = closeNameAddress;
 window.confirmSaveAddress = confirmSaveAddress;
 window.applyDiscount = applyDiscount;
+window.removeDiscount = removeDiscount;
 window.openDiscountsPage = openDiscountsPage;
 window.selectCard = selectCard;
 window.closeCardModal = closeCardModal;
