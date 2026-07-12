@@ -660,7 +660,7 @@ body {
   gap: 5px;
 }
 
-/* ====== لوحة تفاصيل المنتج - نسخة محسنة مع تثبيت الصورة ====== */
+/* ====== لوحة تفاصيل المنتج - مع تصغير الأشرطة ====== */
 .product-detail-overlay {
   display: none;
   position: fixed;
@@ -686,29 +686,30 @@ body {
 }
 
 .product-detail-header {
-  padding: 25px 30px 15px;
+  padding: 15px 20px 10px;
   background: var(--gradient-primary);
   position: sticky;
   top: 0;
   z-index: 10;
   flex-shrink: 0;
+  min-height: 60px;
 }
 
 .close-product-detail {
   position: absolute;
-  top: 15px;
-  right: 15px;
+  top: 10px;
+  right: 10px;
   background: rgba(255,255,255,0.2);
   border: none;
   color: white;
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 18px;
   transition: all var(--transition-speed);
 }
 
@@ -718,42 +719,42 @@ body {
 }
 
 .product-detail-title {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: bold;
   color: white;
-  margin-bottom: 5px;
-  margin-right: 50px;
+  margin-bottom: 3px;
+  margin-right: 40px;
 }
 
 .product-detail-main {
   flex: 1;
-  padding: 20px;
+  padding: 15px 20px;
 }
 
 .product-detail-content {
   display: grid;
   grid-template-columns: 1fr 2fr;
-  gap: 30px;
+  gap: 25px;
   max-width: 1400px;
   margin: 0 auto;
 }
 
-/* ====== تثبيت الصورة على الأجهزة الكبيرة ====== */
 .product-detail-poster {
   align-self: start;
+  position: relative;
 }
 
 @media (min-width: 769px) {
   .product-detail-poster {
     position: sticky;
-    top: 100px;
+    top: 80px;
   }
 }
 
 @media (max-width: 768px) {
   .product-detail-content {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 15px;
   }
   
   .product-detail-poster {
@@ -770,10 +771,36 @@ body {
   box-shadow: 0 8px 25px rgba(0,0,0,0.5);
 }
 
+/* زر العرض الشفاف على الصورة */
+.product-detail-poster .view-btn-overlay {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all var(--transition-speed);
+  z-index: 5;
+}
+
+.product-detail-poster .view-btn-overlay:hover {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.1);
+}
+
 .product-detail-info {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 20px;
 }
 
 .product-detail-meta {
@@ -814,27 +841,26 @@ body {
   font-size: 18px;
 }
 
-/* قسم معلومات المنتج الجديد */
 .product-detail-summary {
   background: rgba(255,255,255,0.05);
-  padding: 25px;
+  padding: 20px;
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--border-color);
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .product-detail-summary-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+  margin-top: 15px;
 }
 
 .summary-item {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 15px;
+  padding: 10px 15px;
   background: var(--card-bg);
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-color);
@@ -861,24 +887,24 @@ body {
   font-size: 18px;
   line-height: 1.8;
   color: var(--text-secondary);
-  padding: 25px;
+  padding: 20px;
   background: rgba(255,255,255,0.05);
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--border-color);
 }
 
 .product-detail-sections {
-  margin-top: 30px;
+  margin-top: 25px;
 }
 
 .product-detail-section {
-  margin-bottom: 30px;
+  margin-bottom: 25px;
 }
 
 .section-label {
   font-size: 20px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   color: var(--primary-color);
   display: flex;
   align-items: center;
@@ -890,12 +916,12 @@ body {
 .chapters-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .chapter-item {
   background: var(--card-bg);
-  padding: 15px 20px;
+  padding: 12px 18px;
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-color);
   display: flex;
@@ -910,27 +936,28 @@ body {
 }
 
 .chapter-info h4 {
-  margin-bottom: 5px;
-  font-size: 16px;
+  margin-bottom: 3px;
+  font-size: 15px;
 }
 
 .chapter-duration {
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .watch-button {
   background: var(--gradient-primary);
   color: white;
   border: none;
-  padding: 8px 20px;
+  padding: 6px 16px;
   border-radius: var(--border-radius-sm);
   cursor: pointer;
   transition: all var(--transition-speed);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   font-weight: bold;
+  font-size: 14px;
 }
 
 .watch-button:hover {
@@ -939,21 +966,22 @@ body {
 }
 
 .comments-section {
-  margin-top: 20px;
+  margin-top: 15px;
 }
 
 .comment-item {
   background: var(--card-bg);
-  padding: 20px;
+  padding: 18px;
   border-radius: var(--border-radius-md);
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   border: 1px solid var(--border-color);
+  position: relative;
 }
 
 .comment-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   align-items: center;
 }
 
@@ -965,7 +993,7 @@ body {
 
 .comment-date {
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .comment-text {
@@ -974,10 +1002,35 @@ body {
   font-size: 15px;
 }
 
+.comment-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.delete-comment-btn {
+  background: transparent;
+  border: none;
+  color: var(--danger-color);
+  cursor: pointer;
+  font-size: 13px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  transition: all var(--transition-speed);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.delete-comment-btn:hover {
+  background: rgba(244, 67, 54, 0.1);
+  transform: scale(1.05);
+}
+
 .add-comment {
-  margin-top: 30px;
+  margin-top: 20px;
   background: rgba(255,255,255,0.05);
-  padding: 25px;
+  padding: 20px;
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-color);
 }
@@ -992,7 +1045,7 @@ body {
   font-family: inherit;
   margin-bottom: 15px;
   resize: vertical;
-  min-height: 120px;
+  min-height: 100px;
   font-size: 15px;
 }
 
@@ -1000,7 +1053,7 @@ body {
   background: var(--gradient-secondary);
   color: white;
   border: none;
-  padding: 12px 30px;
+  padding: 10px 25px;
   border-radius: var(--border-radius-sm);
   cursor: pointer;
   transition: all var(--transition-speed);
@@ -1017,7 +1070,7 @@ body {
 }
 
 .product-detail-footer {
-  padding: 25px 30px;
+  padding: 12px 20px;
   background: var(--darker-bg);
   border-top: 1px solid var(--border-color);
   display: flex;
@@ -1027,13 +1080,15 @@ body {
   position: sticky;
   bottom: 0;
   z-index: 10;
+  min-height: 55px;
 }
 
 @media (max-width: 768px) {
   .product-detail-footer {
     flex-direction: column;
-    gap: 20px;
+    gap: 12px;
     text-align: center;
+    padding: 12px 15px;
   }
 }
 
@@ -1041,15 +1096,15 @@ body {
   background: var(--gradient-primary);
   color: white;
   border: none;
-  padding: 15px 40px;
+  padding: 12px 35px;
   border-radius: var(--border-radius-sm);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
   cursor: pointer;
   transition: all var(--transition-speed);
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
 
 .purchase-button:hover {
@@ -1060,10 +1115,11 @@ body {
 @media (max-width: 768px) {
   .purchase-button {
     width: 100%;
+    justify-content: center;
   }
 }
 
-/* ====== لوحة البحث - محسنة مع مربع بحث أصغر ====== */
+/* ====== لوحة البحث - محسنة ====== */
 .search-overlay {
   display: none;
   position: fixed;
@@ -1087,7 +1143,7 @@ body {
 }
 
 .search-header {
-  padding: 20px 30px;
+  padding: 15px 20px;
   background: var(--gradient-primary);
   position: sticky;
   top: 0;
@@ -1097,19 +1153,19 @@ body {
 
 .close-search {
   position: absolute;
-  top: 15px;
-  right: 15px;
+  top: 10px;
+  right: 10px;
   background: rgba(255,255,255,0.2);
   border: none;
   color: white;
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 18px;
   transition: all var(--transition-speed);
 }
 
@@ -1119,14 +1175,13 @@ body {
 }
 
 .search-title {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
   color: white;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   text-align: center;
 }
 
-/* ====== مربع البحث المحسن - أصغر وأجمل ====== */
 .search-input-container {
   position: relative;
   max-width: 600px;
@@ -1135,12 +1190,12 @@ body {
 
 .search-input {
   width: 100%;
-  padding: 14px 60px 14px 20px;
+  padding: 12px 55px 12px 18px;
   background: rgba(255,255,255,0.15);
   border: 2px solid rgba(255,255,255,0.3);
   border-radius: 50px;
   color: white;
-  font-size: 16px;
+  font-size: 15px;
   outline: none;
   transition: all var(--transition-speed);
 }
@@ -1157,35 +1212,33 @@ body {
 
 .search-icon {
   position: absolute;
-  left: 20px;
+  left: 18px;
   top: 50%;
   transform: translateY(-50%);
   color: rgba(255,255,255,0.7);
-  font-size: 18px;
+  font-size: 16px;
 }
 
-/* ====== عنوان البحث على اليمين ====== */
 .search-label {
   text-align: right;
   color: rgba(255,255,255,0.8);
-  font-size: 14px;
-  margin-bottom: 8px;
+  font-size: 13px;
+  margin-bottom: 6px;
   padding-right: 10px;
 }
 
 .search-main {
   flex: 1;
-  padding: 30px;
+  padding: 20px;
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
 }
 
-/* بطاقات البحث الصغيرة المحسنة */
 .search-products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 25px;
+  gap: 20px;
 }
 
 @media (max-width: 768px) {
@@ -1197,6 +1250,7 @@ body {
 @media (max-width: 480px) {
   .search-products-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
   }
 }
 
@@ -1210,58 +1264,59 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .search-product-card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-5px);
   border-color: var(--primary-color);
   box-shadow: 0 12px 25px rgba(0,0,0,0.4);
 }
 
 .search-product-card img {
   width: 100%;
-  height: 200px;
+  height: 180px;
   object-fit: cover;
 }
 
 .search-product-card-content {
-  padding: 20px;
+  padding: 15px;
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
 .search-product-card-title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
   color: var(--text-primary);
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 .search-product-card-meta {
   display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 8px;
+  margin-bottom: 10px;
   flex-wrap: wrap;
 }
 
 .search-product-meta-item {
   background: rgba(255,255,255,0.1);
-  padding: 5px 10px;
+  padding: 4px 10px;
   border-radius: var(--border-radius-sm);
-  font-size: 12px;
+  font-size: 11px;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 }
 
 .search-product-card-price {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: bold;
   color: var(--success-color);
   margin-top: auto;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 
 .search-product-card-footer {
@@ -1269,20 +1324,23 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-top: auto;
+  gap: 8px;
 }
 
 .search-product-card-button {
   background: var(--gradient-primary);
   color: white;
   border: none;
-  padding: 8px 15px;
+  padding: 8px 12px;
   border-radius: var(--border-radius-sm);
   cursor: pointer;
   transition: all var(--transition-speed);
   display: flex;
   align-items: center;
   gap: 5px;
-  font-size: 14px;
+  font-size: 13px;
+  flex: 1;
+  justify-content: center;
 }
 
 .search-product-card-button:hover {
@@ -1290,8 +1348,13 @@ body {
   box-shadow: 0 4px 12px var(--shadow-light);
 }
 
+.search-product-card-button.view-btn {
+  background: var(--gradient-secondary);
+  flex: 0.6;
+}
+
 .search-footer {
-  padding: 20px 30px;
+  padding: 15px 20px;
   background: var(--darker-bg);
   border-top: 1px solid var(--border-color);
   flex-shrink: 0;
@@ -1300,20 +1363,20 @@ body {
 
 .no-results {
   text-align: center;
-  padding: 60px 20px;
+  padding: 40px 20px;
   color: var(--text-muted);
   font-size: 18px;
   grid-column: 1 / -1;
 }
 
 .no-results i {
-  font-size: 48px;
-  margin-bottom: 20px;
+  font-size: 40px;
+  margin-bottom: 15px;
   display: block;
   color: var(--text-muted);
 }
 
-/* ====== لوحة الإعدادات المحسنة ====== */
+/* ====== لوحة الإعدادات ====== */
 #panel {
   position: fixed;
   top: 0;
@@ -1496,7 +1559,6 @@ body {
   box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
 }
 
-/* ====== عناصر تحكم الإعدادات ====== */
 .settings-control {
   display: flex;
   align-items: center;
@@ -1580,7 +1642,6 @@ input:checked + .toggle-slider:before {
   color: var(--accent-color);
 }
 
-/* ====== التبويبات ====== */
 .tabs {
   display: flex;
   background: var(--card-bg);
@@ -1614,7 +1675,6 @@ input:checked + .toggle-slider:before {
   animation: fadeIn 0.5s;
 }
 
-/* ====== التصنيفات ====== */
 .category-badges {
   display: flex;
   flex-wrap: wrap;
@@ -1640,7 +1700,7 @@ input:checked + .toggle-slider:before {
   border-color: var(--primary-color);
 }
 
-/* ====== نافذة عرض جميع القصص ====== */
+/* ====== نافذة عرض جميع القصص - محسنة ====== */
 .all-stories-overlay {
   display: none;
   position: fixed;
@@ -1651,7 +1711,18 @@ input:checked + .toggle-slider:before {
   background: rgba(0, 0, 0, 0.98);
   z-index: 2000;
   overflow-y: auto;
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .all-stories-container {
@@ -1664,20 +1735,25 @@ input:checked + .toggle-slider:before {
 
 .all-stories-header {
   padding: 20px 30px;
-  background: var(--gradient-primary);
+  background: transparent;
   position: sticky;
   top: 0;
   z-index: 10;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   flex-shrink: 0;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .close-all-stories {
-  background: rgba(255,255,255,0.2);
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
   border: none;
-  color: white;
+  color: var(--danger-color);
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -1685,19 +1761,20 @@ input:checked + .toggle-slider:before {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 28px;
   transition: all var(--transition-speed);
 }
 
 .close-all-stories:hover {
-  background: rgba(255,255,255,0.3);
-  transform: rotate(90deg);
+  transform: translateY(-50%) scale(1.2);
+  color: #ff1744;
 }
 
 .all-stories-title {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: bold;
-  color: white;
+  color: var(--text-primary);
+  text-align: center;
 }
 
 .all-stories-body {
@@ -1712,6 +1789,10 @@ input:checked + .toggle-slider:before {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 25px;
+}
+
+.all-stories-grid .product-card::before {
+  display: none;
 }
 
 /* ====== التذييل ====== */
@@ -1797,29 +1878,30 @@ input:checked + .toggle-slider:before {
 /* ====== الوسائط المتجاوبة ====== */
 @media (max-width: 768px) {
   .main-content {
-    padding: 90px 15px 30px;
+    padding: 80px 12px 20px;
   }
 
   .products-grid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
   }
 
   .section-title {
-    font-size: 24px;
+    font-size: 20px;
   }
 
   .top {
-    height: 60px;
-    padding: 0 15px;
+    height: 55px;
+    padding: 0 12px;
   }
 
   .welcome-text {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .welcome-icon {
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
   }
 
   .manga-navigation {
@@ -1832,9 +1914,24 @@ input:checked + .toggle-slider:before {
     max-height: 100vh;
   }
 
+  .product-detail-header {
+    padding: 10px 15px 8px;
+    min-height: 50px;
+  }
+
+  .product-detail-title {
+    font-size: 20px;
+    margin-right: 35px;
+  }
+
+  .product-detail-footer {
+    padding: 10px 15px;
+    min-height: 50px;
+  }
+
   .content-navigation {
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
   }
 
   .content-nav-button {
@@ -1847,7 +1944,7 @@ input:checked + .toggle-slider:before {
   }
   
   .product-detail-poster img {
-    max-height: 400px;
+    max-height: 300px;
   }
   
   .search-input-container {
@@ -1855,7 +1952,29 @@ input:checked + .toggle-slider:before {
   }
   
   .search-title {
+    font-size: 18px;
+  }
+
+  .all-stories-header {
+    padding: 15px 20px;
+  }
+
+  .all-stories-title {
     font-size: 20px;
+  }
+
+  .close-all-stories {
+    right: 15px;
+    font-size: 24px;
+  }
+
+  .all-stories-body {
+    padding: 15px;
+  }
+
+  .all-stories-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
   }
 }
 
@@ -1869,43 +1988,74 @@ input:checked + .toggle-slider:before {
   }
 
   .section-title {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .card-button {
-    padding: 6px 15px;
-    font-size: 14px;
+    padding: 6px 12px;
+    font-size: 13px;
   }
 
   .manga-navigation {
-    gap: 10px;
+    gap: 8px;
   }
 
   .nav-button {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
   }
 
   .search-products-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .search-product-card img {
+    height: 140px;
+  }
+
+  .search-product-card-content {
+    padding: 10px;
+  }
+
+  .search-product-card-title {
+    font-size: 14px;
+  }
+
+  .search-product-card-price {
+    font-size: 17px;
+  }
+
+  .search-product-card-footer {
+    flex-wrap: wrap;
+  }
+
+  .search-product-card-button {
+    font-size: 12px;
+    padding: 6px 10px;
   }
   
   .all-stories-grid {
     grid-template-columns: 1fr;
   }
+
+  .product-detail-content {
+    gap: 10px;
+  }
 }
 
 /* أنماط نظام التقييم */
 .product-rating-section, .ratings-section {
-  margin-top: 25px;
-  padding: 20px;
+  margin-top: 20px;
+  padding: 15px;
   background: var(--card-bg);
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-color);
 }
 
 .rating-form, .user-rating-display {
-  padding: 20px;
+  padding: 15px;
   background: var(--darker-bg);
   border-radius: var(--border-radius-sm);
 }
@@ -1947,7 +2097,6 @@ input:checked + .toggle-slider:before {
   transform: scale(1.2);
 }
 
-/* تصميم حاوية الإعدادات الرئيسية */
 .settings-menu {
   max-width: 600px;
   margin: 20px auto;
@@ -1960,14 +2109,12 @@ input:checked + .toggle-slider:before {
   gap: 10px;
 }
 
-/* ستايل موحد لروابط الإعدادات */
 .settings-link {
   text-decoration: none;
   color: inherit;
   display: block;
 }
 
-/* تصميم عنصر الإعداد الواحد */
 .settings-item {
   display: flex;
   align-items: center;
@@ -1980,7 +2127,6 @@ input:checked + .toggle-slider:before {
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* تأثير التمرير (Hover) */
 .settings-item:hover {
   background: #1a1a1a;
   border-color: #FF6B35;
@@ -1988,7 +2134,6 @@ input:checked + .toggle-slider:before {
   box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15);
 }
 
-/* تصميم الأيقونات الجانبية */
 .settings-item > i:first-child {
   font-size: 20px;
   color: #FF6B35;
@@ -1998,7 +2143,6 @@ input:checked + .toggle-slider:before {
   justify-content: center;
 }
 
-/* محتوى عنصر الإعداد (النصوص) */
 .settings-item-content {
   flex: 1;
   margin-right: 15px;
@@ -2006,7 +2150,6 @@ input:checked + .toggle-slider:before {
   text-align: right;
 }
 
-/* العناوين الرئيسية */
 .settings-item-title {
   font-size: 16px;
   font-weight: 600;
@@ -2014,14 +2157,12 @@ input:checked + .toggle-slider:before {
   margin-bottom: 4px;
 }
 
-/* النصوص الوصفية */
 .settings-item-desc {
   font-size: 13px;
   color: #b0b0b0;
   line-height: 1.4;
 }
 
-/* القيم النصية المعروضة على اليسار */
 .settings-value {
   font-size: 14px;
   color: #4285F4;
@@ -2031,7 +2172,6 @@ input:checked + .toggle-slider:before {
   font-weight: 500;
 }
 
-/* الأيقونة الفرعية (سهم الانتقال) */
 .fa-chevron-left, .fa-chevron-right {
   font-size: 14px;
   color: #666;
@@ -2043,14 +2183,12 @@ input:checked + .toggle-slider:before {
   color: #FF6B35;
 }
 
-/* أدوات التحكم (شريط الحجم وزر التبديل) */
 .settings-control {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* شريط التمرير لحجم الخط */
 .range-slider {
   -webkit-appearance: none;
   width: 120px;
@@ -2082,7 +2220,6 @@ input:checked + .toggle-slider:before {
   text-align: center;
 }
 
-/* زر التبديل التلقائي (Toggle Switch) */
 .toggle-switch {
   position: relative;
   width: 46px;
@@ -2124,7 +2261,6 @@ input:checked + .toggle-slider:before {
   transform: translateX(22px);
 }
 
-/* زر تسجيل الخروج الخاص */
 .logout-item {
   border-color: rgba(234, 67, 53, 0.3);
 }
@@ -2135,6 +2271,70 @@ input:checked + .toggle-slider:before {
   border-color: #EA4335;
   background: rgba(234, 67, 53, 0.05);
   box-shadow: 0 4px 12px rgba(234, 67, 53, 0.15);
+}
+
+/* زر العرض في بطاقات المنتج - أيقونة عين فقط */
+.product-card .view-icon-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all var(--transition-speed);
+  z-index: 2;
+  opacity: 0;
+}
+
+.product-card:hover .view-icon-btn {
+  opacity: 1;
+}
+
+.product-card .view-icon-btn:hover {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .product-card .view-icon-btn {
+    opacity: 0.7;
+    width: 30px;
+    height: 30px;
+    font-size: 13px;
+    top: 8px;
+    left: 8px;
+  }
+}
+
+/* منتجات البحث - زر عرض مصغر */
+.search-product-card .search-view-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  padding: 6px 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  width: 34px;
+  height: 34px;
+}
+
+.search-product-card .search-view-btn:hover {
+  background: rgba(255,255,255,0.15);
+  transform: scale(1.1);
 }
   </style>
 </head>
@@ -2273,7 +2473,6 @@ input:checked + .toggle-slider:before {
       <div class="video-grid" id="fantasy-videos">
         <!-- سيتم ملؤها ديناميكياً -->
       </div>
-      <!-- أزرار التنقل للفيديوهات -->
       <div class="content-navigation" id="fantasy-navigation" style="display: none;">
         <button class="content-nav-button" onclick="prevVideoPage('fantasy')">
           <i class="fas fa-arrow-right"></i>
@@ -2301,7 +2500,6 @@ input:checked + .toggle-slider:before {
       <div class="video-grid" id="horror-videos">
         <!-- سيتم ملؤها ديناميكياً -->
       </div>
-      <!-- أزرار التنقل للفيديوهات -->
       <div class="content-navigation" id="horror-navigation" style="display: none;">
         <button class="content-nav-button" onclick="prevVideoPage('horror')">
           <i class="fas fa-arrow-right"></i>
@@ -2329,7 +2527,6 @@ input:checked + .toggle-slider:before {
       <div class="video-grid" id="mystery-videos">
         <!-- سيتم ملؤها ديناميكياً -->
       </div>
-      <!-- أزرار التنقل للفيديوهات -->
       <div class="content-navigation" id="mystery-navigation" style="display: none;">
         <button class="content-nav-button" onclick="prevVideoPage('mystery')">
           <i class="fas fa-arrow-right"></i>
@@ -2357,7 +2554,6 @@ input:checked + .toggle-slider:before {
       <div class="video-grid" id="comedy-videos">
         <!-- سيتم ملؤها ديناميكياً -->
       </div>
-      <!-- أزرار التنقل للفيديوهات -->
       <div class="content-navigation" id="comedy-navigation" style="display: none;">
         <button class="content-nav-button" onclick="prevVideoPage('comedy')">
           <i class="fas fa-arrow-right"></i>
@@ -2385,7 +2581,6 @@ input:checked + .toggle-slider:before {
       <div class="video-grid" id="adventure-videos">
         <!-- سيتم ملؤها ديناميكياً -->
       </div>
-      <!-- أزرار التنقل للفيديوهات -->
       <div class="content-navigation" id="adventure-navigation" style="display: none;">
         <button class="content-nav-button" onclick="prevVideoPage('adventure')">
           <i class="fas fa-arrow-right"></i>
@@ -2439,7 +2634,6 @@ input:checked + .toggle-slider:before {
       <div class="products-grid" id="novels-16">
         <!-- سيتم ملؤها ديناميكياً -->
       </div>
-      <!-- أزرار التنقل للروايات -->
       <div class="content-navigation" id="novels-16-navigation" style="display: none;">
         <button class="content-nav-button" onclick="prevNovelPage('16')">
           <i class="fas fa-arrow-right"></i>
@@ -2466,7 +2660,6 @@ input:checked + .toggle-slider:before {
       <div class="products-grid" id="novels-18">
         <!-- سيتم ملؤها ديناميكياً -->
       </div>
-      <!-- أزرار التنقل للروايات -->
       <div class="content-navigation" id="novels-18-navigation" style="display: none;">
         <button class="content-nav-button" onclick="prevNovelPage('18')">
           <i class="fas fa-arrow-right"></i>
@@ -2493,7 +2686,6 @@ input:checked + .toggle-slider:before {
       <div class="products-grid" id="novels-all">
         <!-- سيتم ملؤها ديناميكياً -->
       </div>
-      <!-- أزرار التنقل للروايات -->
       <div class="content-navigation" id="novels-all-navigation" style="display: none;">
         <button class="content-nav-button" onclick="prevNovelPage('all')">
           <i class="fas fa-arrow-right"></i>
@@ -2522,7 +2714,7 @@ input:checked + .toggle-slider:before {
 <div class="all-stories-overlay" id="all-stories-overlay">
   <div class="all-stories-container">
     <div class="all-stories-header">
-      <h2 class="all-stories-title rtl-text">جميع القصص</h2>
+      <h2 class="all-stories-title rtl-text">كـافة القصص</h2>
       <h2 class="all-stories-title ltr-text" style="display: none;">All Stories</h2>
       <button class="close-all-stories" onclick="closeAllStories()">
         <i class="fas fa-times"></i>
@@ -2551,6 +2743,9 @@ input:checked + .toggle-slider:before {
       <div class="product-detail-content">
         <div class="product-detail-poster">
           <img id="product-detail-poster" src="" alt="صورة المنتج">
+          <button class="view-btn-overlay" onclick="event.stopPropagation(); viewProductFullscreen()" title="عرض الصورة بحجم كامل">
+            <i class="fas fa-eye"></i>
+          </button>
         </div>
         
         <div class="product-detail-info">
@@ -2559,7 +2754,6 @@ input:checked + .toggle-slider:before {
             <span class="product-detail-category ltr-text" style="display: none;" id="product-detail-category-en">Category</span>
             <span class="product-detail-price" id="product-detail-price">$0.00</span>
             
-            <!-- النجوم والتقييم المعدل -->
             <div class="product-detail-rating">
               <div class="stars" id="product-detail-stars">
                 <i class="fas fa-star"></i>
@@ -2643,8 +2837,8 @@ input:checked + .toggle-slider:before {
       <div>
         <h3 class="rtl-text" id="product-detail-name">اسم المنتج</h3>
         <h3 class="ltr-text" style="display: none;" id="product-detail-name-en">Product Name</h3>
-        <p class="rtl-text" style="color: var(--text-secondary); margin-top: 5px;" id="product-detail-type">النوع - الفئة</p>
-        <p class="ltr-text" style="color: var(--text-secondary); margin-top: 5px; display: none;" id="product-detail-type-en">Type - Category</p>
+        <p class="rtl-text" style="color: var(--text-secondary); margin-top: 5px; font-size: 13px;" id="product-detail-type">النوع - الفئة</p>
+        <p class="ltr-text" style="color: var(--text-secondary); margin-top: 5px; display: none; font-size: 13px;" id="product-detail-type-en">Type - Category</p>
       </div>
       
       <button class="purchase-button" onclick="purchaseProduct()">
@@ -2663,7 +2857,6 @@ input:checked + .toggle-slider:before {
       <button class="close-search" onclick="closeSearch()">
         <i class="fas fa-times"></i>
       </button>
-      <!-- عنوان البحث على اليمين -->
       <div class="search-label rtl-text">البحث عن المنتجات</div>
       <div class="search-label ltr-text" style="display: none;">Search Products</div>
       
@@ -2686,7 +2879,7 @@ input:checked + .toggle-slider:before {
   </div>
 </div>
 
-<!-- لوحة الإعدادات مع إضافة خيار ترتيب المنتجات -->
+<!-- لوحة الإعدادات -->
 <div id="panel">
   <div class="settings-header">
     <button class="close-settings" onclick="toggleSettings()">
@@ -2893,19 +3086,15 @@ input:checked + .toggle-slider:before {
 <div class="footer-section">
   <h3><i class="fas fa-share-alt"></i> <span class="rtl-text">تواصل معنا</span><span class="ltr-text" style="display: none;">Connect With Us</span></h3>
   <div style="display: flex; gap: 15px; margin-top: 20px;">
-    <!-- فيسبوك -->
     <a href="#" class="icon-wrapper" data-platform="facebook" style="text-decoration: none;" style="width: 40px; height: 40px;">
       <i class="fab fa-facebook-f"></i>
     </a>
-    <!-- تويتر -->
     <a href="#" class="icon-wrapper" data-platform="twitter" style="text-decoration: none;" style="width: 40px; height: 40px;">
       <i class="fab fa-twitter"></i>
     </a>
-    <!-- واتساب -->
     <a href="#" class="icon-wrapper" data-platform="whatsapp" style="text-decoration: none;" style="width: 40px; height: 40px;">
       <i class="fab fa-whatsapp"></i>
     </a>
-    <!-- إنستغرام -->
     <a href="#" class="icon-wrapper" data-platform="instagram" style="text-decoration: none;" style="width: 40px; height: 40px;">
       <i class="fab fa-instagram"></i>
     </a>
@@ -2932,14 +3121,11 @@ input:checked + .toggle-slider:before {
           break;
           
         case 'whatsapp':
-          // ✅ حل متكامل لجميع الأجهزة
           const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
           
           if (isMobile) {
-            // للجوال: يستخدم wa.me لفتح التطبيق مباشرة
             shareUrl = `https://wa.me/?text=${encodeURIComponent(SHARE_TEXT + ' ' + STORE_URL)}`;
           } else {
-            // لسطح المكتب: يفتح واتساب ويب في تبويب جديد
             shareUrl = `https://web.whatsapp.com/send?text=${encodeURIComponent(SHARE_TEXT + ' ' + STORE_URL)}`;
           }
           break;
@@ -2950,7 +3136,6 @@ input:checked + .toggle-slider:before {
       }
 
       if (shareUrl) {
-        // فتح الرابط في تبويب جديد
         window.open(shareUrl, '_blank');
       }
     });
@@ -2995,6 +3180,7 @@ input:checked + .toggle-slider:before {
     let currentMangaPage = 0;
     const mangaItemsPerPage = 4;
     let currentProductId = null;
+    let currentProductData = null; // لتخزين بيانات المنتج الحالي
     
     // إعدادات التقسيم
     const novelsPerPage = 6;
@@ -3022,18 +3208,18 @@ input:checked + .toggle-slider:before {
     let userRatingForCurrentProduct = null;
     let selectedRating = 0;
     let hoveredRating = 0;
+    
+    // بيانات المستخدم الحالي
+    let currentUser = null;
 
     // ====== دالة مساعدة للحصول على الصورة ======
     function getProductImage(product) {
-        // إعطاء الأولوية لـ Base64
         if (product.imageBase64) {
             return product.imageBase64;
         }
-        // ثم الرابط
         else if (product.image) {
             return product.image;
         }
-        // ثم صورة افتراضية
         else {
             return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMzMzMzMzIi8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgdGV4dC1kb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5ObyBJbWFnZTwvdGV4dD4KPC9zdmc+';
         }
@@ -3046,6 +3232,7 @@ input:checked + .toggle-slider:before {
         window.location.href = 'login.html';
         return null;
       }
+      currentUser = user;
       return user;
     }
 
@@ -3110,9 +3297,7 @@ input:checked + .toggle-slider:before {
                         ...products[productId]
                     };
                     
-                    // التأكد من وجود صورة
                     product.image = getProductImage(product);
-                    
                     allProducts.push(product);
                 });
                 console.log(`تم تحميل ${allProducts.length} منتج من Firebase`);
@@ -3136,7 +3321,6 @@ input:checked + .toggle-slider:before {
         try {
             const productsRef = ref(database, 'products');
             
-            // الاستماع للتغييرات في الوقت الحقيقي
             onValue(productsRef, (snapshot) => {
                 if (snapshot.exists()) {
                     const products = snapshot.val();
@@ -3154,10 +3338,8 @@ input:checked + .toggle-slider:before {
                     
                     console.log(`تم تحديث المنتجات في الوقت الحقيقي: ${allProducts.length} منتج`);
                     
-                    // تحديث الواجهة
                     renderAllContent();
                     
-                    // إذا كانت نافذة البحث مفتوحة، تحديث نتائج البحث
                     if (document.getElementById('search-overlay').style.display === 'block') {
                         searchProducts();
                     }
@@ -3317,13 +3499,14 @@ input:checked + .toggle-slider:before {
     }
 
     // إظهار إشعار
-    function showNotification(message) {
+    function showNotification(message, type = 'success') {
         const notification = document.createElement('div');
+        const bgColor = type === 'error' ? 'linear-gradient(135deg, #f44336, #d32f2f)' : 'linear-gradient(135deg, #FF6B35, #FF8E53)';
         notification.style.cssText = `
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: linear-gradient(135deg, #FF6B35, #FF8E53);
+            background: ${bgColor};
             color: white;
             padding: 15px 25px;
             border-radius: 12px;
@@ -3331,6 +3514,7 @@ input:checked + .toggle-slider:before {
             z-index: 10000;
             animation: slideIn 0.3s ease-out;
             max-width: 300px;
+            font-size: 14px;
         `;
         notification.textContent = message;
         document.body.appendChild(notification);
@@ -3577,21 +3761,18 @@ input:checked + .toggle-slider:before {
 
     // ====== إدارة التقسيم للروايات ======
     function initializeNovels() {
-        // تصنيف 16+
         const novels16 = allProducts.filter(p => p.category === 'روايات' && p.ratingCategory === '16');
         const sortedNovels16 = sortProducts(novels16);
         novelPages['16'].items = sortedNovels16;
         novelPages['16'].total = Math.ceil(sortedNovels16.length / novelsPerPage);
         showNovelPage('16', 0);
         
-        // تصنيف 18+
         const novels18 = allProducts.filter(p => p.category === 'روايات' && p.ratingCategory === '18');
         const sortedNovels18 = sortProducts(novels18);
         novelPages['18'].items = sortedNovels18;
         novelPages['18'].total = Math.ceil(sortedNovels18.length / novelsPerPage);
         showNovelPage('18', 0);
         
-        // جميع الأعمار
         const novelsAll = allProducts.filter(p => p.category === 'روايات' && p.ratingCategory === 'all');
         const sortedNovelsAll = sortProducts(novelsAll);
         novelPages['all'].items = sortedNovelsAll;
@@ -3615,13 +3796,11 @@ input:checked + .toggle-slider:before {
                 container.appendChild(card);
             });
             
-            // تحديث المعلومات
             const currentPageEl = document.getElementById(`novels-${category}-current-page`);
             const totalPagesEl = document.getElementById(`novels-${category}-total-pages`);
             if (currentPageEl) currentPageEl.textContent = page + 1;
             if (totalPagesEl) totalPagesEl.textContent = novelPages[category].total;
             
-            // إظهار/إخفاء أزرار التنقل
             const nav = document.getElementById(`novels-${category}-navigation`);
             if (nav) {
                 if (novelPages[category].total > 1) {
@@ -3655,7 +3834,6 @@ input:checked + .toggle-slider:before {
         tabs[index].classList.add('active');
         contents[index].classList.add('active');
         
-        // إعادة تعيين إلى الصفحة الأولى عند التبديل
         const categories = ['16', '18', 'all'];
         const currentCategory = categories[index];
         if (novelPages[currentCategory].items.length > 0) {
@@ -3665,35 +3843,30 @@ input:checked + .toggle-slider:before {
 
     // ====== إدارة التقسيم للفيديوهات ======
     function initializeVideos() {
-        // خيال سحري
         const fantasyVideos = allProducts.filter(p => p.category === 'فيديوهات' && p.subcategory === 'الخيال السحري');
         const sortedFantasy = sortProducts(fantasyVideos);
         videoPages['fantasy'].items = sortedFantasy;
         videoPages['fantasy'].total = Math.ceil(sortedFantasy.length / videosPerPage);
         showVideoPage('fantasy', 0);
         
-        // رعب
         const horrorVideos = allProducts.filter(p => p.category === 'فيديوهات' && p.subcategory === 'الرعب');
         const sortedHorror = sortProducts(horrorVideos);
         videoPages['horror'].items = sortedHorror;
         videoPages['horror'].total = Math.ceil(sortedHorror.length / videosPerPage);
         showVideoPage('horror', 0);
         
-        // غموض
         const mysteryVideos = allProducts.filter(p => p.category === 'فيديوهات' && p.subcategory === 'الغموض');
         const sortedMystery = sortProducts(mysteryVideos);
         videoPages['mystery'].items = sortedMystery;
         videoPages['mystery'].total = Math.ceil(sortedMystery.length / videosPerPage);
         showVideoPage('mystery', 0);
         
-        // سخرية
         const comedyVideos = allProducts.filter(p => p.category === 'فيديوهات' && p.subcategory === 'السخرية');
         const sortedComedy = sortProducts(comedyVideos);
         videoPages['comedy'].items = sortedComedy;
         videoPages['comedy'].total = Math.ceil(sortedComedy.length / videosPerPage);
         showVideoPage('comedy', 0);
         
-        // مغامرة
         const adventureVideos = allProducts.filter(p => p.category === 'فيديوهات' && p.subcategory === 'المغامرة');
         const sortedAdventure = sortProducts(adventureVideos);
         videoPages['adventure'].items = sortedAdventure;
@@ -3725,20 +3898,18 @@ input:checked + .toggle-slider:before {
                         <div class="video-title ltr-text" style="display: none;">${product.titleEn}</div>
                         <div class="video-duration">
                             <i class="far fa-clock"></i>
-                            ${product.chapters ? product.chapters.reduce((sum, ch) => sum + parseInt(ch.duration), 0) : '60'} دقيقة
+                            ${product.chapters ? product.chapters.reduce((sum, ch) => sum + parseInt(ch.duration || 0), 0) : '60'} دقيقة
                         </div>
                     </div>
                 `;
                 container.appendChild(card);
             });
             
-            // تحديث المعلومات
             const currentPageEl = document.getElementById(`${category}-current-page`);
             const totalPagesEl = document.getElementById(`${category}-total-pages`);
             if (currentPageEl) currentPageEl.textContent = page + 1;
             if (totalPagesEl) totalPagesEl.textContent = videoPages[category].total;
             
-            // إظهار/إخفاء أزرار التنقل
             const nav = document.getElementById(`${category}-navigation`);
             if (nav) {
                 if (videoPages[category].total > 1) {
@@ -3772,7 +3943,6 @@ input:checked + .toggle-slider:before {
         tabs[index].classList.add('active');
         contents[index].classList.add('active');
         
-        // إعادة تعيين إلى الصفحة الأولى عند التبديل
         const categories = ['fantasy', 'horror', 'mystery', 'comedy', 'adventure'];
         const currentCategory = categories[index];
         if (videoPages[currentCategory].items.length > 0) {
@@ -3780,13 +3950,16 @@ input:checked + .toggle-slider:before {
         }
     }
 
-    // ====== إنشاء بطاقة المنتج مع دعم Base64 ======
+    // ====== إنشاء بطاقة المنتج مع زر عرض ======
     function createProductCard(product) {
         const card = document.createElement('div');
         card.className = 'product-card';
         card.onclick = () => openProductDetail(product.id);
         card.innerHTML = `
             <img src="${getProductImage(product)}" alt="${product.title}" class="card-image">
+            <button class="view-icon-btn" onclick="event.stopPropagation(); openProductDetail('${product.id}')" title="عرض التفاصيل">
+                <i class="fas fa-eye"></i>
+            </button>
             <div class="card-content">
                 <h3 class="card-title rtl-text">${product.title}</h3>
                 <h3 class="card-title ltr-text" style="display: none;">${product.titleEn}</h3>
@@ -3812,7 +3985,6 @@ input:checked + .toggle-slider:before {
 
     // ====== عرض جميع المحتوى ======
     function renderAllContent() {
-        // قصص
         const storiesContainer = document.getElementById('stories-container');
         if (storiesContainer) {
             storiesContainer.innerHTML = '';
@@ -3824,7 +3996,6 @@ input:checked + .toggle-slider:before {
             });
         }
         
-        // تهيئة باقي المحتوى
         initializeMangaNavigation();
         initializeVideos();
         initializeNovels();
@@ -3879,7 +4050,6 @@ input:checked + .toggle-slider:before {
             
             const userId = user.uid;
             
-            // البحث في المشتريات الرقمية (library)
             const digitalPurchasesRef = ref(database, `users/${userId}/digitalLibrary`);
             const digitalSnapshot = await get(digitalPurchasesRef);
             
@@ -3894,7 +4064,6 @@ input:checked + .toggle-slider:before {
                 }
             }
             
-            // البحث في المشتريات الورقية (orders)
             const physicalPurchasesRef = query(
                 ref(database, 'orders'),
                 orderByChild('userId'),
@@ -3939,7 +4108,6 @@ input:checked + .toggle-slider:before {
             
             if (snapshot.exists()) {
                 const ratings = snapshot.val();
-                // العثور على تقييم المستخدم
                 for (const ratingId in ratings) {
                     if (ratings[ratingId].userId === userId) {
                         return {
@@ -3976,10 +4144,8 @@ input:checked + .toggle-slider:before {
                 });
             }
             
-            // حساب متوسط التقييم
             const averageRating = ratingCount > 0 ? (totalRating / ratingCount).toFixed(1) : 0;
             
-            // تحديث تقييم المنتج في الواجهة
             updateProductRatingDisplay(averageRating, ratingCount);
             
         } catch (error) {
@@ -3990,7 +4156,6 @@ input:checked + .toggle-slider:before {
 
     // ====== تحديث عرض تقييم المنتج ======
     function updateProductRatingDisplay(averageRating, ratingCount) {
-        // تحديث النجوم في أعلى الصفحة
         const starsContainer = document.getElementById('product-detail-stars');
         if (starsContainer) {
             starsContainer.innerHTML = '';
@@ -4018,7 +4183,6 @@ input:checked + .toggle-slider:before {
             }
         }
         
-        // تحديث نص التقييم
         const ratingText = document.getElementById('product-detail-rating-text');
         if (ratingText) {
             if (currentLanguage === 'ar') {
@@ -4034,11 +4198,9 @@ input:checked + .toggle-slider:before {
         const summaryGrid = document.querySelector('.product-detail-summary-grid');
         if (!summaryGrid) return;
         
-        // البحث عن عنصر التقييم الموجود
         let ratingItem = document.querySelector('.summary-item:has(i.fa-star)');
         
         if (!ratingItem) {
-            // إنشاء عنصر التقييم إذا لم يكن موجوداً
             ratingItem = document.createElement('div');
             ratingItem.className = 'summary-item';
             ratingItem.innerHTML = `
@@ -4047,15 +4209,12 @@ input:checked + .toggle-slider:before {
                     <div class="summary-label rtl-text">التقييم</div>
                     <div class="summary-label ltr-text" style="display: none;">Rating</div>
                     <div class="summary-value" id="product-rating-display">
-                        <!-- سيتم تعبئته ديناميكياً -->
                     </div>
                 </div>
             `;
             
-            // إضافة عنصر التقييم إلى الشبكة
             const existingItems = summaryGrid.querySelectorAll('.summary-item');
             if (existingItems.length > 0) {
-                // إضافة بعد عنصر السعر
                 const priceItem = Array.from(existingItems).find(item => 
                     item.querySelector('i.fa-dollar-sign') || 
                     item.querySelector('i.fa-tag')
@@ -4070,7 +4229,6 @@ input:checked + .toggle-slider:before {
             }
         }
         
-        // تعبئة محتوى التقييم
         const ratingDisplay = document.getElementById('product-rating-display');
         if (!ratingDisplay) return;
         
@@ -4078,7 +4236,6 @@ input:checked + .toggle-slider:before {
         
         if (hasPurchased) {
             if (userRating) {
-                // المستخدم قام بالتقييم بالفعل
                 ratingDisplay.innerHTML = `
                     <div class="user-rating-display" style="display: flex; align-items: center; gap: 10px;">
                         <div class="rating-stars-small">
@@ -4102,7 +4259,6 @@ input:checked + .toggle-slider:before {
                     </div>
                 `;
             } else {
-                // المستخدم لم يقم بالتقييم بعد
                 ratingDisplay.innerHTML = `
                     <div class="rating-input-inline" style="display: flex; align-items: center; gap: 10px;">
                         <div class="stars-container-small">
@@ -4126,7 +4282,6 @@ input:checked + .toggle-slider:before {
                 `;
             }
         } else {
-            // المستخدم لم يشتري المنتج
             ratingDisplay.innerHTML = `
                 <div style="color: var(--text-secondary); font-size: 14px;">
                     <i class="fas fa-shopping-cart" style="margin-left: 5px;"></i>
@@ -4136,7 +4291,6 @@ input:checked + .toggle-slider:before {
             `;
         }
         
-        // إذا كان المستخدم قد اختار تقييمًا، تحديث العرض
         if (selectedRating > 0) {
             updateStarsDisplay();
         }
@@ -4157,7 +4311,6 @@ input:checked + .toggle-slider:before {
         selectedRating = rating;
         updateStarsDisplay();
         
-        // إظهار رسالة مؤقتة
         const ratingTexts = {
             1: { ar: 'سيء جداً', en: 'Very Bad' },
             2: { ar: 'سيء', en: 'Bad' },
@@ -4212,7 +4365,6 @@ input:checked + .toggle-slider:before {
         }
         
         try {
-            // التحقق من الشراء مرة أخرى
             const purchaseStatus = await checkProductPurchase(currentProductId);
             if (!purchaseStatus.purchased) {
                 showNotification(currentLanguage === 'ar' ? 
@@ -4221,7 +4373,6 @@ input:checked + .toggle-slider:before {
                 return;
             }
             
-            // إرسال التقييم إلى Firebase
             const ratingsRef = ref(database, `ratings/${currentProductId}`);
             const newRatingRef = push(ratingsRef);
             
@@ -4237,13 +4388,10 @@ input:checked + .toggle-slider:before {
             
             await set(newRatingRef, ratingData);
             
-            // تحديث تقييم المنتج في قاعدة البيانات
             await updateProductAverageRating(currentProductId);
             
-            // إعادة تحميل التقييمات
             await loadProductRatings(currentProductId);
             
-            // تحديث واجهة التقييم
             userRatingForCurrentProduct = await getUserRatingForProduct(currentProductId, user.uid);
             createRatingInProductInfo(true, userRatingForCurrentProduct);
             
@@ -4277,7 +4425,6 @@ input:checked + .toggle-slider:before {
                 
                 const averageRating = ratingCount > 0 ? (totalRating / ratingCount).toFixed(1) : 0;
                 
-                // تحديث تقييم المنتج في جدول المنتجات
                 const productRef = ref(database, `products/${productId}`);
                 const productSnapshot = await get(productRef);
                 
@@ -4288,7 +4435,6 @@ input:checked + .toggle-slider:before {
                         rating: parseFloat(averageRating)
                     });
                     
-                    // تحديث المنتج في المصفوفة المحلية
                     const productIndex = allProducts.findIndex(p => p.id === productId);
                     if (productIndex !== -1) {
                         allProducts[productIndex].rating = parseFloat(averageRating);
@@ -4304,10 +4450,8 @@ input:checked + .toggle-slider:before {
     async function editRating() {
         if (!currentProductId || !userRatingForCurrentProduct) return;
         
-        // إعادة تعيين التقييم المحدد إلى تقييم المستخدم الحالي
         selectedRating = userRatingForCurrentProduct.rating;
         
-        // تحديث الواجهة لتعرض نجوم قابلة للتعديل
         const ratingDisplay = document.getElementById('product-rating-display');
         if (ratingDisplay) {
             ratingDisplay.innerHTML = `
@@ -4336,7 +4480,6 @@ input:checked + .toggle-slider:before {
             `;
         }
         
-        // تحديث النجوم
         updateStarsDisplay();
     }
 
@@ -4352,7 +4495,6 @@ input:checked + .toggle-slider:before {
         if (!currentProductId || !userRatingForCurrentProduct) return;
         
         try {
-            // تحديث التقييم في Firebase
             const ratingRef = ref(database, `ratings/${currentProductId}/${userRatingForCurrentProduct.id}`);
             await set(ratingRef, {
                 ...userRatingForCurrentProduct,
@@ -4360,13 +4502,10 @@ input:checked + .toggle-slider:before {
                 date: new Date().toISOString()
             });
             
-            // تحديث متوسط التقييم
             await updateProductAverageRating(currentProductId);
             
-            // إعادة تحميل التقييمات
             await loadProductRatings(currentProductId);
             
-            // تحديث بيانات التقييم المحلية
             userRatingForCurrentProduct = await getUserRatingForProduct(currentProductId, userRatingForCurrentProduct.userId);
             createRatingInProductInfo(true, userRatingForCurrentProduct);
             
@@ -4391,567 +4530,589 @@ input:checked + .toggle-slider:before {
         hoveredRating = 0;
     }
 
+    // ====== عرض الصورة بحجم كامل ======
+    function viewProductFullscreen() {
+        const poster = document.getElementById('product-detail-poster');
+        if (!poster) return;
+        
+        const imgSrc = poster.src;
+        if (!imgSrc || imgSrc.includes('data:image/svg')) return;
+        
+        // إنشاء نافذة منبثقة لعرض الصورة
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            animation: fadeIn 0.3s ease-out;
+        `;
+        
+        const img = document.createElement('img');
+        img.src = imgSrc;
+        img.style.cssText = `
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        `;
+        
+        modal.appendChild(img);
+        modal.onclick = () => modal.remove();
+        
+        document.body.appendChild(modal);
+        document.body.style.overflow = 'hidden';
+        
+        modal.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                modal.remove();
+                document.body.style.overflow = '';
+            }
+        });
+        modal.setAttribute('tabindex', '0');
+        modal.focus();
+    }
+
     // ====== فتح تفاصيل المنتج ======
     async function openProductDetail(productId) {
-    const product = allProducts.find(p => p.id === productId);
-    if (!product) return;
-    
-    currentProductId = productId;
-    
-    // تعيين البيانات الأساسية
-    document.getElementById('product-detail-title').textContent = product.title;
-    document.getElementById('product-detail-title-en').textContent = product.titleEn;
-    document.getElementById('product-detail-poster').src = getProductImage(product);
-    document.getElementById('product-detail-category').textContent = product.subcategory;
-    document.getElementById('product-detail-category-en').textContent = product.subcategoryEn;
-    document.getElementById('product-detail-price').textContent = product.price;
-    document.getElementById('product-detail-description').textContent = product.description;
-    document.getElementById('product-detail-description-en').textContent = product.descriptionEn;
-    document.getElementById('product-detail-name').textContent = product.title;
-    document.getElementById('product-detail-name-en').textContent = product.titleEn;
-    document.getElementById('product-detail-type').textContent = `${product.type} - ${product.subcategory}`;
-    document.getElementById('product-detail-type-en').textContent = `${product.typeEn} - ${product.subcategoryEn}`;
-    
-    // تحميل تقييمات المنتج
-    await loadProductRatings(productId);
-    
-    // إضافة قسم معلومات المنتج
-    const summarySection = document.getElementById('product-summary-section');
-    if (summarySection) {
-        summarySection.innerHTML = `
-            <div class="product-detail-summary">
-                <h3 class="section-label">
-                    <i class="fas fa-info-circle"></i>
-                    <span class="rtl-text">معلومات المنتج</span>
-                    <span class="ltr-text" style="display: none;">Product Information</span>
-                </h3>
-                <div class="product-detail-summary-grid">
-                    <div class="summary-item">
-                        <i class="fas fa-tag"></i>
-                        <div>
-                            <div class="summary-label rtl-text">الفئة</div>
-                            <div class="summary-label ltr-text" style="display: none;">Category</div>
-                            <div class="summary-value rtl-text">${product.category}</div>
-                            <div class="summary-value ltr-text" style="display: none;">${product.categoryEn}</div>
+        const product = allProducts.find(p => p.id === productId);
+        if (!product) return;
+        
+        // إغلاق البحث إذا كان مفتوحاً
+        const searchOverlay = document.getElementById('search-overlay');
+        if (searchOverlay.style.display === 'block') {
+            closeSearch();
+        }
+        
+        currentProductId = productId;
+        currentProductData = product;
+        
+        document.getElementById('product-detail-title').textContent = product.title;
+        document.getElementById('product-detail-title-en').textContent = product.titleEn;
+        document.getElementById('product-detail-poster').src = getProductImage(product);
+        document.getElementById('product-detail-category').textContent = product.subcategory;
+        document.getElementById('product-detail-category-en').textContent = product.subcategoryEn;
+        document.getElementById('product-detail-price').textContent = product.price;
+        document.getElementById('product-detail-description').textContent = product.description;
+        document.getElementById('product-detail-description-en').textContent = product.descriptionEn;
+        document.getElementById('product-detail-name').textContent = product.title;
+        document.getElementById('product-detail-name-en').textContent = product.titleEn;
+        document.getElementById('product-detail-type').textContent = `${product.type} - ${product.subcategory}`;
+        document.getElementById('product-detail-type-en').textContent = `${product.typeEn} - ${product.subcategoryEn}`;
+        
+        await loadProductRatings(productId);
+        
+        const summarySection = document.getElementById('product-summary-section');
+        if (summarySection) {
+            summarySection.innerHTML = `
+                <div class="product-detail-summary">
+                    <h3 class="section-label">
+                        <i class="fas fa-info-circle"></i>
+                        <span class="rtl-text">معلومات المنتج</span>
+                        <span class="ltr-text" style="display: none;">Product Information</span>
+                    </h3>
+                    <div class="product-detail-summary-grid">
+                        <div class="summary-item">
+                            <i class="fas fa-tag"></i>
+                            <div>
+                                <div class="summary-label rtl-text">الفئة</div>
+                                <div class="summary-label ltr-text" style="display: none;">Category</div>
+                                <div class="summary-value rtl-text">${product.category}</div>
+                                <div class="summary-value ltr-text" style="display: none;">${product.categoryEn}</div>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="summary-item">
-                        <i class="fas fa-layer-group"></i>
-                        <div>
-                            <div class="summary-label rtl-text">النوع</div>
-                            <div class="summary-label ltr-text" style="display: none;">Type</div>
-                            <div class="summary-value rtl-text">${product.type}</div>
-                            <div class="summary-value ltr-text" style="display: none;">${product.typeEn}</div>
+                        
+                        <div class="summary-item">
+                            <i class="fas fa-layer-group"></i>
+                            <div>
+                                <div class="summary-label rtl-text">النوع</div>
+                                <div class="summary-label ltr-text" style="display: none;">Type</div>
+                                <div class="summary-value rtl-text">${product.type}</div>
+                                <div class="summary-value ltr-text" style="display: none;">${product.typeEn}</div>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="summary-item">
-                        <i class="fas fa-dollar-sign"></i>
-                        <div>
-                            <div class="summary-label rtl-text">السعر</div>
-                            <div class="summary-label ltr-text" style="display: none;">Price</div>
-                            <div class="summary-value">${product.price}</div>
+                        
+                        <div class="summary-item">
+                            <i class="fas fa-dollar-sign"></i>
+                            <div>
+                                <div class="summary-label rtl-text">السعر</div>
+                                <div class="summary-label ltr-text" style="display: none;">Price</div>
+                                <div class="summary-value">${product.price}</div>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="summary-item">
-                        <i class="fas fa-box"></i>
-                        <div>
-                            <div class="summary-label rtl-text">التنسيق</div>
-                            <div class="summary-label ltr-text" style="display: none;">Format</div>
-                            <div class="summary-value rtl-text">${product.format}</div>
-                            <div class="summary-value ltr-text" style="display: none;">${product.formatEn}</div>
+                        
+                        <div class="summary-item">
+                            <i class="fas fa-box"></i>
+                            <div>
+                                <div class="summary-label rtl-text">التنسيق</div>
+                                <div class="summary-label ltr-text" style="display: none;">Format</div>
+                                <div class="summary-value rtl-text">${product.format}</div>
+                                <div class="summary-value ltr-text" style="display: none;">${product.formatEn}</div>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="summary-item">
-                        <i class="fas fa-star"></i>
-                        <div>
-                            <div class="summary-label rtl-text">التقييم</div>
-                            <div class="summary-label ltr-text" style="display: none;">Rating</div>
-                            <div class="summary-value" id="product-rating-display">
-                                <!-- سيتم تعبئته ديناميكياً -->
+                        
+                        <div class="summary-item">
+                            <i class="fas fa-star"></i>
+                            <div>
+                                <div class="summary-label rtl-text">التقييم</div>
+                                <div class="summary-label ltr-text" style="display: none;">Rating</div>
+                                <div class="summary-value" id="product-rating-display">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="summary-item">
+                            <i class="fas fa-calendar-alt"></i>
+                            <div>
+                                <div class="summary-label rtl-text">التصنيف العمري</div>
+                                <div class="summary-label ltr-text" style="display: none;">Age Rating</div>
+                                <div class="summary-value rtl-text">${product.ratingCategory === 'all' ? 'جميع الأعمار' : product.ratingCategory + '+'}</div>
+                                <div class="summary-value ltr-text" style="display: none;">${product.ratingCategory === 'all' ? 'All Ages' : product.ratingCategory + '+'}</div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="summary-item">
-                        <i class="fas fa-calendar-alt"></i>
-                        <div>
-                            <div class="summary-label rtl-text">التصنيف العمري</div>
-                            <div class="summary-label ltr-text" style="display: none;">Age Rating</div>
-                            <div class="summary-value rtl-text">${product.ratingCategory === 'all' ? 'جميع الأعمار' : product.ratingCategory + '+'}</div>
-                            <div class="summary-value ltr-text" style="display: none;">${product.ratingCategory === 'all' ? 'All Ages' : product.ratingCategory + '+'}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
-    
-    // التحقق من شراء المستخدم للمنتج
-    const user = checkAuth();
-    if (user) {
-        const purchaseStatus = await checkProductPurchase(productId);
-        userRatingForCurrentProduct = await getUserRatingForProduct(productId, user.uid);
-        
-        // إنشاء واجهة التقييم في قسم معلومات المنتج
-        createRatingInProductInfo(purchaseStatus.purchased, userRatingForCurrentProduct);
-    } else {
-        // إذا لم يكن مسجلاً دخول
-        const ratingDisplay = document.getElementById('product-rating-display');
-        if (ratingDisplay) {
-            ratingDisplay.innerHTML = `
-                <div style="color: var(--text-secondary); font-size: 14px;">
-                    <i class="fas fa-user" style="margin-left: 5px;"></i>
-                    <span class="rtl-text">تسجيل الدخول مطلوب</span>
-                    <span class="ltr-text" style="display: none;">Login required</span>
                 </div>
             `;
         }
-    }
-    
-    // تحديث العناصر بناءً على اللغة
-    updateLanguageElements();
-    
-    // إظهار/إخفاء قسم الأجزاء (للفيديوهات فقط)
-    const chaptersSection = document.getElementById('chapters-section');
-    if (chaptersSection) {
-        if (product.chapters && product.chapters.length > 0) {
-            chaptersSection.style.display = 'block';
-            const chaptersContainer = document.getElementById('product-chapters');
-            if (chaptersContainer) {
-                chaptersContainer.innerHTML = '';
-                product.chapters.forEach((chapter, index) => {
-                    // تحديد رابط الفيديو للفصل
-                    // الأولوية: رابط خاص بالفصل -> رابط المنتج -> رابط يوتيوب للمنتج
-                    let videoUrlForChapter = '';
-                    let videoTitleForChapter = chapter.title || product.title || 'فيديو';
-                    
-                    if (chapter.videoUrl) {
-                        videoUrlForChapter = chapter.videoUrl;
-                    } else if (product.videoUrl) {
-                        videoUrlForChapter = product.videoUrl;
-                    } else if (product.youtubeUrl) {
-                        videoUrlForChapter = product.youtubeUrl;
-                    } else if (product.videoSource === 'youtube' && product.youtubeUrl) {
-                        videoUrlForChapter = product.youtubeUrl;
-                    }
-                    
-                    // إنشاء معرف فريد للفصل إذا لم يكن موجوداً
-                    const chapterId = chapter.id || `chapter_${productId}_${index}`;
-                    
-                    const chapterElement = document.createElement('div');
-                    chapterElement.className = 'chapter-item';
-                    chapterElement.innerHTML = `
-                        <div class="chapter-info">
-                            <h4>${chapter.title}</h4>
-                            <div class="chapter-duration">
-                                <i class="far fa-clock"></i> ${chapter.duration || 'غير محدد'}
-                            </div>
-                        </div>
-                        <button class="watch-button" onclick="watchChapter('${chapterId}', '${escapeHtml(videoUrlForChapter)}', '${escapeHtml(videoTitleForChapter)}')">
-                            <i class="fas fa-play"></i>
-                            <span class="rtl-text">مشاهدة</span>
-                            <span class="ltr-text" style="display: none;">Watch</span>
-                        </button>
-                    `;
-                    chaptersContainer.appendChild(chapterElement);
-                });
-            }
+        
+        const user = checkAuth();
+        if (user) {
+            const purchaseStatus = await checkProductPurchase(productId);
+            userRatingForCurrentProduct = await getUserRatingForProduct(productId, user.uid);
+            
+            createRatingInProductInfo(purchaseStatus.purchased, userRatingForCurrentProduct);
         } else {
-            chaptersSection.style.display = 'none';
+            const ratingDisplay = document.getElementById('product-rating-display');
+            if (ratingDisplay) {
+                ratingDisplay.innerHTML = `
+                    <div style="color: var(--text-secondary); font-size: 14px;">
+                        <i class="fas fa-user" style="margin-left: 5px;"></i>
+                        <span class="rtl-text">تسجيل الدخول مطلوب</span>
+                        <span class="ltr-text" style="display: none;">Login required</span>
+                    </div>
+                `;
+            }
         }
-    }
-    
-    // إنشاء قسم التعليقات
-    const commentsSection = document.getElementById('comments-section');
-    if (commentsSection) {
-        commentsSection.innerHTML = `
-            <div class="section-header">
-                <h3 id="comments-count" class="section-label">
-                    <i class="fas fa-comments"></i>
-                    <span class="rtl-text">التعليقات (0)</span>
-                    <span class="ltr-text" style="display: none;">Comments (0)</span>
-                </h3>
-            </div>
-            
-            <div class="comment-form">
-                <div class="comment-input-container">
-                    <textarea 
-                        id="product-comment-input" 
-                        class="comment-input" 
-                        placeholder="${currentLanguage === 'ar' ? 'اكتب تعليقك هنا...' : 'Write your comment here...'}"
-                        rows="3"
-                    ></textarea>
-                    <button class="comment-submit-btn" onclick="addProductComment()">
-                        <i class="fas fa-paper-plane"></i>
-                        <span class="rtl-text">إرسال</span>
-                        <span class="ltr-text" style="display: none;">Send</span>
-                    </button>
+        
+        updateLanguageElements();
+        
+        const chaptersSection = document.getElementById('chapters-section');
+        if (chaptersSection) {
+            if (product.chapters && product.chapters.length > 0) {
+                chaptersSection.style.display = 'block';
+                const chaptersContainer = document.getElementById('product-chapters');
+                if (chaptersContainer) {
+                    chaptersContainer.innerHTML = '';
+                    product.chapters.forEach((chapter, index) => {
+                        let videoUrlForChapter = '';
+                        let videoTitleForChapter = chapter.title || product.title || 'فيديو';
+                        
+                        if (chapter.videoUrl) {
+                            videoUrlForChapter = chapter.videoUrl;
+                        } else if (product.videoUrl) {
+                            videoUrlForChapter = product.videoUrl;
+                        } else if (product.youtubeUrl) {
+                            videoUrlForChapter = product.youtubeUrl;
+                        } else if (product.videoSource === 'youtube' && product.youtubeUrl) {
+                            videoUrlForChapter = product.youtubeUrl;
+                        }
+                        
+                        const chapterId = chapter.id || `chapter_${productId}_${index}`;
+                        
+                        const chapterElement = document.createElement('div');
+                        chapterElement.className = 'chapter-item';
+                        chapterElement.innerHTML = `
+                            <div class="chapter-info">
+                                <h4>${chapter.title}</h4>
+                                <div class="chapter-duration">
+                                    <i class="far fa-clock"></i> ${chapter.duration || 'غير محدد'}
+                                </div>
+                            </div>
+                            <button class="watch-button" onclick="watchChapter('${chapterId}', '${escapeHtml(videoUrlForChapter)}', '${escapeHtml(videoTitleForChapter)}')">
+                                <i class="fas fa-play"></i>
+                                <span class="rtl-text">مشاهدة</span>
+                                <span class="ltr-text" style="display: none;">Watch</span>
+                            </button>
+                        `;
+                        chaptersContainer.appendChild(chapterElement);
+                    });
+                }
+            } else {
+                chaptersSection.style.display = 'none';
+            }
+        }
+        
+        const commentsSection = document.getElementById('comments-section');
+        if (commentsSection) {
+            commentsSection.innerHTML = `
+                <div class="section-header">
+                    <h3 id="comments-count" class="section-label">
+                        <i class="fas fa-comments"></i>
+                        <span class="rtl-text">التعليقات (0)</span>
+                        <span class="ltr-text" style="display: none;">Comments (0)</span>
+                    </h3>
                 </div>
-            </div>
-            
-            <div id="product-comments" class="comments-list">
-                <!-- التعليقات سيتم تحميلها هنا -->
-            </div>
-        `;
+                
+                <div class="comment-form">
+                    <div class="comment-input-container">
+                        <textarea 
+                            id="product-comment-input" 
+                            class="comment-input" 
+                            placeholder="${currentLanguage === 'ar' ? 'اكتب تعليقك هنا...' : 'Write your comment here...'}"
+                            rows="3"
+                        ></textarea>
+                        <button class="submit-comment" onclick="addProductComment()">
+                            <i class="fas fa-paper-plane"></i>
+                            <span class="rtl-text">إرسال</span>
+                            <span class="ltr-text" style="display: none;">Send</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="product-comments" class="comments-list">
+                </div>
+            `;
+        }
+        
+        await loadCommentsFromFirebase(productId);
+        
+        document.getElementById('product-detail-overlay').style.display = 'block';
+        document.body.style.overflow = 'hidden';
+        
+        updateLanguageElements();
     }
-    
-    // تحميل التعليقات من Firebase
-    await loadCommentsFromFirebase(productId);
-    
-    // إظهار اللوحة
-    document.getElementById('product-detail-overlay').style.display = 'block';
-    document.body.style.overflow = 'hidden';
-    
-    // تحديث العناصر بناءً على اللغة
-    updateLanguageElements();
-}
 
-
+    // ====== إغلاق تفاصيل المنتج ======
     function closeProductDetail() {
         document.getElementById('product-detail-overlay').style.display = 'none';
         document.body.style.overflow = 'auto';
         currentProductId = null;
+        currentProductData = null;
         selectedRating = 0;
         hoveredRating = 0;
         userRatingForCurrentProduct = null;
     }
-    
-    // ====== دالة تشغيل الفيديو - تشغيل مباشر داخل iframe بدون الانتقال لليوتيوب ======
-function watchChapter(chapterId, videoUrl, videoTitle) {
-    // منع أي سلوك افتراضي
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
-    
-    if (!videoUrl) {
-        showNotification(currentLanguage === 'ar' ? 'لا يوجد رابط فيديو لهذا الجزء' : 'No video URL for this chapter', 'error');
-        return;
-    }
-    
-    // استخراج معرف يوتيوب
-    let videoId = null;
-    let isYouTube = false;
-    
-    const youtubePatterns = [
-        /(?:youtube\.com\/watch\?v=)([^&\n?#]+)/,
-        /(?:youtu\.be\/)([^&\n?#]+)/,
-        /(?:youtube\.com\/embed\/)([^&\n?#]+)/,
-        /(?:youtube\.com\/shorts\/)([^&\n?#]+)/
-    ];
-    
-    for (const pattern of youtubePatterns) {
-        const match = videoUrl.match(pattern);
-        if (match && match[1]) {
-            videoId = match[1];
-            isYouTube = true;
-            break;
+
+    // ====== دالة تشغيل الفيديو ======
+    function watchChapter(chapterId, videoUrl, videoTitle) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
         }
-    }
-    
-    // إنشاء نافذة منبثقة
-    const modal = document.createElement('div');
-    modal.id = 'video-popup-modal';
-    modal.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.95);
-        z-index: 10000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        backdrop-filter: blur(8px);
-        animation: fadeInModal 0.3s ease-out;
-    `;
-    
-    // حاوية الفيديو
-    const container = document.createElement('div');
-    container.style.cssText = `
-        position: relative;
-        width: 90%;
-        max-width: 1000px;
-        background: #0f0f0f;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-        border: 1px solid #3f3f3f;
-        animation: slideUpModal 0.3s ease-out;
-    `;
-    
-    // إضافة أنماط التحريك
-    const styleSheet = document.createElement('style');
-    styleSheet.textContent = `
-        @keyframes fadeInModal {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        
+        if (!videoUrl) {
+            showNotification(currentLanguage === 'ar' ? 'لا يوجد رابط فيديو لهذا الجزء' : 'No video URL for this chapter', 'error');
+            return;
         }
-        @keyframes slideUpModal {
-            from { 
-                transform: translateY(50px);
-                opacity: 0;
-            }
-            to { 
-                transform: translateY(0);
-                opacity: 1;
+        
+        let videoId = null;
+        let isYouTube = false;
+        
+        const youtubePatterns = [
+            /(?:youtube\.com\/watch\?v=)([^&\n?#]+)/,
+            /(?:youtu\.be\/)([^&\n?#]+)/,
+            /(?:youtube\.com\/embed\/)([^&\n?#]+)/,
+            /(?:youtube\.com\/shorts\/)([^&\n?#]+)/
+        ];
+        
+        for (const pattern of youtubePatterns) {
+            const match = videoUrl.match(pattern);
+            if (match && match[1]) {
+                videoId = match[1];
+                isYouTube = true;
+                break;
             }
         }
-    `;
-    document.head.appendChild(styleSheet);
-    
-    // شريط العنوان
-    const header = document.createElement('div');
-    header.style.cssText = `
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 12px 20px;
-        background: linear-gradient(135deg, #000000 , #F78738);
-        color: white;
-        border-bottom: 1px solid #000000;
-    `;
-    header.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <span style="font-weight: 500; font-size: 16px;">${escapeHtml(videoTitle) || (currentLanguage === 'ar' ? 'تشغيل الفيديو' : 'Playing Video')}</span>
-        </div>
-        <button id="close-video-popup" style="
-            background: rgba(255,255,255,0.1);
-            border: none;
-            color: white;
-            font-size: 18px;
-            cursor: pointer;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
+        
+        const modal = document.createElement('div');
+        modal.id = 'video-popup-modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
-        ">
-            <i class="fas fa-times"></i>
-        </button>
-    `;
-    
-    // حاوية الفيديو (نسبة 16:9)
-    const videoWrapper = document.createElement('div');
-    videoWrapper.style.cssText = `
-        position: relative;
-        width: 100%;
-        padding-bottom: 56.25%;
-        background: #000;
-    `;
-    
-    let iframe = null;
-    
-    if (isYouTube && videoId) {
-        // استخدام رابط embed الرسمي من YouTube - يعمل مباشرة داخل الصفحة
-        iframe = document.createElement('iframe');
-        // إضافة المعاملات المناسبة للتشغيل السلس
-        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1&rel=0&modestbranding=0&showinfo=1&iv_load_policy=3&enablejsapi=1&origin=${window.location.origin}`;
-        iframe.style.cssText = `
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
+            backdrop-filter: blur(8px);
+            animation: fadeInModal 0.3s ease-out;
         `;
-        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-        iframe.allowFullscreen = true;
-        videoWrapper.appendChild(iframe);
-    } 
-    else if (videoUrl.match(/\.(mp4|webm|ogg|mov)$/i)) {
-        // فيديو محلي مباشر
-        const video = document.createElement('video');
-        video.style.cssText = `
-            position: absolute;
-            top: 0;
-            left: 0;
+        
+        const container = document.createElement('div');
+        container.style.cssText = `
+            position: relative;
+            width: 90%;
+            max-width: 1000px;
+            background: #0f0f0f;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            border: 1px solid #3f3f3f;
+            animation: slideUpModal 0.3s ease-out;
+        `;
+        
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = `
+            @keyframes fadeInModal {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            @keyframes slideUpModal {
+                from { 
+                    transform: translateY(50px);
+                    opacity: 0;
+                }
+                to { 
+                    transform: translateY(0);
+                    opacity: 1;
+                }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+        
+        const header = document.createElement('div');
+        header.style.cssText = `
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #000000 , #F78738);
+            color: white;
+            border-bottom: 1px solid #000000;
+        `;
+        header.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <span style="font-weight: 500; font-size: 16px;">${escapeHtml(videoTitle) || (currentLanguage === 'ar' ? 'تشغيل الفيديو' : 'Playing Video')}</span>
+            </div>
+            <button id="close-video-popup" style="
+                background: rgba(255,255,255,0.1);
+                border: none;
+                color: white;
+                font-size: 18px;
+                cursor: pointer;
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s;
+            ">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        
+        const videoWrapper = document.createElement('div');
+        videoWrapper.style.cssText = `
+            position: relative;
             width: 100%;
-            height: 100%;
-            object-fit: contain;
+            padding-bottom: 56.25%;
             background: #000;
         `;
-        video.controls = true;
-        video.autoplay = true;
         
-        const source = document.createElement('source');
-        source.src = videoUrl;
-        source.type = `video/${videoUrl.split('.').pop()}`;
-        video.appendChild(source);
+        let iframe = null;
         
-        video.innerHTML = currentLanguage === 'ar' ? 'متصفحك لا يدعم تشغيل الفيديو' : 'Your browser does not support video playback';
-        videoWrapper.appendChild(video);
+        if (isYouTube && videoId) {
+            iframe = document.createElement('iframe');
+            iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1&rel=0&modestbranding=0&showinfo=1&iv_load_policy=3&enablejsapi=1&origin=${window.location.origin}`;
+            iframe.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                border: none;
+            `;
+            iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+            iframe.allowFullscreen = true;
+            videoWrapper.appendChild(iframe);
+        } 
+        else if (videoUrl.match(/\.(mp4|webm|ogg|mov)$/i)) {
+            const video = document.createElement('video');
+            video.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                background: #000;
+            `;
+            video.controls = true;
+            video.autoplay = true;
+            
+            const source = document.createElement('source');
+            source.src = videoUrl;
+            source.type = `video/${videoUrl.split('.').pop()}`;
+            video.appendChild(source);
+            
+            video.innerHTML = currentLanguage === 'ar' ? 'متصفحك لا يدعم تشغيل الفيديو' : 'Your browser does not support video playback';
+            videoWrapper.appendChild(video);
+            
+            video.play().catch(e => console.log('Auto-play prevented:', e));
+        }
+        else {
+            iframe = document.createElement('iframe');
+            iframe.src = videoUrl;
+            iframe.style.cssText = `
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                border: none;
+            `;
+            iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+            iframe.allowFullscreen = true;
+            videoWrapper.appendChild(iframe);
+        }
         
-        // محاولة التشغيل التلقائي
-        video.play().catch(e => console.log('Auto-play prevented:', e));
-    }
-    else {
-        // محاولة معالجة روابط أخرى (مثل روابط التضمين المباشرة)
-        iframe = document.createElement('iframe');
-        iframe.src = videoUrl;
-        iframe.style.cssText = `
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
+        container.appendChild(header);
+        container.appendChild(videoWrapper);
+        
+        const controlsBar = document.createElement('div');
+        controlsBar.style.cssText = `
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: #1a1a2e;
+            border-top: 1px solid #2c3e50;
+            flex-wrap: wrap;
+            gap: 10px;
         `;
-        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-        iframe.allowFullscreen = true;
-        videoWrapper.appendChild(iframe);
-    }
-    
-    container.appendChild(header);
-    container.appendChild(videoWrapper);
-    
-    // إضافة أزرار تحكم إضافية أسفل الفيديو
-    const controlsBar = document.createElement('div');
-    controlsBar.style.cssText = `
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 12px 20px;
-        background: #1a1a2e;
-        border-top: 1px solid #2c3e50;
-        flex-wrap: wrap;
-        gap: 10px;
-    `;
-    
-    controlsBar.innerHTML = `
-        <div style="display: flex; gap: 15px;">
-            <button id="fullscreen-btn" style="
-                background: rgba(255,255,255,0.1);
-                border: none;
-                color: white;
-                padding: 8px 16px;
-                border-radius: 8px;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                transition: all 0.2s;
-            ">
-                <i class="fas fa-expand"></i>
-                <span>${currentLanguage === 'ar' ? 'ملء الشاشة' : 'Fullscreen'}</span>
-            </button>
-            <button id="copy-link-btn" style="
-                background: rgba(255,255,255,0.1);
-                border: none;
-                color: white;
-                padding: 8px 16px;
-                border-radius: 8px;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                transition: all 0.2s;
-            ">
-                <i class="fas fa-link"></i>
-                <span>${currentLanguage === 'ar' ? 'نسخ الرابط' : 'Copy Link'}</span>
-            </button>
-        </div>
-        <div style="color: #888; font-size: 12px;">
-            <i class="fas fa-info-circle"></i>
-            <span>${currentLanguage === 'ar' ? 'يتم تشغيل الفيديو مباشرة في هذه الصفحة' : 'Video playing directly on this page'}</span>
-        </div>
-    `;
-    
-    container.appendChild(controlsBar);
-    modal.appendChild(container);
-    document.body.appendChild(modal);
-    document.body.style.overflow = 'hidden';
-    
-    // وظيفة إغلاق النافذة
-    function closeModal() {
-        if (iframe) {
-            // إيقاف الفيديو عند الإغلاق
-            if (isYouTube && iframe.contentWindow) {
+        
+        controlsBar.innerHTML = `
+            <div style="display: flex; gap: 15px;">
+                <button id="fullscreen-btn" style="
+                    background: rgba(255,255,255,0.1);
+                    border: none;
+                    color: white;
+                    padding: 8px 16px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    transition: all 0.2s;
+                ">
+                    <i class="fas fa-expand"></i>
+                    <span>${currentLanguage === 'ar' ? 'ملء الشاشة' : 'Fullscreen'}</span>
+                </button>
+                <button id="copy-link-btn" style="
+                    background: rgba(255,255,255,0.1);
+                    border: none;
+                    color: white;
+                    padding: 8px 16px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    transition: all 0.2s;
+                ">
+                    <i class="fas fa-link"></i>
+                    <span>${currentLanguage === 'ar' ? 'نسخ الرابط' : 'Copy Link'}</span>
+                </button>
+            </div>
+            <div style="color: #888; font-size: 12px;">
+                <i class="fas fa-info-circle"></i>
+                <span>${currentLanguage === 'ar' ? 'يتم تشغيل الفيديو مباشرة في هذه الصفحة' : 'Video playing directly on this page'}</span>
+            </div>
+        `;
+        
+        container.appendChild(controlsBar);
+        modal.appendChild(container);
+        document.body.appendChild(modal);
+        document.body.style.overflow = 'hidden';
+        
+        function closeModal() {
+            if (iframe) {
+                if (isYouTube && iframe.contentWindow) {
+                    try {
+                        iframe.contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', '*');
+                    } catch(e) {}
+                }
+                iframe.src = 'about:blank';
+            }
+            modal.remove();
+            document.body.style.overflow = '';
+        }
+        
+        const closeBtn = document.getElementById('close-video-popup');
+        if (closeBtn) {
+            closeBtn.onclick = closeModal;
+            closeBtn.onmouseenter = () => closeBtn.style.background = 'rgba(255,255,255,0.2)';
+            closeBtn.onmouseleave = () => closeBtn.style.background = 'rgba(255,255,255,0.1)';
+        }
+        
+        modal.onclick = (e) => {
+            if (e.target === modal) closeModal();
+        };
+        
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        if (fullscreenBtn) {
+            fullscreenBtn.onclick = () => {
+                const elem = container;
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen();
+                } else if (elem.msRequestFullscreen) {
+                    elem.msRequestFullscreen();
+                }
+            };
+            fullscreenBtn.onmouseenter = () => fullscreenBtn.style.background = 'rgba(255,255,255,0.2)';
+            fullscreenBtn.onmouseleave = () => fullscreenBtn.style.background = 'rgba(255,255,255,0.1)';
+        }
+        
+        const copyLinkBtn = document.getElementById('copy-link-btn');
+        if (copyLinkBtn) {
+            copyLinkBtn.onclick = async () => {
                 try {
-                    // محاولة إرسال أمر إيقاف (اختياري)
-                    iframe.contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', '*');
-                } catch(e) {}
-            }
-            iframe.src = 'about:blank';
+                    await navigator.clipboard.writeText(videoUrl);
+                    showNotification(currentLanguage === 'ar' ? 'تم نسخ رابط الفيديو' : 'Video link copied');
+                } catch(err) {
+                    console.error('Failed to copy:', err);
+                    showNotification(currentLanguage === 'ar' ? 'فشل نسخ الرابط' : 'Failed to copy link', 'error');
+                }
+            };
+            copyLinkBtn.onmouseenter = () => copyLinkBtn.style.background = 'rgba(255,255,255,0.2)';
+            copyLinkBtn.onmouseleave = () => copyLinkBtn.style.background = 'rgba(255,255,255,0.1)';
         }
-        modal.remove();
-        document.body.style.overflow = '';
-    }
-    
-    // أحداث الإغلاق
-    const closeBtn = document.getElementById('close-video-popup');
-    if (closeBtn) {
-        closeBtn.onclick = closeModal;
-        closeBtn.onmouseenter = () => closeBtn.style.background = 'rgba(255,255,255,0.2)';
-        closeBtn.onmouseleave = () => closeBtn.style.background = 'rgba(255,255,255,0.1)';
-    }
-    
-    modal.onclick = (e) => {
-        if (e.target === modal) closeModal();
-    };
-    
-    // زر ملء الشاشة
-    const fullscreenBtn = document.getElementById('fullscreen-btn');
-    if (fullscreenBtn) {
-        fullscreenBtn.onclick = () => {
-            const elem = container;
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) {
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) {
-                elem.msRequestFullscreen();
+        
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+                document.removeEventListener('keydown', escHandler);
             }
         };
-        fullscreenBtn.onmouseenter = () => fullscreenBtn.style.background = 'rgba(255,255,255,0.2)';
-        fullscreenBtn.onmouseleave = () => fullscreenBtn.style.background = 'rgba(255,255,255,0.1)';
+        document.addEventListener('keydown', escHandler);
     }
-    
-    // زر نسخ الرابط
-    const copyLinkBtn = document.getElementById('copy-link-btn');
-    if (copyLinkBtn) {
-        copyLinkBtn.onclick = async () => {
-            try {
-                await navigator.clipboard.writeText(videoUrl);
-                showNotification(currentLanguage === 'ar' ? 'تم نسخ رابط الفيديو' : 'Video link copied');
-            } catch(err) {
-                console.error('Failed to copy:', err);
-                showNotification(currentLanguage === 'ar' ? 'فشل نسخ الرابط' : 'Failed to copy link', 'error');
-            }
-        };
-        copyLinkBtn.onmouseenter = () => copyLinkBtn.style.background = 'rgba(255,255,255,0.2)';
-        copyLinkBtn.onmouseleave = () => copyLinkBtn.style.background = 'rgba(255,255,255,0.1)';
-    }
-    
-    // إغلاق بالضغط على ESC
-    const escHandler = (e) => {
-        if (e.key === 'Escape') {
-            closeModal();
-            document.removeEventListener('keydown', escHandler);
-        }
-    };
-    document.addEventListener('keydown', escHandler);
-}
 
-function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-    }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
-        return c;
-    });
-}
-    
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+
     // ====== إضافة تعليق مع Firebase ======
     async function addProductComment() {
         const user = checkAuthBeforeComment();
@@ -4975,7 +5136,6 @@ function escapeHtml(str) {
         }
         
         try {
-            // إنشاء مرجع للتعليقات
             const commentsRef = ref(database, 'comments/' + currentProductId);
             const newCommentRef = push(commentsRef);
             
@@ -4991,34 +5151,39 @@ function escapeHtml(str) {
             
             await set(newCommentRef, commentData);
             
-            // إضافة التعليق إلى الواجهة مباشرة
             const commentsContainer = document.getElementById('product-comments');
             if (commentsContainer) {
                 const commentElement = document.createElement('div');
                 commentElement.className = 'comment-item';
+                const isOwner = user.uid === commentData.authorId;
                 commentElement.innerHTML = `
                     <div class="comment-header">
                         <span class="comment-author">${commentData.author}</span>
                         <span class="comment-date">${formatCommentDate(commentData.date)}</span>
                     </div>
                     <p class="comment-text">${commentData.text}</p>
+                    <div class="comment-actions">
+                        ${isOwner ? `
+                            <button class="delete-comment-btn" onclick="deleteComment('${currentProductId}', '${newCommentRef.key}')">
+                                <i class="fas fa-trash"></i>
+                                <span class="rtl-text">حذف</span>
+                                <span class="ltr-text" style="display: none;">Delete</span>
+                            </button>
+                        ` : ''}
+                    </div>
                 `;
                 
-                // إضافة التعليق في الأعلى
                 if (commentsContainer.firstChild) {
                     commentsContainer.insertBefore(commentElement, commentsContainer.firstChild);
                 } else {
                     commentsContainer.appendChild(commentElement);
                 }
                 
-                // تحديث عداد التعليقات
                 updateCommentsCount();
             }
             
-            // مسح حقل الإدخال
             input.value = '';
             
-            // إظهار إشعار النجاح
             showNotification(currentLanguage === 'ar' ? 
                 'تمت إضافة تعليقك بنجاح' : 
                 'Your comment has been added successfully');
@@ -5030,7 +5195,66 @@ function escapeHtml(str) {
                 'Error adding comment');
         }
     }
-    
+
+    // ====== حذف تعليق ======
+    async function deleteComment(productId, commentId) {
+        if (!currentUser) {
+            showNotification(currentLanguage === 'ar' ? 
+                'الرجاء تسجيل الدخول' : 
+                'Please login');
+            return;
+        }
+        
+        try {
+            // التحقق من ملكية التعليق
+            const commentRef = ref(database, `comments/${productId}/${commentId}`);
+            const snapshot = await get(commentRef);
+            
+            if (!snapshot.exists()) {
+                showNotification(currentLanguage === 'ar' ? 
+                    'التعليق غير موجود' : 
+                    'Comment not found');
+                return;
+            }
+            
+            const commentData = snapshot.val();
+            if (commentData.authorId !== currentUser.uid) {
+                showNotification(currentLanguage === 'ar' ? 
+                    'لا يمكنك حذف تعليق ليس لك' : 
+                    'You cannot delete a comment that is not yours');
+                return;
+            }
+            
+            // حذف التعليق
+            await remove(commentRef);
+            
+            // إزالة من الواجهة
+            const commentsContainer = document.getElementById('product-comments');
+            if (commentsContainer) {
+                const commentElements = commentsContainer.querySelectorAll('.comment-item');
+                for (const el of commentElements) {
+                    // البحث عن الزر الذي يحتوي على نفس معرف التعليق
+                    const deleteBtn = el.querySelector(`[onclick*="${commentId}"]`);
+                    if (deleteBtn) {
+                        el.remove();
+                        break;
+                    }
+                }
+                updateCommentsCount();
+            }
+            
+            showNotification(currentLanguage === 'ar' ? 
+                'تم حذف التعليق بنجاح' : 
+                'Comment deleted successfully');
+                
+        } catch (error) {
+            console.error('Error deleting comment:', error);
+            showNotification(currentLanguage === 'ar' ? 
+                'حدث خطأ أثناء حذف التعليق' : 
+                'Error deleting comment');
+        }
+    }
+
     // ====== تحميل التعليقات من Firebase ======
     async function loadCommentsFromFirebase(productId) {
         try {
@@ -5046,7 +5270,6 @@ function escapeHtml(str) {
                 const comments = snapshot.val();
                 const commentsArray = [];
                 
-                // تحويل التعليقات إلى مصفوفة
                 Object.keys(comments).forEach(commentId => {
                     const comment = comments[commentId];
                     commentsArray.push({
@@ -5055,20 +5278,31 @@ function escapeHtml(str) {
                     });
                 });
                 
-                // ترتيب التعليقات من الأحدث إلى الأقدم
                 commentsArray.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
                 
-                // عرض التعليقات
                 if (commentsArray.length > 0) {
+                    const user = checkAuth();
+                    const currentUserId = user ? user.uid : null;
+                    
                     commentsArray.forEach(comment => {
                         const commentElement = document.createElement('div');
                         commentElement.className = 'comment-item';
+                        const isOwner = currentUserId && comment.authorId === currentUserId;
                         commentElement.innerHTML = `
                             <div class="comment-header">
                                 <span class="comment-author">${comment.author}</span>
                                 <span class="comment-date">${formatCommentDate(comment.date)}</span>
                             </div>
                             <p class="comment-text">${comment.text}</p>
+                            <div class="comment-actions">
+                                ${isOwner ? `
+                                    <button class="delete-comment-btn" onclick="deleteComment('${productId}', '${comment.id}')">
+                                        <i class="fas fa-trash"></i>
+                                        <span class="rtl-text">حذف</span>
+                                        <span class="ltr-text" style="display: none;">Delete</span>
+                                    </button>
+                                ` : ''}
+                            </div>
                         `;
                         commentsContainer.appendChild(commentElement);
                     });
@@ -5079,7 +5313,6 @@ function escapeHtml(str) {
                 showNoCommentsMessage(commentsContainer);
             }
             
-            // تحديث عداد التعليقات
             updateCommentsCount();
             
         } catch (error) {
@@ -5090,13 +5323,12 @@ function escapeHtml(str) {
             }
         }
     }
-    
+
     // ====== تحديث عداد التعليقات ======
     function updateCommentsCount() {
         const commentsContainer = document.getElementById('product-comments');
         if (!commentsContainer) return;
         
-        // عد العناصر التي لديها كلاس comment-item
         const commentItems = commentsContainer.querySelectorAll('.comment-item:not(.no-comments)');
         const commentsCount = commentItems.length;
         
@@ -5109,7 +5341,7 @@ function escapeHtml(str) {
             }
         }
     }
-    
+
     function showNoCommentsMessage(container) {
         container.innerHTML = `
             <div class="comment-item no-comments">
@@ -5121,11 +5353,11 @@ function escapeHtml(str) {
             </div>
         `;
     }
-    
+
     function showErrorMessage(container) {
         container.innerHTML = `
             <div class="comment-item">
-                <p class="comment-text" style="text-align: center; color: var(--error-color); padding: 20px;">
+                <p class="comment-text" style="text-align: center; color: var(--danger-color); padding: 20px;">
                     <i class="fas fa-exclamation-triangle"></i><br>
                     <span class="rtl-text">حدث خطأ في تحميل التعليقات</span>
                     <span class="ltr-text" style="display: none;">Error loading comments</span>
@@ -5133,7 +5365,7 @@ function escapeHtml(str) {
             </div>
         `;
     }
-    
+
     function purchaseProduct() {
         const user = checkAuthBeforePurchase();
         if (!user) return;
@@ -5146,7 +5378,6 @@ function escapeHtml(str) {
             return;
         }
         
-        // إضافة المنتج إلى السلة
         addToCart(currentProductId);
         closeProductDetail();
     }
@@ -5161,7 +5392,6 @@ function escapeHtml(str) {
         }
         
         try {
-            // جلب جميع المنتجات من Firebase في كل بحث
             const productsRef = ref(database, 'products');
             const snapshot = await get(productsRef);
             let filteredProducts = [];
@@ -5175,10 +5405,8 @@ function escapeHtml(str) {
                         ...products[productId]
                     };
                     
-                    // التأكد من وجود صورة
                     product.image = getProductImage(product);
                     
-                    // البحث في جميع الحقول
                     const searchFields = [
                         product.title?.toLowerCase() || '',
                         product.titleEn?.toLowerCase() || '',
@@ -5199,7 +5427,6 @@ function escapeHtml(str) {
                     }
                 });
                 
-                // تحديث المنتجات المحلية
                 allProducts = Object.keys(products).map(productId => ({
                     id: productId,
                     ...products[productId],
@@ -5211,7 +5438,6 @@ function escapeHtml(str) {
             
         } catch (error) {
             console.error('Error searching products:', error);
-            // البحث في المنتجات المحلية كبديل
             const localFiltered = allProducts.filter(product => {
                 const searchFields = [
                     product.title?.toLowerCase() || '',
@@ -5323,11 +5549,9 @@ function escapeHtml(str) {
                                 <span class="ltr-text" style="display: none;">Buy</span>
                             </button>
                             
-                            <button class="search-product-card-button" style="background: var(--gradient-secondary);" 
+                            <button class="search-product-card-button view-btn" 
                                     onclick="event.stopPropagation(); openProductDetail('${product.id}')">
                                 <i class="fas fa-eye"></i>
-                                <span class="rtl-text">عرض</span>
-                                <span class="ltr-text" style="display: none;">View</span>
                             </button>
                         </div>
                     </div>
@@ -5338,7 +5562,6 @@ function escapeHtml(str) {
             container.appendChild(grid);
         }
         
-        // تحديث العداد
         if (currentLanguage === 'ar') {
             document.getElementById('search-count').textContent = `تم العثور على ${products.length} منتج`;
             document.getElementById('search-count-en').style.display = 'none';
@@ -5348,7 +5571,6 @@ function escapeHtml(str) {
             document.getElementById('search-count').style.display = 'none';
         }
         
-        // تحديث العناصر بناءً على اللغة
         updateLanguageElements();
     }
 
@@ -5392,7 +5614,6 @@ function escapeHtml(str) {
     }
 
     function updateLanguageElements() {
-        // تحديث تنسيق المنتج بناءً على اللغة
         const formatElements = document.querySelectorAll('[id*="format"]');
         formatElements.forEach(el => {
             if (currentLanguage === 'ar') {
@@ -5433,34 +5654,49 @@ function escapeHtml(str) {
         }
     }
 
+    // ====== دالة تبديل المظهر ======
+    function toggleTheme() {
+        const themes = ['داكن', 'فاتح', 'تلقائي'];
+        const currentIndex = themes.indexOf(currentTheme);
+        const nextIndex = (currentIndex + 1) % themes.length;
+        currentTheme = themes[nextIndex];
+        
+        const themeNames = {'داكن': 'Dark', 'فاتح': 'Light', 'تلقائي': 'Auto'};
+        const themeValue = document.getElementById('theme-value');
+        if (themeValue) {
+            if (currentLanguage === 'ar') {
+                themeValue.textContent = currentTheme;
+            } else {
+                themeValue.textContent = themeNames[currentTheme];
+            }
+        }
+        
+        localStorage.setItem('theme', currentTheme);
+        applyTheme();
+    }
+
     // ====== تهيئة الصفحة عند التحميل ======
     async function initializePage() {
-        // التحقق من تسجيل الدخول أولاً
         const user = checkAuth();
         if (!user) return;
         
-        // استعادة الاتجاه
         const savedDirection = localStorage.getItem('direction') || 'rtl';
         document.documentElement.setAttribute('dir', savedDirection);
         
-        // استعادة اللغة
         const savedLang = localStorage.getItem('language') || 'ar';
         currentLanguage = savedLang;
         
         if (currentLanguage === 'en') {
-            // تطبيق اللغة الإنجليزية
             document.documentElement.setAttribute('lang', 'en');
             const languageValue = document.getElementById('language-value');
             if (languageValue) languageValue.textContent = 'English';
             document.querySelectorAll('.rtl-text').forEach(el => el.style.display = 'none');
             document.querySelectorAll('.ltr-text').forEach(el => el.style.display = '');
         } else {
-            // تأكد من أن العربية هي الافتراضية
             document.documentElement.setAttribute('lang', 'ar');
             document.documentElement.setAttribute('dir', 'rtl');
         }
         
-        // استعادة وضع العرض
         const savedDisplayMode = localStorage.getItem('displayMode') || 'random';
         displayMode = savedDisplayMode;
         const modeNames = { random: 'عشوائي', rating: 'الأعلى تقييماً', newest: 'الأحدث' };
@@ -5477,7 +5713,6 @@ function escapeHtml(str) {
         updateCartBadge();
         updateSearchPlaceholder();
         
-        // استعادة إعدادات النص
         const savedSize = localStorage.getItem('textSize');
         if (savedSize) {
             const textSizeSlider = document.getElementById('textSizeSlider');
@@ -5487,11 +5722,9 @@ function escapeHtml(str) {
             }
         }
         
-        // استعادة المظهر
         const savedTheme = localStorage.getItem('theme') || 'dark';
         currentTheme = savedTheme;
         
-        // ضبط نص المظهر بناءً على اللغة
         const themeValue = document.getElementById('theme-value');
         if (themeValue) {
             if (currentLanguage === 'ar') {
@@ -5502,16 +5735,11 @@ function escapeHtml(str) {
             }
         }
         
-        // تطبيق المظهر
         applyTheme();
         
-        // تحميل المنتجات من Firebase
         await loadProductsFromFirebase();
-        
-        // إعداد مستمع في الوقت الحقيقي للمنتجات
         setupRealtimeProductsListener();
         
-        // إضافة أحداث الإغلاق
         const productDetailOverlay = document.getElementById('product-detail-overlay');
         if (productDetailOverlay) {
             productDetailOverlay.addEventListener('click', function(e) {
@@ -5530,7 +5758,6 @@ function escapeHtml(str) {
             });
         }
         
-        // إضافة حدث إغلاق لنافذة القصص
         const allStoriesOverlay = document.getElementById('all-stories-overlay');
         if (allStoriesOverlay) {
             allStoriesOverlay.addEventListener('click', function(e) {
@@ -5540,7 +5767,6 @@ function escapeHtml(str) {
             });
         }
         
-        // تحديث المعلومات الشخصية
         updateUserProfile();
     }
 
@@ -5556,14 +5782,12 @@ function escapeHtml(str) {
             if (snapshot.exists()) {
                 const userData = snapshot.val();
                 
-                // تحديث بيانات المستخدم في التخزين المحلي
                 localStorage.setItem('user', JSON.stringify({
                     ...user,
                     username: userData.username,
                     phone: userData.phone
                 }));
                 
-                // تحديث واجهة المستخدم إذا كان هناك مكان لعرض اسم المستخدم
                 const userDisplayElements = document.querySelectorAll('.user-display-name');
                 userDisplayElements.forEach(el => {
                     if (userData.username) {
@@ -5666,6 +5890,31 @@ function escapeHtml(str) {
             color: var(--text-primary);
         }
         
+        .comment-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .delete-comment-btn {
+            background: transparent;
+            border: none;
+            color: var(--danger-color);
+            cursor: pointer;
+            font-size: 13px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            transition: all var(--transition-speed);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .delete-comment-btn:hover {
+            background: rgba(244, 67, 54, 0.1);
+            transform: scale(1.05);
+        }
+        
         @media (max-width: 768px) {
             .product-detail-summary-grid {
                 grid-template-columns: 1fr;
@@ -5692,6 +5941,7 @@ function escapeHtml(str) {
     window.toggleSettings = toggleSettings;
     window.toggleLanguage = toggleLanguage;
     window.toggleDisplayMode = toggleDisplayMode;
+    window.toggleTheme = toggleTheme;
     window.updateTextSize = updateTextSize;
     window.scrollManga = scrollManga;
     window.prevNovelPage = prevNovelPage;
@@ -5702,8 +5952,10 @@ function escapeHtml(str) {
     window.switchVideoTab = switchVideoTab;
     window.openProductDetail = openProductDetail;
     window.closeProductDetail = closeProductDetail;
+    window.viewProductFullscreen = viewProductFullscreen;
     window.watchChapter = watchChapter;
     window.addProductComment = addProductComment;
+    window.deleteComment = deleteComment;
     window.purchaseProduct = purchaseProduct;
     window.openSearch = openSearch;
     window.closeSearch = closeSearch;
@@ -5711,43 +5963,6 @@ function escapeHtml(str) {
     window.scrollToTop = scrollToTop;
     window.openAllStories = openAllStories;
     window.closeAllStories = closeAllStories;
-    window.openPrivacy = function() {
-        alert(currentLanguage === 'ar' ? 'صفحة الخصوصية قيد التطوير' : 'Privacy page under development');
-    };
-    window.openOrderHistory = function() {
-        const user = checkAuth();
-        if (!user) return;
-        alert(currentLanguage === 'ar' ? 'صفحة سجل الطلبات قيد التطوير' : 'Order history page under development');
-    };
-    window.openAccount = function() {
-        const user = checkAuth();
-        if (!user) return;
-        alert(currentLanguage === 'ar' ? 'صفحة الحساب قيد التطوير' : 'Account page under development');
-    };
-    window.openFeedback = function() {
-        const user = checkAuth();
-        if (!user) return;
-        alert(currentLanguage === 'ar' ? 'صفحة الرأي العام قيد التطوير' : 'Feedback page under development');
-    };
-    window.openTerms = function() {
-        alert(currentLanguage === 'ar' ? 'صفحة سياسة الاستخدام قيد التطوير' : 'Terms page under development');
-    };
-    window.openFAQ = function() {
-        alert(currentLanguage === 'ar' ? 'صفحة الأسئلة الشائعة قيد التطوير' : 'FAQ page under development');
-    };
-    window.openContact = function() {
-        alert(currentLanguage === 'ar' ? 'صفحة الاتصال بنا قيد التطوير' : 'Contact page under development');
-    };
-    window.openReport = function() {
-        const user = checkAuth();
-        if (!user) return;
-        alert(currentLanguage === 'ar' ? 'صفحة الإبلاغ عن مشكلة قيد التطوير' : 'Report issue page under development');
-    };
-    window.openSuggestions = function() {
-        const user = checkAuth();
-        if (!user) return;
-        alert(currentLanguage === 'ar' ? 'صفحة المقترحات قيد التطوير' : 'Suggestions page under development');
-    };
     window.hoverStar = hoverStar;
     window.resetStars = resetStars;
     window.selectStar = selectStar;
@@ -5755,7 +5970,6 @@ function escapeHtml(str) {
     window.editRating = editRating;
     window.updateRating = updateRating;
     window.cancelEdit = cancelEdit;
-    window.watchChapter = watchChapter;
     window.escapeHtml = escapeHtml;
 </script>
 </body>
