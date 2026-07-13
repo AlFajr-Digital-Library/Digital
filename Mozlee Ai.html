@@ -1,0 +1,1743 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>المساعد الذكي لمكتبة الفجر الرقمية</title>
+    <link rel="icon" type="image/x-icon" href="img/mozlee.jpg">
+    
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #111118;
+            --bg-card: #16161f;
+            --bg-hover: #1e1e2a;
+            --gold: #d4a853;
+            --gold-light: #f0d078;
+            --gold-dark: #b8922e;
+            --primary: #6c5ce7;
+            --primary-dark: #5a4bd1;
+            --accent: #00d4ff;
+            --surface: #1a1a2e;
+            --surface-light: #222240;
+            --text-primary: #f0ede8;
+            --text-secondary: #b8b5ae;
+            --text-muted: #8a8680;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --border-gold: rgba(212, 168, 83, 0.25);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+            --shadow-gold: 0 4px 20px rgba(212, 168, 83, 0.2);
+            --radius-sm: 10px;
+            --radius-md: 16px;
+            --radius-lg: 20px;
+            --max-chat-width: 800px;
+            --sidebar-width: 250px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            background-image: 
+                radial-gradient(ellipse at 20% 10%, rgba(212, 168, 83, 0.03) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 90%, rgba(108, 92, 231, 0.03) 0%, transparent 55%);
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        /* ====== الشريط الجانبي ====== */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            z-index: 100;
+            position: relative;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 15%;
+            right: 15%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            z-index: 2;
+        }
+
+        .sidebar-brand {
+            text-align: center;
+            padding: 24px 16px 18px;
+            border-bottom: 1px solid var(--border-subtle);
+            position: relative;
+        }
+
+        .sidebar-brand .brand-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: block;
+            margin: 0 auto 10px;
+            object-fit: cover;
+            border: 2px solid var(--border-gold);
+            box-shadow: 0 0 20px rgba(212, 168, 83, 0.12);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-brand .brand-icon:hover {
+            box-shadow: 0 0 28px rgba(212, 168, 83, 0.25);
+            transform: scale(1.03);
+        }
+
+        .sidebar-brand h2 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+            letter-spacing: -0.3px;
+        }
+
+        .sidebar-brand p {
+            font-size: 11px;
+            color: var(--gold);
+            margin-top: 3px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-section-title {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 16px 16px 10px;
+        }
+
+        .pages-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 8px;
+        }
+
+        .page-btn {
+            padding: 11px 14px;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 13.5px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            text-align: right;
+            position: relative;
+            min-height: 44px;
+        }
+
+        .page-btn i {
+            font-size: 15px;
+            width: 20px;
+            text-align: center;
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+        }
+
+        .page-btn img.page-icon-img {
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .page-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .page-btn:hover i {
+            color: var(--gold-light);
+        }
+
+        .page-btn.active {
+            background: rgba(212, 168, 83, 0.1);
+            color: var(--gold-light);
+            font-weight: 600;
+            border: 1px solid var(--border-gold);
+        }
+
+        .page-btn.active i {
+            color: var(--gold);
+        }
+
+        .page-btn.ai-assistant-btn {
+            background: linear-gradient(135deg, rgba(212, 168, 83, 0.1), rgba(240, 208, 120, 0.04));
+            border: 1px solid rgba(212, 168, 83, 0.3);
+            margin-top: 4px;
+        }
+
+        .page-btn.ai-assistant-btn i {
+            color: var(--gold-light);
+            animation: sparkle 2s infinite;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; text-shadow: 0 0 8px rgba(240, 208, 120, 0.4); }
+        }
+
+        .page-btn .delete-page {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 10px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .page-btn:hover .delete-page {
+            display: flex;
+        }
+
+        .page-btn .delete-page:hover {
+            background: rgba(220, 80, 80, 0.2);
+            color: #dc5050;
+        }
+
+        .add-page-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: calc(100% - 16px);
+            padding: 10px;
+            margin: 6px 8px 14px;
+            border: 1px dashed var(--border-gold);
+            border-radius: var(--radius-sm);
+            background: rgba(212, 168, 83, 0.03);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .add-page-btn:hover {
+            background: rgba(212, 168, 83, 0.08);
+            border-color: var(--gold-light);
+            color: var(--gold-light);
+        }
+
+        .add-page-btn i {
+            font-size: 14px;
+            color: var(--gold);
+        }
+
+        /* ====== Main Content ====== */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-primary);
+            position: relative;
+            min-width: 0;
+            align-items: center;
+        }
+
+        /* ====== شاشة الترحيب ====== */
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            width: 100%;
+            max-width: var(--max-chat-width);
+            padding: 40px 20px;
+            text-align: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .welcome-screen.hidden {
+            display: none;
+        }
+
+        .welcome-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(212, 168, 83, 0.25);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .welcome-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .welcome-subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .feature-card {
+            background: var(--surface-light);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 18px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            background: rgba(212, 168, 83, 0.06);
+            border-color: var(--border-gold);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-card i {
+            font-size: 26px;
+            color: var(--gold-light);
+            margin-bottom: 10px;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover i {
+            transform: scale(1.15);
+        }
+
+        .feature-card span {
+            font-size: 13px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        /* ====== Chat Container ====== */
+        .chat-container {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 16px;
+            width: 100%;
+            max-width: var(--max-chat-width);
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chat-container.active {
+            display: flex;
+        }
+
+        /* ====== Messages ====== */
+        .message {
+            display: flex;
+            gap: 10px;
+            animation: messageAppear 0.3s ease;
+            max-width: 80%;
+        }
+
+        @keyframes messageAppear {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message.ai {
+            align-self: flex-start;
+        }
+
+        .avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            flex-shrink: 0;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .message-content {
+            background: var(--surface-light);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .message.user .message-content {
+            background: rgba(108, 92, 231, 0.2);
+            border-color: rgba(108, 92, 231, 0.3);
+            border-bottom-right-radius: 6px;
+        }
+
+        .message.ai .message-content {
+            background: var(--surface-light);
+            border-bottom-left-radius: 6px;
+        }
+
+        .message-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .message-time {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-align: left;
+            opacity: 0.7;
+        }
+
+        .message.user .message-time {
+            text-align: right;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            background: rgba(212, 168, 83, 0.15);
+            color: var(--gold-light);
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 6px;
+        }
+
+        /* ====== Typing Indicator ====== */
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            background: var(--surface-light);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            width: fit-content;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--gold);
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+
+        .typing-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* ====== Input Area ====== */
+        .input-area {
+            padding: 12px 16px 16px;
+            width: 100%;
+            max-width: var(--max-chat-width);
+        }
+
+        .suggestions-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+            justify-content: center;
+        }
+
+        .suggestion-btn {
+            padding: 6px 14px;
+            background: var(--surface-light);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .suggestion-btn:hover {
+            background: rgba(212, 168, 83, 0.08);
+            border-color: var(--border-gold);
+            color: var(--text-primary);
+        }
+
+        .suggestion-btn i {
+            color: var(--accent);
+            margin-left: 4px;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        #userInput {
+            width: 100%;
+            padding: 12px 52px 12px 16px;
+            background: var(--surface-light);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: all 0.2s ease;
+            resize: none;
+            min-height: 46px;
+            max-height: 120px;
+            line-height: 1.5;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        #userInput:focus {
+            border-color: var(--border-gold);
+            box-shadow: 0 0 0 3px rgba(212, 168, 83, 0.06);
+        }
+
+        #userInput::placeholder {
+            color: var(--text-muted);
+            opacity: 0.7;
+        }
+
+        .input-icons {
+            position: absolute;
+            left: 8px;
+            bottom: 8px;
+            display: flex;
+            gap: 4px;
+        }
+
+        .input-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 15px;
+            border: none;
+        }
+
+        .input-icon:hover {
+            background: rgba(212, 168, 83, 0.12);
+            color: var(--text-primary);
+        }
+
+        #actionButton {
+            width: 46px;
+            height: 46px;
+            border-radius: var(--radius-sm);
+            border: none;
+            color: #1a1a1a;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: var(--gold);
+            box-shadow: 0 4px 14px rgba(212, 168, 83, 0.3);
+        }
+
+        #actionButton:hover {
+            background: var(--gold-light);
+            box-shadow: 0 6px 20px rgba(212, 168, 83, 0.4);
+            transform: translateY(-1px);
+        }
+
+        #actionButton:active {
+            transform: scale(0.95);
+        }
+
+        #actionButton.voice-mode {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+        }
+
+        #actionButton.send-mode {
+            background: var(--gold-light);
+        }
+
+        #actionButton.recording {
+            background: #dc5050;
+            box-shadow: 0 4px 16px rgba(220, 80, 80, 0.35);
+            animation: pulseRecord 1.5s infinite;
+        }
+
+        @keyframes pulseRecord {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(220, 80, 80, 0.3); }
+            50% { box-shadow: 0 0 0 12px rgba(220, 80, 80, 0); }
+        }
+
+        /* ====== Modal ====== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(6px);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-dialog {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            width: 90%;
+            max-width: 380px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+
+        .modal-dialog h3 {
+            color: var(--text-primary);
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .modal-dialog p {
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        .modal-dialog input {
+            width: 100%;
+            padding: 11px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            text-align: center;
+            font-family: 'Tajawal', sans-serif;
+            margin-bottom: 16px;
+        }
+
+        .modal-dialog input:focus {
+            border-color: var(--border-gold);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 10px 22px;
+            border-radius: var(--radius-sm);
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .modal-btn-confirm {
+            background: var(--gold);
+            color: #1a1a1a;
+        }
+
+        .modal-btn-confirm:hover {
+            background: var(--gold-light);
+        }
+
+        .modal-btn-cancel {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .modal-btn-cancel:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        /* ====== Confirm Modal (بديل alert) ====== */
+        .confirm-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 3100;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .confirm-overlay.active {
+            display: flex;
+        }
+
+        .confirm-dialog {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 24px 20px;
+            width: 90%;
+            max-width: 360px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+
+        .confirm-dialog p {
+            color: var(--text-primary);
+            font-size: 15px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .confirm-dialog .confirm-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        /* ====== Toast ====== */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            padding: 12px 20px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-md);
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            white-space: nowrap;
+            color: var(--text-primary);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* ====== Image Modal ====== */
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: var(--radius-md);
+        }
+
+        .close-image-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .close-image-modal:hover {
+            background: #dc5050;
+        }
+
+        /* ====== Voice Indicator ====== */
+        .voice-indicator {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            z-index: 1000;
+            border: 1px solid var(--border-subtle);
+            text-align: center;
+        }
+
+        .voice-waves {
+            display: flex;
+            gap: 4px;
+            align-items: flex-end;
+            height: 24px;
+            margin: 12px 0;
+            justify-content: center;
+        }
+
+        .voice-wave {
+            width: 4px;
+            background: var(--gold);
+            border-radius: 2px;
+            animation: voiceWave 1.2s infinite;
+        }
+
+        .voice-wave:nth-child(2) { animation-delay: 0.1s; }
+        .voice-wave:nth-child(3) { animation-delay: 0.2s; }
+        .voice-wave:nth-child(4) { animation-delay: 0.3s; }
+        .voice-wave:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes voiceWave {
+            0%, 100% { height: 6px; }
+            50% { height: 24px; }
+        }
+
+        /* ====== Scrollbar ====== */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(212, 168, 83, 0.2);
+            border-radius: 3px;
+        }
+
+        /* ====== Mobile ====== */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                z-index: 2500;
+                transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: -8px 0 30px rgba(0, 0, 0, 0.5);
+            }
+
+            .sidebar.mobile-open {
+                right: 0;
+            }
+
+            .mobile-sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.55);
+                backdrop-filter: blur(3px);
+                z-index: 2400;
+            }
+
+            .mobile-sidebar-overlay.active {
+                display: block;
+            }
+
+            .mobile-menu-btn {
+                display: flex !important;
+                position: fixed;
+                top: 14px;
+                right: 14px;
+                width: 42px;
+                height: 42px;
+                border-radius: var(--radius-sm);
+                background: var(--bg-card);
+                border: 1px solid var(--border-subtle);
+                color: var(--text-primary);
+                font-size: 17px;
+                cursor: pointer;
+                z-index: 2300;
+                align-items: center;
+                justify-content: center;
+                box-shadow: var(--shadow-sm);
+            }
+
+            .chat-container {
+                padding: 56px 12px 12px;
+            }
+
+            .welcome-screen {
+                padding: 64px 16px 20px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+
+            .suggestions-bar {
+                gap: 4px;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 4px;
+            }
+
+            .suggestions-bar::-webkit-scrollbar {
+                height: 0;
+            }
+
+            .suggestion-btn {
+                font-size: 11px;
+                padding: 5px 10px;
+                flex-shrink: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+
+            .welcome-title {
+                font-size: 20px;
+            }
+
+            .welcome-subtitle {
+                font-size: 14px;
+            }
+        }
+
+        .mobile-menu-btn {
+            display: none;
+        }
+    </style>
+
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Mobile Elements -->
+    <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay" onclick="closeMobileSidebar()"></div>
+    <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Voice Indicator -->
+    <div class="voice-indicator" id="voiceIndicator">
+        <i class="fas fa-microphone" style="font-size: 24px; color: var(--gold); margin-bottom: 10px;"></i>
+        <h3 style="color: white; font-size: 16px;">جاري التسجيل الصوتي...</h3>
+        <div class="voice-waves">
+            <div class="voice-wave"></div><div class="voice-wave"></div>
+            <div class="voice-wave"></div><div class="voice-wave"></div>
+            <div class="voice-wave"></div>
+        </div>
+        <p style="color: var(--text-secondary); font-size: 12px;">تحدث الآن...</p>
+    </div>
+
+    <!-- Image Modal -->
+    <div class="image-modal" id="imageModal">
+        <button class="close-image-modal" onclick="closeImageModal()">&times;</button>
+        <img id="modalImage" src="" alt="صورة مكبرة">
+    </div>
+
+    <!-- Add Page Modal -->
+    <div class="modal-overlay" id="addPageModal">
+        <div class="modal-dialog">
+            <h3>✨ إضافة صفحة جديدة</h3>
+            <p>أدخل اسم الصفحة التي تريد إنشاءها</p>
+            <input type="text" id="newPageNameInput" placeholder="اسم الصفحة..." autocomplete="off">
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" onclick="closeAddPageModal()">إلغاء</button>
+                <button class="modal-btn modal-btn-confirm" onclick="confirmAddPage()">إنشاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal (بديل alert) -->
+    <div class="confirm-overlay" id="confirmModal">
+        <div class="confirm-dialog">
+            <p id="confirmMessage">هل أنت متأكد؟</p>
+            <div class="confirm-buttons">
+                <button class="modal-btn modal-btn-cancel" onclick="closeConfirmModal(false)">إلغاء</button>
+                <button class="modal-btn modal-btn-confirm" onclick="closeConfirmModal(true)" style="background: #dc5050; color: white;">حذف</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- ====== الشريط الجانبي ====== -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <img src="img/mozlee.jpg" alt="المكتبة" class="brand-icon" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<div class=\'brand-icon\' style=\'background:linear-gradient(135deg, #d4a853, #8b6914); display:flex; align-items:center; justify-content:center; font-size:26px; color:#1a1a1a;\'>🎬</div>');">
+                <h2>مكتبة الفجر</h2>
+                <p>Cinematic Library</p>
+            </div>
+
+            <div class="sidebar-section-title">• الأقسام •</div>
+            <div class="pages-list" id="pagesList"></div>
+
+            <button class="add-page-btn" onclick="openAddPageModal()">
+                <i class="fas fa-plus-circle"></i> إضافة صفحة جديدة
+            </button>
+        </div>
+
+        <!-- ====== Main Content ====== -->
+        <div class="main-content">
+            <!-- Welcome Screen -->
+            <div class="welcome-screen" id="welcomeScreen">
+                <div class="welcome-icon">🎬</div>
+                <h2 class="welcome-title">مرحباً بك في مكتبة الفجر</h2>
+                <p class="welcome-subtitle">اسألني عن أي شيء: الوقت، الكتب، إنشاء الصور، وأكثر!</p>
+                <div class="features-grid">
+                    <div class="feature-card" onclick="sendSuggestion('ما هو الوقت والتاريخ الآن؟')">
+                        <i class="fas fa-clock"></i>
+                        <span>الوقت والتاريخ</span>
+                    </div>
+                    <div class="feature-card" onclick="sendSuggestion('أنشئ لي صورة لأسد')">
+                        <i class="fas fa-image"></i>
+                        <span>إنشاء صورة</span>
+                    </div>
+                    <div class="feature-card" onclick="sendSuggestion('ما هي الكتب الأكثر مبيعاً؟')">
+                        <i class="fas fa-chart-line"></i>
+                        <span>الأكثر مبيعاً</span>
+                    </div>
+                    <div class="feature-card" onclick="sendSuggestion('حلل هذه الصورة...')">
+                        <i class="fas fa-search"></i>
+                        <span>تحليل صورة</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Container -->
+            <div class="chat-container" id="chatContainer"></div>
+
+            <!-- Typing Indicator -->
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="typing-dots">
+                    <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+                </div>
+                <div class="typing-text">جاري التفكير...</div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <div class="suggestions-bar" id="suggestionsBar">
+                    <button class="suggestion-btn" onclick="sendSuggestion('الوقت والتاريخ')">
+                        <i class="fas fa-clock"></i> الوقت
+                    </button>
+                    <button class="suggestion-btn" onclick="sendSuggestion('أنشئ صورة')">
+                        <i class="fas fa-image"></i> صورة
+                    </button>
+                    <button class="suggestion-btn" onclick="sendSuggestion('كتب الأكثر مبيعاً')">
+                        <i class="fas fa-chart-line"></i> كتب
+                    </button>
+                </div>
+                <div class="input-container">
+                    <div class="input-wrapper">
+                        <textarea id="userInput" rows="1" placeholder="اكتب رسالتك..." autocomplete="off"></textarea>
+                        <div class="input-icons">
+                            <button class="input-icon" onclick="toggleAttachment()" title="رفع صورة">
+                                <i class="fas fa-paperclip"></i>
+                            </button>
+                            <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+                        </div>
+                    </div>
+                    <button id="actionButton" class="voice-mode" onclick="handleAction()">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast">
+        <span id="toastMessage"></span>
+    </div>
+
+    <script>
+        // ====== المتغيرات العامة ======
+        let isRecording = false;
+        let recognition = null;
+        let isVoiceSupported = false;
+        let imagesGenerated = 0;
+        let aiKnowledge = {};
+        let pages = [];
+        let currentPage = 'home';
+        let pageCounter = 0;
+        
+        // كل صفحة لها محادثتها الخاصة
+        let pageConversations = {};
+        let confirmCallback = null;
+
+        const YOUR_IMAGE_PATH = 'img/mozlee.jpg';
+
+        // ====== عناصر DOM ======
+        const chatContainer = document.getElementById('chatContainer');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const userInput = document.getElementById('userInput');
+        const actionButton = document.getElementById('actionButton');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const voiceIndicator = document.getElementById('voiceIndicator');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        const imageUpload = document.getElementById('imageUpload');
+        const pagesList = document.getElementById('pagesList');
+        const addPageModal = document.getElementById('addPageModal');
+        const newPageNameInput = document.getElementById('newPageNameInput');
+        const sidebar = document.getElementById('sidebar');
+        const mobileSidebarOverlay = document.getElementById('mobileSidebarOverlay');
+        const confirmModal = document.getElementById('confirmModal');
+        const confirmMessage = document.getElementById('confirmMessage');
+
+        // ====== الصفحات الافتراضية ======
+        const defaultPages = [
+            { id: 'home', name: 'الرئيسية', icon: 'fa-home' },
+            { id: 'books', name: 'المكتبة', icon: 'fa-book-open' },
+            { id: 'images', name: 'الصور', icon: 'fa-image' },
+            { id: 'catalog', name: 'الفهرس الرقمي', icon: 'fa-list' },
+            { id: 'ai-assistant', name: 'المساعد الذكي', icon: 'fa-robot', isAi: true }
+        ];
+
+        // ====== تهيئة ======
+        function init() {
+            loadPages();
+            imagesGenerated = parseInt(localStorage.getItem('imagesGenerated')) || 0;
+            setupEventListeners();
+            setupVoiceRecognition();
+            loadAllConversations();
+            loadDefaultKnowledge();
+            updateDateTime();
+            setInterval(updateDateTime, 60000);
+            autoResizeTextarea();
+            updateActionButton();
+            switchPage('home');
+        }
+
+        // ====== إدارة الصفحات ======
+        function loadPages() {
+            const saved = localStorage.getItem('pages');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    pages = [...defaultPages];
+                    parsed.forEach(p => {
+                        if (!pages.find(m => m.id === p.id)) pages.push(p);
+                    });
+                } catch (e) {
+                    pages = JSON.parse(JSON.stringify(defaultPages));
+                }
+            } else {
+                pages = JSON.parse(JSON.stringify(defaultPages));
+            }
+            renderPages();
+        }
+
+        function savePages() {
+            const custom = pages.filter(p => !defaultPages.find(d => d.id === p.id));
+            localStorage.setItem('pages', JSON.stringify(custom));
+        }
+
+        function renderPages() {
+            pagesList.innerHTML = '';
+            pages.forEach(page => {
+                const btn = document.createElement('button');
+                btn.className = `page-btn ${page.id === currentPage ? 'active' : ''} ${page.isAi ? 'ai-assistant-btn' : ''}`;
+                
+                btn.innerHTML = `<i class="fas ${page.icon}"></i><span>${page.name}</span>`;
+                
+                if (!defaultPages.find(d => d.id === page.id)) {
+                    btn.innerHTML += `<button class="delete-page" onclick="event.stopPropagation(); requestDeletePage('${page.id}')"><i class="fas fa-times"></i></button>`;
+                }
+                
+                btn.onclick = () => {
+                    if (page.isAi) {
+                        switchPage(page.id);
+                        userInput.value = 'مرحباً، أحتاج مساعدتك';
+                        userInput.dispatchEvent(new Event('input'));
+                        processUserInput('مرحباً، أحتاج مساعدتك');
+                    } else {
+                        switchPage(page.id);
+                    }
+                    if (window.innerWidth <= 768) closeMobileSidebar();
+                };
+                pagesList.appendChild(btn);
+            });
+        }
+
+        function switchPage(pageId) {
+            // حفظ المحادثة الحالية
+            saveCurrentConversation();
+            
+            currentPage = pageId;
+            renderPages();
+            
+            // تحميل محادثة الصفحة الجديدة
+            chatContainer.innerHTML = '';
+            
+            if (!pageConversations[pageId]) {
+                pageConversations[pageId] = [];
+            }
+            
+            const conv = pageConversations[pageId];
+            
+            if (conv.length === 0) {
+                // صفحة جديدة - إظهار الترحيب
+                welcomeScreen.classList.remove('hidden');
+                chatContainer.classList.remove('active');
+            } else {
+                // تحميل المحادثة المحفوظة
+                welcomeScreen.classList.add('hidden');
+                chatContainer.classList.add('active');
+                conv.forEach(msg => {
+                    renderMessageToChat(msg.text, msg.sender, msg.time);
+                });
+                chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'auto' });
+            }
+        }
+
+        function saveCurrentConversation() {
+            if (currentPage && pageConversations[currentPage]) {
+                // تم الحفظ مباشرة عند إضافة الرسائل
+            }
+        }
+
+        function renderMessageToChat(text, sender, timeStr) {
+            const div = document.createElement('div');
+            div.className = `message ${sender}`;
+            let formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+            
+            const avatarImg = sender === 'ai' ? 'img/mozlee.jpg' : '';
+            const avatarFallback = sender === 'ai' ? '🤖' : '👤';
+            
+            div.innerHTML = `
+                <div class="avatar">${avatarImg ? `<img src="${avatarImg}" alt="" onerror="this.innerHTML='${avatarFallback}'; this.style.background='linear-gradient(135deg, #d4a853, #b8922e)'; this.style.display='flex'; this.style.alignItems='center'; this.style.justifyContent='center'; this.style.color='#1a1a1a'; this.style.fontSize='16px';">` : `<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:linear-gradient(135deg, #ff9a9e, #fad0c4);color:white;">${avatarFallback}</span>`}</div>
+                <div class="message-content">
+                    <div class="message-text">${formatted}</div>
+                    <div class="message-time">${timeStr}</div>
+                </div>
+            `;
+            chatContainer.appendChild(div);
+        }
+
+        function openAddPageModal() {
+            addPageModal.classList.add('active');
+            newPageNameInput.value = '';
+            setTimeout(() => newPageNameInput.focus(), 300);
+        }
+
+        function closeAddPageModal() { addPageModal.classList.remove('active'); }
+
+        function confirmAddPage() {
+            const name = newPageNameInput.value.trim();
+            if (!name) { showToast('الرجاء إدخال اسم الصفحة', 'warning'); return; }
+            pageCounter++;
+            const newId = 'page_' + pageCounter + '_' + Date.now();
+            pages.push({ id: newId, name: name, icon: 'fa-file' });
+            pageConversations[newId] = [];
+            savePages();
+            renderPages();
+            closeAddPageModal();
+            switchPage(newId);
+            showToast('تم إضافة "' + name + '"', 'success');
+        }
+
+        function requestDeletePage(pageId) {
+            if (defaultPages.find(d => d.id === pageId)) {
+                showToast('لا يمكن حذف الصفحات الأساسية', 'warning');
+                return;
+            }
+            
+            const page = pages.find(p => p.id === pageId);
+            confirmMessage.textContent = `هل تريد حذف صفحة "${page.name}"؟`;
+            confirmCallback = () => {
+                pages = pages.filter(p => p.id !== pageId);
+                delete pageConversations[pageId];
+                savePages();
+                if (currentPage === pageId) {
+                    switchPage('home');
+                }
+                renderPages();
+                showToast('تم حذف الصفحة', 'success');
+            };
+            confirmModal.classList.add('active');
+        }
+
+        function closeConfirmModal(confirmed) {
+            confirmModal.classList.remove('active');
+            if (confirmed && confirmCallback) {
+                confirmCallback();
+            }
+            confirmCallback = null;
+        }
+
+        // ====== Mobile Sidebar ======
+        function toggleMobileSidebar() {
+            sidebar.classList.contains('mobile-open') ? closeMobileSidebar() : openMobileSidebar();
+        }
+        function openMobileSidebar() {
+            sidebar.classList.add('mobile-open');
+            mobileSidebarOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeMobileSidebar() {
+            sidebar.classList.remove('mobile-open');
+            mobileSidebarOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // ====== Chat Functions ======
+        function addMessage(text, sender) {
+            welcomeScreen.classList.add('hidden');
+            chatContainer.classList.add('active');
+            
+            const time = new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+            
+            // حفظ في محادثة الصفحة الحالية
+            if (!pageConversations[currentPage]) {
+                pageConversations[currentPage] = [];
+            }
+            pageConversations[currentPage].push({ text, sender, time });
+            if (pageConversations[currentPage].length > 100) {
+                pageConversations[currentPage] = pageConversations[currentPage].slice(-100);
+            }
+            saveAllConversations();
+            
+            renderMessageToChat(text, sender, time);
+            chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
+        }
+
+        function processUserInput(inputText) {
+            const text = inputText || userInput.value.trim();
+            if (!text) return;
+            
+            addMessage(text, 'user');
+            userInput.value = '';
+            userInput.dispatchEvent(new Event('input'));
+            
+            const normalized = text.toLowerCase();
+            
+            if (normalized.includes('الوقت') || normalized.includes('التاريخ') || normalized.includes('الساعة')) {
+                showTypingIndicator();
+                setTimeout(() => { hideTypingIndicator(); addMessage(handleDateTimeRequest(), 'ai'); }, 500);
+                return;
+            }
+            if ((normalized.includes('أنشئ') || normalized.includes('اصنع') || normalized.includes('ارسم')) && normalized.includes('صورة')) {
+                const prompt = text.replace(/أنشئ|اصنع|ارسم|صورة|لي|لـ|ل|create|generate|image|picture|of/gi, '').trim() || 'منظر طبيعي';
+                generateRealImage(prompt);
+                return;
+            }
+            if (normalized.includes('مساعدة') || normalized.includes('ماذا تستطيع')) {
+                addMessage('🚀 **ماذا أستطيع؟**\n• إخبارك بالوقت والتاريخ\n• إنشاء صور بالذكاء الاصطناعي\n• الإجابة عن أسئلة الكتب\n• تحليل الصور\n• التحدث معك صوتياً', 'ai');
+                return;
+            }
+            if (normalized.includes('فهرس') || normalized.includes('تصنيف')) {
+                addMessage('📋 **الفهرس الرقمي:**\n• 📚 كتب أدبية (12,450 عنوان)\n• 🔬 كتب علمية (8,320 عنوان)\n• 📜 مخطوطات تاريخية (3,100 عنوان)\n• 🎓 مراجع أكاديمية (15,600 عنوان)\n• 🎨 كتب فنية (5,200 عنوان)', 'ai');
+                return;
+            }
+            
+            showTypingIndicator();
+            setTimeout(() => {
+                hideTypingIndicator();
+                addMessage(getAIResponse(text), 'ai');
+            }, 800 + Math.random() * 800);
+        }
+
+        function sendSuggestion(text) {
+            userInput.value = text;
+            userInput.dispatchEvent(new Event('input'));
+            processUserInput(text);
+        }
+
+        function getAIResponse(input) {
+            for (const [q, answers] of Object.entries(aiKnowledge)) {
+                if (input.toLowerCase().includes(q)) return answers[0];
+            }
+            const responses = [
+                '🤔 **سؤال مثير!**\nلست متأكداً من الإجابة، لكن يمكنني البحث في مكتبة الفجر لمساعدتك.',
+                '🧠 **فكرة رائعة!**\nيمكنك تدريبي على هذا السؤال لتصبح معرفتي أفضل.',
+                '🌟 **سؤال جميل!**\nجرب البحث في الفهرس الرقمي للمكتبة.'
+            ];
+            return responses[Math.floor(Math.random() * responses.length)];
+        }
+
+        // ====== DateTime ======
+        function updateDateTime() {
+            const now = new Date();
+            window.currentDateTime = {
+                time: now.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }),
+                date: now.toLocaleDateString('ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }),
+                hijri: getHijriDate(now)
+            };
+        }
+        function getHijriDate(date) {
+            const hijriYear = Math.floor((date.getFullYear() - 622) * (33/32));
+            const months = ['محرم', 'صفر', 'ربيع الأول', 'ربيع الآخر', 'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'];
+            return `${date.getDate()} ${months[Math.floor(Math.random() * 12)]} ${hijriYear} هـ`;
+        }
+        function handleDateTimeRequest() {
+            updateDateTime();
+            return `🕒 **الوقت:** ${window.currentDateTime.time}\n📅 **التاريخ:** ${window.currentDateTime.date}\n📿 **هجري:** ${window.currentDateTime.hijri}`;
+        }
+
+        // ====== Voice ======
+        function setupVoiceRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                recognition.lang = 'ar-SA';
+                recognition.continuous = false;
+                recognition.interimResults = true;
+                isVoiceSupported = true;
+                
+                recognition.onstart = () => {
+                    isRecording = true;
+                    voiceIndicator.style.display = 'block';
+                    actionButton.classList.add('recording');
+                    actionButton.querySelector('i').className = 'fas fa-stop';
+                };
+                recognition.onresult = (event) => {
+                    let final = '';
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        if (event.results[i].isFinal) final = event.results[i][0].transcript;
+                    }
+                    if (final) { userInput.value = final; userInput.dispatchEvent(new Event('input')); setTimeout(() => processUserInput(final), 300); }
+                };
+                recognition.onend = () => {
+                    isRecording = false;
+                    voiceIndicator.style.display = 'none';
+                    actionButton.classList.remove('recording');
+                    updateActionButton();
+                };
+                recognition.onerror = (event) => {
+                    isRecording = false;
+                    voiceIndicator.style.display = 'none';
+                    actionButton.classList.remove('recording');
+                    updateActionButton();
+                    if (event.error === 'no-speech') showToast('لم يتم الكشف عن صوت', 'warning');
+                    else if (event.error === 'not-allowed') showToast('تم رفض إذن الميكروفون', 'error');
+                };
+            }
+        }
+
+        function toggleVoiceRecording() {
+            if (!isVoiceSupported) return showToast('المتصفح لا يدعم هذه الميزة', 'error');
+            isRecording ? recognition.stop() : recognition.start();
+        }
+
+        // ====== Images ======
+        function toggleAttachment() { imageUpload.click(); }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            if (!file.type.startsWith('image/')) return showToast('الرجاء اختيار صورة', 'error');
+            event.target.value = '';
+            showTypingIndicator();
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                addImageMessage(e.target.result, 'user', 'صورة مرفوعة');
+                setTimeout(() => { hideTypingIndicator(); addMessage('✅ **تم استلام الصورة!**', 'ai'); }, 1000);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function generateRealImage(prompt) {
+            showTypingIndicator();
+            setTimeout(() => {
+                hideTypingIndicator();
+                imagesGenerated++;
+                localStorage.setItem('imagesGenerated', imagesGenerated.toString());
+                const fallbackImages = {
+                    'أسد': 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=400&h=400&fit=crop',
+                    'منظر طبيعي': 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400&h=400&fit=crop',
+                    'كتاب': 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=400&fit=crop',
+                    'قط': 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop'
+                };
+                let selected = 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=400&h=400&fit=crop';
+                for (const [key, url] of Object.entries(fallbackImages)) {
+                    if (prompt.includes(key)) { selected = url; break; }
+                }
+                addImageMessage(selected, 'ai', prompt);
+                addMessage(`✅ **تم إنشاء الصورة!**\n🎨 ${prompt}\n📊 #IMG-${imagesGenerated.toString().padStart(4, '0')}`, 'ai');
+            }, 1500);
+        }
+
+        function addImageMessage(src, sender, caption = '') {
+            welcomeScreen.classList.add('hidden');
+            chatContainer.classList.add('active');
+            
+            const div = document.createElement('div');
+            div.className = `message ${sender}`;
+            const time = new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
+            div.innerHTML = `
+                <div class="avatar">${sender === 'ai' ? '<img src="img/mozlee.jpg" alt="" onerror="this.style.display=\'none\';">' : '<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:linear-gradient(135deg, #ff9a9e, #fad0c4);color:white;">👤</span>'}</div>
+                <div class="message-content">
+                    <img src="${src}" style="max-width:240px;max-height:240px;border-radius:12px;cursor:pointer;margin-bottom:6px;" onclick="openImageModal('${src}')">
+                    ${caption ? `<div style="font-size:11px;color:var(--text-secondary);text-align:center;">🖼️ ${caption}</div>` : ''}
+                    <div class="message-time">${time}</div>
+                </div>
+            `;
+            chatContainer.appendChild(div);
+            
+            // حفظ في المحادثة
+            if (!pageConversations[currentPage]) pageConversations[currentPage] = [];
+            pageConversations[currentPage].push({ text: `[صورة: ${caption}]`, sender, time, isImage: true });
+            saveAllConversations();
+            
+            chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
+        }
+
+        function openImageModal(src) {
+            document.getElementById('imageModal').style.display = 'flex';
+            document.getElementById('modalImage').src = src;
+            document.body.style.overflow = 'hidden';
+        }
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // ====== Knowledge ======
+        function loadDefaultKnowledge() {
+            aiKnowledge = {
+                'كتاب': ['📚 **عن الكتب:** مكتبتنا تضم أكثر من 50,000 كتاب إلكتروني.'],
+                'قراءة': ['📖 **نصائح للقراءة:** حدد هدفاً، ابدأ بـ 20 صفحة يومياً.'],
+                'مكتبة': ['🏛️ **مكتبة الفجر الرقمية:** منصة شاملة للقراءة والتعلم.'],
+                'دورات': ['🎓 **الدورات:** مهارات القراءة السريعة، فن التلخيص، البحث العلمي.'],
+                'فهرس': ['📋 **الفهرس الرقمي:**\n• كتب أدبية (12,450)\n• كتب علمية (8,320)\n• مخطوطات (3,100)\n• مراجع أكاديمية (15,600)\n• كتب فنية (5,200)']
+            };
+        }
+
+        // ====== تخزين المحادثات ======
+        function saveAllConversations() {
+            try {
+                localStorage.setItem('page_conversations', JSON.stringify(pageConversations));
+            } catch (e) {
+                // تجاوز خطأ التخزين
+            }
+        }
+
+        function loadAllConversations() {
+            try {
+                const saved = localStorage.getItem('page_conversations');
+                if (saved) {
+                    pageConversations = JSON.parse(saved);
+                }
+            } catch (e) {
+                pageConversations = {};
+            }
+        }
+
+        // ====== UI Helpers ======
+        function autoResizeTextarea() {
+            userInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+                updateActionButton();
+            });
+        }
+
+        function updateActionButton() {
+            const hasText = userInput.value.trim().length > 0;
+            const icon = actionButton.querySelector('i');
+            actionButton.className = hasText ? 'send-mode' : 'voice-mode';
+            icon.className = hasText ? 'fas fa-paper-plane' : 'fas fa-microphone';
+        }
+
+        function handleAction() {
+            const text = userInput.value.trim();
+            text ? processUserInput(text) : toggleVoiceRecording();
+        }
+
+        function showTypingIndicator() { typingIndicator.style.display = 'flex'; typingIndicator.scrollIntoView({ behavior: 'smooth' }); }
+        function hideTypingIndicator() { typingIndicator.style.display = 'none'; }
+
+        function showToast(message, type = 'success') {
+            toast.classList.remove('show');
+            toastMessage.textContent = message;
+            const colors = { success: '3px solid #00d2a0', error: '3px solid #dc5050', info: '3px solid var(--gold)', warning: '3px solid #ffd166' };
+            toast.style.borderRight = colors[type] || colors.success;
+            setTimeout(() => toast.classList.add('show'), 50);
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        // ====== Event Listeners ======
+        function setupEventListeners() {
+            userInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    if (userInput.value.trim()) processUserInput();
+                }
+            });
+            document.getElementById('imageModal').addEventListener('click', (e) => {
+                if (e.target.id === 'imageModal') closeImageModal();
+            });
+            addPageModal.addEventListener('click', (e) => {
+                if (e.target === addPageModal) closeAddPageModal();
+            });
+            confirmModal.addEventListener('click', (e) => {
+                if (e.target === confirmModal) closeConfirmModal(false);
+            });
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (addPageModal.classList.contains('active')) closeAddPageModal();
+                    if (confirmModal.classList.contains('active')) closeConfirmModal(false);
+                }
+            });
+            newPageNameInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') confirmAddPage();
+            });
+        }
+
+        // ====== Start ======
+        document.addEventListener('DOMContentLoaded', init);
+
+        // ====== Expose Globals ======
+        window.sendSuggestion = sendSuggestion;
+        window.processUserInput = processUserInput;
+        window.handleAction = handleAction;
+        window.toggleVoiceRecording = toggleVoiceRecording;
+        window.toggleAttachment = toggleAttachment;
+        window.switchPage = switchPage;
+        window.openAddPageModal = openAddPageModal;
+        window.closeAddPageModal = closeAddPageModal;
+        window.confirmAddPage = confirmAddPage;
+        window.requestDeletePage = requestDeletePage;
+        window.closeConfirmModal = closeConfirmModal;
+        window.openImageModal = openImageModal;
+        window.closeImageModal = closeImageModal;
+        window.handleImageUpload = handleImageUpload;
+        window.toggleMobileSidebar = toggleMobileSidebar;
+        window.closeMobileSidebar = closeMobileSidebar;
+    </script>
+</body>
+</html>

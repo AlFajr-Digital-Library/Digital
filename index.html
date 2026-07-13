@@ -660,7 +660,7 @@ body {
   gap: 5px;
 }
 
-/* ====== لوحة تفاصيل المنتج - مع تصغير الأشرطة ====== */
+/* ====== لوحة تفاصيل المنتج - مع شريطين مصغرين ====== */
 .product-detail-overlay {
   display: none;
   position: fixed;
@@ -686,30 +686,32 @@ body {
 }
 
 .product-detail-header {
-  padding: 15px 20px 10px;
+  padding: 6px 12px 4px;
   background: var(--gradient-primary);
   position: sticky;
   top: 0;
   z-index: 10;
   flex-shrink: 0;
-  min-height: 60px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
 }
 
 .close-product-detail {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 6px;
+  right: 8px;
   background: rgba(255,255,255,0.2);
   border: none;
   color: white;
-  width: 35px;
-  height: 35px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 14px;
   transition: all var(--transition-speed);
 }
 
@@ -719,22 +721,24 @@ body {
 }
 
 .product-detail-title {
-  font-size: 24px;
+  font-size: 16px;
   font-weight: bold;
   color: white;
-  margin-bottom: 3px;
-  margin-right: 40px;
+  margin: 0 30px 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .product-detail-main {
   flex: 1;
-  padding: 15px 20px;
+  padding: 10px 15px;
 }
 
 .product-detail-content {
   display: grid;
   grid-template-columns: 1fr 2fr;
-  gap: 25px;
+  gap: 20px;
   max-width: 1400px;
   margin: 0 auto;
 }
@@ -747,14 +751,14 @@ body {
 @media (min-width: 769px) {
   .product-detail-poster {
     position: sticky;
-    top: 80px;
+    top: 60px;
   }
 }
 
 @media (max-width: 768px) {
   .product-detail-content {
     grid-template-columns: 1fr;
-    gap: 15px;
+    gap: 12px;
   }
   
   .product-detail-poster {
@@ -765,29 +769,28 @@ body {
 
 .product-detail-poster img {
   width: 100%;
-  max-height: 500px;
+  max-height: 400px;
   object-fit: cover;
   border-radius: var(--border-radius-lg);
   box-shadow: 0 8px 25px rgba(0,0,0,0.5);
 }
 
-/* زر العرض الشفاف على الصورة */
 .product-detail-poster .view-btn-overlay {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 8px;
+  left: 8px;
   background: rgba(0,0,0,0.5);
   backdrop-filter: blur(5px);
   border: 1px solid rgba(255,255,255,0.2);
   color: white;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 13px;
   transition: all var(--transition-speed);
   z-index: 5;
 }
@@ -800,12 +803,12 @@ body {
 .product-detail-info {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
 }
 
 .product-detail-meta {
   display: flex;
-  gap: 15px;
+  gap: 10px;
   flex-wrap: wrap;
   align-items: center;
 }
@@ -813,14 +816,14 @@ body {
 .product-detail-category {
   background: var(--gradient-primary);
   color: white;
-  padding: 8px 20px;
+  padding: 4px 14px;
   border-radius: 20px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: bold;
 }
 
 .product-detail-price {
-  font-size: 28px;
+  font-size: 22px;
   font-weight: bold;
   color: var(--success-color);
 }
@@ -828,39 +831,39 @@ body {
 .product-detail-rating {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .stars {
   color: var(--accent-color);
-  font-size: 18px;
+  font-size: 15px;
 }
 
 .rating-value {
   font-weight: bold;
-  font-size: 18px;
+  font-size: 14px;
 }
 
 .product-detail-summary {
   background: rgba(255,255,255,0.05);
-  padding: 20px;
+  padding: 12px 15px;
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--border-color);
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .product-detail-summary-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 15px;
-  margin-top: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .summary-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 15px;
+  gap: 8px;
+  padding: 8px 12px;
   background: var(--card-bg);
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-color);
@@ -868,60 +871,91 @@ body {
 
 .summary-item i {
   color: var(--accent-color);
-  font-size: 18px;
+  font-size: 14px;
 }
 
 .summary-label {
   font-weight: bold;
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: 11px;
 }
 
 .summary-value {
   font-weight: bold;
   color: var(--text-primary);
-  font-size: 16px;
+  font-size: 13px;
 }
 
 .product-detail-description {
-  font-size: 18px;
-  line-height: 1.8;
+  font-size: 15px;
+  line-height: 1.6;
   color: var(--text-secondary);
-  padding: 20px;
+  padding: 12px 15px;
   background: rgba(255,255,255,0.05);
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--border-color);
 }
 
+/* أزرار الأجزاء المدمجة */
+.merged-parts-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 15px;
+}
+
+.merged-part-tab {
+  padding: 6px 16px;
+  background: var(--card-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  transition: all var(--transition-speed);
+  color: var(--text-secondary);
+}
+
+.merged-part-tab:hover {
+  border-color: var(--primary-color);
+  color: var(--text-primary);
+}
+
+.merged-part-tab.active {
+  background: var(--gradient-primary);
+  border-color: var(--primary-color);
+  color: white;
+}
+
 .product-detail-sections {
-  margin-top: 25px;
+  margin-top: 15px;
 }
 
 .product-detail-section {
-  margin-bottom: 25px;
+  margin-bottom: 15px;
 }
 
 .section-label {
-  font-size: 20px;
+  font-size: 17px;
   font-weight: bold;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   color: var(--primary-color);
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding-bottom: 10px;
+  gap: 8px;
+  padding-bottom: 8px;
   border-bottom: 2px solid var(--border-color);
 }
 
 .chapters-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .chapter-item {
   background: var(--card-bg);
-  padding: 12px 18px;
+  padding: 10px 14px;
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-color);
   display: flex;
@@ -936,28 +970,28 @@ body {
 }
 
 .chapter-info h4 {
-  margin-bottom: 3px;
-  font-size: 15px;
+  margin-bottom: 2px;
+  font-size: 14px;
 }
 
 .chapter-duration {
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .watch-button {
   background: var(--gradient-primary);
   color: white;
   border: none;
-  padding: 6px 16px;
+  padding: 5px 14px;
   border-radius: var(--border-radius-sm);
   cursor: pointer;
   transition: all var(--transition-speed);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .watch-button:hover {
@@ -966,14 +1000,14 @@ body {
 }
 
 .comments-section {
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
 .comment-item {
   background: var(--card-bg);
-  padding: 18px;
+  padding: 12px 15px;
   border-radius: var(--border-radius-md);
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   border: 1px solid var(--border-color);
   position: relative;
 }
@@ -981,31 +1015,31 @@ body {
 .comment-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   align-items: center;
 }
 
 .comment-author {
   font-weight: bold;
   color: var(--primary-color);
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .comment-date {
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .comment-text {
   color: var(--text-secondary);
-  line-height: 1.6;
-  font-size: 15px;
+  line-height: 1.5;
+  font-size: 14px;
 }
 
 .comment-actions {
   display: flex;
-  gap: 10px;
-  margin-top: 10px;
+  gap: 8px;
+  margin-top: 8px;
 }
 
 .delete-comment-btn {
@@ -1013,13 +1047,13 @@ body {
   border: none;
   color: var(--danger-color);
   cursor: pointer;
-  font-size: 13px;
-  padding: 4px 10px;
+  font-size: 12px;
+  padding: 3px 8px;
   border-radius: 4px;
   transition: all var(--transition-speed);
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
 }
 
 .delete-comment-btn:hover {
@@ -1028,40 +1062,40 @@ body {
 }
 
 .add-comment {
-  margin-top: 20px;
+  margin-top: 15px;
   background: rgba(255,255,255,0.05);
-  padding: 20px;
+  padding: 15px;
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-color);
 }
 
 .comment-input {
   width: 100%;
-  padding: 15px;
+  padding: 12px;
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-sm);
   color: var(--text-primary);
   font-family: inherit;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   resize: vertical;
-  min-height: 100px;
-  font-size: 15px;
+  min-height: 70px;
+  font-size: 14px;
 }
 
 .submit-comment {
   background: var(--gradient-secondary);
   color: white;
   border: none;
-  padding: 10px 25px;
+  padding: 8px 20px;
   border-radius: var(--border-radius-sm);
   cursor: pointer;
   transition: all var(--transition-speed);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .submit-comment:hover {
@@ -1069,8 +1103,9 @@ body {
   box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
 }
 
+/* ====== الشريط السفلي المصغر ====== */
 .product-detail-footer {
-  padding: 12px 20px;
+  padding: 6px 12px;
   background: var(--darker-bg);
   border-top: 1px solid var(--border-color);
   display: flex;
@@ -1080,15 +1115,46 @@ body {
   position: sticky;
   bottom: 0;
   z-index: 10;
-  min-height: 55px;
+  min-height: 40px;
+  gap: 10px;
+}
+
+.product-detail-footer .footer-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 1;
+}
+
+.product-detail-footer .footer-info h3 {
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-detail-footer .footer-info p {
+  font-size: 11px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 @media (max-width: 768px) {
   .product-detail-footer {
-    flex-direction: column;
-    gap: 12px;
-    text-align: center;
-    padding: 12px 15px;
+    flex-direction: row;
+    padding: 5px 10px;
+    min-height: 36px;
+    gap: 6px;
+  }
+  
+  .product-detail-footer .footer-info h3 {
+    font-size: 12px;
+  }
+  
+  .product-detail-footer .footer-info p {
+    font-size: 10px;
   }
 }
 
@@ -1096,30 +1162,54 @@ body {
   background: var(--gradient-primary);
   color: white;
   border: none;
-  padding: 12px 35px;
+  padding: 6px 18px;
   border-radius: var(--border-radius-sm);
-  font-size: 16px;
+  font-size: 13px;
   font-weight: bold;
   cursor: pointer;
   transition: all var(--transition-speed);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .purchase-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px var(--shadow-light);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow-light);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .purchase-button {
-    width: 100%;
-    justify-content: center;
+    padding: 4px 12px;
+    font-size: 11px;
+  }
+  
+  .product-detail-header {
+    padding: 4px 8px;
+    min-height: 32px;
+  }
+  
+  .product-detail-title {
+    font-size: 13px;
+    margin: 0 24px 0 0;
+  }
+  
+  .close-product-detail {
+    width: 22px;
+    height: 22px;
+    font-size: 11px;
+    top: 4px;
+    right: 5px;
+  }
+  
+  .product-detail-main {
+    padding: 8px 10px;
   }
 }
 
-/* ====== لوحة البحث - محسنة ====== */
+/* ====== لوحة البحث ====== */
 .search-overlay {
   display: none;
   position: fixed;
@@ -1143,7 +1233,7 @@ body {
 }
 
 .search-header {
-  padding: 15px 20px;
+  padding: 10px 15px;
   background: var(--gradient-primary);
   position: sticky;
   top: 0;
@@ -1153,19 +1243,19 @@ body {
 
 .close-search {
   position: absolute;
-  top: 10px;
+  top: 8px;
   right: 10px;
   background: rgba(255,255,255,0.2);
   border: none;
   color: white;
-  width: 35px;
-  height: 35px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 14px;
   transition: all var(--transition-speed);
 }
 
@@ -1175,10 +1265,10 @@ body {
 }
 
 .search-title {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bold;
   color: white;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
   text-align: center;
 }
 
@@ -1190,12 +1280,12 @@ body {
 
 .search-input {
   width: 100%;
-  padding: 12px 55px 12px 18px;
+  padding: 10px 45px 10px 15px;
   background: rgba(255,255,255,0.15);
   border: 2px solid rgba(255,255,255,0.3);
   border-radius: 50px;
   color: white;
-  font-size: 15px;
+  font-size: 14px;
   outline: none;
   transition: all var(--transition-speed);
 }
@@ -1212,24 +1302,24 @@ body {
 
 .search-icon {
   position: absolute;
-  left: 18px;
+  left: 15px;
   top: 50%;
   transform: translateY(-50%);
   color: rgba(255,255,255,0.7);
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .search-label {
   text-align: right;
   color: rgba(255,255,255,0.8);
-  font-size: 13px;
-  margin-bottom: 6px;
-  padding-right: 10px;
+  font-size: 11px;
+  margin-bottom: 4px;
+  padding-right: 8px;
 }
 
 .search-main {
   flex: 1;
-  padding: 20px;
+  padding: 15px;
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
@@ -1238,7 +1328,7 @@ body {
 .search-products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
+  gap: 15px;
 }
 
 @media (max-width: 768px) {
@@ -1250,7 +1340,7 @@ body {
 @media (max-width: 480px) {
   .search-products-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 10px;
   }
 }
 
@@ -1275,48 +1365,48 @@ body {
 
 .search-product-card img {
   width: 100%;
-  height: 180px;
+  height: 160px;
   object-fit: cover;
 }
 
 .search-product-card-content {
-  padding: 15px;
+  padding: 12px;
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
 .search-product-card-title {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   color: var(--text-primary);
   line-height: 1.3;
 }
 
 .search-product-card-meta {
   display: flex;
-  gap: 8px;
-  margin-bottom: 10px;
+  gap: 6px;
+  margin-bottom: 8px;
   flex-wrap: wrap;
 }
 
 .search-product-meta-item {
   background: rgba(255,255,255,0.1);
-  padding: 4px 10px;
+  padding: 3px 8px;
   border-radius: var(--border-radius-sm);
-  font-size: 11px;
+  font-size: 10px;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
 }
 
 .search-product-card-price {
-  font-size: 20px;
+  font-size: 17px;
   font-weight: bold;
   color: var(--success-color);
   margin-top: auto;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .search-product-card-footer {
@@ -1324,21 +1414,21 @@ body {
   justify-content: space-between;
   align-items: center;
   margin-top: auto;
-  gap: 8px;
+  gap: 6px;
 }
 
 .search-product-card-button {
   background: var(--gradient-primary);
   color: white;
   border: none;
-  padding: 8px 12px;
+  padding: 6px 10px;
   border-radius: var(--border-radius-sm);
   cursor: pointer;
   transition: all var(--transition-speed);
   display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: 13px;
+  gap: 4px;
+  font-size: 11px;
   flex: 1;
   justify-content: center;
 }
@@ -1350,28 +1440,29 @@ body {
 
 .search-product-card-button.view-btn {
   background: var(--gradient-secondary);
-  flex: 0.6;
+  flex: 0.5;
 }
 
 .search-footer {
-  padding: 15px 20px;
+  padding: 10px 15px;
   background: var(--darker-bg);
   border-top: 1px solid var(--border-color);
   flex-shrink: 0;
   text-align: center;
+  font-size: 13px;
 }
 
 .no-results {
   text-align: center;
-  padding: 40px 20px;
+  padding: 30px 15px;
   color: var(--text-muted);
-  font-size: 18px;
+  font-size: 16px;
   grid-column: 1 / -1;
 }
 
 .no-results i {
-  font-size: 40px;
-  margin-bottom: 15px;
+  font-size: 32px;
+  margin-bottom: 10px;
   display: block;
   color: var(--text-muted);
 }
@@ -1406,7 +1497,7 @@ body {
 }
 
 .settings-header {
-  padding: 12px 20px;
+  padding: 10px 15px;
   background: linear-gradient(135deg, #ff5722, #d32f2f);
   text-align: center;
   position: relative;
@@ -1419,19 +1510,20 @@ body {
 
 .close-settings {
   position: absolute;
-  top: 10px;
-  right: 15px;
+  top: 8px;
+  right: 12px;
   background: rgba(255,255,255,0.2);
   border: none;
   color: white;
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all var(--transition-speed);
+  font-size: 12px;
 }
 
 .close-settings:hover {
@@ -1440,42 +1532,42 @@ body {
 }
 
 .user-avatar {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   background: white;
   border-radius: 50%;
-  margin: 0 auto 8px;
+  margin: 0 auto 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
+  font-size: 18px;
   color: var(--primary-color);
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
 .settings-title {
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bold;
   color: white;
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 
 .settings-subtitle {
   color: rgba(255,255,255,0.8);
-  font-size: 11px;
+  font-size: 10px;
 }
 
 .settings-menu {
   flex: 1;
-  padding: 16px 12px;
+  padding: 12px 10px;
 }
 
 .settings-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 14px;
-  margin-bottom: 8px;
+  padding: 10px 12px;
+  margin-bottom: 6px;
   background: rgba(255,255,255,0.05);
   border-radius: var(--border-radius-sm);
   cursor: pointer;
@@ -1490,35 +1582,35 @@ body {
 }
 
 .settings-item i {
-  width: 22px;
+  width: 18px;
   color: var(--accent-color);
-  margin-right: 10px;
-  font-size: 16px;
+  margin-right: 8px;
+  font-size: 14px;
 }
 
 .settings-item-content {
   flex: 1;
-  margin-left: 10px;
+  margin-left: 8px;
 }
 
 .settings-item-title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: bold;
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 
 .settings-item-desc {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-secondary);
 }
 
 .settings-value {
   background: transparent;
   color: var(--text-secondary);
-  padding: 5px 12px;
+  padding: 4px 10px;
   border-radius: 20px;
-  font-size: 13px;
-  min-width: 65px;
+  font-size: 12px;
+  min-width: 55px;
   text-align: center;
   transition: all var(--transition-speed);
   border: 1px solid rgba(255,255,255,0.15);
@@ -1533,7 +1625,7 @@ body {
 }
 
 .settings-footer {
-  padding: 16px 20px;
+  padding: 12px 15px;
   text-align: center;
   border-top: 1px solid var(--border-color);
 }
@@ -1542,7 +1634,7 @@ body {
   background: var(--gradient-secondary);
   color: white;
   border: none;
-  padding: 10px 30px;
+  padding: 8px 25px;
   border-radius: var(--border-radius-sm);
   font-weight: bold;
   cursor: pointer;
@@ -1550,8 +1642,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
+  font-size: 13px;
 }
 
 .logout-btn:hover {
@@ -1562,14 +1655,14 @@ body {
 .settings-control {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   margin-top: 0;
 }
 
 .toggle-switch {
   position: relative;
-  width: 46px;
-  height: 24px;
+  width: 40px;
+  height: 20px;
 }
 
 .toggle-switch input {
@@ -1593,10 +1686,10 @@ body {
 .toggle-slider:before {
   position: absolute;
   content: "";
-  height: 17px;
-  width: 17px;
-  left: 4px;
-  bottom: 3.5px;
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
   background: var(--text-secondary);
   transition: .3s;
   border-radius: 50%;
@@ -1607,13 +1700,13 @@ input:checked + .toggle-slider {
 }
 
 input:checked + .toggle-slider:before {
-  transform: translateX(22px);
+  transform: translateX(20px);
   background: white;
 }
 
 .range-slider {
   flex: 1;
-  height: 5px;
+  height: 4px;
   background: var(--card-bg);
   border-radius: 3px;
   outline: none;
@@ -1622,8 +1715,8 @@ input:checked + .toggle-slider:before {
 
 .range-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   background: var(--gradient-primary);
   border-radius: 50%;
   cursor: pointer;
@@ -1636,8 +1729,8 @@ input:checked + .toggle-slider:before {
 }
 
 #textSizePercent {
-  min-width: 40px;
-  font-size: 13px;
+  min-width: 35px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--accent-color);
 }
@@ -1646,19 +1739,19 @@ input:checked + .toggle-slider:before {
   display: flex;
   background: var(--card-bg);
   border-radius: var(--border-radius-sm);
-  padding: 5px;
-  margin: 20px 0;
+  padding: 4px;
+  margin: 15px 0;
 }
 
 .tab {
   flex: 1;
   text-align: center;
-  padding: 10px;
+  padding: 8px;
   cursor: pointer;
   transition: all var(--transition-speed);
   border-radius: var(--border-radius-sm);
   font-weight: bold;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .tab.active {
@@ -1678,16 +1771,16 @@ input:checked + .toggle-slider:before {
 .category-badges {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin: 20px 0;
+  gap: 8px;
+  margin: 15px 0;
 }
 
 .category-badge {
   background: var(--gradient-dark);
   color: var(--text-secondary);
-  padding: 8px 16px;
+  padding: 6px 14px;
   border-radius: 20px;
-  font-size: 14px;
+  font-size: 12px;
   cursor: pointer;
   transition: all var(--transition-speed);
   border: 1px solid var(--border-color);
@@ -1700,7 +1793,7 @@ input:checked + .toggle-slider:before {
   border-color: var(--primary-color);
 }
 
-/* ====== نافذة عرض جميع القصص - محسنة ====== */
+/* ====== نافذة عرض جميع القصص ====== */
 .all-stories-overlay {
   display: none;
   position: fixed;
@@ -1734,7 +1827,7 @@ input:checked + .toggle-slider:before {
 }
 
 .all-stories-header {
-  padding: 20px 30px;
+  padding: 12px 20px;
   background: transparent;
   position: sticky;
   top: 0;
@@ -1748,20 +1841,20 @@ input:checked + .toggle-slider:before {
 
 .close-all-stories {
   position: absolute;
-  right: 20px;
+  right: 15px;
   top: 50%;
   transform: translateY(-50%);
   background: transparent;
   border: none;
   color: var(--danger-color);
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
+  font-size: 22px;
   transition: all var(--transition-speed);
 }
 
@@ -1771,7 +1864,7 @@ input:checked + .toggle-slider:before {
 }
 
 .all-stories-title {
-  font-size: 26px;
+  font-size: 20px;
   font-weight: bold;
   color: var(--text-primary);
   text-align: center;
@@ -1779,7 +1872,7 @@ input:checked + .toggle-slider:before {
 
 .all-stories-body {
   flex: 1;
-  padding: 30px;
+  padding: 20px;
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
@@ -1787,8 +1880,8 @@ input:checked + .toggle-slider:before {
 
 .all-stories-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 25px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
 }
 
 .all-stories-grid .product-card::before {
@@ -1798,8 +1891,8 @@ input:checked + .toggle-slider:before {
 /* ====== التذييل ====== */
 .footer {
   background: var(--darker-bg);
-  padding: 40px 20px;
-  margin-top: 60px;
+  padding: 30px 20px;
+  margin-top: 40px;
   border-top: 1px solid var(--border-color);
 }
 
@@ -1807,17 +1900,17 @@ input:checked + .toggle-slider:before {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
 }
 
 .footer-section h3 {
   color: var(--text-primary);
-  margin-bottom: 20px;
-  font-size: 18px;
+  margin-bottom: 15px;
+  font-size: 16px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .footer-section h3 i {
@@ -1829,7 +1922,7 @@ input:checked + .toggle-slider:before {
 }
 
 .footer-links li {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .footer-links a {
@@ -1838,7 +1931,8 @@ input:checked + .toggle-slider:before {
   transition: color var(--transition-speed);
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  font-size: 13px;
 }
 
 .footer-links a:hover {
@@ -1847,11 +1941,11 @@ input:checked + .toggle-slider:before {
 
 .copyright {
   text-align: center;
-  padding-top: 30px;
-  margin-top: 30px;
+  padding-top: 20px;
+  margin-top: 20px;
   border-top: 1px solid var(--border-color);
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: 12px;
 }
 
 /* ====== الرسوم المتحركة الإضافية ====== */
@@ -1878,60 +1972,39 @@ input:checked + .toggle-slider:before {
 /* ====== الوسائط المتجاوبة ====== */
 @media (max-width: 768px) {
   .main-content {
-    padding: 80px 12px 20px;
+    padding: 80px 10px 15px;
   }
 
   .products-grid {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
   }
 
   .section-title {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   .top {
-    height: 55px;
-    padding: 0 12px;
+    height: 50px;
+    padding: 0 10px;
   }
 
   .welcome-text {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .welcome-icon {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
   }
 
   .manga-navigation {
     flex-wrap: wrap;
   }
 
-  .product-detail-container,
-  .search-container {
-    margin: 0;
-    max-height: 100vh;
-  }
-
-  .product-detail-header {
-    padding: 10px 15px 8px;
-    min-height: 50px;
-  }
-
-  .product-detail-title {
-    font-size: 20px;
-    margin-right: 35px;
-  }
-
-  .product-detail-footer {
-    padding: 10px 15px;
-    min-height: 50px;
-  }
-
   .content-navigation {
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
   }
 
   .content-nav-button {
@@ -1940,11 +2013,11 @@ input:checked + .toggle-slider:before {
   }
   
   .product-detail-summary-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
   
   .product-detail-poster img {
-    max-height: 300px;
+    max-height: 250px;
   }
   
   .search-input-container {
@@ -1952,35 +2025,36 @@ input:checked + .toggle-slider:before {
   }
   
   .search-title {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .all-stories-header {
-    padding: 15px 20px;
+    padding: 10px 15px;
   }
 
   .all-stories-title {
-    font-size: 20px;
+    font-size: 17px;
   }
 
   .close-all-stories {
-    right: 15px;
-    font-size: 24px;
+    right: 10px;
+    font-size: 18px;
   }
 
   .all-stories-body {
-    padding: 15px;
+    padding: 12px;
   }
 
   .all-stories-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
   }
 }
 
 @media (max-width: 480px) {
   .products-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
   }
 
   .video-grid {
@@ -1988,105 +2062,104 @@ input:checked + .toggle-slider:before {
   }
 
   .section-title {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .card-button {
-    padding: 6px 12px;
-    font-size: 13px;
+    padding: 4px 10px;
+    font-size: 11px;
+  }
+  
+  .card-price {
+    font-size: 16px;
   }
 
   .manga-navigation {
-    gap: 8px;
+    gap: 6px;
   }
 
   .nav-button {
-    width: 36px;
-    height: 36px;
-    font-size: 14px;
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
   }
 
   .search-products-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    gap: 8px;
   }
 
   .search-product-card img {
-    height: 140px;
+    height: 120px;
   }
 
   .search-product-card-content {
-    padding: 10px;
+    padding: 8px;
   }
 
   .search-product-card-title {
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .search-product-card-price {
-    font-size: 17px;
-  }
-
-  .search-product-card-footer {
-    flex-wrap: wrap;
-  }
-
-  .search-product-card-button {
-    font-size: 12px;
-    padding: 6px 10px;
+    font-size: 14px;
   }
   
   .all-stories-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
 
   .product-detail-content {
-    gap: 10px;
+    gap: 8px;
+  }
+  
+  .product-detail-summary-grid {
+    grid-template-columns: 1fr;
   }
 }
 
 /* أنماط نظام التقييم */
 .product-rating-section, .ratings-section {
-  margin-top: 20px;
-  padding: 15px;
+  margin-top: 15px;
+  padding: 12px;
   background: var(--card-bg);
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-color);
 }
 
 .rating-form, .user-rating-display {
-  padding: 15px;
+  padding: 12px;
   background: var(--darker-bg);
   border-radius: var(--border-radius-sm);
 }
 
 .stars-display {
   display: flex;
-  gap: 5px;
-  margin-right: 10px;
+  gap: 4px;
+  margin-right: 8px;
 }
 
 .stars-display .fa-star {
   color: #FFD700;
-  font-size: 18px;
+  font-size: 15px;
 }
 
 .stars-display .fa-star-half-alt {
   color: #FFD700;
-  font-size: 18px;
+  font-size: 15px;
 }
 
 .rating-text {
-  font-size: 16px;
+  font-size: 14px;
   color: var(--text-secondary);
 }
 
 .stars-container {
   display: flex;
-  gap: 10px;
-  font-size: 32px;
+  gap: 8px;
+  font-size: 26px;
   cursor: pointer;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .stars-container .fa-star {
@@ -2099,14 +2172,14 @@ input:checked + .toggle-slider:before {
 
 .settings-menu {
   max-width: 600px;
-  margin: 20px auto;
+  margin: 15px auto;
   background: #1e1e1e;
   border-radius: 16px;
-  padding: 15px;
+  padding: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .settings-link {
@@ -2119,7 +2192,7 @@ input:checked + .toggle-slider:before {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
+  padding: 12px 15px;
   background: #121212;
   border: 1px solid #2d2d2d;
   border-radius: 12px;
@@ -2135,9 +2208,9 @@ input:checked + .toggle-slider:before {
 }
 
 .settings-item > i:first-child {
-  font-size: 20px;
+  font-size: 17px;
   color: #FF6B35;
-  width: 35px;
+  width: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2145,35 +2218,35 @@ input:checked + .toggle-slider:before {
 
 .settings-item-content {
   flex: 1;
-  margin-right: 15px;
-  margin-left: 15px;
+  margin-right: 12px;
+  margin-left: 12px;
   text-align: right;
 }
 
 .settings-item-title {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: #ffffff;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .settings-item-desc {
-  font-size: 13px;
+  font-size: 11px;
   color: #b0b0b0;
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 .settings-value {
-  font-size: 14px;
+  font-size: 12px;
   color: #4285F4;
   background: rgba(66, 133, 244, 0.1);
-  padding: 6px 12px;
+  padding: 4px 10px;
   border-radius: 8px;
   font-weight: 500;
 }
 
 .fa-chevron-left, .fa-chevron-right {
-  font-size: 14px;
+  font-size: 12px;
   color: #666;
   transition: transform 0.3s ease;
 }
@@ -2186,13 +2259,13 @@ input:checked + .toggle-slider:before {
 .settings-control {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .range-slider {
   -webkit-appearance: none;
-  width: 120px;
-  height: 6px;
+  width: 100px;
+  height: 5px;
   background: #333;
   border-radius: 5px;
   outline: none;
@@ -2200,8 +2273,8 @@ input:checked + .toggle-slider:before {
 
 .range-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   background: #FF6B35;
   cursor: pointer;
@@ -2213,17 +2286,17 @@ input:checked + .toggle-slider:before {
 }
 
 #textSizePercent {
-  font-size: 14px;
+  font-size: 12px;
   color: #FFAB00;
   font-weight: bold;
-  min-width: 45px;
+  min-width: 38px;
   text-align: center;
 }
 
 .toggle-switch {
   position: relative;
-  width: 46px;
-  height: 24px;
+  width: 40px;
+  height: 20px;
 }
 
 .toggle-switch input {
@@ -2244,8 +2317,8 @@ input:checked + .toggle-slider:before {
 .toggle-slider:before {
   position: absolute;
   content: "";
-  height: 18px;
-  width: 18px;
+  height: 14px;
+  width: 14px;
   left: 3px;
   bottom: 3px;
   background-color: white;
@@ -2258,7 +2331,7 @@ input:checked + .toggle-slider {
 }
 
 input:checked + .toggle-slider:before {
-  transform: translateX(22px);
+  transform: translateX(20px);
 }
 
 .logout-item {
@@ -2273,23 +2346,22 @@ input:checked + .toggle-slider:before {
   box-shadow: 0 4px 12px rgba(234, 67, 53, 0.15);
 }
 
-/* زر العرض في بطاقات المنتج - أيقونة عين فقط */
 .product-card .view-icon-btn {
   position: absolute;
-  top: 10px;
-  left: 10px;
+  top: 8px;
+  left: 8px;
   background: rgba(0,0,0,0.5);
   backdrop-filter: blur(4px);
   border: 1px solid rgba(255,255,255,0.15);
   color: white;
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 13px;
   transition: all var(--transition-speed);
   z-index: 2;
   opacity: 0;
@@ -2307,29 +2379,28 @@ input:checked + .toggle-slider:before {
 @media (max-width: 768px) {
   .product-card .view-icon-btn {
     opacity: 0.7;
-    width: 30px;
-    height: 30px;
-    font-size: 13px;
-    top: 8px;
-    left: 8px;
+    width: 26px;
+    height: 26px;
+    font-size: 11px;
+    top: 6px;
+    left: 6px;
   }
 }
 
-/* منتجات البحث - زر عرض مصغر */
 .search-product-card .search-view-btn {
   background: transparent;
   border: 1px solid rgba(255,255,255,0.2);
   color: white;
-  padding: 6px 10px;
+  padding: 4px 8px;
   border-radius: 50%;
   cursor: pointer;
   transition: all var(--transition-speed);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  width: 34px;
-  height: 34px;
+  font-size: 12px;
+  width: 28px;
+  height: 28px;
 }
 
 .search-product-card .search-view-btn:hover {
@@ -2728,7 +2799,7 @@ input:checked + .toggle-slider:before {
   </div>
 </div>
 
-<!-- لوحة تفاصيل المنتج المحسنة -->
+<!-- ====== لوحة تفاصيل المنتج المحسنة ====== -->
 <div class="product-detail-overlay" id="product-detail-overlay">
   <div class="product-detail-container">
     <div class="product-detail-header">
@@ -2775,6 +2846,11 @@ input:checked + .toggle-slider:before {
           <p class="product-detail-description ltr-text" style="display: none;" id="product-detail-description-en">
             Product description will appear here...
           </p>
+          
+          <!-- أزرار الأجزاء المدمجة -->
+          <div class="merged-parts-tabs" id="merged-parts-tabs" style="display: none;">
+            <!-- سيتم إنشاؤها ديناميكياً -->
+          </div>
           
           <!-- قسم التقييمات -->
           <div class="product-detail-section" id="product-rating-section">
@@ -2834,11 +2910,11 @@ input:checked + .toggle-slider:before {
     </div>
     
     <div class="product-detail-footer">
-      <div>
+      <div class="footer-info">
         <h3 class="rtl-text" id="product-detail-name">اسم المنتج</h3>
         <h3 class="ltr-text" style="display: none;" id="product-detail-name-en">Product Name</h3>
-        <p class="rtl-text" style="color: var(--text-secondary); margin-top: 5px; font-size: 13px;" id="product-detail-type">النوع - الفئة</p>
-        <p class="ltr-text" style="color: var(--text-secondary); margin-top: 5px; display: none; font-size: 13px;" id="product-detail-type-en">Type - Category</p>
+        <p class="rtl-text" style="color: var(--text-secondary); margin-top: 2px; font-size: 11px;" id="product-detail-type">النوع - الفئة</p>
+        <p class="ltr-text" style="color: var(--text-secondary); margin-top: 2px; display: none; font-size: 11px;" id="product-detail-type-en">Type - Category</p>
       </div>
       
       <button class="purchase-button" onclick="purchaseProduct()">
@@ -2963,7 +3039,7 @@ input:checked + .toggle-slider:before {
       </label>
     </div>
     
-    <!-- الخصوصية -->
+    <!-- المساعد الذكي -->
     <a style="text-decoration: none; color: white;" href="Rt-chat.html"><div class="settings-item" >
       <i class="fas fa-shield-alt"></i>
       <div class="settings-item-content">
@@ -3180,7 +3256,9 @@ input:checked + .toggle-slider:before {
     let currentMangaPage = 0;
     const mangaItemsPerPage = 4;
     let currentProductId = null;
-    let currentProductData = null; // لتخزين بيانات المنتج الحالي
+    let currentProductData = null;
+    let currentMergedProducts = [];
+    let currentMergedIndex = 0;
     
     // إعدادات التقسيم
     const novelsPerPage = 6;
@@ -4538,7 +4616,6 @@ input:checked + .toggle-slider:before {
         const imgSrc = poster.src;
         if (!imgSrc || imgSrc.includes('data:image/svg')) return;
         
-        // إنشاء نافذة منبثقة لعرض الصورة
         const modal = document.createElement('div');
         modal.style.cssText = `
             position: fixed;
@@ -4581,10 +4658,30 @@ input:checked + .toggle-slider:before {
         modal.focus();
     }
 
-    // ====== فتح تفاصيل المنتج ======
-    async function openProductDetail(productId) {
+    // ====== دالة تجميع المنتجات المتطابقة ======
+    function getMergedProducts(productId) {
         const product = allProducts.find(p => p.id === productId);
-        if (!product) return;
+        if (!product) return [product];
+        
+        const mergeKey = product.mergeKey || product.title || productId;
+        
+        const merged = allProducts.filter(p => {
+            const pKey = p.mergeKey || p.title || p.id;
+            return pKey === mergeKey;
+        });
+        
+        return merged.length > 1 ? merged : [product];
+    }
+
+    // ====== فتح تفاصيل المنتج مع دمج المنتجات المتطابقة ======
+    async function openProductDetail(productId) {
+        const mergedProducts = getMergedProducts(productId);
+        currentMergedProducts = mergedProducts;
+        currentMergedIndex = 0;
+        
+        // البحث عن المنتج الرئيسي
+        const mainProduct = mergedProducts[0] || allProducts.find(p => p.id === productId);
+        if (!mainProduct) return;
         
         // إغلاق البحث إذا كان مفتوحاً
         const searchOverlay = document.getElementById('search-overlay');
@@ -4592,8 +4689,18 @@ input:checked + .toggle-slider:before {
             closeSearch();
         }
         
-        currentProductId = productId;
-        currentProductData = product;
+        currentProductId = mainProduct.id;
+        currentProductData = mainProduct;
+        
+        // عرض المنتج الأول
+        await displayProductInDetail(mainProduct, mergedProducts);
+    }
+
+    // ====== عرض منتج في تفاصيل المنتج ======
+    async function displayProductInDetail(product, mergedProducts = null) {
+        if (!product) return;
+        
+        const merged = mergedProducts || currentMergedProducts || [product];
         
         document.getElementById('product-detail-title').textContent = product.title;
         document.getElementById('product-detail-title-en').textContent = product.titleEn;
@@ -4608,7 +4715,7 @@ input:checked + .toggle-slider:before {
         document.getElementById('product-detail-type').textContent = `${product.type} - ${product.subcategory}`;
         document.getElementById('product-detail-type-en').textContent = `${product.typeEn} - ${product.subcategoryEn}`;
         
-        await loadProductRatings(productId);
+        await loadProductRatings(product.id);
         
         const summarySection = document.getElementById('product-summary-section');
         if (summarySection) {
@@ -4685,8 +4792,8 @@ input:checked + .toggle-slider:before {
         
         const user = checkAuth();
         if (user) {
-            const purchaseStatus = await checkProductPurchase(productId);
-            userRatingForCurrentProduct = await getUserRatingForProduct(productId, user.uid);
+            const purchaseStatus = await checkProductPurchase(product.id);
+            userRatingForCurrentProduct = await getUserRatingForProduct(product.id, user.uid);
             
             createRatingInProductInfo(purchaseStatus.purchased, userRatingForCurrentProduct);
         } else {
@@ -4699,6 +4806,28 @@ input:checked + .toggle-slider:before {
                         <span class="ltr-text" style="display: none;">Login required</span>
                     </div>
                 `;
+            }
+        }
+        
+        // عرض أزرار الأجزاء المدمجة
+        const mergedTabsContainer = document.getElementById('merged-parts-tabs');
+        if (mergedTabsContainer) {
+            if (merged.length > 1) {
+                mergedTabsContainer.style.display = 'flex';
+                mergedTabsContainer.innerHTML = '';
+                
+                merged.forEach((p, index) => {
+                    const tab = document.createElement('button');
+                    tab.className = `merged-part-tab ${index === currentMergedIndex ? 'active' : ''}`;
+                    tab.textContent = `${currentLanguage === 'ar' ? 'الجزء' : 'Part'} ${index + 1}: ${p.title}`;
+                    tab.onclick = () => {
+                        currentMergedIndex = index;
+                        displayProductInDetail(p, merged);
+                    };
+                    mergedTabsContainer.appendChild(tab);
+                });
+            } else {
+                mergedTabsContainer.style.display = 'none';
             }
         }
         
@@ -4725,7 +4854,7 @@ input:checked + .toggle-slider:before {
                             videoUrlForChapter = product.youtubeUrl;
                         }
                         
-                        const chapterId = chapter.id || `chapter_${productId}_${index}`;
+                        const chapterId = chapter.id || `chapter_${product.id}_${index}`;
                         
                         const chapterElement = document.createElement('div');
                         chapterElement.className = 'chapter-item';
@@ -4750,39 +4879,8 @@ input:checked + .toggle-slider:before {
             }
         }
         
-        const commentsSection = document.getElementById('comments-section');
-        if (commentsSection) {
-            commentsSection.innerHTML = `
-                <div class="section-header">
-                    <h3 id="comments-count" class="section-label">
-                        <i class="fas fa-comments"></i>
-                        <span class="rtl-text">التعليقات (0)</span>
-                        <span class="ltr-text" style="display: none;">Comments (0)</span>
-                    </h3>
-                </div>
-                
-                <div class="comment-form">
-                    <div class="comment-input-container">
-                        <textarea 
-                            id="product-comment-input" 
-                            class="comment-input" 
-                            placeholder="${currentLanguage === 'ar' ? 'اكتب تعليقك هنا...' : 'Write your comment here...'}"
-                            rows="3"
-                        ></textarea>
-                        <button class="submit-comment" onclick="addProductComment()">
-                            <i class="fas fa-paper-plane"></i>
-                            <span class="rtl-text">إرسال</span>
-                            <span class="ltr-text" style="display: none;">Send</span>
-                        </button>
-                    </div>
-                </div>
-                
-                <div id="product-comments" class="comments-list">
-                </div>
-            `;
-        }
-        
-        await loadCommentsFromFirebase(productId);
+        // تحميل التعليقات للمنتج الحالي
+        await loadCommentsFromFirebase(product.id);
         
         document.getElementById('product-detail-overlay').style.display = 'block';
         document.body.style.overflow = 'hidden';
@@ -4796,6 +4894,8 @@ input:checked + .toggle-slider:before {
         document.body.style.overflow = 'auto';
         currentProductId = null;
         currentProductData = null;
+        currentMergedProducts = [];
+        currentMergedIndex = 0;
         selectedRating = 0;
         hoveredRating = 0;
         userRatingForCurrentProduct = null;
@@ -5151,36 +5251,7 @@ input:checked + .toggle-slider:before {
             
             await set(newCommentRef, commentData);
             
-            const commentsContainer = document.getElementById('product-comments');
-            if (commentsContainer) {
-                const commentElement = document.createElement('div');
-                commentElement.className = 'comment-item';
-                const isOwner = user.uid === commentData.authorId;
-                commentElement.innerHTML = `
-                    <div class="comment-header">
-                        <span class="comment-author">${commentData.author}</span>
-                        <span class="comment-date">${formatCommentDate(commentData.date)}</span>
-                    </div>
-                    <p class="comment-text">${commentData.text}</p>
-                    <div class="comment-actions">
-                        ${isOwner ? `
-                            <button class="delete-comment-btn" onclick="deleteComment('${currentProductId}', '${newCommentRef.key}')">
-                                <i class="fas fa-trash"></i>
-                                <span class="rtl-text">حذف</span>
-                                <span class="ltr-text" style="display: none;">Delete</span>
-                            </button>
-                        ` : ''}
-                    </div>
-                `;
-                
-                if (commentsContainer.firstChild) {
-                    commentsContainer.insertBefore(commentElement, commentsContainer.firstChild);
-                } else {
-                    commentsContainer.appendChild(commentElement);
-                }
-                
-                updateCommentsCount();
-            }
+            await loadCommentsFromFirebase(currentProductId);
             
             input.value = '';
             
@@ -5206,7 +5277,6 @@ input:checked + .toggle-slider:before {
         }
         
         try {
-            // التحقق من ملكية التعليق
             const commentRef = ref(database, `comments/${productId}/${commentId}`);
             const snapshot = await get(commentRef);
             
@@ -5225,23 +5295,9 @@ input:checked + .toggle-slider:before {
                 return;
             }
             
-            // حذف التعليق
             await remove(commentRef);
             
-            // إزالة من الواجهة
-            const commentsContainer = document.getElementById('product-comments');
-            if (commentsContainer) {
-                const commentElements = commentsContainer.querySelectorAll('.comment-item');
-                for (const el of commentElements) {
-                    // البحث عن الزر الذي يحتوي على نفس معرف التعليق
-                    const deleteBtn = el.querySelector(`[onclick*="${commentId}"]`);
-                    if (deleteBtn) {
-                        el.remove();
-                        break;
-                    }
-                }
-                updateCommentsCount();
-            }
+            await loadCommentsFromFirebase(productId);
             
             showNotification(currentLanguage === 'ar' ? 
                 'تم حذف التعليق بنجاح' : 
@@ -5291,18 +5347,16 @@ input:checked + .toggle-slider:before {
                         commentElement.innerHTML = `
                             <div class="comment-header">
                                 <span class="comment-author">${comment.author}</span>
-                                <span class="comment-date">${formatCommentDate(comment.date)}</span>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span class="comment-date">${formatCommentDate(comment.date)}</span>
+                                    ${isOwner ? `
+                                        <button class="delete-comment-btn" onclick="deleteComment('${productId}', '${comment.id}')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    ` : ''}
+                                </div>
                             </div>
                             <p class="comment-text">${comment.text}</p>
-                            <div class="comment-actions">
-                                ${isOwner ? `
-                                    <button class="delete-comment-btn" onclick="deleteComment('${productId}', '${comment.id}')">
-                                        <i class="fas fa-trash"></i>
-                                        <span class="rtl-text">حذف</span>
-                                        <span class="ltr-text" style="display: none;">Delete</span>
-                                    </button>
-                                ` : ''}
-                            </div>
                         `;
                         commentsContainer.appendChild(commentElement);
                     });
@@ -5332,7 +5386,7 @@ input:checked + .toggle-slider:before {
         const commentItems = commentsContainer.querySelectorAll('.comment-item:not(.no-comments)');
         const commentsCount = commentItems.length;
         
-        const countElement = document.getElementById('comments-count');
+        const countElement = document.querySelector('#comments-count');
         if (countElement) {
             if (currentLanguage === 'ar') {
                 countElement.innerHTML = `<i class="fas fa-comments"></i> التعليقات (${commentsCount})`;
@@ -5370,7 +5424,8 @@ input:checked + .toggle-slider:before {
         const user = checkAuthBeforePurchase();
         if (!user) return;
         
-        const product = allProducts.find(p => p.id === currentProductId);
+        // إذا كان هناك منتجات مدمجة، نضيف المنتج الحالي فقط
+        const product = currentProductData || allProducts.find(p => p.id === currentProductId);
         if (!product) {
             showNotification(currentLanguage === 'ar' ? 
                 'المنتج غير موجود' : 
@@ -5378,7 +5433,7 @@ input:checked + .toggle-slider:before {
             return;
         }
         
-        addToCart(currentProductId);
+        addToCart(product.id);
         closeProductDetail();
     }
 
@@ -5915,9 +5970,41 @@ input:checked + .toggle-slider:before {
             transform: scale(1.05);
         }
         
+        .merged-part-tab {
+            padding: 6px 16px;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            transition: all var(--transition-speed);
+            color: var(--text-secondary);
+        }
+        
+        .merged-part-tab:hover {
+            border-color: var(--primary-color);
+            color: var(--text-primary);
+        }
+        
+        .merged-part-tab.active {
+            background: var(--gradient-primary);
+            border-color: var(--primary-color);
+            color: white;
+        }
+        
         @media (max-width: 768px) {
             .product-detail-summary-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .merged-part-tab {
+                font-size: 11px;
+                padding: 4px 12px;
+            }
+            
+            .product-detail-footer .footer-info h3 {
+                font-size: 12px;
             }
         }
     `;
