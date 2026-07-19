@@ -183,18 +183,9 @@
             text-align: left;
         }
 
+        /* تم إخفاء اسم المرسل */
         .bubble .sender-name {
-            font-size: 12px;
-            font-weight: 700;
-            color: #ff6b35;
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .bubble .sender-name i {
-            font-size: 14px;
+            display: none;
         }
 
         .empty-state {
@@ -219,28 +210,11 @@
             margin-bottom: 8px;
         }
         .empty-state h5 { color: #64748b; }
+        .empty-state p { color: #94a3b8; font-size: 14px; }
+        
+        /* تم إخفاء قائمة المشرفين */
         .empty-state .supervisors-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-            margin-top: 12px;
-            max-width: 400px;
-        }
-        .empty-state .supervisor-chip {
-            background: #fff;
-            border: 1px solid #e8ecf1;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            color: #334155;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .empty-state .supervisor-chip i {
-            color: #10b981;
-            font-size: 8px;
+            display: none;
         }
 
         /* Input */
@@ -299,6 +273,50 @@
             cursor: not-allowed;
             box-shadow: none;
         }
+
+        /* تحسينات للشاشات الصغيرة */
+        @media (max-width: 480px) {
+            .topbar {
+                padding: 10px 14px;
+                min-height: 50px;
+            }
+            .topbar .brand .icon {
+                width: 34px;
+                height: 34px;
+                font-size: 14px;
+            }
+            .topbar .brand .title {
+                font-size: 14px;
+            }
+            .topbar .brand .subtitle {
+                font-size: 10px;
+            }
+            .online-badge {
+                font-size: 10px;
+                padding: 4px 10px;
+            }
+            .messages {
+                padding: 12px 14px;
+            }
+            .bubble {
+                max-width: 85%;
+                font-size: 13px;
+                padding: 8px 12px;
+            }
+            .input-area {
+                padding: 8px 12px;
+            }
+            .input-area input {
+                font-size: 13px;
+                padding: 10px 12px;
+                min-height: 40px;
+            }
+            .btn-send {
+                width: 40px;
+                height: 40px;
+                font-size: 15px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -323,10 +341,7 @@
         <div class="empty-state">
             <div class="circle"><i class="fas fa-comments"></i></div>
             <h5>مرحباً بك في الدعم الفني</h5>
-            <p>اكتب رسالتك وسيرد عليك أحد المشرفين</p>
-            <div class="supervisors-list" id="supervisorsList">
-                <!-- Will be populated -->
-            </div>
+            <p>اكتب رسالتك وسيرد عليك فريق الدعم</p>
         </div>
     </div>
 
@@ -375,8 +390,8 @@
     const messagesContainer = document.getElementById('messagesContainer');
     const messageInput = document.getElementById('messageInput');
     const sendBtn = document.getElementById('sendBtn');
-    const supervisorsList = document.getElementById('supervisorsList');
 
+    // قائمة المشرفين (مخفية عن المستخدم، تستخدم فقط للخلفية)
     const supervisorNames = {
         'supervisor_hussain': 'حسين العصاري',
         'supervisor_ahmed_j': 'أحمد الجويد',
@@ -385,18 +400,9 @@
         'supervisor_moayad': 'مؤيد رضا',
         'supervisor_mohammed_a': 'محمد علي',
         'supervisor_mohammed_t': 'محمد طاهر',
-        'supervisor_abdulaziz': 'عبد العزيز'
+        'supervisor_abdulaziz': 'عبد العزيز',
+        'supervisor_ali_t': 'علي طاهر'
     };
-
-    // Show supervisors list in empty state
-    function showSupervisorsList() {
-        let html = '';
-        Object.entries(supervisorNames).forEach(([id, name]) => {
-            html += `<span class="supervisor-chip"><i class="fas fa-circle"></i> ${name}</span>`;
-        });
-        if (supervisorsList) supervisorsList.innerHTML = html;
-    }
-    showSupervisorsList();
 
     function fmtTime(ts) {
         if (!ts) return '';
@@ -412,7 +418,7 @@
         return d.toLocaleDateString('ar-SA', { weekday: 'long', month: 'long', day: 'numeric' });
     }
 
-    // Listen to all messages for this user (from all supervisors)
+    // Listen to all messages for this user
     function subscribeToMessages() {
         const userChatRef = ref(db, `users/${USER_ID}/messages`);
         const q = query(userChatRef, orderByChild('timestamp'), limitToLast(100));
@@ -424,8 +430,7 @@
                     <div class="empty-state">
                         <div class="circle"><i class="fas fa-comments"></i></div>
                         <h5>مرحباً بك في الدعم الفني</h5>
-                        <p>اكتب رسالتك وسيرد عليك أحد المشرفين</p>
-                        <div class="supervisors-list">${Object.entries(supervisorNames).map(([id, name]) => `<span class="supervisor-chip"><i class="fas fa-circle"></i> ${name}</span>`).join('')}</div>
+                        <p>اكتب رسالتك وسيرد عليك فريق الدعم</p>
                     </div>`;
                 return;
             }
@@ -440,7 +445,6 @@
                 const md = m.timestamp ? fmtDate(m.timestamp) : '';
                 const isSent = m.sender === 'client';
                 const t = fmtTime(m.timestamp);
-                const supervisorName = m.supervisorName || '';
 
                 if (md && md !== lastDate) {
                     html += `<div class="date-separator">${md}</div>`;
@@ -450,7 +454,6 @@
                 html += `
                     <div class="msg-row ${isSent ? 'sent' : 'received'}">
                         <div class="bubble ${isSent ? 'sent' : 'received'}">
-                            ${!isSent && supervisorName ? `<span class="sender-name"><i class="fas fa-user-tie"></i> ${supervisorName}</span>` : ''}
                             ${m.text}
                             <span class="time">${t} ${isSent ? '✓' : ''}</span>
                         </div>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>انضم إلينا - وظائف المستقبل | مكتبة الفجر الرقمية</title>
-      <link rel="icon" type="image/x-icon" href="img\Login library.jpg">
+    <link rel="icon" type="image/x-icon" href="img\Login library.jpg">
     
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
@@ -42,6 +42,7 @@
                 window.currentUser = user;
                 loadUserData(user.uid);
                 checkExistingApplication(user.uid);
+                loadMyProducts(user.uid);
             }
         });
 
@@ -70,7 +71,6 @@
                     if (found) {
                         window.existingApplication = found;
                         updateApplicationUI(found);
-                        // الاستماع للتغييرات
                         listenForChanges(found.id);
                     }
                 }
@@ -115,7 +115,6 @@
             statusBadge.textContent = label.text;
             statusBadge.className = 'status-badge ' + label.class;
             
-            // إظهار رسالة المشرف
             if (app.adminMessage) {
                 adminMessageBox.style.display = 'block';
                 adminMessageText.textContent = app.adminMessage;
@@ -128,7 +127,6 @@
                 adminMessageBox.style.display = 'none';
             }
             
-            // أزرار حسب الحالة
             if (app.status === 'new' || app.status === 'reviewing') {
                 btnCancel.style.display = 'inline-flex';
                 btnEdit.style.display = 'inline-flex';
@@ -137,7 +135,6 @@
                 btnEdit.style.display = 'none';
             }
             
-            // تعطيل اختيار الوظائف إذا كان هناك طلب
             if (!window.isEditing) {
                 document.querySelectorAll('.job-card').forEach(c => c.classList.add('disabled'));
                 document.getElementById('btnApply').disabled = true;
@@ -146,6 +143,67 @@
         }
 
         window.updateApplicationUI = updateApplicationUI;
+
+        // تحميل منتجات المستخدم
+        async function loadMyProducts(uid) {
+            try {
+                const productsRef = ref(database, 'productSubmissions');
+                const snapshot = await get(productsRef);
+                if (snapshot.exists()) {
+                    const myProducts = [];
+                    snapshot.forEach(child => {
+                        const data = child.val();
+                        if (data.userId === uid) {
+                            myProducts.push({ id: child.key, ...data });
+                        }
+                    });
+                    renderMyProducts(myProducts);
+                }
+            } catch(e) {
+                console.error('Error loading products:', e);
+            }
+        }
+
+        function renderMyProducts(products) {
+            const container = document.getElementById('myProductsContainer');
+            if (products.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center;padding:30px;color:var(--muted);">
+                        <i class="fa-solid fa-cube" style="font-size:2em;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                        لم تقم بإرسال أي منتج بعد
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = products.map((p, i) => {
+                const statusLabels = { pending:'⏳ قيد الانتظار', approved:'✅ مقبول', rejected:'❌ مرفوض' };
+                const statusColors = { pending:'#fdcb6e', approved:'#00b894', rejected:'#e17055' };
+                const status = p.status || 'pending';
+                const dateStr = p.timestamp ? new Date(p.timestamp).toLocaleDateString('ar-SA', {
+                    year:'numeric', month:'long', day:'numeric'
+                }) : 'غير معروف';
+                const dealLabel = p.dealType === 'percentage' ? 'نسبة 70%' : 'شراء مرة واحدة';
+                
+                return `
+                <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:12px;border-right:4px solid ${statusColors[status]};">
+                    <div style="display:flex;gap:15px;flex-wrap:wrap;">
+                        ${p.imageData ? `<img src="${p.imageData}" alt="${p.productName}" style="width:80px;height:80px;border-radius:12px;object-fit:cover;border:1px solid var(--border);">` : ''}
+                        <div style="flex:1;min-width:200px;">
+                            <h4 style="font-size:1.1em;margin-bottom:4px;">${p.productName}</h4>
+                            <p style="color:var(--muted);font-size:0.85em;">${p.productIdea}</p>
+                            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">
+                                <span style="font-size:0.75em;background:rgba(108,92,231,0.15);color:#a29bfe;padding:2px 12px;border-radius:12px;">${dealLabel}</span>
+                                <span style="font-size:0.75em;color:var(--muted);">📅 ${dateStr}</span>
+                                <span style="font-size:0.75em;color:${statusColors[status]};">${statusLabels[status]}</span>
+                            </div>
+                            ${p.adminMessage ? `<div style="margin-top:8px;background:rgba(108,92,231,0.1);border-radius:10px;padding:10px;font-size:0.85em;color:var(--muted);border-right:2px solid #a29bfe;"><strong style="color:#a29bfe;">رسالة من الإدارة:</strong> ${p.adminMessage}</div>` : ''}
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -162,6 +220,7 @@
             --grad1: linear-gradient(135deg, #6c5ce7, #a29bfe);
             --grad2: linear-gradient(135deg, #00cec9, #81ecec);
             --grad3: linear-gradient(135deg, #fd79a8, #fab1a0);
+            --grad4: linear-gradient(135deg, #fdcb6e, #f39c12);
             --radius: 20px;
             --transition: 0.35s cubic-bezier(0.25, 0.8, 0.25, 1.2);
         }
@@ -198,6 +257,8 @@
             background: rgba(15,15,28,0.8); backdrop-filter: blur(30px);
             border-bottom: 1px solid var(--border); padding: 12px 28px;
             display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         .topbar-brand {
             display: flex; align-items: center; gap: 10px;
@@ -227,10 +288,215 @@
         .hero h1 .g1 { background: var(--grad1); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
         .hero h1 .g2 { background: var(--grad2); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
         .hero h1 .g3 { background: var(--grad3); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .hero p { color: var(--muted); margin-top: 10px; }
 
         .container { max-width: 1150px; margin: 0 auto; padding: 0 22px; position: relative; z-index: 1; }
 
-        /* Application Status Section */
+        /* ====== TABS ====== */
+        .tabs-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: var(--surface2);
+            padding: 8px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 12px 28px;
+            border-radius: 14px;
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            justify-content: center;
+        }
+        .tab-btn:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .tab-btn.active {
+            background: var(--grad1);
+            color: #fff;
+            box-shadow: 0 8px 25px rgba(108,92,231,0.3);
+        }
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(15px); } to { opacity:1; transform:translateY(0); } }
+
+        /* ====== PRODUCT SUBMISSION ====== */
+        .product-form {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+        .product-form .form-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .product-form .form-title i { color: var(--grad4); }
+        .product-form .form-subtitle {
+            color: var(--muted);
+            font-size: 0.9em;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.9em;
+        }
+        .form-group label .required {
+            color: #e17055;
+        }
+        .form-group label .optional {
+            color: var(--muted);
+            font-weight: 400;
+            font-size: 0.8em;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(10,10,20,0.6);
+            color: var(--text);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.95em;
+            transition: var(--transition);
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #6c5ce7;
+            box-shadow: 0 0 0 3px rgba(108,92,231,0.15);
+        }
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .form-group input[type="file"] {
+            padding: 10px;
+            background: rgba(10,10,20,0.4);
+        }
+        .form-group input[type="file"]::file-selector-button {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            background: var(--grad1);
+            color: #fff;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .form-checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 15px;
+            background: rgba(10,10,20,0.4);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-top: 5px;
+        }
+        .form-checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            min-width: 20px;
+            margin-top: 2px;
+            accent-color: #6c5ce7;
+            cursor: pointer;
+        }
+        .form-checkbox-group label {
+            font-weight: 400;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+        .form-checkbox-group label strong {
+            color: #fdcb6e;
+        }
+
+        .deal-type-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 5px;
+        }
+        .deal-option {
+            padding: 16px;
+            border-radius: 14px;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+            background: rgba(10,10,20,0.3);
+            text-align: center;
+        }
+        .deal-option:hover { border-color: rgba(255,255,255,0.2); }
+        .deal-option.selected {
+            border-color: #6c5ce7;
+            background: rgba(108,92,231,0.1);
+            box-shadow: 0 0 20px rgba(108,92,231,0.1);
+        }
+        .deal-option .icon { font-size: 1.8em; display: block; margin-bottom: 8px; }
+        .deal-option .title { font-weight: 700; font-size: 1em; }
+        .deal-option .desc { font-size: 0.78em; color: var(--muted); margin-top: 4px; }
+
+        .btn-submit-product {
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
+            border: none;
+            background: var(--grad4);
+            color: #000;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 800;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .btn-submit-product:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(253,203,110,0.4);
+        }
+        .btn-submit-product:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ====== JOB SECTION ====== */
+        .section-head { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        .section-head .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--grad2); box-shadow: 0 0 12px #00cec9; }
+        .section-head h2 { font-size: 1.4em; font-weight: 700; }
+
         .app-status-section {
             display: none;
             background: var(--surface2);
@@ -273,9 +539,7 @@
             margin-bottom: 10px;
             font-size: 0.9em;
         }
-        .admin-message-box .msg-header i {
-            font-size: 1.2em;
-        }
+        .admin-message-box .msg-header i { font-size: 1.2em; }
         .admin-message-box .msg-content {
             color: #e8e8f0;
             font-size: 0.95em;
@@ -323,10 +587,6 @@
             border: 1px solid rgba(253,203,110,0.3);
         }
         .btn-edit-app:hover { background: rgba(253,203,110,0.3); }
-
-        .section-head { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-        .section-head .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--grad2); box-shadow: 0 0 12px #00cec9; }
-        .section-head h2 { font-size: 1.4em; font-weight: 700; }
 
         .job-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
         .job-card {
@@ -403,6 +663,27 @@
         .btn-primary:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(108,92,231,0.5); }
         .btn-primary:disabled { background: #3a3a50; color: #777; cursor: not-allowed; box-shadow: none; }
 
+        /* ====== MY PRODUCTS SECTION ====== */
+        .my-products-section {
+            margin-top: 30px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 25px;
+            backdrop-filter: blur(10px);
+        }
+        .my-products-section .section-title {
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .my-products-section .section-title i {
+            color: var(--grad4);
+        }
+
         .toast {
             position: fixed; top: 25px; left: 50%;
             transform: translateX(-50%) translateY(-120px);
@@ -415,6 +696,10 @@
 
         @media (max-width: 768px) {
             .job-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .deal-type-group { grid-template-columns: 1fr; }
+            .tabs-container { flex-direction: column; }
+            .tab-btn { flex: none; }
         }
     </style>
 </head>
@@ -442,54 +727,173 @@
 
     <div class="hero">
         <h1><span class="g1">انضم</span> إلى <span class="g2">طاقم</span> <span class="g3">المستقبل</span></h1>
-        <p style="color:var(--muted);margin-top:10px;">اختر الوظائف التي تناسب مهاراتك وقدّم طلبك الآن</p>
+        <p>اختر مسارك: إما الانضمام إلى فريق العمل أو تقديم منتجك الخاص</p>
     </div>
 
     <div class="container">
-        <!-- Application Status -->
-        <div class="app-status-section" id="applicationStatus">
-            <h2><i class="fa-solid fa-clipboard-list"></i> حالة طلب التوظيف الخاص بك</h2>
-            <div class="status-badge badge-new" id="statusBadge">جديد - قيد الانتظار</div>
-            
-            <div class="admin-message-box" id="adminMessageBox">
-                <div class="msg-header">
-                    <i class="fa-solid fa-envelope"></i>
-                    رسالة من فريق التوظيف
+        <!-- Tabs -->
+        <div class="tabs-container">
+            <button class="tab-btn active" data-tab="tabJobs">
+                <i class="fa-solid fa-briefcase"></i> وظائف
+            </button>
+            <button class="tab-btn" data-tab="tabProducts">
+                <i class="fa-solid fa-cube"></i> إرسال منتج جديد
+            </button>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- TAB 1: JOBS -->
+        <!-- ============================================ -->
+        <div class="tab-content active" id="tabJobs">
+            <!-- Application Status -->
+            <div class="app-status-section" id="applicationStatus">
+                <h2><i class="fa-solid fa-clipboard-list"></i> حالة طلب التوظيف الخاص بك</h2>
+                <div class="status-badge badge-new" id="statusBadge">جديد - قيد الانتظار</div>
+                
+                <div class="admin-message-box" id="adminMessageBox">
+                    <div class="msg-header">
+                        <i class="fa-solid fa-envelope"></i>
+                        رسالة من فريق التوظيف
+                    </div>
+                    <div class="msg-content" id="adminMessageText"></div>
+                    <div class="msg-footer">
+                        <span id="adminMessageSender"></span>
+                        <span id="adminMessageTime"></span>
+                    </div>
                 </div>
-                <div class="msg-content" id="adminMessageText"></div>
-                <div class="msg-footer">
-                    <span id="adminMessageSender"></span>
-                    <span id="adminMessageTime"></span>
+
+                <div class="app-actions">
+                    <button class="btn-app btn-edit-app" id="btnEditApplication" onclick="editApplication()">
+                        <i class="fa-solid fa-pen-to-square"></i> تعديل الطلب
+                    </button>
+                    <button class="btn-app btn-cancel-app" id="btnCancelApplication" onclick="cancelApplication()">
+                        <i class="fa-solid fa-trash"></i> إلغاء الطلب
+                    </button>
                 </div>
             </div>
 
-            <div class="app-actions">
-                <button class="btn-app btn-edit-app" id="btnEditApplication" onclick="editApplication()">
-                    <i class="fa-solid fa-pen-to-square"></i> تعديل الطلب
+            <div class="section-head"><div class="dot"></div><h2>اختر الوظائف المناسبة لك</h2></div>
+            <div class="job-grid" id="jobGrid"></div>
+
+            <div class="apply-section" id="applySection">
+                <div class="icon-circle"><i class="fa-solid fa-paper-plane"></i></div>
+                <h2 id="applyTitle">مستعد للانضمام؟</h2>
+                <p class="sub" id="applySub">بعد اختيارك للوظائف، اضغط على الزر أدناه لتقديم طلبك</p>
+                <button class="btn btn-primary" id="btnApply" disabled onclick="submitApplication()">
+                    <i class="fa-solid fa-paper-plane"></i> <span id="btnApplyText">طلب الانضمام</span>
                 </button>
-                <button class="btn-app btn-cancel-app" id="btnCancelApplication" onclick="cancelApplication()">
-                    <i class="fa-solid fa-trash"></i> إلغاء الطلب
-                </button>
+                <p style="color:var(--muted);font-size:0.75em;margin-top:10px;" id="applyNote"></p>
             </div>
         </div>
 
-        <div class="section-head"><div class="dot"></div><h2>اختر الوظائف المناسبة لك</h2></div>
-        <div class="job-grid" id="jobGrid"></div>
+        <!-- ============================================ -->
+        <!-- TAB 2: PRODUCT SUBMISSION -->
+        <!-- ============================================ -->
+        <div class="tab-content" id="tabProducts">
+            <div class="product-form">
+                <div class="form-title">
+                    <i class="fa-solid fa-cube"></i>
+                    إرسال منتج جديد
+                </div>
+                <p class="form-subtitle">قدّم منتجك الفكري إلى مكتبة الفجر الرقمية واختر طريقة التعاون المناسبة لك</p>
 
-        <div class="apply-section" id="applySection">
-            <div class="icon-circle"><i class="fa-solid fa-paper-plane"></i></div>
-            <h2 id="applyTitle">مستعد للانضمام؟</h2>
-            <p class="sub" id="applySub">بعد اختيارك للوظائف، اضغط على الزر أدناه لتقديم طلبك</p>
-            <button class="btn btn-primary" id="btnApply" disabled onclick="submitApplication()">
-                <i class="fa-solid fa-paper-plane"></i> <span id="btnApplyText">طلب الانضمام</span>
-            </button>
-            <p style="color:var(--muted);font-size:0.75em;margin-top:10px;" id="applyNote"></p>
+                <form id="productForm" onsubmit="submitProduct(event)">
+                    <!-- اسم مالك المنتج -->
+                    <div class="form-group">
+                        <label>اسم مالك المنتج <span class="required">*</span></label>
+                        <input type="text" id="productOwnerName" placeholder="أدخل اسمك الكامل" required>
+                    </div>
+
+                    <div class="form-row">
+                        <!-- اسم المنتج -->
+                        <div class="form-group">
+                            <label>اسم المنتج <span class="required">*</span></label>
+                            <input type="text" id="productName" placeholder="مثال: رواية الأفق البعيد" required>
+                        </div>
+                        <!-- فكرة المنتج -->
+                        <div class="form-group">
+                            <label>فكرة المنتج <span class="required">*</span></label>
+                            <input type="text" id="productIdea" placeholder="وصف مختصر للفكرة" required>
+                        </div>
+                    </div>
+
+                    <!-- وصف تفصيلي -->
+                    <div class="form-group">
+                        <label>الوصف التفصيلي <span class="required">*</span></label>
+                        <textarea id="productDescription" placeholder="اشرح فكرتك بالتفصيل، ماذا يقدم المنتج؟ وما هي مميزاته؟" required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <!-- صورة المنتج -->
+                        <div class="form-group">
+                            <label>صورة المنتج <span class="required">*</span></label>
+                            <input type="file" id="productImage" accept="image/*" required>
+                        </div>
+                        <!-- ملف إضافي (اختياري) -->
+                        <div class="form-group">
+                            <label>ملف إضافي <span class="optional">(اختياري)</span></label>
+                            <input type="file" id="productFile" accept=".*">
+                        </div>
+                    </div>
+
+                    <!-- نوع الاتفاق -->
+                    <div class="form-group">
+                        <label>طريقة التعاون <span class="required">*</span></label>
+                        <div class="deal-type-group" id="dealTypeGroup">
+                            <div class="deal-option selected" data-value="percentage">
+                                <span class="icon">📊</span>
+                                <div class="title">نسبة 70%</div>
+                                <div class="desc">نأخذ 30% ونحن نطبعه وننشره ونسوقه</div>
+                            </div>
+                            <div class="deal-option" data-value="buyout">
+                                <span class="icon">💰</span>
+                                <div class="title">شراء مرة واحدة</div>
+                                <div class="desc">نشتري المنتج وندفع لك مبلغاً مرة واحدة</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="dealType" value="percentage">
+                    </div>
+
+                    <!-- الشروط والأحكام -->
+                    <div class="form-group">
+                        <div class="form-checkbox-group">
+                            <input type="checkbox" id="termsCheckbox" required>
+                            <label for="termsCheckbox">
+                                أوافق على <strong>شروط المتجر</strong> وأقر بأن:
+                                <br>
+                                • في حال اختيار <strong>نسبة 70%</strong>: أحصل على 70% من أرباح كل منتج، وتتكفل المكتبة بالطباعة والنشر والتسويق.
+                                <br>
+                                • في حال اختيار <strong>الشراء مرة واحدة</strong>: أتلقى مبلغاً مقطوعاً عن المنتج، ولا أحصل على أي نسبة مستقبلية.
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-submit-product" id="btnSubmitProduct">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        إرسال المنتج
+                    </button>
+                </form>
+            </div>
+
+            <!-- عرض منتجاتي -->
+            <div class="my-products-section">
+                <div class="section-title">
+                    <i class="fa-solid fa-boxes"></i>
+                    منتجاتي المرسلة
+                </div>
+                <div id="myProductsContainer">
+                    <div style="text-align:center;padding:20px;color:var(--muted);">
+                        <i class="fa-solid fa-spinner fa-spin" style="font-size:1.5em;"></i> جاري التحميل...
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="toast" id="toast"></div>
 
     <script>
+        // ===================== JOBS DATA =====================
         const jobs = [
             { id:1, icon:"fa-solid fa-shield-halved", title:"مهندس الأمن السيبراني", en:"Cyber Security", desc:"حماية البنية التحتية الرقمية وكشف الثغرات ومنع الاختراقات.", tags:["Python","شبكات","OSCP"] },
             { id:2, icon:"fa-solid fa-code", title:"مبرمج ويب", en:"Web Developer", desc:"بناء منصات ويب عالية الأداء وتجارب مستخدم استثنائية.", tags:["React","Node.js","PHP"] },
@@ -516,6 +920,26 @@
         window.isEditing = false;
         let editingAppId = null;
 
+        // ===================== TABS =====================
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById(this.dataset.tab).classList.add('active');
+            });
+        });
+
+        // ===================== DEAL TYPE SELECTION =====================
+        document.querySelectorAll('.deal-option').forEach(opt => {
+            opt.addEventListener('click', function() {
+                document.querySelectorAll('.deal-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                document.getElementById('dealType').value = this.dataset.value;
+            });
+        });
+
+        // ===================== RENDER JOBS =====================
         function renderJobs() {
             jobGrid.innerHTML = '';
             jobs.forEach(job => {
@@ -569,6 +993,7 @@
             }
         }
 
+        // ===================== SUBMIT JOB APPLICATION =====================
         window.submitApplication = async function() {
             if (!window.currentUser) {
                 window.location.href = 'login.html';
@@ -583,7 +1008,6 @@
 
             try {
                 if (window.isEditing && editingAppId) {
-                    // تحديث الطلب الموجود - سيظهر التعديل عند المشرفين أيضاً
                     await window.dbUpdate(window.dbRef(window.db, 'jobApplications/' + editingAppId), {
                         jobs: selectedJobs,
                         jobCount: selectedJobs.length,
@@ -596,7 +1020,6 @@
                     window.existingApplication = null;
                     location.reload();
                 } else {
-                    // طلب جديد
                     const newRef = window.dbPush(window.dbRef(window.db, 'jobApplications'));
                     await window.dbSet(newRef, {
                         userId: window.currentUser.uid,
@@ -656,12 +1079,177 @@
             }
         };
 
+        // ===================== SUBMIT PRODUCT (Base64) =====================
+        window.submitProduct = async function(e) {
+            e.preventDefault();
+            
+            if (!window.currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const ownerName = document.getElementById('productOwnerName').value.trim();
+            const productName = document.getElementById('productName').value.trim();
+            const productIdea = document.getElementById('productIdea').value.trim();
+            const productDesc = document.getElementById('productDescription').value.trim();
+            const imageFile = document.getElementById('productImage').files[0];
+            const extraFile = document.getElementById('productFile').files[0];
+            const dealType = document.getElementById('dealType').value;
+            const termsChecked = document.getElementById('termsCheckbox').checked;
+
+            if (!ownerName || !productName || !productIdea || !productDesc || !imageFile) {
+                showToast('❌ يرجى ملء جميع الحقول المطلوبة', true);
+                return;
+            }
+
+            if (!termsChecked) {
+                showToast('❌ يرجى الموافقة على الشروط والأحكام', true);
+                return;
+            }
+
+            const btn = document.getElementById('btnSubmitProduct');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الإرسال...';
+
+            try {
+                // تحويل الصورة إلى Base64
+                const imageData = await readFileAsBase64(imageFile);
+                
+                let extraFileData = null;
+                let extraFileName = null;
+                if (extraFile) {
+                    extraFileData = await readFileAsBase64(extraFile);
+                    extraFileName = extraFile.name;
+                }
+
+                // حفظ البيانات في Realtime Database
+                const productRef = window.dbPush(window.dbRef(window.db, 'productSubmissions'));
+                await window.dbSet(productRef, {
+                    userId: window.currentUser.uid,
+                    userEmail: window.currentUser.email,
+                    ownerName: ownerName,
+                    productName: productName,
+                    productIdea: productIdea,
+                    productDescription: productDesc,
+                    imageData: imageData,
+                    imageName: imageFile.name,
+                    extraFileData: extraFileData,
+                    extraFileName: extraFileName,
+                    dealType: dealType,
+                    dealTypeLabel: dealType === 'percentage' ? 'نسبة 70%' : 'شراء مرة واحدة',
+                    timestamp: new Date().toISOString(),
+                    status: 'pending',
+                    adminMessage: null,
+                    adminName: null,
+                    messageTimestamp: null
+                });
+
+                showToast('✅ تم إرسال منتجك بنجاح! سنتواصل معك قريباً.');
+                
+                // إعادة تعيين النموذج
+                document.getElementById('productForm').reset();
+                document.querySelectorAll('.deal-option').forEach(o => o.classList.remove('selected'));
+                document.querySelector('.deal-option[data-value="percentage"]').classList.add('selected');
+                document.getElementById('dealType').value = 'percentage';
+                document.getElementById('termsCheckbox').checked = false;
+
+                // إعادة تحميل منتجاتي
+                if (window.currentUser) {
+                    loadMyProducts(window.currentUser.uid);
+                }
+
+            } catch(e) {
+                console.error('Error details:', e);
+                showToast('❌ حدث خطأ: ' + e.message, true);
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> إرسال المنتج';
+        };
+
+        // دالة قراءة الملف وتحويله إلى Base64
+        function readFileAsBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // تحميل منتجات المستخدم (تم تعريفها في الـ module)
+        async function loadMyProducts(uid) {
+            try {
+                const productsRef = window.dbRef(window.db, 'productSubmissions');
+                const snapshot = await window.dbGet(productsRef);
+                if (snapshot.exists()) {
+                    const myProducts = [];
+                    snapshot.forEach(child => {
+                        const data = child.val();
+                        if (data.userId === uid) {
+                            myProducts.push({ id: child.key, ...data });
+                        }
+                    });
+                    renderMyProducts(myProducts);
+                } else {
+                    renderMyProducts([]);
+                }
+            } catch(e) {
+                console.error('Error loading products:', e);
+            }
+        }
+
+        function renderMyProducts(products) {
+            const container = document.getElementById('myProductsContainer');
+            if (products.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center;padding:30px;color:var(--muted);">
+                        <i class="fa-solid fa-cube" style="font-size:2em;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                        لم تقم بإرسال أي منتج بعد
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = products.map((p, i) => {
+                const statusLabels = { pending:'⏳ قيد الانتظار', approved:'✅ مقبول', rejected:'❌ مرفوض' };
+                const statusColors = { pending:'#fdcb6e', approved:'#00b894', rejected:'#e17055' };
+                const status = p.status || 'pending';
+                const dateStr = p.timestamp ? new Date(p.timestamp).toLocaleDateString('ar-SA', {
+                    year:'numeric', month:'long', day:'numeric'
+                }) : 'غير معروف';
+                const dealLabel = p.dealType === 'percentage' ? 'نسبة 70%' : 'شراء مرة واحدة';
+                
+                return `
+                <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:12px;border-right:4px solid ${statusColors[status]};">
+                    <div style="display:flex;gap:15px;flex-wrap:wrap;">
+                        ${p.imageData ? `<img src="${p.imageData}" alt="${p.productName}" style="width:80px;height:80px;border-radius:12px;object-fit:cover;border:1px solid var(--border);">` : '<div style="width:80px;height:80px;border-radius:12px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;color:var(--muted);"><i class="fa-solid fa-image" style="font-size:1.5em;"></i></div>'}
+                        <div style="flex:1;min-width:200px;">
+                            <h4 style="font-size:1.1em;margin-bottom:4px;">${p.productName}</h4>
+                            <p style="color:var(--muted);font-size:0.85em;">${p.productIdea}</p>
+                            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">
+                                <span style="font-size:0.75em;background:rgba(108,92,231,0.15);color:#a29bfe;padding:2px 12px;border-radius:12px;">${dealLabel}</span>
+                                <span style="font-size:0.75em;color:var(--muted);">📅 ${dateStr}</span>
+                                <span style="font-size:0.75em;color:${statusColors[status]};">${statusLabels[status]}</span>
+                                ${p.extraFileName ? `<span style="font-size:0.75em;color:var(--muted);"><i class="fa-solid fa-paperclip"></i> ${p.extraFileName}</span>` : ''}
+                            </div>
+                            ${p.adminMessage ? `<div style="margin-top:8px;background:rgba(108,92,231,0.1);border-radius:10px;padding:10px;font-size:0.85em;color:var(--muted);border-right:2px solid #a29bfe;"><strong style="color:#a29bfe;">رسالة من الإدارة:</strong> ${p.adminMessage}</div>` : ''}
+                            ${p.extraFileData ? `<div style="margin-top:8px;"><button onclick="window.open('${p.extraFileData}','_blank')" style="background:rgba(108,92,231,0.15);color:#a29bfe;border:1px solid rgba(108,92,231,0.2);padding:4px 12px;border-radius:8px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:0.75em;">📄 عرض الملف الإضافي</button></div>` : ''}
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        // ===================== TOAST =====================
         function showToast(msg, err = false) {
             toast.textContent = msg;
             toast.className = `toast ${err ? 'error' : 'success'} show`;
-            setTimeout(() => toast.classList.remove('show'), 3000);
+            setTimeout(() => toast.classList.remove('show'), 4000);
         }
 
+        // ===================== INIT =====================
         renderJobs();
         updateApplyButton();
 

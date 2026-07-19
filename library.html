@@ -1,887 +1,667 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>مكتبتي الرقمية</title>
-<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-      <link rel="icon" type="image/x-icon" href="img\Login library.jpg">
-<style>
-:root {
-  --netflix-red: #e50914;
-  --netflix-dark: #141414;
-  --netflix-gray: #222222;
-  --netflix-light-gray: #757575;
-  --netflix-white: #ffffff;
-  --netflix-gradient: linear-gradient(to bottom, rgba(20,20,20,0.95) 0%, rgba(20,20,20,0.98) 100%);
-  --shadow-heavy: 0 8px 25px rgba(0,0,0,0.7);
-  --shadow-light: 0 4px 12px rgba(0,0,0,0.4);
-  --transition-speed: 0.3s;
-  --header-height: 70px;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>رفي | مكتبتي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+    body {
+      font-family: 'Almarai', sans-serif;
+      background: #0b0e14;
+      background-image: 
+        radial-gradient(ellipse at 20% 50%, rgba(30, 60, 90, 0.3) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(20, 40, 70, 0.2) 0%, transparent 50%);
+      color: #e8e4de;
+      min-height: 100vh;
+      padding-top: 0;
+      overflow-x: hidden;
+    }
 
-body {
-  font-family: 'Almarai', sans-serif;
-  background-color: var(--netflix-dark);
-  background-image: 
-    radial-gradient(circle at 20% 80%, rgba(229, 9, 20, 0.05) 0%, transparent 40%),
-    radial-gradient(circle at 80% 20%, rgba(229, 9, 20, 0.05) 0%, transparent 40%);
-  color: var(--netflix-white);
-  padding-top: var(--header-height);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
+    /* ===== الشريط العلوي ===== */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 5%;
+      background: rgba(11, 14, 20, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(200, 170, 120, 0.15);
+      z-index: 10000;
+      height: 72px;
+    }
 
-/* ===== الشريط العلوي ===== */
-header {
-  position: fixed; 
-  top: 0; 
-  left: 0; 
-  right: 0;
-  display: flex; 
-  justify-content: space-between; 
-  align-items: center;
-  padding: 15px 4%;
-  background: var(--netflix-gradient);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  color: white; 
-  z-index: 10000;
-  box-shadow: var(--shadow-heavy);
-  height: var(--header-height);
-}
+    header .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #d4b68a;
+      letter-spacing: -0.5px;
+    }
+    header .logo i {
+      font-size: 1.8rem;
+      color: #c9a87c;
+    }
 
-header h1 { 
-  font-size: 1.5em; 
-  margin: 0; 
-  color: var(--netflix-red);
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
 
-.header-actions { 
-  display: flex; 
-  align-items: center; 
-  gap: 15px; 
-}
+    .header-actions a {
+      color: #a8a4a0;
+      font-size: 1.2rem;
+      text-decoration: none;
+      transition: 0.3s ease;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: rgba(200, 170, 120, 0.06);
+      border: 1px solid rgba(200, 170, 120, 0.08);
+    }
+    .header-actions a:hover {
+      color: #d4b68a;
+      background: rgba(200, 170, 120, 0.12);
+      border-color: rgba(200, 170, 120, 0.25);
+      transform: translateY(-2px);
+    }
 
-.header-actions a { 
-  color: white; 
-  font-size: 20px; 
-  text-decoration: none; 
-  transition: all var(--transition-speed); 
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.1);
-}
+    .balance-box {
+      font-weight: 700;
+      background: rgba(200, 170, 120, 0.08);
+      padding: 8px 18px;
+      border-radius: 30px;
+      color: #d4b68a;
+      font-size: 0.9rem;
+      border: 1px solid rgba(200, 170, 120, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .balance-box i {
+      color: #c9a87c;
+    }
 
-.header-actions a:hover { 
-  color: var(--netflix-red); 
-  background: rgba(229, 9, 20, 0.2);
-  transform: translateY(-2px);
-}
+    /* ===== المحتوى الرئيسي ===== */
+    .main-wrap {
+      padding-top: 88px;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding-left: 5%;
+      padding-right: 5%;
+    }
 
-.balance-box { 
-  font-weight: 700; 
-  background: rgba(229, 9, 20, 0.2); 
-  padding: 6px 12px; 
-  border-radius: 20px; 
-  color: white; 
-  font-size: 0.9em;
-  border: 1px solid rgba(229, 9, 20, 0.4);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
+    /* ===== الهيدر ===== */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px 0 30px;
+      border-bottom: 1px solid rgba(200, 170, 120, 0.08);
+      margin-bottom: 30px;
+    }
 
-/* ===== عنوان الصفحة ===== */
-.page-title {
-  padding: 30px 4% 20px;
-  margin-bottom: 20px;
-}
+    .page-header h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: #ece8e2;
+      line-height: 1.2;
+    }
+    .page-header h1 span {
+      color: #d4b68a;
+    }
+    .page-header p {
+      color: #8a8682;
+      font-size: 1rem;
+      margin-top: 6px;
+    }
 
-.page-title h2 {
-  font-size: 2em;
-  margin: 0 0 10px 0;
-  color: var(--netflix-white);
-  font-weight: 700;
-  position: relative;
-  display: inline-block;
-}
+    .header-stats-mini {
+      display: flex;
+      gap: 30px;
+      background: rgba(200, 170, 120, 0.04);
+      padding: 12px 28px;
+      border-radius: 20px;
+      border: 1px solid rgba(200, 170, 120, 0.06);
+    }
+    .header-stats-mini .stat-item {
+      text-align: center;
+    }
+    .header-stats-mini .stat-item .num {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #d4b68a;
+    }
+    .header-stats-mini .stat-item .lbl {
+      font-size: 0.75rem;
+      color: #8a8682;
+      letter-spacing: 0.5px;
+    }
 
-.page-title h2::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  right: 0;
-  width: 60px;
-  height: 4px;
-  background: var(--netflix-red);
-  border-radius: 2px;
-}
+    /* ===== فلاتر ===== */
+    .filter-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 35px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(200, 170, 120, 0.06);
+    }
 
-.page-title p {
-  color: var(--netflix-light-gray);
-  font-size: 1.1em;
-  margin: 5px 0 0 0;
-}
+    .filter-btn {
+      padding: 8px 22px;
+      background: transparent;
+      color: #8a8682;
+      border: 1px solid rgba(200, 170, 120, 0.1);
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .filter-btn:hover {
+      color: #d4b68a;
+      border-color: rgba(200, 170, 120, 0.3);
+      background: rgba(200, 170, 120, 0.05);
+    }
+    .filter-btn.active {
+      background: rgba(200, 170, 120, 0.12);
+      color: #d4b68a;
+      border-color: #d4b68a;
+      box-shadow: 0 0 20px rgba(200, 170, 120, 0.05);
+    }
 
-/* ===== فلاتر المكتبة ===== */
-.library-filters {
-  padding: 0 4% 20px;
-  display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
-}
+    /* ===== شبكة المنتجات ===== */
+    .library-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 28px;
+      padding-bottom: 60px;
+    }
 
-.filter-btn {
-  padding: 8px 20px;
-  background: var(--netflix-gray);
-  color: var(--netflix-light-gray);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 25px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all var(--transition-speed);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+    /* ===== البطاقة ===== */
+    .product-card {
+      background: rgba(20, 26, 36, 0.6);
+      backdrop-filter: blur(4px);
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(200, 170, 120, 0.06);
+      transition: all 0.4s cubic-bezier(0.15, 0.75, 0.4, 1);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
 
-.filter-btn:hover {
-  color: var(--netflix-white);
-  border-color: var(--netflix-red);
-}
+    .product-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(200, 170, 120, 0.25);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      background: rgba(24, 32, 44, 0.7);
+    }
 
-.filter-btn.active {
-  background: rgba(229, 9, 20, 0.2);
-  color: var(--netflix-red);
-  border-color: var(--netflix-red);
-}
+    .product-card .card-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(212, 182, 138, 0.15);
+      backdrop-filter: blur(4px);
+      padding: 4px 14px;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #d4b68a;
+      border: 1px solid rgba(212, 182, 138, 0.15);
+      z-index: 2;
+      letter-spacing: 0.3px;
+    }
 
-/* ===== إحصائيات المكتبة ===== */
-.library-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 15px;
-  padding: 0 4% 30px;
-}
+    .product-card .img-wrap {
+      width: 100%;
+      height: 210px;
+      overflow: hidden;
+      position: relative;
+    }
+    .product-card .img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+    .product-card:hover .img-wrap img {
+      transform: scale(1.04);
+    }
 
-.stat-card {
-  background: var(--netflix-gray);
-  border-radius: 10px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  border: 1px solid rgba(255,255,255,0.1);
-  transition: all var(--transition-speed);
-}
+    .product-card .card-body {
+      padding: 22px 22px 20px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
 
-.stat-card:hover {
-  transform: translateY(-3px);
-  border-color: var(--netflix-red);
-  box-shadow: var(--shadow-light);
-}
+    .product-card .card-body .title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #ece8e2;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
 
-.stat-card i {
-  font-size: 1.8em;
-  color: var(--netflix-red);
-  margin-bottom: 10px;
-}
+    .product-card .card-body .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 10px 0 12px;
+    }
+    .product-card .card-body .meta span {
+      background: rgba(200, 170, 120, 0.06);
+      padding: 2px 12px;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      color: #a8a4a0;
+      border: 1px solid rgba(200, 170, 120, 0.04);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .product-card .card-body .meta span i {
+      color: #d4b68a;
+      font-size: 0.7rem;
+    }
 
-.stat-card .value {
-  font-size: 1.8em;
-  font-weight: bold;
-  margin-bottom: 5px;
-}
+    .product-card .card-body .info-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: #8a8682;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(200, 170, 120, 0.04);
+    }
+    .product-card .card-body .info-line:last-of-type {
+      border-bottom: none;
+    }
+    .product-card .card-body .info-line i {
+      color: #d4b68a;
+      width: 22px;
+    }
 
-.stat-card .label {
-  color: var(--netflix-light-gray);
-  font-size: 0.9em;
-}
+    .product-card .card-body .price-tag {
+      margin: 14px 0 16px;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #d4b68a;
+      letter-spacing: 0.5px;
+    }
 
-/* ===== قائمة المنتجات الرقمية ===== */
-.library-container {
-  padding: 0 4% 40px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 25px;
-}
+    .product-card .card-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: auto;
+    }
+    .product-card .card-actions button {
+      flex: 1;
+      padding: 12px 10px;
+      border: none;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(200, 170, 120, 0.06);
+      color: #a8a4a0;
+      border: 1px solid rgba(200, 170, 120, 0.06);
+    }
+    .product-card .card-actions button:hover {
+      background: rgba(200, 170, 120, 0.12);
+      color: #ece8e2;
+      transform: translateY(-2px);
+    }
+    .product-card .card-actions .btn-primary {
+      background: rgba(212, 182, 138, 0.12);
+      color: #d4b68a;
+      border-color: rgba(212, 182, 138, 0.2);
+    }
+    .product-card .card-actions .btn-primary:hover {
+      background: rgba(212, 182, 138, 0.25);
+      box-shadow: 0 8px 24px rgba(212, 182, 138, 0.08);
+    }
 
-/* ===== بطاقة المنتج الرقمي ===== */
-.library-item {
-  background: var(--netflix-gray);
-  border-radius: 12px;
-  overflow: hidden;
-  padding: 0;
-  box-shadow: var(--shadow-light);
-  transition: all var(--transition-speed) cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  border: 1px solid rgba(255,255,255,0.05);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
+    /* ===== فارغ ===== */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 80px 20px;
+    }
+    .empty-state i {
+      font-size: 4rem;
+      color: rgba(200, 170, 120, 0.15);
+      margin-bottom: 20px;
+    }
+    .empty-state h3 {
+      font-size: 2rem;
+      color: #ece8e2;
+      margin-bottom: 10px;
+    }
+    .empty-state p {
+      color: #8a8682;
+      max-width: 400px;
+      margin: 0 auto 30px;
+      line-height: 1.6;
+    }
+    .empty-state .browse-btn {
+      display: inline-block;
+      padding: 14px 40px;
+      background: rgba(212, 182, 138, 0.12);
+      color: #d4b68a;
+      text-decoration: none;
+      border-radius: 60px;
+      font-weight: 700;
+      border: 1px solid rgba(212, 182, 138, 0.2);
+      transition: all 0.3s ease;
+    }
+    .empty-state .browse-btn:hover {
+      background: rgba(212, 182, 138, 0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(212, 182, 138, 0.05);
+    }
 
-.library-item:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: var(--shadow-heavy);
-  border-color: var(--netflix-red);
-}
+    /* ===== متجاوب ===== */
+    @media(max-width: 768px) {
+      header { height: 64px; padding: 12px 4%; }
+      header .logo { font-size: 1.3rem; }
+      .main-wrap { padding-top: 76px; padding-left: 4%; padding-right: 4%; }
+      .page-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .page-header h1 { font-size: 1.8rem; }
+      .header-stats-mini { width: 100%; justify-content: space-around; padding: 10px 16px; gap: 10px; }
+      .header-stats-mini .stat-item .num { font-size: 1.2rem; }
+      .library-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
+      .product-card .img-wrap { height: 170px; }
+    }
 
-.library-item:hover::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--netflix-red);
-}
+    @media(max-width: 480px) {
+      .library-grid { grid-template-columns: 1fr; }
+      .product-card .img-wrap { height: 190px; }
+      .filter-bar { justify-content: center; }
+      .filter-btn { padding: 6px 16px; font-size: 0.8rem; }
+      .header-stats-mini { flex-wrap: wrap; gap: 8px; }
+      .header-stats-mini .stat-item { flex: 1; min-width: 60px; }
+    }
 
-.library-item img { 
-  width: 100%; 
-  height: 200px; 
-  object-fit: cover;
-  border-radius: 0;
-  margin: 0;
-  transition: transform 0.5s ease;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.library-item:hover img {
-  transform: scale(1.05);
-}
-
-.library-content {
-  padding: 20px;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.library-info { 
-  flex: 1; 
-  display: flex; 
-  flex-direction: column; 
-  justify-content: flex-start;
-  margin-bottom: 15px;
-}
-
-.library-info .title { 
-  font-weight: 700; 
-  font-size: 1.2em; 
-  color: var(--netflix-white);
-  margin-bottom: 10px;
-  line-height: 1.3;
-}
-
-.library-details {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.detail-badge {
-  background: rgba(255,255,255,0.1);
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 0.8em;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.detail-badge i {
-  color: var(--netflix-red);
-  font-size: 0.9em;
-}
-
-.purchase-date {
-  color: var(--netflix-light-gray);
-  font-size: 0.85em;
-  margin-top: 5px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.library-actions { 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: auto;
-  padding-top: 15px;
-  border-top: 1px solid rgba(255,255,255,0.1);
-}
-
-.library-actions button { 
-  padding: 10px 20px; 
-  border-radius: 20px; 
-  border: none; 
-  cursor: pointer; 
-  font-weight: 700; 
-  background: rgba(229, 9, 20, 0.2); 
-  color: white; 
-  font-size: 0.9em; 
-  transition: all var(--transition-speed);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border: 1px solid rgba(229, 9, 20, 0.4);
-}
-
-.library-actions button:hover { 
-  background: var(--netflix-red); 
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(229, 9, 20, 0.4);
-}
-
-.library-actions .read-btn {
-  background: rgba(46, 204, 113, 0.2);
-  border-color: rgba(46, 204, 113, 0.4);
-}
-
-.library-actions .read-btn:hover {
-  background: #2ecc71;
-}
-
-/* ===== حالة المكتبة الفارغة ===== */
-.empty-library {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 60px 20px;
-  color: var(--netflix-light-gray);
-}
-
-.empty-library i {
-  font-size: 4em;
-  color: var(--netflix-gray);
-  margin-bottom: 20px;
-  opacity: 0.5;
-}
-
-.empty-library h3 {
-  font-size: 1.8em;
-  color: var(--netflix-white);
-  margin-bottom: 15px;
-}
-
-.empty-library p {
-  font-size: 1.1em;
-  max-width: 500px;
-  margin: 0 auto 30px;
-}
-
-.empty-library .browse-btn {
-  display: inline-block;
-  padding: 12px 30px;
-  background: var(--netflix-red);
-  color: white;
-  text-decoration: none;
-  border-radius: 25px;
-  font-weight: 700;
-  transition: all var(--transition-speed);
-  font-size: 1em;
-}
-
-.empty-library .browse-btn:hover {
-  background: #f40612;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(229, 9, 20, 0.4);
-}
-
-/* ===== التصميم المتجاوب ===== */
-@media(max-width: 768px){
-  :root {
-    --header-height: 60px;
-  }
-  
-  body {
-    padding-top: var(--header-height);
-  }
-  
-  header {
-    padding: 10px 4%;
-  }
-  
-  header h1 {
-    font-size: 1.3em;
-  }
-  
-  .page-title h2 {
-    font-size: 1.7em;
-  }
-  
-  .library-container {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 15px;
-  }
-  
-  .library-filters {
-    justify-content: center;
-  }
-  
-  .library-item img {
-    height: 180px;
-  }
-  
-  .library-stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media(max-width: 480px){
-  .library-container {
-    grid-template-columns: 1fr;
-  }
-  
-  .page-title h2 {
-    font-size: 1.5em;
-  }
-  
-  .library-item img {
-    height: 160px;
-  }
-  
-  .library-content {
-    padding: 15px;
-  }
-  
-  .library-actions {
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .library-actions button {
-    width: 100%;
-    justify-content: center;
-  }
-  
-  .library-stats {
-    grid-template-columns: 1fr;
-  }
-  
-  header h1 {
-    font-size: 1.1em;
-  }
-}
-
-/* ===== تخصيص شريط التمرير ===== */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--netflix-dark);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--netflix-red);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #f40612;
-}
-</style>
+    /* ===== سكرول ===== */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0b0e14; }
+    ::-webkit-scrollbar-thumb { background: rgba(212, 182, 138, 0.3); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(212, 182, 138, 0.5); }
+  </style>
 </head>
 <body>
 
 <header>
-  <h1><i class="fas fa-book"></i> مكتبتي الرقمية</h1>
+  <div class="logo">
+    <i class="fas fa-feather-alt"></i>
+    <span>رفي</span>
+  </div>
   <div class="header-actions">
     <a href="index.html" title="الرئيسية"><i class="fas fa-home"></i></a>
-    <a href="cart.html" title="سلة الشراء"><i class="fas fa-shopping-cart"></i></a>
+    <a href="basket.html" title="سلة الشراء"><i class="fas fa-shopping-bag"></i></a>
     <div class="balance-box">
-      <i class="fas fa-wallet"></i>
-      الرصيد: <span id="globalBalance">0.00</span> ريال
+      <i class="fas fa-coins"></i>
+      <span id="globalBalance">0.00</span>
     </div>
   </div>
 </header>
 
-<div class="page-title">
-  <h2>مكتبتي الرقمية</h2>
-  <p>جميع المنتجات الرقمية التي قمت بشرائها</p>
-</div>
+<div class="main-wrap">
+  
+  <div class="page-header">
+    <div>
+      <h1>مكتبتي <span>الرقمية</span></h1>
+      <p>جميع ما اقتنيت من محتوى رقمي</p>
+    </div>
+    <div class="header-stats-mini">
+      <div class="stat-item">
+        <div class="num" id="totalItems">0</div>
+        <div class="lbl">المنتجات</div>
+      </div>
+      <div class="stat-item">
+        <div class="num" id="avgRating">0.0</div>
+        <div class="lbl">التقييم</div>
+      </div>
+      <div class="stat-item">
+        <div class="num" id="totalSpent">0</div>
+        <div class="lbl">المشتريات</div>
+      </div>
+    </div>
+  </div>
 
-<!-- فلاتر المكتبة -->
-<div class="library-filters">
-  <button class="filter-btn active" data-filter="all">
-    <i class="fas fa-th-large"></i>
-    الكل
-  </button>
-  <button class="filter-btn" data-filter="story">
-    <i class="fas fa-book-open"></i>
-    قصص
-  </button>
-  <button class="filter-btn" data-filter="manga">
-    <i class="fas fa-images"></i>
-    مانجا
-  </button>
-  <button class="filter-btn" data-filter="video">
-    <i class="fas fa-play-circle"></i>
-    فيديوهات
-  </button>
-  <button class="filter-btn" data-filter="recent">
-    <i class="fas fa-clock"></i>
-    الأحدث
-  </button>
-</div>
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all"><i class="fas fa-th"></i> الكل</button>
+    <button class="filter-btn" data-filter="story"><i class="fas fa-book"></i> قصص</button>
+    <button class="filter-btn" data-filter="manga"><i class="fas fa-palette"></i> مانجا</button>
+    <button class="filter-btn" data-filter="video"><i class="fas fa-video"></i> فيديو</button>
+    <button class="filter-btn" data-filter="recent"><i class="fas fa-clock"></i> الأحدث</button>
+  </div>
 
-<!-- إحصائيات المكتبة -->
-<div class="library-stats">
-  <div class="stat-card">
-    <i class="fas fa-book"></i>
-    <div class="value" id="totalItems">0</div>
-    <div class="label">إجمالي المنتجات</div>
-  </div>
-  <div class="stat-card">
-    <i class="fas fa-star"></i>
-    <div class="value" id="avgRating">0.0</div>
-    <div class="label">متوسط التقييم</div>
-  </div>
-  <div class="stat-card">
-    <i class="fas fa-calendar"></i>
-    <div class="value" id="lastPurchase">-</div>
-    <div class="label">آخر شراء</div>
-  </div>
-  <div class="stat-card">
-    <i class="fas fa-coins"></i>
-    <div class="value" id="totalSpent">0 ر.س</div>
-    <div class="label">إجمالي المشتريات</div>
-  </div>
-</div>
-
-<!-- قائمة المنتجات الرقمية -->
-<div class="library-container" id="libraryContainer">
-  <!-- سيتم ملؤها ديناميكياً -->
+  <div class="library-grid" id="libraryContainer"></div>
 </div>
 
 <script>
-// ====== بيانات المستخدم ======
-const user = JSON.parse(localStorage.getItem('user') || 'null');
-let loggedInUser = null;
-
-if (user && user.email) {
-  loggedInUser = user.email;
-} else {
-  setTimeout(() => {
-    window.location.href = 'login.html';
-  }, 1000);
-  document.body.innerHTML = `
-    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #141414; color: white; font-family: 'Almarai'; flex-direction: column; gap: 20px;">
-      <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #e50914;"></i>
-      <h2>يرجى تسجيل الدخول أولاً</h2>
-      <p>سيتم تحويلك إلى صفحة تسجيل الدخول...</p>
-    </div>
-  `;
-  throw new Error('No user logged in');
-}
-
-const LIBRARY_KEY = `library_${loggedInUser}`;
-const BALANCE_KEY = `balance_${loggedInUser}`;
-let library = JSON.parse(localStorage.getItem(LIBRARY_KEY)) || [];
-
-// ====== عناصر DOM ======
-const libraryContainer = document.getElementById('libraryContainer');
-const totalItemsEl = document.getElementById('totalItems');
-const avgRatingEl = document.getElementById('avgRating');
-const lastPurchaseEl = document.getElementById('lastPurchase');
-const totalSpentEl = document.getElementById('totalSpent');
-const globalBalanceEl = document.getElementById('globalBalance');
-const filterButtons = document.querySelectorAll('.filter-btn');
-
-// ====== تهيئة الصفحة ======
-function initializePage() {
-  const balance = parseFloat(localStorage.getItem(BALANCE_KEY)) || 0;
-  globalBalanceEl.textContent = balance.toFixed(2);
-  
-  updateLibraryStats();
-  renderLibrary('all');
-  
-  // إضافة أحداث الفلاتر
-  filterButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      filterButtons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderLibrary(btn.dataset.filter);
-    });
-  });
-}
-
-// ====== تحديث إحصائيات المكتبة ======
-function updateLibraryStats() {
-  if (library.length === 0) {
-    totalItemsEl.textContent = '0';
-    avgRatingEl.textContent = '0.0';
-    lastPurchaseEl.textContent = '-';
-    totalSpentEl.textContent = '0 ر.س';
-    return;
-  }
-  
-  // إجمالي المنتجات
-  totalItemsEl.textContent = library.length;
-  
-  // متوسط التقييم
-  const totalRating = library.reduce((sum, item) => sum + (parseFloat(item.rating) || 0), 0);
-  const avgRating = library.length > 0 ? (totalRating / library.length).toFixed(1) : '0.0';
-  avgRatingEl.textContent = avgRating;
-  
-  // آخر شراء
-  const sortedByDate = [...library].sort((a, b) => 
-    new Date(b.purchaseDate || 0) - new Date(a.purchaseDate || 0)
-  );
-  lastPurchaseEl.textContent = sortedByDate[0]?.purchaseDate?.split('،')[0] || '-';
-  
-  // إجمالي المشتريات
-  const totalSpent = library.reduce((sum, item) => sum + (parseFloat(item.finalPrice) || 0), 0);
-  totalSpentEl.textContent = `${totalSpent.toFixed(2)} ر.س`;
-}
-
-// ====== عرض المنتجات ======
-function renderLibrary(filter = 'all') {
-  libraryContainer.innerHTML = '';
-  
-  if (library.length === 0) {
-    libraryContainer.innerHTML = `
-      <div class="empty-library">
-        <i class="fas fa-book-open"></i>
-        <h3>مكتبتك فارغة</h3>
-        <p>لم تقم بشراء أي منتجات رقمية بعد. تصفح المتجر وأضف المنتجات التي تريدها إلى سلة الشراء.</p>
-        <a href="index.html" class="browse-btn"><i class="fas fa-store"></i> تصفح المتجر</a>
-      </div>
-    `;
-    return;
-  }
-  
-  let filteredLibrary = [...library];
-  
-  // تطبيق الفلاتر
-  switch(filter) {
-    case 'story':
-      filteredLibrary = library.filter(item => 
-        item.type?.includes('قصة') || 
-        item.category?.includes('قصص') ||
-        item.type?.toLowerCase().includes('story')
-      );
-      break;
-    case 'manga':
-      filteredLibrary = library.filter(item => 
-        item.type?.includes('مانجا') || 
-        item.category?.includes('مانجا') ||
-        item.type?.toLowerCase().includes('manga')
-      );
-      break;
-    case 'video':
-      filteredLibrary = library.filter(item => 
-        item.type?.includes('فيديو') || 
-        item.category?.includes('فيديوهات') ||
-        item.type?.toLowerCase().includes('video')
-      );
-      break;
-    case 'recent':
-      filteredLibrary = [...library].sort((a, b) => 
-        new Date(b.purchaseDate || 0) - new Date(a.purchaseDate || 0)
-      );
-      break;
-  }
-  
-  if (filteredLibrary.length === 0) {
-    libraryContainer.innerHTML = `
-      <div class="empty-library">
-        <i class="fas fa-filter"></i>
-        <h3>لا توجد منتجات في هذا القسم</h3>
-        <p>لم تقم بشراء أي منتجات رقمية في هذه الفئة.</p>
-      </div>
-    `;
-    return;
-  }
-  
-  filteredLibrary.forEach(item => {
-    const libraryItem = document.createElement('div');
-    libraryItem.className = 'library-item';
-    
-    const purchaseDate = item.purchaseDate || 'غير معروف';
-    const price = parseFloat(item.finalPrice || item.price || 0);
-    
-    libraryItem.innerHTML = `
-      <img src="${item.image || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzIyMjIyMiIvPjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5ubyBpbWFnZTwvdGV4dD48L3N2Zz4='}" alt="${item.title}" loading="lazy">
-      <div class="library-content">
-        <div class="library-info">
-          <div class="title">${item.title || 'منتج بدون عنوان'}</div>
-          
-          <div class="library-details">
-            <span class="detail-badge">
-              <i class="fas fa-box"></i>
-              ${item.format || 'رقمي'}
-            </span>
-            <span class="detail-badge">
-              <i class="fas fa-tag"></i>
-              ${item.category || 'عام'}
-            </span>
-            ${item.rating ? `
-            <span class="detail-badge">
-              <i class="fas fa-star"></i>
-              ${item.rating}
-            </span>` : ''}
-          </div>
-          
-          <div class="purchase-date">
-            <i class="far fa-calendar-alt"></i>
-            تم الشراء: ${purchaseDate}
-          </div>
-          
-          <div class="purchase-date">
-            <i class="fas fa-receipt"></i>
-            رقم العملية: ${item.transactionId || 'غير معروف'}
-          </div>
-          
-          <div class="purchase-date">
-            <i class="fas fa-tag"></i>
-            السعر: ${price.toFixed(2)} ر.س
-          </div>
-        </div>
-        
-        <div class="library-actions">
-          <button class="read-btn" onclick="openProduct('${item.id}')">
-            <i class="fas fa-play"></i>
-            ${item.type?.includes('فيديو') ? 'مشاهدة' : 'قراءة'}
-          </button>
-          <button onclick="downloadProduct('${item.id}')">
-            <i class="fas fa-download"></i>
-            تحميل
-          </button>
-        </div>
-      </div>
-    `;
-    
-    libraryContainer.appendChild(libraryItem);
-  });
-}
-
-// ====== فتح المنتج ======
-function openProduct(productId) {
-  const product = library.find(item => item.id === productId);
-  if (!product) return;
-  
-  alert(`جاري فتح ${product.title}...`);
-  
-  // هنا يمكنك إضافة منطق فتح المنتج حسب نوعه
-  if (product.type?.includes('فيديو')) {
-    // فتح مشغل الفيديو
-    window.open(`player.html?id=${productId}`, '_blank');
-  } else if (product.type?.includes('مانجا')) {
-    // فتح قارئ المانجا
-    window.open(`manga-reader.html?id=${productId}`, '_blank');
+  // ====== بيانات المستخدم ======
+  const user = JSON.parse(localStorage.getItem('user') || 'null');
+  let loggedInUser = null;
+  if (user && user.email) {
+    loggedInUser = user.email;
   } else {
-    // فتح قارئ النص
-    window.open(`reader.html?id=${productId}`, '_blank');
+    setTimeout(() => { window.location.href = 'login.html'; }, 1000);
+    document.body.innerHTML = `
+      <div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#0b0e14;color:#e8e4de;font-family:'Almarai';flex-direction:column;gap:20px;">
+        <i class="fas fa-lock" style="font-size:48px;color:#d4b68a;opacity:0.5;"></i>
+        <h2>يرجى تسجيل الدخول</h2>
+        <p style="color:#8a8682;">سيتم تحويلك إلى صفحة تسجيل الدخول...</p>
+      </div>
+    `;
+    throw new Error('No user logged in');
   }
-}
 
-// ====== تحميل المنتج ======
-function downloadProduct(productId) {
-  const product = library.find(item => item.id === productId);
-  if (!product) return;
-  
-  alert(`جاري تحميل ${product.title}...`);
-  
-  // إنشاء رابط تحميل وهمي (في الواقع سيكون من الخادم)
-  const downloadLink = product.downloadLink || `download/${productId}.zip`;
-  
-  // محاكاة عملية التحميل
-  const link = document.createElement('a');
-  link.href = '#';
-  link.download = `${product.title}.zip`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  
-  // إظهار رسالة نجاح
-  showNotification(`بدأ تحميل ${product.title}`, 'success');
-}
+  const LIBRARY_KEY = `library_${loggedInUser}`;
+  const BALANCE_KEY = `balance_${loggedInUser}`;
+  let library = JSON.parse(localStorage.getItem(LIBRARY_KEY)) || [];
 
-// ====== إظهار إشعار ======
-function showNotification(message, type = 'success') {
-  const notification = document.createElement('div');
-  notification.style.cssText = `
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: ${type === 'success' ? '#2ecc71' : '#e50914'};
-    color: white;
-    padding: 15px 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    z-index: 10000;
-    animation: slideIn 0.3s ease-out;
-    max-width: 300px;
+  // ====== عناصر DOM ======
+  const container = document.getElementById('libraryContainer');
+  const totalItemsEl = document.getElementById('totalItems');
+  const avgRatingEl = document.getElementById('avgRating');
+  const totalSpentEl = document.getElementById('totalSpent');
+  const globalBalanceEl = document.getElementById('globalBalance');
+  const filterBtns = document.querySelectorAll('.filter-btn');
+
+  // ====== تهيئة ======
+  function init() {
+    const balance = parseFloat(localStorage.getItem(BALANCE_KEY)) || 0;
+    globalBalanceEl.textContent = balance.toFixed(2) + ' ر.س';
+    updateStats();
+    render('all');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        render(btn.dataset.filter);
+      });
+    });
+  }
+
+  // ====== تحديث الإحصائيات ======
+  function updateStats() {
+    if (library.length === 0) {
+      totalItemsEl.textContent = '0';
+      avgRatingEl.textContent = '0.0';
+      totalSpentEl.textContent = '0';
+      return;
+    }
+    totalItemsEl.textContent = library.length;
+    const totalRating = library.reduce((s, i) => s + (parseFloat(i.rating) || 0), 0);
+    avgRatingEl.textContent = (totalRating / library.length).toFixed(1);
+    const totalSpent = library.reduce((s, i) => s + (parseFloat(i.finalPrice) || 0), 0);
+    totalSpentEl.textContent = totalSpent.toFixed(0);
+  }
+
+  // ====== عرض المنتجات ======
+  function render(filter = 'all') {
+    container.innerHTML = '';
+
+    if (library.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-inbox"></i>
+          <h3>مكتبتك فارغة</h3>
+          <p>لم تقم بشراء أي منتجات رقمية بعد. تصفح المتجر وابدأ في بناء مكتبتك.</p>
+          <a href="index.html" class="browse-btn"><i class="fas fa-store"></i> استكشف المتجر</a>
+        </div>
+      `;
+      return;
+    }
+
+    let filtered = [...library];
+    switch(filter) {
+      case 'story':
+        filtered = library.filter(i => i.type?.includes('قصة') || i.category?.includes('قصص') || i.type?.toLowerCase().includes('story'));
+        break;
+      case 'manga':
+        filtered = library.filter(i => i.type?.includes('مانجا') || i.category?.includes('مانجا') || i.type?.toLowerCase().includes('manga'));
+        break;
+      case 'video':
+        filtered = library.filter(i => i.type?.includes('فيديو') || i.category?.includes('فيديوهات') || i.type?.toLowerCase().includes('video'));
+        break;
+      case 'recent':
+        filtered = [...library].sort((a, b) => new Date(b.purchaseDate || 0) - new Date(a.purchaseDate || 0));
+        break;
+    }
+
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <i class="fas fa-filter"></i>
+          <h3>لا توجد منتجات</h3>
+          <p>لا يوجد منتجات في هذه الفئة</p>
+        </div>
+      `;
+      return;
+    }
+
+    filtered.forEach(item => {
+      const price = parseFloat(item.finalPrice || item.price || 0);
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.innerHTML = `
+        <div class="card-badge"><i class="fas fa-check-circle"></i> مملوك</div>
+        <div class="img-wrap">
+          <img src="${item.image || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI0MCIgZmlsbD0iIzE0MWEyNCIvPjx0ZXh0IHg9IjIwMCIgeT0iMTIwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM4YTg2ODIiIHRleHQtYW5jaG9yPSJtaWRkbGUiPuiCoeKApuWkp+agoeW4gzwvdGV4dD48L3N2Zz4='}" alt="${item.title}" loading="lazy">
+        </div>
+        <div class="card-body">
+          <div class="title">${item.title || 'منتج'}</div>
+          <div class="meta">
+            <span><i class="fas fa-tag"></i> ${item.category || 'عام'}</span>
+            <span><i class="fas fa-box"></i> ${item.format || 'رقمي'}</span>
+            ${item.rating ? `<span><i class="fas fa-star"></i> ${item.rating}</span>` : ''}
+          </div>
+          <div class="info-line"><i class="fas fa-calendar-alt"></i> ${item.purchaseDate || 'غير معروف'}</div>
+          <div class="info-line"><i class="fas fa-hashtag"></i> ${item.transactionId || 'غير معروف'}</div>
+          <div class="price-tag">${price.toFixed(2)} <span style="font-size:0.8rem;color:#8a8682;">ر.س</span></div>
+          <div class="card-actions">
+            <button class="btn-primary" onclick="openProduct('${item.id}')"><i class="fas fa-${item.type?.includes('فيديو') ? 'play' : 'book-open'}"></i> ${item.type?.includes('فيديو') ? 'مشاهدة' : 'قراءة'}</button>
+            <button onclick="downloadProduct('${item.id}')"><i class="fas fa-download"></i> تحميل</button>
+          </div>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  // ====== دوال المنتج ======
+  function openProduct(id) {
+    const p = library.find(i => i.id === id);
+    if (!p) return;
+    alert(`جاري فتح "${p.title}"...`);
+    if (p.type?.includes('فيديو')) window.open(`player.html?id=${id}`, '_blank');
+    else if (p.type?.includes('مانجا')) window.open(`manga-reader.html?id=${id}`, '_blank');
+    else window.open(`reader.html?id=${id}`, '_blank');
+  }
+
+  function downloadProduct(id) {
+    const p = library.find(i => i.id === id);
+    if (!p) return;
+    alert(`جاري تحميل "${p.title}"...`);
+    const link = document.createElement('a');
+    link.href = '#';
+    link.download = `${p.title}.zip`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showNotif(`تم بدء تحميل ${p.title}`);
+  }
+
+  // ====== إشعار ======
+  function showNotif(msg) {
+    const el = document.createElement('div');
+    el.style.cssText = `
+      position:fixed; bottom:28px; right:28px;
+      background:rgba(20,26,36,0.95); backdrop-filter:blur(8px);
+      color:#ece8e2; padding:14px 28px; border-radius:20px;
+      border:1px solid rgba(200,170,120,0.15);
+      z-index:99999; font-weight:600;
+      box-shadow:0 16px 40px rgba(0,0,0,0.6);
+      animation: slideIn 0.3s ease-out;
+    `;
+    el.textContent = msg;
+    document.body.appendChild(el);
+    setTimeout(() => {
+      el.style.animation = 'slideOut 0.3s ease-out';
+      setTimeout(() => el.remove(), 300);
+    }, 2800);
+  }
+
+  // ====== أنماط الحركة ======
+  const st = document.createElement('style');
+  st.textContent = `
+    @keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+    @keyframes slideOut { from { transform:translateX(0); opacity:1; } to { transform:translateX(100%); opacity:0; } }
   `;
-  notification.textContent = message;
-  document.body.appendChild(notification);
-  
-  setTimeout(() => {
-    notification.style.animation = 'slideOut 0.3s ease-out';
-    setTimeout(() => notification.remove(), 300);
-  }, 3000);
-}
+  document.head.appendChild(st);
 
-// ====== تهيئة أنماط الرسوم المتحركة ======
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes slideIn {
-    from {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-  
-  @keyframes slideOut {
-    from {
-      transform: translateX(0);
-      opacity: 1;
-    }
-    to {
-      transform: translateX(100%);
-      opacity: 0;
-    }
-  }
-`;
-document.head.appendChild(style);
-
-// تشغيل تهيئة الصفحة
-document.addEventListener('DOMContentLoaded', initializePage);
-
-// تحديث المكتبة عند العودة للصفحة
-window.addEventListener('pageshow', () => {
-  library = JSON.parse(localStorage.getItem(LIBRARY_KEY)) || [];
-  updateLibraryStats();
-  const activeFilter = document.querySelector('.filter-btn.active');
-  renderLibrary(activeFilter?.dataset.filter || 'all');
-});
+  document.addEventListener('DOMContentLoaded', init);
+  window.addEventListener('pageshow', () => {
+    library = JSON.parse(localStorage.getItem(LIBRARY_KEY)) || [];
+    updateStats();
+    const active = document.querySelector('.filter-btn.active');
+    render(active?.dataset.filter || 'all');
+  });
 </script>
-
 </body>
 </html>
