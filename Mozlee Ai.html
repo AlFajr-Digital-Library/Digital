@@ -15,24 +15,18 @@
             --gold: #d4a853;
             --gold-light: #f0d078;
             --gold-dark: #b8922e;
-            --primary: #6c5ce7;
-            --primary-dark: #5a4bd1;
-            --accent: #00d4ff;
-            --surface: #1a1a2e;
             --surface-light: #222240;
             --text-primary: #f0ede8;
             --text-secondary: #b8b5ae;
             --text-muted: #8a8680;
             --border-subtle: rgba(255, 255, 255, 0.06);
             --border-gold: rgba(212, 168, 83, 0.25);
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
-            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
-            --shadow-gold: 0 4px 20px rgba(212, 168, 83, 0.2);
             --radius-sm: 10px;
             --radius-md: 16px;
-            --radius-lg: 20px;
             --max-chat-width: 800px;
             --sidebar-width: 250px;
+            --header-height: 56px;
+            --input-area-height: 130px;
         }
 
         * {
@@ -42,11 +36,14 @@
             font-family: 'Tajawal', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
         body {
             background: var(--bg-primary);
             color: var(--text-primary);
-            height: 100vh;
-            overflow: hidden;
             background-image: 
                 radial-gradient(ellipse at 20% 10%, rgba(212, 168, 83, 0.03) 0%, transparent 55%),
                 radial-gradient(ellipse at 80% 90%, rgba(108, 92, 231, 0.03) 0%, transparent 55%);
@@ -55,8 +52,10 @@
         .container {
             display: flex;
             height: 100vh;
+            height: 100dvh; /* Dynamic viewport height for mobile */
             max-width: 100%;
             margin: 0 auto;
+            overflow: hidden;
         }
 
         /* ====== الشريط الجانبي ====== */
@@ -69,7 +68,7 @@
             flex-shrink: 0;
             z-index: 100;
             position: relative;
-            height: 100vh;
+            height: 100%;
             overflow-y: auto;
         }
 
@@ -86,36 +85,34 @@
 
         .sidebar-brand {
             text-align: center;
-            padding: 24px 16px 18px;
+            padding: 20px 16px 14px;
             border-bottom: 1px solid var(--border-subtle);
             position: relative;
             flex-shrink: 0;
         }
 
         .sidebar-brand .brand-icon {
-            width: 56px;
-            height: 56px;
-            border-radius: 16px;
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
             display: block;
-            margin: 0 auto 10px;
+            margin: 0 auto 8px;
             object-fit: cover;
             border: 2px solid var(--border-gold);
             box-shadow: 0 0 20px rgba(212, 168, 83, 0.12);
-            transition: all 0.3s ease;
         }
 
         .sidebar-brand h2 {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 700;
             color: var(--text-primary);
             margin: 0;
-            letter-spacing: -0.3px;
         }
 
         .sidebar-brand p {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--gold);
-            margin-top: 3px;
+            margin-top: 2px;
             letter-spacing: 1px;
             text-transform: uppercase;
         }
@@ -126,7 +123,7 @@
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            padding: 16px 16px 10px;
+            padding: 14px 16px 8px;
             flex-shrink: 0;
         }
 
@@ -140,12 +137,12 @@
         }
 
         .page-btn {
-            padding: 11px 14px;
+            padding: 10px 12px;
             border: none;
             border-radius: var(--radius-sm);
             background: transparent;
             color: var(--text-secondary);
-            font-size: 13.5px;
+            font-size: 13px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -155,15 +152,14 @@
             width: 100%;
             text-align: right;
             position: relative;
-            min-height: 44px;
+            min-height: 40px;
         }
 
         .page-btn i {
-            font-size: 15px;
-            width: 20px;
+            font-size: 14px;
+            width: 18px;
             text-align: center;
             color: var(--text-muted);
-            transition: all 0.2s ease;
             flex-shrink: 0;
         }
 
@@ -207,22 +203,20 @@
 
         .page-btn .delete-page {
             position: absolute;
-            left: 10px;
+            left: 8px;
             top: 50%;
             transform: translateY(-50%);
-            width: 20px;
-            height: 20px;
-            border-radius: 5px;
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
             border: none;
             background: transparent;
             color: var(--text-muted);
-            font-size: 10px;
+            font-size: 9px;
             cursor: pointer;
             display: none;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
-            flex-shrink: 0;
         }
 
         .page-btn:hover .delete-page {
@@ -240,13 +234,13 @@
             justify-content: center;
             gap: 8px;
             width: calc(100% - 16px);
-            padding: 10px;
-            margin: 6px 8px 14px;
+            padding: 9px;
+            margin: 4px 8px 12px;
             border: 1px dashed var(--border-gold);
             border-radius: var(--radius-sm);
             background: rgba(212, 168, 83, 0.03);
             color: var(--text-secondary);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -261,7 +255,7 @@
         }
 
         .add-page-btn i {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--gold);
         }
 
@@ -273,8 +267,7 @@
             background: var(--bg-primary);
             position: relative;
             min-width: 0;
-            align-items: center;
-            height: 100vh;
+            height: 100%;
             overflow: hidden;
         }
 
@@ -287,11 +280,10 @@
             flex: 1;
             width: 100%;
             max-width: var(--max-chat-width);
-            padding: 40px 20px;
+            padding: 20px;
             text-align: center;
-            transition: opacity 0.3s ease;
             overflow-y: auto;
-            height: 100%;
+            margin: 0 auto;
         }
 
         .welcome-screen.hidden {
@@ -299,70 +291,65 @@
         }
 
         .welcome-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 20px;
+            width: 72px;
+            height: 72px;
+            border-radius: 18px;
             background: linear-gradient(135deg, var(--gold), var(--gold-dark));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
-            margin-bottom: 20px;
+            font-size: 32px;
+            margin-bottom: 16px;
             box-shadow: 0 8px 32px rgba(212, 168, 83, 0.25);
             border: 2px solid rgba(255, 255, 255, 0.1);
             flex-shrink: 0;
         }
 
         .welcome-title {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .welcome-subtitle {
-            font-size: 15px;
+            font-size: 14px;
             color: var(--text-secondary);
-            margin-bottom: 32px;
-            line-height: 1.7;
+            margin-bottom: 24px;
+            line-height: 1.6;
         }
 
         .features-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            gap: 10px;
             width: 100%;
-            max-width: 500px;
+            max-width: 460px;
         }
 
         .feature-card {
             background: var(--surface-light);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
-            padding: 18px 16px;
+            padding: 14px 12px;
             text-align: center;
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
         }
 
-        .feature-card:hover {
-            background: rgba(212, 168, 83, 0.06);
-            border-color: var(--border-gold);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        .feature-card:active {
+            transform: scale(0.96);
         }
 
         .feature-card i {
-            font-size: 26px;
+            font-size: 22px;
             color: var(--gold-light);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             display: block;
         }
 
         .feature-card span {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-primary);
             font-weight: 500;
         }
@@ -372,12 +359,14 @@
             display: none;
             flex: 1;
             overflow-y: auto;
-            padding: 20px 16px;
+            padding: 16px;
             width: 100%;
             max-width: var(--max-chat-width);
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
+            margin: 0 auto;
             height: 100%;
+            -webkit-overflow-scrolling: touch;
         }
 
         .chat-container.active {
@@ -387,14 +376,14 @@
         /* ====== Messages ====== */
         .message {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             animation: messageAppear 0.3s ease;
-            max-width: 80%;
+            max-width: 85%;
             width: fit-content;
         }
 
         @keyframes messageAppear {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -408,9 +397,9 @@
         }
 
         .avatar {
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
             flex-shrink: 0;
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -425,11 +414,11 @@
         .message-content {
             background: var(--surface-light);
             border-radius: var(--radius-md);
-            padding: 12px 16px;
+            padding: 10px 14px;
             border: 1px solid var(--border-subtle);
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
             word-break: break-word;
             max-width: 100%;
         }
@@ -437,12 +426,12 @@
         .message.user .message-content {
             background: rgba(108, 92, 231, 0.2);
             border-color: rgba(108, 92, 231, 0.3);
-            border-bottom-right-radius: 6px;
+            border-bottom-right-radius: 4px;
         }
 
         .message.ai .message-content {
             background: var(--surface-light);
-            border-bottom-left-radius: 6px;
+            border-bottom-left-radius: 4px;
         }
 
         .message-text {
@@ -454,45 +443,35 @@
 
         .message-text img {
             max-width: 100%;
-            border-radius: 12px;
+            border-radius: 10px;
             margin: 4px 0;
             cursor: pointer;
         }
 
         .message-time {
-            font-size: 10px;
+            font-size: 9px;
             color: var(--text-secondary);
             text-align: left;
             opacity: 0.7;
-            margin-top: 4px;
+            margin-top: 2px;
         }
 
         .message.user .message-time {
             text-align: right;
         }
 
-        .badge {
-            display: inline-block;
-            padding: 2px 8px;
-            background: rgba(212, 168, 83, 0.15);
-            color: var(--gold-light);
-            border-radius: 8px;
-            font-size: 10px;
-            font-weight: 600;
-            margin-left: 6px;
-        }
-
         /* ====== Typing Indicator ====== */
         .typing-indicator {
             display: none;
             align-items: center;
-            gap: 10px;
-            padding: 10px 16px;
+            gap: 8px;
+            padding: 8px 14px;
             background: var(--surface-light);
             border-radius: var(--radius-md);
             border: 1px solid var(--border-subtle);
             width: fit-content;
-            margin: 0 16px;
+            margin: 0 16px 4px;
+            flex-shrink: 0;
         }
 
         .typing-dots {
@@ -501,8 +480,8 @@
         }
 
         .typing-dot {
-            width: 7px;
-            height: 7px;
+            width: 6px;
+            height: 6px;
             background: var(--gold);
             border-radius: 50%;
             animation: typingBounce 1.4s infinite;
@@ -517,54 +496,54 @@
         }
 
         .typing-text {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-secondary);
         }
 
         /* ====== Input Area ====== */
         .input-area {
-            padding: 12px 16px 16px;
+            padding: 8px 12px 12px;
             width: 100%;
             max-width: var(--max-chat-width);
             flex-shrink: 0;
             background: var(--bg-primary);
+            margin: 0 auto;
+            border-top: 1px solid var(--border-subtle);
         }
 
         .suggestions-bar {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 10px;
+            gap: 5px;
+            margin-bottom: 8px;
             justify-content: center;
         }
 
         .suggestion-btn {
-            padding: 6px 14px;
+            padding: 4px 12px;
             background: var(--surface-light);
             border: 1px solid var(--border-subtle);
             border-radius: 20px;
             color: var(--text-secondary);
-            font-size: 12px;
+            font-size: 11px;
             cursor: pointer;
             transition: all 0.2s ease;
             white-space: nowrap;
             font-family: 'Tajawal', sans-serif;
         }
 
-        .suggestion-btn:hover {
-            background: rgba(212, 168, 83, 0.08);
-            border-color: var(--border-gold);
-            color: var(--text-primary);
+        .suggestion-btn:active {
+            transform: scale(0.95);
         }
 
         .suggestion-btn i {
             color: var(--accent);
-            margin-left: 4px;
+            margin-left: 3px;
         }
 
         .input-container {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             align-items: flex-end;
         }
 
@@ -575,7 +554,7 @@
 
         #userInput {
             width: 100%;
-            padding: 12px 52px 12px 16px;
+            padding: 10px 44px 10px 12px;
             background: var(--surface-light);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
@@ -584,9 +563,9 @@
             outline: none;
             transition: all 0.2s ease;
             resize: none;
-            min-height: 46px;
-            max-height: 120px;
-            line-height: 1.5;
+            min-height: 42px;
+            max-height: 100px;
+            line-height: 1.4;
             font-family: 'Tajawal', sans-serif;
         }
 
@@ -602,16 +581,16 @@
 
         .input-icons {
             position: absolute;
-            left: 8px;
-            bottom: 8px;
+            left: 6px;
+            bottom: 6px;
             display: flex;
-            gap: 4px;
+            gap: 3px;
         }
 
         .input-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 8px;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -619,22 +598,21 @@
             color: var(--text-muted);
             cursor: pointer;
             transition: all 0.2s ease;
-            font-size: 15px;
+            font-size: 14px;
             border: none;
         }
 
-        .input-icon:hover {
-            background: rgba(212, 168, 83, 0.12);
-            color: var(--text-primary);
+        .input-icon:active {
+            transform: scale(0.9);
         }
 
         #actionButton {
-            width: 46px;
-            height: 46px;
+            width: 42px;
+            height: 42px;
             border-radius: var(--radius-sm);
             border: none;
             color: #1a1a1a;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
             transition: all 0.25s ease;
             display: flex;
@@ -645,14 +623,8 @@
             box-shadow: 0 4px 14px rgba(212, 168, 83, 0.3);
         }
 
-        #actionButton:hover {
-            background: var(--gold-light);
-            box-shadow: 0 6px 20px rgba(212, 168, 83, 0.4);
-            transform: translateY(-1px);
-        }
-
         #actionButton:active {
-            transform: scale(0.95);
+            transform: scale(0.92);
         }
 
         #actionButton.voice-mode {
@@ -671,11 +643,11 @@
 
         @keyframes pulseRecord {
             0%, 100% { box-shadow: 0 0 0 0 rgba(220, 80, 80, 0.3); }
-            50% { box-shadow: 0 0 0 12px rgba(220, 80, 80, 0); }
+            50% { box-shadow: 0 0 0 10px rgba(220, 80, 80, 0); }
         }
 
-        /* ====== Modal ====== */
-        .modal-overlay {
+        /* ====== Modals ====== */
+        .modal-overlay, .confirm-overlay {
             display: none;
             position: fixed;
             top: 0;
@@ -690,14 +662,14 @@
             padding: 20px;
         }
 
-        .modal-overlay.active {
+        .modal-overlay.active, .confirm-overlay.active {
             display: flex;
         }
 
-        .modal-dialog {
+        .modal-dialog, .confirm-dialog {
             background: var(--bg-secondary);
             border-radius: var(--radius-lg);
-            padding: 28px 24px;
+            padding: 24px 20px;
             width: 90%;
             max-width: 380px;
             border: 1px solid var(--border-subtle);
@@ -707,19 +679,20 @@
 
         .modal-dialog h3 {
             color: var(--text-primary);
-            font-size: 18px;
-            margin-bottom: 8px;
+            font-size: 17px;
+            margin-bottom: 6px;
         }
 
-        .modal-dialog p {
+        .modal-dialog p, .confirm-dialog p {
             color: var(--text-secondary);
             font-size: 13px;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
+            line-height: 1.6;
         }
 
         .modal-dialog input {
             width: 100%;
-            padding: 11px 16px;
+            padding: 10px 14px;
             background: var(--bg-card);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-sm);
@@ -728,24 +701,24 @@
             outline: none;
             text-align: center;
             font-family: 'Tajawal', sans-serif;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .modal-dialog input:focus {
             border-color: var(--border-gold);
         }
 
-        .modal-buttons {
+        .modal-buttons, .confirm-buttons {
             display: flex;
             gap: 8px;
             justify-content: center;
         }
 
         .modal-btn {
-            padding: 10px 22px;
+            padding: 8px 20px;
             border-radius: var(--radius-sm);
             border: none;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -757,8 +730,8 @@
             color: #1a1a1a;
         }
 
-        .modal-btn-confirm:hover {
-            background: var(--gold-light);
+        .modal-btn-confirm:active {
+            transform: scale(0.95);
         }
 
         .modal-btn-cancel {
@@ -767,61 +740,22 @@
             border: 1px solid var(--border-subtle);
         }
 
-        .modal-btn-cancel:hover {
-            background: var(--bg-hover);
-            color: var(--text-primary);
+        .modal-btn-cancel:active {
+            transform: scale(0.95);
         }
 
-        .confirm-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
-            z-index: 3100;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .confirm-overlay.active {
-            display: flex;
-        }
-
-        .confirm-dialog {
-            background: var(--bg-secondary);
-            border-radius: var(--radius-lg);
-            padding: 24px 20px;
-            width: 90%;
-            max-width: 360px;
-            border: 1px solid var(--border-subtle);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-            text-align: center;
-        }
-
-        .confirm-dialog p {
-            color: var(--text-primary);
-            font-size: 15px;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-
-        .confirm-dialog .confirm-buttons {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
+        .confirm-dialog .modal-btn-confirm {
+            background: #dc5050;
+            color: white;
         }
 
         /* ====== Toast ====== */
         .toast {
             position: fixed;
-            bottom: 24px;
+            bottom: 20px;
             left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            padding: 12px 20px;
+            transform: translateX(-50%) translateY(80px);
+            padding: 10px 18px;
             background: var(--bg-secondary);
             border-radius: var(--radius-sm);
             border: 1px solid var(--border-subtle);
@@ -829,12 +763,11 @@
             z-index: 9999;
             opacity: 0;
             transition: all 0.3s ease;
-            font-size: 13px;
-            white-space: nowrap;
+            font-size: 12px;
             color: var(--text-primary);
             max-width: 90%;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            text-align: center;
+            pointer-events: none;
         }
 
         .toast.show {
@@ -850,7 +783,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.92);
             z-index: 2000;
             align-items: center;
             justify-content: center;
@@ -858,31 +791,32 @@
         }
 
         .image-modal img {
-            max-width: 90%;
-            max-height: 90%;
+            max-width: 95%;
+            max-height: 85%;
             border-radius: var(--radius-md);
+            object-fit: contain;
         }
 
         .close-image-modal {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 16px;
+            right: 16px;
             background: rgba(255, 255, 255, 0.08);
             color: white;
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 18px;
             cursor: pointer;
             border: none;
             transition: all 0.2s;
         }
 
-        .close-image-modal:hover {
-            background: #dc5050;
+        .close-image-modal:active {
+            transform: scale(0.9);
         }
 
         /* ====== Voice Indicator ====== */
@@ -894,24 +828,25 @@
             transform: translate(-50%, -50%);
             background: var(--bg-secondary);
             border-radius: var(--radius-lg);
-            padding: 24px;
+            padding: 20px;
             box-shadow: var(--shadow-md);
             z-index: 1000;
             border: 1px solid var(--border-subtle);
             text-align: center;
+            width: 180px;
         }
 
         .voice-waves {
             display: flex;
             gap: 4px;
             align-items: flex-end;
-            height: 24px;
-            margin: 12px 0;
+            height: 20px;
+            margin: 10px 0;
             justify-content: center;
         }
 
         .voice-wave {
-            width: 4px;
+            width: 3px;
             background: var(--gold);
             border-radius: 2px;
             animation: voiceWave 1.2s infinite;
@@ -923,13 +858,23 @@
         .voice-wave:nth-child(5) { animation-delay: 0.4s; }
 
         @keyframes voiceWave {
-            0%, 100% { height: 6px; }
-            50% { height: 24px; }
+            0%, 100% { height: 5px; }
+            50% { height: 20px; }
+        }
+
+        .voice-indicator h3 {
+            color: white;
+            font-size: 14px;
+        }
+
+        .voice-indicator p {
+            color: var(--text-secondary);
+            font-size: 11px;
         }
 
         /* ====== Scrollbar ====== */
         ::-webkit-scrollbar {
-            width: 5px;
+            width: 4px;
         }
         ::-webkit-scrollbar-track {
             background: transparent;
@@ -939,19 +884,19 @@
             border-radius: 3px;
         }
 
-        /* ====== Mobile Menu Button ====== */
+        /* ====== Mobile Menu ====== */
         .mobile-menu-btn {
             display: none;
             position: fixed;
-            top: 14px;
-            right: 14px;
-            width: 42px;
-            height: 42px;
+            top: 10px;
+            right: 10px;
+            width: 38px;
+            height: 38px;
             border-radius: var(--radius-sm);
             background: var(--bg-card);
             border: 1px solid var(--border-subtle);
             color: var(--text-primary);
-            font-size: 17px;
+            font-size: 16px;
             cursor: pointer;
             z-index: 2300;
             align-items: center;
@@ -966,7 +911,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.55);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(3px);
             z-index: 2400;
         }
@@ -975,7 +920,7 @@
             display: block;
         }
 
-        /* ====== Mobile ====== */
+        /* ====== Mobile Styles ====== */
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -989,12 +934,13 @@
                 position: fixed;
                 top: 0;
                 right: -100%;
-                width: 280px;
-                height: 100vh;
+                width: 270px;
+                height: 100%;
                 z-index: 2500;
                 transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 box-shadow: -8px 0 30px rgba(0, 0, 0, 0.5);
                 border-left: none;
+                border-right: 1px solid var(--border-subtle);
             }
 
             .sidebar.mobile-open {
@@ -1002,61 +948,82 @@
             }
 
             .main-content {
-                padding-top: 56px;
-                height: 100vh;
+                height: 100%;
+                padding-top: 48px;
             }
 
-            .welcome-screen {
-                padding: 20px 16px;
-            }
-
-            .welcome-icon {
-                width: 64px;
-                height: 64px;
-                font-size: 28px;
-            }
-
-            .welcome-title {
-                font-size: 20px;
-            }
-
-            .welcome-subtitle {
-                font-size: 14px;
-                margin-bottom: 20px;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-            }
-
-            .feature-card {
-                padding: 14px 12px;
-            }
-
-            .feature-card i {
-                font-size: 22px;
-            }
-
-            .feature-card span {
-                font-size: 12px;
+            /* Fix: Make input area always visible at bottom */
+            .input-area {
+                padding: 6px 10px 10px;
+                background: var(--bg-primary);
+                border-top: 1px solid var(--border-subtle);
+                flex-shrink: 0;
             }
 
             .chat-container {
-                padding: 12px 12px 12px;
-                height: calc(100vh - 160px);
+                padding: 12px 10px;
+                flex: 1;
+                min-height: 0;
+                height: auto;
+            }
+
+            .welcome-screen {
+                padding: 16px;
+                justify-content: center;
+            }
+
+            .welcome-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 26px;
+            }
+
+            .welcome-title {
+                font-size: 18px;
+            }
+
+            .welcome-subtitle {
+                font-size: 13px;
+                margin-bottom: 16px;
+            }
+
+            .features-grid {
+                gap: 8px;
+                max-width: 100%;
+            }
+
+            .feature-card {
+                padding: 12px 10px;
+            }
+
+            .feature-card i {
+                font-size: 20px;
+                margin-bottom: 6px;
+            }
+
+            .feature-card span {
+                font-size: 11px;
             }
 
             .message {
-                max-width: 90%;
+                max-width: 92%;
             }
 
             .message-content {
-                padding: 10px 14px;
+                padding: 8px 12px;
             }
 
             .message-text {
                 font-size: 13px;
+            }
+
+            .message-text img {
+                max-width: 180px;
+            }
+
+            .avatar {
+                width: 26px;
+                height: 26px;
             }
 
             .suggestions-bar {
@@ -1073,172 +1040,21 @@
             }
 
             .suggestion-btn {
-                font-size: 11px;
-                padding: 5px 10px;
+                font-size: 10px;
+                padding: 4px 10px;
                 flex-shrink: 0;
             }
 
-            .input-area {
-                padding: 8px 12px 12px;
-            }
-
             #userInput {
                 font-size: 13px;
-                min-height: 40px;
-                padding: 10px 46px 10px 12px;
+                min-height: 38px;
+                padding: 8px 38px 8px 10px;
             }
 
             #actionButton {
-                width: 40px;
-                height: 40px;
-                font-size: 16px;
-            }
-
-            .input-icon {
-                width: 26px;
-                height: 26px;
-                font-size: 13px;
-            }
-
-            .input-icons {
-                left: 6px;
-                bottom: 6px;
-            }
-
-            .typing-indicator {
-                margin: 0 12px;
-                padding: 8px 14px;
-            }
-
-            .toast {
-                font-size: 12px;
-                padding: 10px 16px;
-                bottom: 16px;
-                max-width: 90%;
-                white-space: normal;
-            }
-
-            .voice-indicator {
-                padding: 20px;
-                width: 200px;
-            }
-
-            .modal-dialog {
-                padding: 20px 16px;
-                width: 95%;
-            }
-
-            .modal-dialog h3 {
-                font-size: 16px;
-            }
-
-            .page-btn {
-                padding: 10px 12px;
-                font-size: 13px;
-                min-height: 40px;
-            }
-
-            .sidebar-brand .brand-icon {
-                width: 48px;
-                height: 48px;
-            }
-
-            .sidebar-brand h2 {
-                font-size: 15px;
-            }
-
-            .add-page-btn {
-                font-size: 12px;
-                padding: 8px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .features-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 6px;
-            }
-
-            .feature-card {
-                padding: 12px 10px;
-            }
-
-            .feature-card i {
-                font-size: 20px;
-                margin-bottom: 6px;
-            }
-
-            .feature-card span {
-                font-size: 11px;
-            }
-
-            .welcome-icon {
-                width: 56px;
-                height: 56px;
-                font-size: 24px;
-            }
-
-            .welcome-title {
-                font-size: 18px;
-            }
-
-            .message {
-                max-width: 95%;
-            }
-
-            .chat-container {
-                padding: 10px 8px;
-                height: calc(100vh - 150px);
-            }
-
-            .message-content {
-                padding: 8px 12px;
-            }
-
-            .message-text {
-                font-size: 12px;
-            }
-
-            .message-text img {
-                max-width: 180px;
-            }
-
-            .avatar {
-                width: 28px;
-                height: 28px;
-            }
-
-            .sidebar {
-                width: 260px;
-            }
-
-            .mobile-menu-btn {
-                top: 10px;
-                right: 10px;
                 width: 38px;
                 height: 38px;
                 font-size: 15px;
-            }
-
-            .main-content {
-                padding-top: 48px;
-            }
-
-            .suggestion-btn {
-                font-size: 10px;
-                padding: 4px 8px;
-            }
-
-            #userInput {
-                font-size: 12px;
-                min-height: 36px;
-                padding: 8px 40px 8px 10px;
-            }
-
-            #actionButton {
-                width: 36px;
-                height: 36px;
-                font-size: 14px;
             }
 
             .input-icon {
@@ -1252,23 +1068,221 @@
                 bottom: 4px;
             }
 
-            .input-area {
-                padding: 6px 10px 10px;
+            .typing-indicator {
+                padding: 6px 12px;
+                margin: 0 10px 2px;
+            }
+
+            .typing-text {
+                font-size: 10px;
             }
 
             .toast {
                 font-size: 11px;
                 padding: 8px 14px;
                 bottom: 12px;
+                max-width: 92%;
             }
 
             .voice-indicator {
+                width: 160px;
                 padding: 16px;
-                width: 180px;
             }
 
             .voice-indicator h3 {
+                font-size: 13px;
+            }
+
+            .modal-dialog {
+                padding: 18px 16px;
+                width: 95%;
+            }
+
+            .modal-dialog h3 {
+                font-size: 16px;
+            }
+
+            .sidebar-brand .brand-icon {
+                width: 44px;
+                height: 44px;
+            }
+
+            .sidebar-brand h2 {
                 font-size: 14px;
+            }
+
+            .page-btn {
+                padding: 8px 10px;
+                font-size: 12px;
+                min-height: 36px;
+            }
+
+            .add-page-btn {
+                font-size: 11px;
+                padding: 8px;
+                margin: 2px 8px 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding-top: 44px;
+            }
+
+            .welcome-icon {
+                width: 52px;
+                height: 52px;
+                font-size: 22px;
+            }
+
+            .welcome-title {
+                font-size: 16px;
+            }
+
+            .welcome-subtitle {
+                font-size: 12px;
+                margin-bottom: 12px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+
+            .feature-card {
+                padding: 10px 8px;
+            }
+
+            .feature-card i {
+                font-size: 18px;
+                margin-bottom: 4px;
+            }
+
+            .feature-card span {
+                font-size: 10px;
+            }
+
+            .message {
+                max-width: 95%;
+            }
+
+            .message-content {
+                padding: 6px 10px;
+            }
+
+            .message-text {
+                font-size: 12px;
+            }
+
+            .message-text img {
+                max-width: 140px;
+            }
+
+            .avatar {
+                width: 22px;
+                height: 22px;
+            }
+
+            .chat-container {
+                padding: 8px 6px;
+            }
+
+            .input-area {
+                padding: 4px 8px 8px;
+            }
+
+            #userInput {
+                font-size: 12px;
+                min-height: 34px;
+                padding: 6px 34px 6px 8px;
+                border-radius: var(--radius-sm);
+            }
+
+            #actionButton {
+                width: 34px;
+                height: 34px;
+                font-size: 13px;
+            }
+
+            .input-icon {
+                width: 22px;
+                height: 22px;
+                font-size: 11px;
+            }
+
+            .input-icons {
+                left: 3px;
+                bottom: 3px;
+            }
+
+            .suggestion-btn {
+                font-size: 9px;
+                padding: 3px 8px;
+            }
+
+            .suggestions-bar {
+                gap: 3px;
+                margin-bottom: 6px;
+            }
+
+            .typing-indicator {
+                padding: 5px 10px;
+                margin: 0 6px 2px;
+            }
+
+            .typing-dot {
+                width: 5px;
+                height: 5px;
+            }
+
+            .typing-text {
+                font-size: 9px;
+            }
+
+            .sidebar {
+                width: 240px;
+            }
+
+            .mobile-menu-btn {
+                top: 8px;
+                right: 8px;
+                width: 34px;
+                height: 34px;
+                font-size: 14px;
+            }
+
+            .toast {
+                font-size: 10px;
+                padding: 6px 12px;
+                bottom: 10px;
+                max-width: 95%;
+            }
+
+            .voice-indicator {
+                width: 140px;
+                padding: 14px;
+            }
+
+            .voice-indicator h3 {
+                font-size: 12px;
+            }
+
+            .modal-dialog {
+                padding: 16px 14px;
+            }
+
+            .modal-dialog h3 {
+                font-size: 15px;
+            }
+
+            .modal-dialog input {
+                font-size: 13px;
+                padding: 8px 12px;
+            }
+
+            .modal-btn {
+                font-size: 12px;
+                padding: 7px 16px;
             }
         }
 
@@ -1278,17 +1292,21 @@
             }
 
             .welcome-icon {
-                width: 48px;
-                height: 48px;
-                font-size: 20px;
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
             }
 
             .welcome-title {
-                font-size: 16px;
+                font-size: 14px;
             }
 
-            .welcome-subtitle {
-                font-size: 12px;
+            .message-text {
+                font-size: 11px;
+            }
+
+            .message-text img {
+                max-width: 120px;
             }
         }
     </style>
@@ -1306,14 +1324,14 @@
 
     <!-- Voice Indicator -->
     <div class="voice-indicator" id="voiceIndicator">
-        <i class="fas fa-microphone" style="font-size: 24px; color: var(--gold); margin-bottom: 10px;"></i>
-        <h3 style="color: white; font-size: 16px;">جاري التسجيل الصوتي...</h3>
+        <i class="fas fa-microphone" style="font-size: 22px; color: var(--gold); margin-bottom: 8px;"></i>
+        <h3>جاري التسجيل...</h3>
         <div class="voice-waves">
             <div class="voice-wave"></div><div class="voice-wave"></div>
             <div class="voice-wave"></div><div class="voice-wave"></div>
             <div class="voice-wave"></div>
         </div>
-        <p style="color: var(--text-secondary); font-size: 12px;">تحدث الآن...</p>
+        <p>تحدث الآن...</p>
     </div>
 
     <!-- Image Modal -->
@@ -1341,7 +1359,7 @@
             <p id="confirmMessage">هل أنت متأكد؟</p>
             <div class="confirm-buttons">
                 <button class="modal-btn modal-btn-cancel" onclick="closeConfirmModal(false)">إلغاء</button>
-                <button class="modal-btn modal-btn-confirm" onclick="closeConfirmModal(true)" style="background: #dc5050; color: white;">حذف</button>
+                <button class="modal-btn modal-btn-confirm" onclick="closeConfirmModal(true)">حذف</button>
             </div>
         </div>
     </div>
@@ -1350,7 +1368,7 @@
         <!-- ====== الشريط الجانبي ====== -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-brand">
-                <img src="img/mozlee.jpg" alt="المكتبة" class="brand-icon" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<div class=\'brand-icon\' style=\'background:linear-gradient(135deg, #d4a853, #8b6914); display:flex; align-items:center; justify-content:center; font-size:26px; color:#1a1a1a;\'>🎬</div>');">
+                <img src="img/mozlee.jpg" alt="المكتبة" class="brand-icon" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<div class=\'brand-icon\' style=\'background:linear-gradient(135deg, #d4a853, #8b6914); display:flex; align-items:center; justify-content:center; font-size:22px; color:#1a1a1a;\'>🎬</div>');">
                 <h2>مكتبة الفجر</h2>
                 <p>Cinematic Library</p>
             </div>
@@ -1491,6 +1509,13 @@
             autoResizeTextarea();
             updateActionButton();
             switchPage('home');
+            
+            // Fix for mobile: ensure input area is visible
+            setTimeout(() => {
+                if (window.innerWidth <= 768) {
+                    document.querySelector('.main-content').style.paddingBottom = '0';
+                }
+            }, 100);
         }
 
         // ====== إدارة الصفحات ======
@@ -1572,18 +1597,13 @@
             }
         }
 
-        function saveCurrentConversation() {
-            // تم الحفظ مباشرة عند إضافة الرسائل
-        }
+        function saveCurrentConversation() {}
 
         function renderMessageToChat(text, sender, timeStr) {
             const div = document.createElement('div');
             div.className = `message ${sender}`;
             
-            // معالجة النص لدعم الصور المضمنة
             let formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-            
-            // تحويل روابط الصور إلى img tags
             formatted = formatted.replace(/!\[(.*?)\]\((.*?)\)/g, (match, alt, src) => {
                 return `<img src="${src}" alt="${alt}" onclick="openImageModal('${src}')" style="max-width:200px;max-height:200px;border-radius:8px;cursor:pointer;margin:4px 0;">`;
             });
@@ -1855,8 +1875,8 @@
             div.innerHTML = `
                 <div class="avatar">${sender === 'ai' ? '<img src="img/mozlee.jpg" alt="" onerror="this.style.display=\'none\';">' : '<span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;background:linear-gradient(135deg, #ff9a9e, #fad0c4);color:white;">👤</span>'}</div>
                 <div class="message-content">
-                    <img src="${src}" style="max-width:240px;max-height:240px;border-radius:12px;cursor:pointer;margin-bottom:6px;width:100%;height:auto;" onclick="openImageModal('${src}')">
-                    ${caption ? `<div style="font-size:11px;color:var(--text-secondary);text-align:center;word-break:break-word;">🖼️ ${caption}</div>` : ''}
+                    <img src="${src}" style="max-width:200px;max-height:200px;border-radius:10px;cursor:pointer;margin-bottom:4px;width:100%;height:auto;" onclick="openImageModal('${src}')">
+                    ${caption ? `<div style="font-size:10px;color:var(--text-secondary);text-align:center;word-break:break-word;">🖼️ ${caption}</div>` : ''}
                     <div class="message-time">${time}</div>
                 </div>
             `;
@@ -1914,7 +1934,7 @@
         function autoResizeTextarea() {
             userInput.addEventListener('input', function() {
                 this.style.height = 'auto';
-                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+                this.style.height = Math.min(this.scrollHeight, 100) + 'px';
                 updateActionButton();
             });
         }
@@ -1975,13 +1995,13 @@
                 if (e.key === 'Escape') {
                     if (addPageModal.classList.contains('active')) closeAddPageModal();
                     if (confirmModal.classList.contains('active')) closeConfirmModal(false);
+                    if (document.getElementById('imageModal').style.display === 'flex') closeImageModal();
                 }
             });
             newPageNameInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') confirmAddPage();
             });
             
-            // إغلاق القائمة الجانبية عند تغيير حجم النافذة إلى أكبر من 768px
             window.addEventListener('resize', () => {
                 if (window.innerWidth > 768 && sidebar.classList.contains('mobile-open')) {
                     closeMobileSidebar();
