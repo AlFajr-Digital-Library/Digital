@@ -36,28 +36,477 @@
   --border-radius-md: 12px;
   --border-radius-lg: 16px;
   --transition-speed: 0.3s;
+  --adult-color: #8B0000;
+  --adult-glow: rgba(139, 0, 0, 0.6);
+  --adult-border: #ff0000;
 }
 
-/* ====== نص اللغة الإنجليزية ====== */
-:root[lang="en"] {
-  font-family: 'Roboto', sans-serif;
+/* ====== المظهر الفاتح (محسّن) ====== */
+body.light-theme {
+  --dark-bg: #f4f7fc;
+  --darker-bg: #e9edf4;
+  --card-bg: #ffffff;
+  --card-hover: #f8faff;
+  --text-primary: #2c3e50;
+  --text-secondary: #5a6c7d;
+  --text-muted: #8a9baa;
+  --border-color: #dce3ed;
+  --shadow-medium: rgba(44, 62, 80, 0.08);
+  --gradient-dark: linear-gradient(135deg, #ffffff, #f4f7fc);
+  --shadow-light: rgba(255, 107, 53, 0.15);
 }
 
-:root[lang="en"] .rtl-text {
+body.light-theme .top {
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid #dce3ed;
+  box-shadow: 0 2px 12px rgba(44, 62, 80, 0.06);
+}
+
+body.light-theme .top2 {
+  background: linear-gradient(135deg, #ffffff, #f0f5fe);
+  border-bottom: 1px solid #dce3ed;
+}
+
+body.light-theme .product-card {
+  background: #ffffff;
+  border: 1px solid #e8edf5;
+  box-shadow: 0 2px 8px rgba(44, 62, 80, 0.05);
+}
+
+body.light-theme .product-card:hover {
+  box-shadow: 0 8px 30px rgba(44, 62, 80, 0.10);
+  border-color: var(--primary-color);
+}
+
+body.light-theme .video-section {
+  background: #ffffff;
+  border: 1px solid #e8edf5;
+}
+
+body.light-theme .video-tabs {
+  background: #f0f5fe;
+}
+
+body.light-theme .video-tab {
+  color: #5a6c7d;
+}
+
+body.light-theme .video-tab.active {
+  background: var(--gradient-primary);
+  color: white;
+}
+
+body.light-theme .settings-item {
+  background: #ffffff;
+  border: 1px solid #e8edf5;
+}
+
+body.light-theme .settings-item:hover {
+  background: #f8faff;
+  border-color: var(--primary-color);
+}
+
+body.light-theme .settings-menu {
+  background: #ffffff;
+}
+
+body.light-theme .footer {
+  background: #e9edf4;
+  border-top: 1px solid #dce3ed;
+}
+
+body.light-theme .search-container {
+  background: #ffffff;
+}
+
+body.light-theme .search-product-card {
+  background: #ffffff;
+  border: 1px solid #e8edf5;
+}
+
+body.light-theme .product-detail-container {
+  background: #ffffff;
+}
+
+body.light-theme .product-detail-summary {
+  background: rgba(44, 62, 80, 0.03);
+}
+
+body.light-theme .summary-item {
+  background: #f8faff;
+}
+
+body.light-theme .chapter-item {
+  background: #f8faff;
+}
+
+body.light-theme .comment-item {
+  background: #f8faff;
+}
+
+body.light-theme .add-comment {
+  background: rgba(44, 62, 80, 0.03);
+}
+
+body.light-theme .comment-input {
+  background: #ffffff;
+  color: #2c3e50;
+  border: 1px solid #dce3ed;
+}
+
+body.light-theme .product-detail-footer {
+  background: #f0f5fe;
+}
+
+body.light-theme .icon-wrapper {
+  background: #f0f5fe;
+}
+
+body.light-theme .icon-wrapper:hover {
+  background: var(--gradient-primary);
+}
+
+body.light-theme .icon-wrapper i {
+  color: #2c3e50;
+}
+
+body.light-theme .icon-wrapper:hover i {
+  color: white;
+}
+
+body.light-theme #panel {
+  background: #ffffff;
+}
+
+body.light-theme .settings-header {
+  background: linear-gradient(135deg, #ff6b35, #e85d2e);
+}
+
+body.light-theme .settings-item-content .settings-item-title {
+  color: #2c3e50;
+}
+
+body.light-theme .settings-item-content .settings-item-desc {
+  color: #5a6c7d;
+}
+
+body.light-theme .settings-value {
+  color: var(--primary-color);
+  border-color: rgba(255, 107, 53, 0.2);
+}
+
+body.light-theme .toggle-slider {
+  background-color: #dce3ed;
+}
+
+/* ====== منتجات +18 ====== */
+.product-card.adult-product {
+  border: 2px solid var(--adult-border) !important;
+  box-shadow: 0 0 20px var(--adult-glow), inset 0 0 20px rgba(139, 0, 0, 0.1) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.product-card.adult-product::before {
+  content: '🔞 18+';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(139, 0, 0, 0.9);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 10;
+  animation: pulse-adult 1.5s infinite;
+}
+
+@keyframes pulse-adult {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.product-card.adult-product::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(255, 0, 0, 0.03) 10px,
+    rgba(255, 0, 0, 0.03) 20px
+  );
+  pointer-events: none;
+  animation: adult-shimmer 3s linear infinite;
+}
+
+@keyframes adult-shimmer {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.product-card.adult-product:hover {
+  border-color: #ff0000 !important;
+  box-shadow: 0 0 40px rgba(255, 0, 0, 0.4), inset 0 0 30px rgba(139, 0, 0, 0.2) !important;
+}
+
+.product-card.adult-product .card-title {
+  color: #ff4444;
+}
+
+.product-card.adult-product .card-price {
+  color: #ff0000;
+}
+
+/* ====== نافذة التحقق من العمر ====== */
+.age-verification-overlay {
   display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease-out;
 }
 
-:root[lang="ar"] .ltr-text {
+.age-verification-overlay.show {
+  display: flex;
+}
+
+.age-verification-box {
+  background: var(--card-bg);
+  border-radius: var(--border-radius-lg);
+  max-width: 550px;
+  width: 90%;
+  padding: 30px;
+  border: 2px solid var(--adult-border);
+  box-shadow: 0 0 60px rgba(255, 0, 0, 0.3);
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.age-verification-box .step-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.age-verification-box .step-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: all var(--transition-speed);
+}
+
+.age-verification-box .step-dot.active {
+  background: var(--primary-color);
+  transform: scale(1.2);
+}
+
+.age-verification-box .step-dot.completed {
+  background: var(--success-color);
+}
+
+.age-verification-box .step-title {
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+  color: var(--adult-border);
+}
+
+.age-verification-box .step-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.age-verification-box .step-content {
   display: none;
+  animation: fadeIn 0.3s ease-out;
 }
 
+.age-verification-box .step-content.active {
+  display: block;
+}
+
+/* الخطوة 1: إخلاء المسؤولية */
+.disclaimer-text {
+  background: rgba(139, 0, 0, 0.1);
+  border: 1px solid var(--adult-border);
+  border-radius: var(--border-radius-md);
+  padding: 20px;
+  margin: 15px 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.disclaimer-text p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.8;
+  margin-bottom: 10px;
+}
+
+/* الخطوة 2: التحقق من العمر */
+.age-verify-input {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.age-verify-input label {
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+.age-verify-input input {
+  padding: 12px 16px;
+  background: var(--darker-bg);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  color: var(--text-primary);
+  font-size: 16px;
+  transition: all var(--transition-speed);
+}
+
+.age-verify-input input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.age-verify-input .hint {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+/* الخطوة 3: الشروط والإقرار */
+.terms-text {
+  background: rgba(0,0,0,0.2);
+  border-radius: var(--border-radius-md);
+  padding: 20px;
+  margin: 15px 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.terms-text p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.8;
+  margin-bottom: 8px;
+}
+
+.terms-text ul {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.8;
+  padding-right: 20px;
+}
+
+.terms-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 15px 0;
+}
+
+.terms-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.terms-checkbox label {
+  color: var(--text-secondary);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.age-verification-box .btn-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: center;
+}
+
+.age-verification-box .btn {
+  padding: 10px 30px;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  font-size: 14px;
+}
+
+.age-verification-box .btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+}
+
+.age-verification-box .btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px var(--shadow-light);
+}
+
+.age-verification-box .btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.age-verification-box .btn-secondary {
+  background: var(--card-bg);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.age-verification-box .btn-secondary:hover {
+  background: var(--darker-bg);
+}
+
+.age-verification-box .btn-danger {
+  background: linear-gradient(135deg, #f44336, #d32f2f);
+  color: white;
+}
+
+.age-verification-box .btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+}
+
+.age-verification-box .btn-success {
+  background: linear-gradient(135deg, #4caf50, #388e3c);
+  color: white;
+}
+
+.age-verification-box .btn-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+/* ====== باقي الأنماط ====== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* ====== الجسم العام ====== */
 body {
   font-family: 'Cairo', 'Amiri', sans-serif;
   background: var(--dark-bg);
@@ -67,9 +516,9 @@ body {
   background-image: 
     radial-gradient(circle at 10% 20%, rgba(255, 107, 53, 0.05) 0%, transparent 20%),
     radial-gradient(circle at 90% 80%, rgba(26, 115, 232, 0.05) 0%, transparent 20%);
+  transition: background 0.3s, color 0.3s;
 }
 
-/* ====== الخلفية ====== */
 #img1 {
   position: fixed;
   width: 100%;
@@ -82,7 +531,6 @@ body {
   filter: brightness(0.4) saturate(1.5);
 }
 
-/* ====== الشريط العلوي ====== */
 .top {
   position: fixed;
   width: 100%;
@@ -98,6 +546,7 @@ body {
   justify-content: space-between;
   padding: 0 20px;
   box-shadow: 0 4px 12px var(--shadow-medium);
+  transition: background 0.3s, border-color 0.3s;
 }
 
 #icon {
@@ -155,7 +604,6 @@ body {
   z-index: 101;
 }
 
-/* ====== قسم الترحيب المتحرك ====== */
 .top2 {
   position: relative;
   top: 70px;
@@ -164,6 +612,7 @@ body {
   background: var(--gradient-dark);
   overflow: hidden;
   border-bottom: 1px solid var(--border-color);
+  transition: background 0.3s, border-color 0.3s;
 }
 
 .welcome-banner {
@@ -179,14 +628,8 @@ body {
 }
 
 @keyframes slideIn {
-  from {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 .welcome-icon {
@@ -214,7 +657,6 @@ body {
   text-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-/* ====== البطاقات الرئيسية ====== */
 .main-content {
   padding: 90px 20px 40px;
   max-width: 1200px;
@@ -242,7 +684,6 @@ body {
   margin-bottom: 25px;
 }
 
-/* ====== بطاقات المنتجات ====== */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -348,7 +789,6 @@ body {
   box-shadow: 0 4px 12px var(--shadow-light);
 }
 
-/* ====== أقسام التمرير الأفقي ====== */
 .scroll-section {
   margin: 40px 0;
   position: relative;
@@ -418,7 +858,6 @@ body {
   color: var(--accent-color);
 }
 
-/* ====== أزرار التنقل للقسم المانجا ====== */
 .manga-navigation {
   display: flex;
   justify-content: center;
@@ -493,7 +932,6 @@ body {
   background: var(--accent-color);
 }
 
-/* ====== تبويبات الفيديوهات ====== */
 .video-tabs {
   display: flex;
   background: var(--card-bg);
@@ -502,6 +940,7 @@ body {
   margin: 30px 0;
   overflow-x: auto;
   gap: 5px;
+  transition: background 0.3s;
 }
 
 .video-tab {
@@ -531,7 +970,6 @@ body {
   animation: fadeIn 0.5s;
 }
 
-/* ====== أزرار التنقل للفيديوهات والروايات ====== */
 .content-navigation {
   display: flex;
   justify-content: space-between;
@@ -582,13 +1020,13 @@ body {
   gap: 5px;
 }
 
-/* ====== قسم الفيديوهات ====== */
 .video-section {
   background: var(--gradient-dark);
   border-radius: var(--border-radius-lg);
   padding: 25px;
   margin: 40px 0;
   border: 1px solid var(--border-color);
+  transition: background 0.3s, border-color 0.3s;
 }
 
 .video-grid {
@@ -660,7 +1098,6 @@ body {
   gap: 5px;
 }
 
-/* ====== لوحة تفاصيل المنتج - مع شريطين مصغرين ====== */
 .product-detail-overlay {
   display: none;
   position: fixed;
@@ -683,35 +1120,36 @@ body {
   background: var(--gradient-dark);
   display: flex;
   flex-direction: column;
+  transition: background 0.3s;
 }
 
 .product-detail-header {
-  padding: 6px 12px 4px;
+  padding: 10px 16px;
   background: var(--gradient-primary);
   position: sticky;
   top: 0;
   z-index: 10;
   flex-shrink: 0;
-  min-height: 40px;
+  min-height: 50px;
   display: flex;
   align-items: center;
 }
 
 .close-product-detail {
   position: absolute;
-  top: 6px;
-  right: 8px;
+  top: 8px;
+  right: 10px;
   background: rgba(255,255,255,0.2);
   border: none;
   color: white;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 16px;
   transition: all var(--transition-speed);
 }
 
@@ -721,7 +1159,7 @@ body {
 }
 
 .product-detail-title {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   color: white;
   margin: 0 30px 0 0;
@@ -732,7 +1170,7 @@ body {
 
 .product-detail-main {
   flex: 1;
-  padding: 10px 15px;
+  padding: 12px 16px;
 }
 
 .product-detail-content {
@@ -850,6 +1288,7 @@ body {
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--border-color);
   margin-bottom: 10px;
+  transition: background 0.3s, border-color 0.3s;
 }
 
 .product-detail-summary-grid {
@@ -867,6 +1306,7 @@ body {
   background: var(--card-bg);
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-color);
+  transition: background 0.3s, border-color 0.3s;
 }
 
 .summary-item i {
@@ -894,11 +1334,11 @@ body {
   background: rgba(255,255,255,0.05);
   border-radius: var(--border-radius-lg);
   border: 1px solid var(--border-color);
+  transition: background 0.3s, border-color 0.3s;
 }
 
-/* أزرار الأجزاء المدمجة */
 .merged-parts-tabs {
-  display: flex;
+  display: none;
   flex-wrap: wrap;
   gap: 6px;
   margin: 10px 0 15px;
@@ -1010,6 +1450,7 @@ body {
   margin-bottom: 10px;
   border: 1px solid var(--border-color);
   position: relative;
+  transition: background 0.3s, border-color 0.3s;
 }
 
 .comment-header {
@@ -1067,6 +1508,7 @@ body {
   padding: 15px;
   border-radius: var(--border-radius-md);
   border: 1px solid var(--border-color);
+  transition: background 0.3s, border-color 0.3s;
 }
 
 .comment-input {
@@ -1081,6 +1523,7 @@ body {
   resize: vertical;
   min-height: 70px;
   font-size: 14px;
+  transition: background 0.3s, border-color 0.3s, color 0.3s;
 }
 
 .submit-comment {
@@ -1103,9 +1546,8 @@ body {
   box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
 }
 
-/* ====== الشريط السفلي المصغر ====== */
 .product-detail-footer {
-  padding: 6px 12px;
+  padding: 10px 16px;
   background: var(--darker-bg);
   border-top: 1px solid var(--border-color);
   display: flex;
@@ -1115,8 +1557,9 @@ body {
   position: sticky;
   bottom: 0;
   z-index: 10;
-  min-height: 40px;
+  min-height: 50px;
   gap: 10px;
+  transition: background 0.3s, border-color 0.3s;
 }
 
 .product-detail-footer .footer-info {
@@ -1127,44 +1570,27 @@ body {
 }
 
 .product-detail-footer .footer-info h3 {
-  font-size: 13px;
+  font-size: 14px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .product-detail-footer .footer-info p {
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-secondary);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-@media (max-width: 768px) {
-  .product-detail-footer {
-    flex-direction: row;
-    padding: 5px 10px;
-    min-height: 36px;
-    gap: 6px;
-  }
-  
-  .product-detail-footer .footer-info h3 {
-    font-size: 12px;
-  }
-  
-  .product-detail-footer .footer-info p {
-    font-size: 10px;
-  }
-}
-
 .purchase-button {
   background: var(--gradient-primary);
   color: white;
   border: none;
-  padding: 6px 18px;
+  padding: 8px 20px;
   border-radius: var(--border-radius-sm);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: bold;
   cursor: pointer;
   transition: all var(--transition-speed);
@@ -1180,36 +1606,6 @@ body {
   box-shadow: 0 4px 12px var(--shadow-light);
 }
 
-@media (max-width: 480px) {
-  .purchase-button {
-    padding: 4px 12px;
-    font-size: 11px;
-  }
-  
-  .product-detail-header {
-    padding: 4px 8px;
-    min-height: 32px;
-  }
-  
-  .product-detail-title {
-    font-size: 13px;
-    margin: 0 24px 0 0;
-  }
-  
-  .close-product-detail {
-    width: 22px;
-    height: 22px;
-    font-size: 11px;
-    top: 4px;
-    right: 5px;
-  }
-  
-  .product-detail-main {
-    padding: 8px 10px;
-  }
-}
-
-/* ====== لوحة البحث ====== */
 .search-overlay {
   display: none;
   position: fixed;
@@ -1230,6 +1626,7 @@ body {
   background: var(--gradient-dark);
   display: flex;
   flex-direction: column;
+  transition: background 0.3s;
 }
 
 .search-header {
@@ -1329,19 +1726,6 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 15px;
-}
-
-@media (max-width: 768px) {
-  .search-products-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  }
-}
-
-@media (max-width: 480px) {
-  .search-products-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
 }
 
 .search-product-card {
@@ -1467,7 +1851,6 @@ body {
   color: var(--text-muted);
 }
 
-/* ====== لوحة الإعدادات ====== */
 #panel {
   position: fixed;
   top: 0;
@@ -1560,6 +1943,7 @@ body {
 .settings-menu {
   flex: 1;
   padding: 12px 10px;
+  transition: background 0.3s;
 }
 
 .settings-item {
@@ -1768,32 +2152,6 @@ input:checked + .toggle-slider:before {
   animation: fadeIn 0.5s;
 }
 
-.category-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 15px 0;
-}
-
-.category-badge {
-  background: var(--gradient-dark);
-  color: var(--text-secondary);
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all var(--transition-speed);
-  border: 1px solid var(--border-color);
-}
-
-.category-badge:hover,
-.category-badge.active {
-  background: var(--gradient-primary);
-  color: white;
-  border-color: var(--primary-color);
-}
-
-/* ====== نافذة عرض جميع القصص ====== */
 .all-stories-overlay {
   display: none;
   position: fixed;
@@ -1808,14 +2166,8 @@ input:checked + .toggle-slider:before {
 }
 
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(100%); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .all-stories-container {
@@ -1888,12 +2240,12 @@ input:checked + .toggle-slider:before {
   display: none;
 }
 
-/* ====== التذييل ====== */
 .footer {
   background: var(--darker-bg);
   padding: 30px 20px;
   margin-top: 40px;
   border-top: 1px solid var(--border-color);
+  transition: background 0.3s, border-color 0.3s;
 }
 
 .footer-content {
@@ -1948,28 +2300,16 @@ input:checked + .toggle-slider:before {
   font-size: 12px;
 }
 
-/* ====== الرسوم المتحركة الإضافية ====== */
 @keyframes slideOut {
-  from {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateX(100%);
-    opacity: 0;
-  }
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-/* ====== الوسائط المتجاوبة ====== */
 @media (max-width: 768px) {
   .main-content {
     padding: 80px 10px 15px;
@@ -2049,6 +2389,44 @@ input:checked + .toggle-slider:before {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 12px;
   }
+
+  .age-verification-box {
+    padding: 20px;
+  }
+
+  /* تكبير الشريطين العلوي والسفلي في الأجهزة الصغيرة */
+  .product-detail-header {
+    padding: 14px 18px;
+    min-height: 60px;
+  }
+  
+  .product-detail-header .product-detail-title {
+    font-size: 20px;
+  }
+  
+  .product-detail-footer {
+    padding: 14px 18px;
+    min-height: 60px;
+  }
+  
+  .product-detail-footer .footer-info h3 {
+    font-size: 16px;
+  }
+  
+  .product-detail-footer .footer-info p {
+    font-size: 14px;
+  }
+  
+  .purchase-button {
+    padding: 12px 24px;
+    font-size: 16px;
+  }
+  
+  .close-product-detail {
+    width: 38px;
+    height: 38px;
+    font-size: 20px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -2116,9 +2494,28 @@ input:checked + .toggle-slider:before {
   .product-detail-summary-grid {
     grid-template-columns: 1fr;
   }
+
+  .age-verification-box {
+    padding: 15px;
+  }
+
+  .age-verification-box .btn {
+    padding: 8px 20px;
+    font-size: 12px;
+  }
+  
+  /* تكبير إضافي للشاشات الصغيرة جداً */
+  .product-detail-header {
+    padding: 16px 20px;
+    min-height: 65px;
+  }
+  
+  .product-detail-footer {
+    padding: 16px 20px;
+    min-height: 65px;
+  }
 }
 
-/* أنماط نظام التقييم */
 .product-rating-section, .ratings-section {
   margin-top: 15px;
   padding: 12px;
@@ -2407,6 +2804,131 @@ input:checked + .toggle-slider:before {
   background: rgba(255,255,255,0.15);
   transform: scale(1.1);
 }
+
+.settings-item.adult-toggle {
+  border-color: var(--adult-border);
+  background: rgba(139, 0, 0, 0.1);
+}
+
+.settings-item.adult-toggle:hover {
+  border-color: #ff0000;
+  background: rgba(139, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.2);
+}
+
+.settings-item.adult-toggle > i:first-child {
+  color: #ff0000 !important;
+}
+
+.settings-item.adult-toggle .toggle-slider {
+  background-color: #444;
+}
+
+.settings-item.adult-toggle input:checked + .toggle-slider {
+  background: linear-gradient(135deg, #ff0000, #8B0000);
+}
+
+#adult-status {
+  color: var(--text-secondary);
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(255,0,0,0.1);
+  border: 1px solid rgba(255,0,0,0.2);
+}
+
+#adult-status.active {
+  color: #ff4444;
+  border-color: #ff4444;
+  background: rgba(255,0,0,0.15);
+}
+
+/* ====== نافذة تأكيد الحذف ====== */
+.confirm-delete-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.confirm-delete-overlay.show {
+  display: flex;
+}
+
+.confirm-delete-box {
+  background: var(--card-bg);
+  border-radius: var(--border-radius-lg);
+  max-width: 400px;
+  width: 90%;
+  padding: 30px;
+  border: 2px solid var(--danger-color);
+  box-shadow: 0 0 40px rgba(244, 67, 54, 0.2);
+  text-align: center;
+  animation: slideUpModal 0.3s ease-out;
+}
+
+.confirm-delete-box .confirm-icon {
+  font-size: 48px;
+  color: var(--danger-color);
+  margin-bottom: 15px;
+}
+
+.confirm-delete-box h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: var(--text-primary);
+}
+
+.confirm-delete-box p {
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.confirm-delete-box .btn-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.confirm-delete-box .btn {
+  padding: 10px 30px;
+  border: none;
+  border-radius: var(--border-radius-sm);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  font-size: 14px;
+}
+
+.confirm-delete-box .btn-cancel {
+  background: var(--card-bg);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.confirm-delete-box .btn-cancel:hover {
+  background: var(--darker-bg);
+}
+
+.confirm-delete-box .btn-danger {
+  background: linear-gradient(135deg, #f44336, #d32f2f);
+  color: white;
+}
+
+.confirm-delete-box .btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+}
   </style>
 </head>
 
@@ -2507,15 +3029,30 @@ input:checked + .toggle-slider:before {
     </div>
   </div>
 
-  <!-- قسم الفيديوهات مع تبويبات -->
+  <!-- قسم المانهوا (جديد) -->
+  <div class="section">
+    <div class="section-title">
+      <i class="fas fa-dragon"></i>
+      <span class="rtl-text">مانهوا</span>
+      <span class="ltr-text" style="display: none;">Manhwa</span>
+    </div>
+    <p class="section-subtitle rtl-text">المغامرات الكورية المصورة</p>
+    <p class="section-subtitle ltr-text" style="display: none;">Korean illustrated adventures</p>
+    
+    <div class="products-grid" id="manhwa-container">
+      <!-- سيتم ملؤها ديناميكياً -->
+    </div>
+  </div>
+
+  <!-- قسم الافلام (كان اسمه فيديوهات) -->
   <div class="video-section">
     <div class="section-title">
-      <i class="fas fa-video"></i>
-      <span class="rtl-text">فيديوهات</span>
-      <span class="ltr-text" style="display: none;">Videos</span>
+      <i class="fas fa-film"></i>
+      <span class="rtl-text">الافلام</span>
+      <span class="ltr-text" style="display: none;">Movies</span>
     </div>
     
-    <!-- تبويبات الفيديوهات -->
+    <!-- تبويبات الافلام -->
     <div class="video-tabs">
       <div class="video-tab active" onclick="switchVideoTab(0)">
         <span class="rtl-text">الخيال السحري</span>
@@ -2779,6 +3316,64 @@ input:checked + .toggle-slider:before {
       </div>
     </div>
   </div>
+
+  <!-- قسم الألعاب الملموسة (جديد) -->
+  <div class="section">
+    <div class="section-title">
+      <i class="fas fa-gamepad"></i>
+      <span class="rtl-text">الألعاب</span>
+      <span class="ltr-text" style="display: none;">Games</span>
+    </div>
+    
+    <!-- تبويبات الألعاب -->
+    <div class="tabs">
+      <div class="tab active" onclick="switchGameTab(0)">
+        <span class="rtl-text">العاب الشباب</span>
+        <span class="ltr-text" style="display: none;">Youth Games</span>
+      </div>
+      <div class="tab" onclick="switchGameTab(1)">
+        <span class="rtl-text">العاب الاطفال</span>
+        <span class="ltr-text" style="display: none;">Kids Games</span>
+      </div>
+      <div class="tab" onclick="switchGameTab(2)">
+        <span class="rtl-text">الكل</span>
+        <span class="ltr-text" style="display: none;">All</span>
+      </div>
+    </div>
+    
+    <div class="tab-content active" id="game-tab-0">
+      <div class="products-grid" id="games-youth">
+        <!-- سيتم ملؤها ديناميكياً -->
+      </div>
+    </div>
+    
+    <div class="tab-content" id="game-tab-1">
+      <div class="products-grid" id="games-kids">
+        <!-- سيتم ملؤها ديناميكياً -->
+      </div>
+    </div>
+    
+    <div class="tab-content" id="game-tab-2">
+      <div class="products-grid" id="games-all">
+        <!-- سيتم ملؤها ديناميكياً -->
+      </div>
+    </div>
+  </div>
+
+  <!-- قسم الألعاب الرقمية (جديد) -->
+  <div class="section">
+    <div class="section-title">
+      <i class="fas fa-desktop"></i>
+      <span class="rtl-text">الألعاب الرقمية</span>
+      <span class="ltr-text" style="display: none;">Digital Games</span>
+    </div>
+    <p class="section-subtitle rtl-text">ألعاب إلكترونية للتحميل المباشر</p>
+    <p class="section-subtitle ltr-text" style="display: none;">Digital games for direct download</p>
+    
+    <div class="products-grid" id="digital-games-container">
+      <!-- سيتم ملؤها ديناميكياً -->
+    </div>
+  </div>
 </div>
 
 <!-- ====== نافذة عرض جميع القصص ====== -->
@@ -2795,6 +3390,128 @@ input:checked + .toggle-slider:before {
       <div class="all-stories-grid" id="all-stories-grid">
         <!-- سيتم ملؤها ديناميكياً -->
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== نافذة التحقق من العمر ====== -->
+<div class="age-verification-overlay" id="age-verification-overlay">
+  <div class="age-verification-box">
+    <!-- مؤشر الخطوات -->
+    <div class="step-indicator">
+      <div class="step-dot active" id="step-dot-1"></div>
+      <div class="step-dot" id="step-dot-2"></div>
+      <div class="step-dot" id="step-dot-3"></div>
+    </div>
+    
+    <!-- الخطوة 1: إخلاء المسؤولية -->
+    <div class="step-content active" id="step-1">
+      <div class="step-title">🔞 إخلاء المسؤولية</div>
+      <div class="step-subtitle">يحتوي هذا القسم على محتوى مخصص للبالغين</div>
+      
+      <div class="disclaimer-text">
+        <p>⚠️ <strong>تنبيه هام:</strong></p>
+        <p>المحتوى المصنف +18 يحتوي على مشاهد وعبارات قد لا تكون مناسبة للأشخاص الذين تقل أعمارهم عن 18 سنة.</p>
+        <p>باستمرارك، أنت توافق على أنك قد بلغت السن القانونية لمشاهدة هذا المحتوى في بلدك.</p>
+        <p>نحن في مكتبة الفجر نؤمن بحرية الاختيار مع التحمل الكامل للمسؤولية.</p>
+        <p>🔞 <strong>لا نتحمل أي مسؤولية عن أي ضرر قد ينجم عن مشاهدة هذا المحتوى.</strong></p>
+      </div>
+      
+      <div class="btn-group">
+        <button class="btn btn-secondary" onclick="closeAgeVerification()">
+          <span class="rtl-text">إلغاء</span>
+          <span class="ltr-text" style="display: none;">Cancel</span>
+        </button>
+        <button class="btn btn-primary" onclick="goToStep(2)">
+          <span class="rtl-text">أوافق وأستمر</span>
+          <span class="ltr-text" style="display: none;">I Agree & Continue</span>
+        </button>
+      </div>
+    </div>
+    
+    <!-- الخطوة 2: التحقق من العمر -->
+    <div class="step-content" id="step-2">
+      <div class="step-title">🆔 التحقق من العمر</div>
+      <div class="step-subtitle">يرجى تأكيد أنك قد بلغت 18 سنة أو أكثر</div>
+      
+      <div class="age-verify-input">
+        <label for="age-year">📅 سنة الميلاد:</label>
+        <input type="number" id="age-year" placeholder="مثال: 2000" min="1900" max="2026">
+        <div class="hint">أدخل سنة ميلادك للتأكد من أنك فوق 18 سنة</div>
+      </div>
+      
+      <div class="btn-group">
+        <button class="btn btn-secondary" onclick="goToStep(1)">
+          <i class="fas fa-arrow-right"></i>
+          <span class="rtl-text">رجوع</span>
+          <span class="ltr-text" style="display: none;">Back</span>
+        </button>
+        <button class="btn btn-primary" onclick="verifyAge()">
+          <span class="rtl-text">تحقق</span>
+          <span class="ltr-text" style="display: none;">Verify</span>
+          <i class="fas fa-arrow-left"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- الخطوة 3: الشروط والإقرار النهائي -->
+    <div class="step-content" id="step-3">
+      <div class="step-title">📜 الشروط والإقرار النهائي</div>
+      <div class="step-subtitle">يرجى قراءة الشروط بعناية قبل المتابعة</div>
+      
+      <div class="terms-text">
+        <p><strong>شروط الوصول إلى المحتوى +18:</strong></p>
+        <ul>
+          <li>أنا أقر بأنني قد بلغت 18 سنة أو أكثر.</li>
+          <li>أنا أتحمل كامل المسؤولية عن المحتوى الذي أشاهده.</li>
+          <li>أنا أوافق على أن مكتبة الفجر غير مسؤولة عن أي ضرر.</li>
+          <li>أنا أقر بأن هذا المحتوى قد يكون غير مناسب للبعض.</li>
+          <li>أنا أوافق على عدم مشاركة هذا المحتوى مع قاصرين.</li>
+        </ul>
+      </div>
+      
+      <div class="terms-checkbox">
+        <input type="checkbox" id="terms-checkbox">
+        <label for="terms-checkbox" class="rtl-text">أقر بأنني قرأت وفهمت جميع الشروط وأوافق عليها</label>
+        <label for="terms-checkbox" class="ltr-text" style="display: none;">I confirm that I have read and agree to all terms</label>
+      </div>
+      
+      <div class="btn-group">
+        <button class="btn btn-secondary" onclick="goToStep(2)">
+          <i class="fas fa-arrow-right"></i>
+          <span class="rtl-text">رجوع</span>
+          <span class="ltr-text" style="display: none;">Back</span>
+        </button>
+        <button class="btn btn-success" id="final-confirm-btn" disabled onclick="finalizeAgeVerification()">
+          <span class="rtl-text">تأكيد وتفعيل</span>
+          <span class="ltr-text" style="display: none;">Confirm & Activate</span>
+          <i class="fas fa-check"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== نافذة تأكيد الحذف ====== -->
+<div class="confirm-delete-overlay" id="confirm-delete-overlay">
+  <div class="confirm-delete-box">
+    <div class="confirm-icon">
+      <i class="fas fa-trash-alt"></i>
+    </div>
+    <h3 class="rtl-text">تأكيد الحذف</h3>
+    <h3 class="ltr-text" style="display: none;">Confirm Deletion</h3>
+    <p class="rtl-text">هل أنت متأكد أنك تريد حذف هذا التعليق؟ لا يمكن التراجع عن هذا الإجراء.</p>
+    <p class="ltr-text" style="display: none;">Are you sure you want to delete this comment? This action cannot be undone.</p>
+    
+    <div class="btn-group">
+      <button class="btn btn-cancel" onclick="closeConfirmDelete()">
+        <span class="rtl-text">إلغاء</span>
+        <span class="ltr-text" style="display: none;">Cancel</span>
+      </button>
+      <button class="btn btn-danger" id="confirm-delete-btn" onclick="executeDeleteComment()">
+        <span class="rtl-text">حذف</span>
+        <span class="ltr-text" style="display: none;">Delete</span>
+      </button>
     </div>
   </div>
 </div>
@@ -3038,6 +3755,18 @@ input:checked + .toggle-slider:before {
         <span class="toggle-slider"></span>
       </label>
     </div>
+
+    <!-- تصنيف +18 -->
+    <div class="settings-item adult-toggle" onclick="toggleAdultContent()">
+      <i class="fas fa-exclamation-triangle"></i>
+      <div class="settings-item-content">
+        <div class="settings-item-title rtl-text">تصنيف +18</div>
+        <div class="settings-item-title ltr-text" style="display: none;">+18 Rating</div>
+        <div class="settings-item-desc rtl-text">تفعيل عرض المحتوى المخصص للبالغين</div>
+        <div class="settings-item-desc ltr-text" style="display: none;">Enable adult content display</div>
+      </div>
+      <span class="settings-value" id="adult-status">🔒 غير مفعل</span>
+    </div>
     
     <!-- المساعد الذكي -->
     <a style="text-decoration: none; color: white;" href="Mozlee Ai.html"><div class="settings-item" >
@@ -3182,7 +3911,7 @@ input:checked + .toggle-slider:before {
     btn.addEventListener('click', function(e) {
       e.preventDefault();
       const platform = this.dataset.platform;
-      const STORE_URL = 'https://system-306.github.io/Digital/';
+      const STORE_URL = 'https://alfajr-digital-library.github.io/Digital/login.html';
       const SHARE_TEXT = 'تسوق الآن من متجرنا الرقمي';
 
       let shareUrl = '';
@@ -3257,8 +3986,8 @@ input:checked + .toggle-slider:before {
     const mangaItemsPerPage = 4;
     let currentProductId = null;
     let currentProductData = null;
-    let currentMergedProducts = [];
-    let currentMergedIndex = 0;
+    let adultContentEnabled = false;
+    let hasVerifiedAgeOnce = false; // لتذكر أن المستخدم قد تحقق من عمره مرة واحدة
     
     // إعدادات التقسيم
     const novelsPerPage = 6;
@@ -3281,6 +4010,7 @@ input:checked + .toggle-slider:before {
 
     // جميع المنتجات
     let allProducts = [];
+    let filteredProducts = [];
     
     // بيانات التقييم
     let userRatingForCurrentProduct = null;
@@ -3289,6 +4019,10 @@ input:checked + .toggle-slider:before {
     
     // بيانات المستخدم الحالي
     let currentUser = null;
+    
+    // متغيرات تأكيد الحذف
+    let deletePendingProductId = null;
+    let deletePendingCommentId = null;
 
     // ====== دالة مساعدة للحصول على الصورة ======
     function getProductImage(product) {
@@ -3336,28 +4070,169 @@ input:checked + .toggle-slider:before {
       }
     }
 
-    // ====== دالة التحقق من تسجيل الدخول قبل إضافة تعليق ======
-    function checkAuthBeforeComment() {
-      const user = checkAuth();
-      if (!user) {
+    // ====== التحقق من العمر ======
+    function verifyAge() {
+      const yearInput = document.getElementById('age-year');
+      const year = parseInt(yearInput.value);
+      const currentYear = new Date().getFullYear();
+      
+      if (!year || year < 1900 || year > currentYear) {
         showNotification(currentLanguage === 'ar' ? 
-          'الرجاء تسجيل الدخول لإضافة تعليق' : 
-          'Please login to add a comment');
-        return null;
+          'الرجاء إدخال سنة ميلاد صحيحة' : 
+          'Please enter a valid birth year');
+        return;
       }
-      return user;
+      
+      const age = currentYear - year;
+      
+      if (age >= 18) {
+        goToStep(3);
+        showNotification(currentLanguage === 'ar' ? 
+          '✅ تم التحقق من العمر بنجاح' : 
+          '✅ Age verified successfully');
+      } else {
+        showNotification(currentLanguage === 'ar' ? 
+          '❌ عذراً، أنت دون السن القانونية لمشاهدة هذا المحتوى' : 
+          '❌ Sorry, you are underage to view this content');
+        closeAgeVerification();
+      }
     }
 
-    // ====== دالة التحقق من تسجيل الدخول قبل الشراء ======
-    function checkAuthBeforePurchase() {
-      const user = checkAuth();
-      if (!user) {
-        showNotification(currentLanguage === 'ar' ? 
-          'الرجاء تسجيل الدخول لإكمال عملية الشراء' : 
-          'Please login to complete purchase');
-        return null;
+    // ====== التنقل بين خطوات التحقق ======
+    function goToStep(step) {
+      // إخفاء جميع الخطوات
+      document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+      
+      // إظهار الخطوة المطلوبة
+      const targetStep = document.getElementById(`step-${step}`);
+      if (targetStep) targetStep.classList.add('active');
+      
+      // تحديث مؤشر الخطوات
+      document.querySelectorAll('.step-dot').forEach((dot, index) => {
+        dot.classList.remove('active', 'completed');
+        if (index < step - 1) dot.classList.add('completed');
+        if (index === step - 1) dot.classList.add('active');
+      });
+    }
+
+    // ====== تفعيل زر التأكيد النهائي ======
+    document.addEventListener('DOMContentLoaded', function() {
+      const checkbox = document.getElementById('terms-checkbox');
+      const confirmBtn = document.getElementById('final-confirm-btn');
+      
+      if (checkbox && confirmBtn) {
+        checkbox.addEventListener('change', function() {
+          confirmBtn.disabled = !this.checked;
+        });
       }
-      return user;
+    });
+
+    // ====== إكمال التحقق من العمر ======
+    function finalizeAgeVerification() {
+      const checkbox = document.getElementById('terms-checkbox');
+      if (!checkbox.checked) {
+        showNotification(currentLanguage === 'ar' ? 
+          'الرجاء الموافقة على الشروط' : 
+          'Please agree to the terms');
+        return;
+      }
+      
+      adultContentEnabled = true;
+      hasVerifiedAgeOnce = true;
+      localStorage.setItem('adultContentEnabled', 'true');
+      localStorage.setItem('hasVerifiedAgeOnce', 'true');
+      
+      // تحديث حالة الزر في الإعدادات
+      const adultStatus = document.getElementById('adult-status');
+      if (adultStatus) {
+        adultStatus.textContent = '🔞 مفعل';
+        adultStatus.classList.add('active');
+      }
+      
+      closeAgeVerification();
+      
+      showNotification(currentLanguage === 'ar' ? 
+        '✅ تم تفعيل المحتوى +18 بنجاح' : 
+        '✅ +18 content activated successfully');
+      
+      // إعادة عرض المحتوى
+      renderAllContent();
+    }
+
+    // ====== فتح نافذة التحقق من العمر ======
+    function openAgeVerification() {
+      const overlay = document.getElementById('age-verification-overlay');
+      if (overlay) {
+        overlay.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        // إعادة تعيين إلى الخطوة 1
+        goToStep(1);
+        document.getElementById('age-year').value = '';
+        document.getElementById('terms-checkbox').checked = false;
+        document.getElementById('final-confirm-btn').disabled = true;
+      }
+    }
+
+    // ====== إغلاق نافذة التحقق من العمر ======
+    function closeAgeVerification() {
+      const overlay = document.getElementById('age-verification-overlay');
+      if (overlay) {
+        overlay.classList.remove('show');
+        document.body.style.overflow = 'auto';
+      }
+    }
+
+    // ====== تبديل المحتوى +18 ======
+    function toggleAdultContent() {
+      const adultStatus = document.getElementById('adult-status');
+      
+      if (adultContentEnabled) {
+        // تعطيل المحتوى +18 (لا حاجة لإعادة التحقق)
+        adultContentEnabled = false;
+        localStorage.setItem('adultContentEnabled', 'false');
+        if (adultStatus) {
+          adultStatus.textContent = '🔒 غير مفعل';
+          adultStatus.classList.remove('active');
+        }
+        showNotification(currentLanguage === 'ar' ? 
+          'تم تعطيل المحتوى +18' : 
+          '+18 content disabled');
+        renderAllContent();
+      } else {
+        // التحقق مما إذا كان المستخدم قد تحقق من عمره من قبل
+        const savedVerified = localStorage.getItem('hasVerifiedAgeOnce');
+        if (savedVerified === 'true') {
+          // تفعيل مباشر دون إعادة التحقق
+          adultContentEnabled = true;
+          localStorage.setItem('adultContentEnabled', 'true');
+          if (adultStatus) {
+            adultStatus.textContent = '🔞 مفعل';
+            adultStatus.classList.add('active');
+          }
+          showNotification(currentLanguage === 'ar' ? 
+            '✅ تم تفعيل المحتوى +18' : 
+            '✅ +18 content activated');
+          renderAllContent();
+        } else {
+          // فتح نافذة التحقق
+          openAgeVerification();
+        }
+      }
+    }
+
+    // ====== دالة مساعدة للتحقق من المنتج +18 ======
+    function isAdultProduct(product) {
+      return product.ratingCategory === '18' || product.ageRating === '18' || 
+             product.ratingCategory === '18+' || product.ageRating === '18+' ||
+             product.category === '18+';
+    }
+
+    // ====== دالة مساعدة لفلترة المنتجات ======
+    function filterProducts(products) {
+      if (!adultContentEnabled) {
+        return products.filter(p => !isAdultProduct(p));
+      }
+      return products;
     }
 
     // ====== تحميل المنتجات من Firebase مع دعم Base64 ======
@@ -3384,11 +4259,31 @@ input:checked + .toggle-slider:before {
                 loadSampleProducts();
             }
             
+            // تحميل حالة المحتوى +18 وحالة التحقق السابقة
+            const savedAdult = localStorage.getItem('adultContentEnabled');
+            adultContentEnabled = savedAdult === 'true';
+            
+            const savedVerified = localStorage.getItem('hasVerifiedAgeOnce');
+            hasVerifiedAgeOnce = savedVerified === 'true';
+            
+            const adultStatus = document.getElementById('adult-status');
+            if (adultStatus) {
+              if (adultContentEnabled) {
+                adultStatus.textContent = '🔞 مفعل';
+                adultStatus.classList.add('active');
+              } else {
+                adultStatus.textContent = '🔒 غير مفعل';
+                adultStatus.classList.remove('active');
+              }
+            }
+            
+            filteredProducts = filterProducts(allProducts);
             renderAllContent();
             return true;
         } catch (error) {
             console.error("خطأ في تحميل المنتجات من Firebase:", error);
             loadSampleProducts();
+            filteredProducts = filterProducts(allProducts);
             renderAllContent();
             return false;
         }
@@ -3416,6 +4311,7 @@ input:checked + .toggle-slider:before {
                     
                     console.log(`تم تحديث المنتجات في الوقت الحقيقي: ${allProducts.length} منتج`);
                     
+                    filteredProducts = filterProducts(allProducts);
                     renderAllContent();
                     
                     if (document.getElementById('search-overlay').style.display === 'block') {
@@ -3472,6 +4368,27 @@ input:checked + .toggle-slider:before {
                 format: 'رقمي',
                 formatEn: 'Digital',
                 ratingCategory: 'all',
+                chapters: [],
+                comments: []
+            },
+            {
+                id: 'adult1',
+                title: 'الغابة المظلمة',
+                titleEn: 'The Dark Forest',
+                category: 'روايات',
+                categoryEn: 'Novels',
+                subcategory: 'رعب، إثارة',
+                subcategoryEn: 'Horror, Thriller',
+                price: '$15.99',
+                description: 'رواية رعب مثيرة للمغامرين فقط. تحتوي على مشاهد عنيفة.',
+                descriptionEn: 'A thrilling horror novel for adventurers only. Contains violent scenes.',
+                image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjOGIwMDAwIi8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZGlyZWN0aW9uPSJydGwiPiDZhtmI2YrYp9mGINin2YTYs9in2K/Yp9mGIDghPC90ZXh0Pgo8L3N2Zz4=',
+                rating: 3.8,
+                type: 'رواية',
+                typeEn: 'Novel',
+                format: 'رقمي',
+                formatEn: 'Digital',
+                ratingCategory: '18',
                 chapters: [],
                 comments: []
             }
@@ -3691,41 +4608,24 @@ input:checked + .toggle-slider:before {
 
     // تطبيق المظهر
     function applyTheme() {
+        const body = document.body;
+        
         if (currentTheme === 'فاتح') {
-            document.documentElement.style.setProperty('--dark-bg', '#f5f5f5');
-            document.documentElement.style.setProperty('--darker-bg', '#e0e0e0');
-            document.documentElement.style.setProperty('--card-bg', '#ffffff');
-            document.documentElement.style.setProperty('--text-primary', '#333333');
-            document.documentElement.style.setProperty('--text-secondary', '#666666');
-            document.documentElement.style.setProperty('--border-color', '#dddddd');
+            body.classList.add('light-theme');
+            body.classList.remove('dark-theme');
         } else if (currentTheme === 'تلقائي') {
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             if (prefersDark) {
-                applyDarkTheme();
+                body.classList.remove('light-theme');
+                body.classList.add('dark-theme');
             } else {
-                applyLightTheme();
+                body.classList.add('light-theme');
+                body.classList.remove('dark-theme');
             }
         } else {
-            applyDarkTheme();
+            body.classList.remove('light-theme');
+            body.classList.add('dark-theme');
         }
-    }
-
-    function applyDarkTheme() {
-        document.documentElement.style.setProperty('--dark-bg', '#121212');
-        document.documentElement.style.setProperty('--darker-bg', '#0d0d0d');
-        document.documentElement.style.setProperty('--card-bg', '#1e1e1e');
-        document.documentElement.style.setProperty('--text-primary', '#ffffff');
-        document.documentElement.style.setProperty('--text-secondary', '#b0b0b0');
-        document.documentElement.style.setProperty('--border-color', '#333333');
-    }
-
-    function applyLightTheme() {
-        document.documentElement.style.setProperty('--dark-bg', '#f5f5f5');
-        document.documentElement.style.setProperty('--darker-bg', '#e0e0e0');
-        document.documentElement.style.setProperty('--card-bg', '#ffffff');
-        document.documentElement.style.setProperty('--text-primary', '#333333');
-        document.documentElement.style.setProperty('--text-secondary', '#666666');
-        document.documentElement.style.setProperty('--border-color', '#dddddd');
     }
 
     // تغيير حجم النص
@@ -3739,16 +4639,16 @@ input:checked + .toggle-slider:before {
 
     // ====== إدارة التنقل في قسم المانجا ======
     function initializeMangaNavigation() {
-        const mangaItems = allProducts.filter(p => p.category === 'مانجا');
+        const mangaItems = filteredProducts.filter(p => p.category === 'مانجا');
         const sortedManga = sortProducts(mangaItems);
         const totalPages = Math.ceil(sortedManga.length / mangaItemsPerPage);
         
-        document.getElementById('total-manga').textContent = totalPages;
+        document.getElementById('total-manga').textContent = totalPages || 1;
         const dotsContainer = document.getElementById('manga-dots');
         if (dotsContainer) {
             dotsContainer.innerHTML = '';
             
-            for (let i = 0; i < totalPages; i++) {
+            for (let i = 0; i < Math.max(totalPages, 1); i++) {
                 const dot = document.createElement('div');
                 dot.className = 'page-dot';
                 if (i === 0) dot.classList.add('active');
@@ -3763,7 +4663,7 @@ input:checked + .toggle-slider:before {
     
     function showMangaPage(page) {
         currentMangaPage = page;
-        const mangaItems = allProducts.filter(p => p.category === 'مانجا');
+        const mangaItems = filteredProducts.filter(p => p.category === 'مانجا');
         const sortedManga = sortProducts(mangaItems);
         const startIndex = page * mangaItemsPerPage;
         const endIndex = startIndex + mangaItemsPerPage;
@@ -3776,6 +4676,9 @@ input:checked + .toggle-slider:before {
             itemsToShow.forEach(product => {
                 const item = document.createElement('div');
                 item.className = 'scroll-item manga-item';
+                if (isAdultProduct(product)) {
+                    item.classList.add('adult-product');
+                }
                 item.onclick = () => openProductDetail(product.id);
                 item.innerHTML = `
                     <img src="${getProductImage(product)}" alt="${product.title}" class="scroll-image">
@@ -3803,7 +4706,7 @@ input:checked + .toggle-slider:before {
     }
     
     function goToMangaPage(page) {
-        const mangaItems = allProducts.filter(p => p.category === 'مانجا');
+        const mangaItems = filteredProducts.filter(p => p.category === 'مانجا');
         const sortedManga = sortProducts(mangaItems);
         if (page >= 0 && page < Math.ceil(sortedManga.length / mangaItemsPerPage)) {
             showMangaPage(page);
@@ -3811,7 +4714,7 @@ input:checked + .toggle-slider:before {
     }
     
     function scrollManga(direction) {
-        const mangaItems = allProducts.filter(p => p.category === 'مانجا');
+        const mangaItems = filteredProducts.filter(p => p.category === 'مانجا');
         const sortedManga = sortProducts(mangaItems);
         const totalPages = Math.ceil(sortedManga.length / mangaItemsPerPage);
         
@@ -3827,31 +4730,158 @@ input:checked + .toggle-slider:before {
     }
     
     function updateMangaNavigation() {
-        const mangaItems = allProducts.filter(p => p.category === 'مانجا');
+        const mangaItems = filteredProducts.filter(p => p.category === 'مانجا');
         const sortedManga = sortProducts(mangaItems);
         const totalPages = Math.ceil(sortedManga.length / mangaItemsPerPage);
         const prevButton = document.getElementById('prev-manga');
         const nextButton = document.getElementById('next-manga');
         
         if (prevButton) prevButton.disabled = currentMangaPage === 0;
-        if (nextButton) nextButton.disabled = currentMangaPage === totalPages - 1;
+        if (nextButton) nextButton.disabled = currentMangaPage === totalPages - 1 || totalPages === 0;
+    }
+
+    // ====== إدارة المانهوا ======
+    function initializeManhwa() {
+        const container = document.getElementById('manhwa-container');
+        if (!container) return;
+        
+        const manhwaItems = filteredProducts.filter(p => p.category === 'مانهوا');
+        const sortedManhwa = sortProducts(manhwaItems);
+        
+        container.innerHTML = '';
+        
+        if (sortedManhwa.length === 0) {
+            container.innerHTML = `
+                <div class="no-results" style="grid-column: 1 / -1;">
+                    <i class="fas fa-dragon"></i>
+                    <p class="rtl-text" style="margin-top: 20px;">لا توجد مانهوا متاحة حالياً</p>
+                    <p class="ltr-text" style="display: none; margin-top: 20px;">No manhwa available at the moment</p>
+                </div>
+            `;
+            return;
+        }
+        
+        sortedManhwa.forEach(product => {
+            const card = createProductCard(product);
+            container.appendChild(card);
+        });
+    }
+
+    // ====== إدارة الألعاب الملموسة ======
+    let gamePages = {
+        'youth': { current: 0, total: 0, items: [] },
+        'kids': { current: 0, total: 0, items: [] },
+        'all': { current: 0, total: 0, items: [] }
+    };
+    const gamesPerPage = 6;
+
+    function initializeGames() {
+        const gamesAll = filteredProducts.filter(p => p.category === 'العاب ملموسة');
+        
+        const gamesYouth = gamesAll.filter(p => p.subcategory === 'العاب الشباب');
+        const sortedYouth = sortProducts(gamesYouth);
+        gamePages['youth'].items = sortedYouth;
+        gamePages['youth'].total = Math.ceil(sortedYouth.length / gamesPerPage);
+        showGamePage('youth', 0);
+        
+        const gamesKids = gamesAll.filter(p => p.subcategory === 'العاب الاطفال');
+        const sortedKids = sortProducts(gamesKids);
+        gamePages['kids'].items = sortedKids;
+        gamePages['kids'].total = Math.ceil(sortedKids.length / gamesPerPage);
+        showGamePage('kids', 0);
+        
+        const sortedAll = sortProducts(gamesAll);
+        gamePages['all'].items = sortedAll;
+        gamePages['all'].total = Math.ceil(sortedAll.length / gamesPerPage);
+        showGamePage('all', 0);
+    }
+    
+    function showGamePage(category, page) {
+        gamePages[category].current = page;
+        const items = gamePages[category].items;
+        const startIndex = page * gamesPerPage;
+        const endIndex = startIndex + gamesPerPage;
+        const itemsToShow = items.slice(startIndex, endIndex);
+        
+        const container = document.getElementById(`games-${category}`);
+        if (container) {
+            container.innerHTML = '';
+            
+            itemsToShow.forEach(product => {
+                const card = createProductCard(product);
+                container.appendChild(card);
+            });
+        }
+    }
+    
+    function switchGameTab(index) {
+        const tabs = document.querySelectorAll('.tabs');
+        const gameTabs = tabs[1]?.querySelectorAll('.tab') || [];
+        const contents = document.querySelectorAll('.tab-content');
+        const gameContents = [];
+        
+        // جمع محتويات الألعاب
+        for (let i = 0; i < contents.length; i++) {
+            if (contents[i].id && contents[i].id.startsWith('game-tab-')) {
+                gameContents.push(contents[i]);
+            }
+        }
+        
+        gameTabs.forEach(tab => tab.classList.remove('active'));
+        gameContents.forEach(content => content.classList.remove('active'));
+        
+        if (gameTabs[index]) gameTabs[index].classList.add('active');
+        if (gameContents[index]) gameContents[index].classList.add('active');
+        
+        const categories = ['youth', 'kids', 'all'];
+        const currentCategory = categories[index];
+        if (gamePages[currentCategory].items.length > 0) {
+            showGamePage(currentCategory, 0);
+        }
+    }
+
+    // ====== إدارة الألعاب الرقمية ======
+    function initializeDigitalGames() {
+        const container = document.getElementById('digital-games-container');
+        if (!container) return;
+        
+        const digitalGames = filteredProducts.filter(p => p.category === 'العاب رقمية');
+        const sortedGames = sortProducts(digitalGames);
+        
+        container.innerHTML = '';
+        
+        if (sortedGames.length === 0) {
+            container.innerHTML = `
+                <div class="no-results" style="grid-column: 1 / -1;">
+                    <i class="fas fa-desktop"></i>
+                    <p class="rtl-text" style="margin-top: 20px;">لا توجد ألعاب رقمية متاحة حالياً</p>
+                    <p class="ltr-text" style="display: none; margin-top: 20px;">No digital games available at the moment</p>
+                </div>
+            `;
+            return;
+        }
+        
+        sortedGames.forEach(product => {
+            const card = createProductCard(product);
+            container.appendChild(card);
+        });
     }
 
     // ====== إدارة التقسيم للروايات ======
     function initializeNovels() {
-        const novels16 = allProducts.filter(p => p.category === 'روايات' && p.ratingCategory === '16');
+        const novels16 = filteredProducts.filter(p => p.category === 'روايات' && p.ratingCategory === '16');
         const sortedNovels16 = sortProducts(novels16);
         novelPages['16'].items = sortedNovels16;
         novelPages['16'].total = Math.ceil(sortedNovels16.length / novelsPerPage);
         showNovelPage('16', 0);
         
-        const novels18 = allProducts.filter(p => p.category === 'روايات' && p.ratingCategory === '18');
+        const novels18 = filteredProducts.filter(p => p.category === 'روايات' && p.ratingCategory === '18');
         const sortedNovels18 = sortProducts(novels18);
         novelPages['18'].items = sortedNovels18;
         novelPages['18'].total = Math.ceil(sortedNovels18.length / novelsPerPage);
         showNovelPage('18', 0);
         
-        const novelsAll = allProducts.filter(p => p.category === 'روايات' && p.ratingCategory === 'all');
+        const novelsAll = filteredProducts.filter(p => p.category === 'روايات' && p.ratingCategory === 'all');
         const sortedNovelsAll = sortProducts(novelsAll);
         novelPages['all'].items = sortedNovelsAll;
         novelPages['all'].total = Math.ceil(sortedNovelsAll.length / novelsPerPage);
@@ -3877,7 +4907,7 @@ input:checked + .toggle-slider:before {
             const currentPageEl = document.getElementById(`novels-${category}-current-page`);
             const totalPagesEl = document.getElementById(`novels-${category}-total-pages`);
             if (currentPageEl) currentPageEl.textContent = page + 1;
-            if (totalPagesEl) totalPagesEl.textContent = novelPages[category].total;
+            if (totalPagesEl) totalPagesEl.textContent = novelPages[category].total || 1;
             
             const nav = document.getElementById(`novels-${category}-navigation`);
             if (nav) {
@@ -3903,14 +4933,22 @@ input:checked + .toggle-slider:before {
     }
     
     function switchNovelTab(index) {
-        const tabs = document.querySelectorAll('.tabs .tab');
+        const tabs = document.querySelectorAll('.tabs');
+        const novelTabs = tabs[0]?.querySelectorAll('.tab') || [];
         const contents = document.querySelectorAll('.tab-content');
+        const novelContents = [];
         
-        tabs.forEach(tab => tab.classList.remove('active'));
-        contents.forEach(content => content.classList.remove('active'));
+        for (let i = 0; i < contents.length; i++) {
+            if (contents[i].id && contents[i].id.startsWith('novel-tab-')) {
+                novelContents.push(contents[i]);
+            }
+        }
         
-        tabs[index].classList.add('active');
-        contents[index].classList.add('active');
+        novelTabs.forEach(tab => tab.classList.remove('active'));
+        novelContents.forEach(content => content.classList.remove('active'));
+        
+        if (novelTabs[index]) novelTabs[index].classList.add('active');
+        if (novelContents[index]) novelContents[index].classList.add('active');
         
         const categories = ['16', '18', 'all'];
         const currentCategory = categories[index];
@@ -3919,33 +4957,33 @@ input:checked + .toggle-slider:before {
         }
     }
 
-    // ====== إدارة التقسيم للفيديوهات ======
+    // ====== إدارة التقسيم للافلام (كانت فيديوهات) ======
     function initializeVideos() {
-        const fantasyVideos = allProducts.filter(p => p.category === 'فيديوهات' && p.subcategory === 'الخيال السحري');
+        const fantasyVideos = filteredProducts.filter(p => p.category === 'الافلام' && p.subcategory === 'الخيال السحري');
         const sortedFantasy = sortProducts(fantasyVideos);
         videoPages['fantasy'].items = sortedFantasy;
         videoPages['fantasy'].total = Math.ceil(sortedFantasy.length / videosPerPage);
         showVideoPage('fantasy', 0);
         
-        const horrorVideos = allProducts.filter(p => p.category === 'فيديوهات' && p.subcategory === 'الرعب');
+        const horrorVideos = filteredProducts.filter(p => p.category === 'الافلام' && p.subcategory === 'الرعب');
         const sortedHorror = sortProducts(horrorVideos);
         videoPages['horror'].items = sortedHorror;
         videoPages['horror'].total = Math.ceil(sortedHorror.length / videosPerPage);
         showVideoPage('horror', 0);
         
-        const mysteryVideos = allProducts.filter(p => p.category === 'فيديوهات' && p.subcategory === 'الغموض');
+        const mysteryVideos = filteredProducts.filter(p => p.category === 'الافلام' && p.subcategory === 'الغموض');
         const sortedMystery = sortProducts(mysteryVideos);
         videoPages['mystery'].items = sortedMystery;
         videoPages['mystery'].total = Math.ceil(sortedMystery.length / videosPerPage);
         showVideoPage('mystery', 0);
         
-        const comedyVideos = allProducts.filter(p => p.category === 'فيديوهات' && p.subcategory === 'السخرية');
+        const comedyVideos = filteredProducts.filter(p => p.category === 'الافلام' && p.subcategory === 'السخرية');
         const sortedComedy = sortProducts(comedyVideos);
         videoPages['comedy'].items = sortedComedy;
         videoPages['comedy'].total = Math.ceil(sortedComedy.length / videosPerPage);
         showVideoPage('comedy', 0);
         
-        const adventureVideos = allProducts.filter(p => p.category === 'فيديوهات' && p.subcategory === 'المغامرة');
+        const adventureVideos = filteredProducts.filter(p => p.category === 'الافلام' && p.subcategory === 'المغامرة');
         const sortedAdventure = sortProducts(adventureVideos);
         videoPages['adventure'].items = sortedAdventure;
         videoPages['adventure'].total = Math.ceil(sortedAdventure.length / videosPerPage);
@@ -3966,6 +5004,9 @@ input:checked + .toggle-slider:before {
             itemsToShow.forEach(product => {
                 const card = document.createElement('div');
                 card.className = 'video-card';
+                if (isAdultProduct(product)) {
+                    card.classList.add('adult-product');
+                }
                 card.onclick = () => openProductDetail(product.id);
                 card.innerHTML = `
                     <div class="video-player">
@@ -3986,7 +5027,7 @@ input:checked + .toggle-slider:before {
             const currentPageEl = document.getElementById(`${category}-current-page`);
             const totalPagesEl = document.getElementById(`${category}-total-pages`);
             if (currentPageEl) currentPageEl.textContent = page + 1;
-            if (totalPagesEl) totalPagesEl.textContent = videoPages[category].total;
+            if (totalPagesEl) totalPagesEl.textContent = videoPages[category].total || 1;
             
             const nav = document.getElementById(`${category}-navigation`);
             if (nav) {
@@ -4032,6 +5073,9 @@ input:checked + .toggle-slider:before {
     function createProductCard(product) {
         const card = document.createElement('div');
         card.className = 'product-card';
+        if (isAdultProduct(product)) {
+            card.classList.add('adult-product');
+        }
         card.onclick = () => openProductDetail(product.id);
         card.innerHTML = `
             <img src="${getProductImage(product)}" alt="${product.title}" class="card-image">
@@ -4066,7 +5110,7 @@ input:checked + .toggle-slider:before {
         const storiesContainer = document.getElementById('stories-container');
         if (storiesContainer) {
             storiesContainer.innerHTML = '';
-            const stories = allProducts.filter(p => p.category === 'قصص');
+            const stories = filteredProducts.filter(p => p.category === 'قصص');
             const sortedStories = sortProducts(stories);
             sortedStories.forEach(product => {
                 const card = createProductCard(product);
@@ -4075,8 +5119,11 @@ input:checked + .toggle-slider:before {
         }
         
         initializeMangaNavigation();
+        initializeManhwa();
         initializeVideos();
         initializeNovels();
+        initializeGames();
+        initializeDigitalGames();
     }
 
     // ====== دالة مساعدة لتنسيق التاريخ ======
@@ -4517,6 +5564,7 @@ input:checked + .toggle-slider:before {
                     if (productIndex !== -1) {
                         allProducts[productIndex].rating = parseFloat(averageRating);
                     }
+                    filteredProducts = filterProducts(allProducts);
                 }
             }
         } catch (error) {
@@ -4658,30 +5706,19 @@ input:checked + .toggle-slider:before {
         modal.focus();
     }
 
-    // ====== دالة تجميع المنتجات المتطابقة ======
-    function getMergedProducts(productId) {
-        const product = allProducts.find(p => p.id === productId);
-        if (!product) return [product];
-        
-        const mergeKey = product.mergeKey || product.title || productId;
-        
-        const merged = allProducts.filter(p => {
-            const pKey = p.mergeKey || p.title || p.id;
-            return pKey === mergeKey;
-        });
-        
-        return merged.length > 1 ? merged : [product];
-    }
-
-    // ====== فتح تفاصيل المنتج مع دمج المنتجات المتطابقة ======
+    // ====== فتح تفاصيل المنتج ======
     async function openProductDetail(productId) {
-        const mergedProducts = getMergedProducts(productId);
-        currentMergedProducts = mergedProducts;
-        currentMergedIndex = 0;
+        const product = allProducts.find(p => p.id === productId);
+        if (!product) return;
         
-        // البحث عن المنتج الرئيسي
-        const mainProduct = mergedProducts[0] || allProducts.find(p => p.id === productId);
-        if (!mainProduct) return;
+        // التحقق من المنتج +18
+        if (isAdultProduct(product) && !adultContentEnabled) {
+            showNotification(currentLanguage === 'ar' ? 
+                '🔞 هذا المنتج مصنف +18. يرجى تفعيل التصنيف من الإعدادات أولاً.' : 
+                '🔞 This product is rated +18. Please enable the rating from settings first.');
+            toggleSettings();
+            return;
+        }
         
         // إغلاق البحث إذا كان مفتوحاً
         const searchOverlay = document.getElementById('search-overlay');
@@ -4689,18 +5726,15 @@ input:checked + .toggle-slider:before {
             closeSearch();
         }
         
-        currentProductId = mainProduct.id;
-        currentProductData = mainProduct;
+        currentProductId = product.id;
+        currentProductData = product;
         
-        // عرض المنتج الأول
-        await displayProductInDetail(mainProduct, mergedProducts);
+        await displayProductInDetail(product);
     }
 
     // ====== عرض منتج في تفاصيل المنتج ======
-    async function displayProductInDetail(product, mergedProducts = null) {
+    async function displayProductInDetail(product) {
         if (!product) return;
-        
-        const merged = mergedProducts || currentMergedProducts || [product];
         
         document.getElementById('product-detail-title').textContent = product.title;
         document.getElementById('product-detail-title-en').textContent = product.titleEn;
@@ -4714,6 +5748,12 @@ input:checked + .toggle-slider:before {
         document.getElementById('product-detail-name-en').textContent = product.titleEn;
         document.getElementById('product-detail-type').textContent = `${product.type} - ${product.subcategory}`;
         document.getElementById('product-detail-type-en').textContent = `${product.typeEn} - ${product.subcategoryEn}`;
+        
+        // إضافة علامة +18 إذا كان المنتج +18
+        const detailTitle = document.querySelector('.product-detail-title');
+        if (isAdultProduct(product)) {
+            detailTitle.textContent = `🔞 ${product.title}`;
+        }
         
         await loadProductRatings(product.id);
         
@@ -4809,28 +5849,6 @@ input:checked + .toggle-slider:before {
             }
         }
         
-        // عرض أزرار الأجزاء المدمجة
-        const mergedTabsContainer = document.getElementById('merged-parts-tabs');
-        if (mergedTabsContainer) {
-            if (merged.length > 1) {
-                mergedTabsContainer.style.display = 'flex';
-                mergedTabsContainer.innerHTML = '';
-                
-                merged.forEach((p, index) => {
-                    const tab = document.createElement('button');
-                    tab.className = `merged-part-tab ${index === currentMergedIndex ? 'active' : ''}`;
-                    tab.textContent = `${currentLanguage === 'ar' ? 'الجزء' : 'Part'} ${index + 1}: ${p.title}`;
-                    tab.onclick = () => {
-                        currentMergedIndex = index;
-                        displayProductInDetail(p, merged);
-                    };
-                    mergedTabsContainer.appendChild(tab);
-                });
-            } else {
-                mergedTabsContainer.style.display = 'none';
-            }
-        }
-        
         updateLanguageElements();
         
         const chaptersSection = document.getElementById('chapters-section');
@@ -4894,8 +5912,6 @@ input:checked + .toggle-slider:before {
         document.body.style.overflow = 'auto';
         currentProductId = null;
         currentProductData = null;
-        currentMergedProducts = [];
-        currentMergedIndex = 0;
         selectedRating = 0;
         hoveredRating = 0;
         userRatingForCurrentProduct = null;
@@ -5213,10 +6229,56 @@ input:checked + .toggle-slider:before {
         });
     }
 
+    // ====== دوال تأكيد الحذف ======
+    function openConfirmDelete(productId, commentId) {
+        deletePendingProductId = productId;
+        deletePendingCommentId = commentId;
+        document.getElementById('confirm-delete-overlay').classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+    
+    function closeConfirmDelete() {
+        document.getElementById('confirm-delete-overlay').classList.remove('show');
+        document.body.style.overflow = 'auto';
+        deletePendingProductId = null;
+        deletePendingCommentId = null;
+    }
+    
+    async function executeDeleteComment() {
+        if (!deletePendingProductId || !deletePendingCommentId) {
+            closeConfirmDelete();
+            return;
+        }
+        
+        try {
+            const commentRef = ref(database, `comments/${deletePendingProductId}/${deletePendingCommentId}`);
+            await remove(commentRef);
+            
+            await loadCommentsFromFirebase(deletePendingProductId);
+            
+            showNotification(currentLanguage === 'ar' ? 
+                'تم حذف التعليق بنجاح' : 
+                'Comment deleted successfully');
+                
+        } catch (error) {
+            console.error('Error deleting comment:', error);
+            showNotification(currentLanguage === 'ar' ? 
+                'حدث خطأ أثناء حذف التعليق' : 
+                'Error deleting comment');
+        }
+        
+        closeConfirmDelete();
+    }
+
     // ====== إضافة تعليق مع Firebase ======
     async function addProductComment() {
-        const user = checkAuthBeforeComment();
-        if (!user) return;
+        const user = checkAuth();
+        if (!user) {
+            showNotification(currentLanguage === 'ar' ? 
+                'الرجاء تسجيل الدخول أولاً' : 
+                'Please login first');
+            return;
+        }
         
         const input = document.getElementById('product-comment-input');
         const text = input.value.trim();
@@ -5267,8 +6329,8 @@ input:checked + .toggle-slider:before {
         }
     }
 
-    // ====== حذف تعليق ======
-    async function deleteComment(productId, commentId) {
+    // ====== حذف تعليق (يستدعي نافذة التأكيد) ======
+    function deleteComment(productId, commentId) {
         if (!currentUser) {
             showNotification(currentLanguage === 'ar' ? 
                 'الرجاء تسجيل الدخول' : 
@@ -5276,39 +6338,8 @@ input:checked + .toggle-slider:before {
             return;
         }
         
-        try {
-            const commentRef = ref(database, `comments/${productId}/${commentId}`);
-            const snapshot = await get(commentRef);
-            
-            if (!snapshot.exists()) {
-                showNotification(currentLanguage === 'ar' ? 
-                    'التعليق غير موجود' : 
-                    'Comment not found');
-                return;
-            }
-            
-            const commentData = snapshot.val();
-            if (commentData.authorId !== currentUser.uid) {
-                showNotification(currentLanguage === 'ar' ? 
-                    'لا يمكنك حذف تعليق ليس لك' : 
-                    'You cannot delete a comment that is not yours');
-                return;
-            }
-            
-            await remove(commentRef);
-            
-            await loadCommentsFromFirebase(productId);
-            
-            showNotification(currentLanguage === 'ar' ? 
-                'تم حذف التعليق بنجاح' : 
-                'Comment deleted successfully');
-                
-        } catch (error) {
-            console.error('Error deleting comment:', error);
-            showNotification(currentLanguage === 'ar' ? 
-                'حدث خطأ أثناء حذف التعليق' : 
-                'Error deleting comment');
-        }
+        // فتح نافذة التأكيد بدلاً من الحذف المباشر
+        openConfirmDelete(productId, commentId);
     }
 
     // ====== تحميل التعليقات من Firebase ======
@@ -5421,10 +6452,14 @@ input:checked + .toggle-slider:before {
     }
 
     function purchaseProduct() {
-        const user = checkAuthBeforePurchase();
-        if (!user) return;
+        const user = checkAuth();
+        if (!user) {
+            showNotification(currentLanguage === 'ar' ? 
+                'الرجاء تسجيل الدخول لإكمال عملية الشراء' : 
+                'Please login to complete purchase');
+            return;
+        }
         
-        // إذا كان هناك منتجات مدمجة، نضيف المنتج الحالي فقط
         const product = currentProductData || allProducts.find(p => p.id === currentProductId);
         if (!product) {
             showNotification(currentLanguage === 'ar' ? 
@@ -5446,70 +6481,29 @@ input:checked + .toggle-slider:before {
             return;
         }
         
-        try {
-            const productsRef = ref(database, 'products');
-            const snapshot = await get(productsRef);
-            let filteredProducts = [];
+        const filtered = allProducts.filter(product => {
+            // فحص المنتجات +18
+            if (isAdultProduct(product) && !adultContentEnabled) return false;
             
-            if (snapshot.exists()) {
-                const products = snapshot.val();
-                
-                Object.keys(products).forEach(productId => {
-                    const product = {
-                        id: productId,
-                        ...products[productId]
-                    };
-                    
-                    product.image = getProductImage(product);
-                    
-                    const searchFields = [
-                        product.title?.toLowerCase() || '',
-                        product.titleEn?.toLowerCase() || '',
-                        product.category?.toLowerCase() || '',
-                        product.categoryEn?.toLowerCase() || '',
-                        product.subcategory?.toLowerCase() || '',
-                        product.subcategoryEn?.toLowerCase() || '',
-                        product.description?.toLowerCase() || '',
-                        product.descriptionEn?.toLowerCase() || '',
-                        product.type?.toLowerCase() || '',
-                        product.typeEn?.toLowerCase() || '',
-                        product.format?.toLowerCase() || '',
-                        product.formatEn?.toLowerCase() || ''
-                    ];
-                    
-                    if (searchFields.some(field => field.includes(searchTerm))) {
-                        filteredProducts.push(product);
-                    }
-                });
-                
-                allProducts = Object.keys(products).map(productId => ({
-                    id: productId,
-                    ...products[productId],
-                    image: getProductImage(products[productId])
-                }));
-            }
+            const searchFields = [
+                product.title?.toLowerCase() || '',
+                product.titleEn?.toLowerCase() || '',
+                product.category?.toLowerCase() || '',
+                product.categoryEn?.toLowerCase() || '',
+                product.subcategory?.toLowerCase() || '',
+                product.subcategoryEn?.toLowerCase() || '',
+                product.description?.toLowerCase() || '',
+                product.descriptionEn?.toLowerCase() || '',
+                product.type?.toLowerCase() || '',
+                product.typeEn?.toLowerCase() || '',
+                product.format?.toLowerCase() || '',
+                product.formatEn?.toLowerCase() || ''
+            ];
             
-            renderSearchResults(filteredProducts);
-            
-        } catch (error) {
-            console.error('Error searching products:', error);
-            const localFiltered = allProducts.filter(product => {
-                const searchFields = [
-                    product.title?.toLowerCase() || '',
-                    product.titleEn?.toLowerCase() || '',
-                    product.category?.toLowerCase() || '',
-                    product.categoryEn?.toLowerCase() || '',
-                    product.subcategory?.toLowerCase() || '',
-                    product.subcategoryEn?.toLowerCase() || '',
-                    product.description?.toLowerCase() || '',
-                    product.descriptionEn?.toLowerCase() || ''
-                ];
-                
-                return searchFields.some(field => field.includes(searchTerm));
-            });
-            
-            renderSearchResults(localFiltered);
-        }
+            return searchFields.some(field => field.includes(searchTerm));
+        });
+        
+        renderSearchResults(filtered);
     }
 
     // ====== لوحة البحث ======
@@ -5561,6 +6555,9 @@ input:checked + .toggle-slider:before {
             sortedProducts.forEach(product => {
                 const card = document.createElement('div');
                 card.className = 'search-product-card';
+                if (isAdultProduct(product)) {
+                    card.classList.add('adult-product');
+                }
                 card.onclick = () => openProductDetail(product.id);
                 card.innerHTML = `
                     <img src="${getProductImage(product)}" alt="${product.title}">
@@ -5631,7 +6628,7 @@ input:checked + .toggle-slider:before {
 
     // ====== نافذة عرض جميع القصص ======
     function openAllStories() {
-        const stories = allProducts.filter(p => p.category === 'قصص');
+        const stories = filteredProducts.filter(p => p.category === 'قصص');
         const sortedStories = sortProducts(stories);
         
         const grid = document.getElementById('all-stories-grid');
@@ -5822,6 +6819,26 @@ input:checked + .toggle-slider:before {
             });
         }
         
+        // إغلاق نافذة التحقق بالضغط خارجها
+        const ageVerificationOverlay = document.getElementById('age-verification-overlay');
+        if (ageVerificationOverlay) {
+            ageVerificationOverlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeAgeVerification();
+                }
+            });
+        }
+        
+        // إغلاق نافذة تأكيد الحذف بالضغط خارجها
+        const confirmDeleteOverlay = document.getElementById('confirm-delete-overlay');
+        if (confirmDeleteOverlay) {
+            confirmDeleteOverlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeConfirmDelete();
+                }
+            });
+        }
+        
         updateUserProfile();
     }
 
@@ -5970,42 +6987,31 @@ input:checked + .toggle-slider:before {
             transform: scale(1.05);
         }
         
-        .merged-part-tab {
-            padding: 6px 16px;
-            background: var(--card-bg);
-            border: 2px solid var(--border-color);
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: bold;
-            transition: all var(--transition-speed);
-            color: var(--text-secondary);
-        }
-        
-        .merged-part-tab:hover {
-            border-color: var(--primary-color);
-            color: var(--text-primary);
-        }
-        
-        .merged-part-tab.active {
-            background: var(--gradient-primary);
-            border-color: var(--primary-color);
-            color: white;
-        }
-        
         @media (max-width: 768px) {
             .product-detail-summary-grid {
                 grid-template-columns: 1fr;
             }
             
-            .merged-part-tab {
-                font-size: 11px;
-                padding: 4px 12px;
-            }
-            
             .product-detail-footer .footer-info h3 {
                 font-size: 12px;
             }
+        }
+
+        .product-card.adult-product .view-icon-btn {
+            background: rgba(139, 0, 0, 0.8);
+        }
+
+        .product-card.adult-product .view-icon-btn:hover {
+            background: rgba(255, 0, 0, 0.9);
+        }
+
+        .search-product-card.adult-product .search-view-btn {
+            border-color: var(--adult-border);
+            color: var(--adult-border);
+        }
+
+        .search-product-card.adult-product .search-view-btn:hover {
+            background: rgba(255, 0, 0, 0.2);
         }
     `;
     document.head.appendChild(style);
@@ -6016,6 +7022,7 @@ input:checked + .toggle-slider:before {
         localStorage.setItem('language', currentLanguage);
         localStorage.setItem('direction', currentLanguage === 'ar' ? 'rtl' : 'ltr');
         localStorage.setItem('displayMode', displayMode);
+        localStorage.setItem('adultContentEnabled', adultContentEnabled ? 'true' : 'false');
     });
 
     // تشغيل تهيئة الصفحة عند تحميل DOM
@@ -6058,6 +7065,16 @@ input:checked + .toggle-slider:before {
     window.updateRating = updateRating;
     window.cancelEdit = cancelEdit;
     window.escapeHtml = escapeHtml;
+    window.toggleAdultContent = toggleAdultContent;
+    window.verifyAge = verifyAge;
+    window.goToStep = goToStep;
+    window.finalizeAgeVerification = finalizeAgeVerification;
+    window.openAgeVerification = openAgeVerification;
+    window.closeAgeVerification = closeAgeVerification;
+    window.switchGameTab = switchGameTab;
+    window.openConfirmDelete = openConfirmDelete;
+    window.closeConfirmDelete = closeConfirmDelete;
+    window.executeDeleteComment = executeDeleteComment;
 </script>
 </body>
 </html>
