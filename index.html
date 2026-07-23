@@ -4030,7 +4030,8 @@ input:checked + .toggle-slider:before {
   </div>
 </footer>
 
-<script type="module">// ====== استيراد Firebase ======
+<script type="module">
+  // ====== استيراد Firebase ======
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 import { getDatabase, ref, get, set, push, onValue, query, orderByChild, equalTo, remove } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
@@ -4064,7 +4065,7 @@ let hasVerifiedAgeOnce = false;
 
 // إعدادات التقسيم
 const novelsPerPage = 6;
-const videosPerPage = 3;
+const videosPerPage = 4; // زيادة عدد الأفلام المعروضة في الصفحة
 
 // حالات التقسيم
 let novelPages = {
@@ -4307,7 +4308,7 @@ function filterProducts(products) {
     return products;
 }
 
-// ====== تحميل المنتجات من Firebase مع دعم Base64 ======
+// ====== تحميل المنتجات من Firebase ======
 async function loadProductsFromFirebase() {
     try {
         const productsRef = ref(database, 'products');
@@ -4529,11 +4530,11 @@ function loadSampleProducts() {
             chapters: [],
             comments: []
         },
-        // ==== أفلام (Movies) ====
+        // ==== أفلام (Movies) مع التصنيفات الموحدة ====
         {
             id: 'movie1',
-            title: 'الرحلة الخيالية',
-            titleEn: 'The Fantasy Journey',
+            title: 'رحلة الخيال السحري',
+            titleEn: 'Magic Fantasy Journey',
             category: 'أفلام',
             categoryEn: 'Movies',
             subcategory: 'الخيال السحري',
@@ -4543,8 +4544,8 @@ function loadSampleProducts() {
             descriptionEn: 'A fantasy adventure movie that takes you on a magical journey across worlds',
             image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjN2IyN2ZmIi8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZGlyZWN0aW9uPSJydGwiPs2Y2YjZgyDZhtmI2KfYqQpcL3RleHQ+Cjwvc3ZnPg==',
             rating: 4.7,
-            type: 'فيديو',
-            typeEn: 'Video',
+            type: 'فلم',
+            typeEn: 'Movie',
             format: 'فيديو',
             formatEn: 'Video',
             ratingCategory: 'all',
@@ -4564,12 +4565,75 @@ function loadSampleProducts() {
             descriptionEn: 'A thrilling horror movie that gives you a terrifying experience',
             image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjOGIwMDAwIi8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZGlyZWN0aW9uPSJydGwiPs2Y2YjZgyDZhtmI2KfYqQpcL3RleHQ+Cjwvc3ZnPg==',
             rating: 4.3,
-            type: 'فيديو',
-            typeEn: 'Video',
+            type: 'فلم',
+            typeEn: 'Movie',
             format: 'فيديو',
             formatEn: 'Video',
             ratingCategory: '18',
             chapters: [{ title: 'الحلقة الأولى', duration: '55:00' }],
+            comments: []
+        },
+        {
+            id: 'movie3',
+            title: 'لغز القصر المسكون',
+            titleEn: 'Mystery of the Haunted Palace',
+            category: 'أفلام',
+            categoryEn: 'Movies',
+            subcategory: 'الغموض',
+            subcategoryEn: 'Mystery',
+            price: '$15.99',
+            description: 'فيلم غموض وإثارة حول قصر مسكون وأسراره',
+            descriptionEn: 'A mystery and thriller movie about a haunted palace and its secrets',
+            image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjNDQzM0I3Ii8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZGlyZWN0aW9uPSJydGwiPs2Y2YjZgyDZhtmI2KfYqQpcL3RleHQ+Cjwvc3ZnPg==',
+            rating: 4.5,
+            type: 'فلم',
+            typeEn: 'Movie',
+            format: 'فيديو',
+            formatEn: 'Video',
+            ratingCategory: '16',
+            chapters: [{ title: 'الجزء الأول', duration: '48:00' }, { title: 'الجزء الثاني', duration: '52:00' }],
+            comments: []
+        },
+        {
+            id: 'movie4',
+            title: 'ضحكات لا تنتهي',
+            titleEn: 'Endless Laughter',
+            category: 'أفلام',
+            categoryEn: 'Movies',
+            subcategory: 'السخرية',
+            subcategoryEn: 'Comedy',
+            price: '$12.99',
+            description: 'فيلم كوميدي سخرية عن مغامرات عائلة مضحكة',
+            descriptionEn: 'A comedy satire movie about a funny family\'s adventures',
+            image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRkVCMzUiLz4KICAgIDx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkaXJlY3Rpb249InJ0bCI+INmI2YrZg9mK2Kcg2KfZhNmI2YrZhCAhPC90ZXh0Pgo8L3N2Zz4=',
+            rating: 4.2,
+            type: 'فلم',
+            typeEn: 'Movie',
+            format: 'فيديو',
+            formatEn: 'Video',
+            ratingCategory: 'all',
+            chapters: [{ title: 'الحلقة الأولى', duration: '35:00' }, { title: 'الحلقة الثانية', duration: '40:00' }],
+            comments: []
+        },
+        {
+            id: 'movie5',
+            title: 'مغامرة في الأدغال',
+            titleEn: 'Adventure in the Jungle',
+            category: 'أفلام',
+            categoryEn: 'Movies',
+            subcategory: 'المغامرة',
+            subcategoryEn: 'Adventure',
+            price: '$18.99',
+            description: 'فيلم مغامرات مثير في أعماق الأدغال',
+            descriptionEn: 'An exciting adventure movie in the depths of the jungle',
+            image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMkU3QjMyIi8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZGlyZWN0aW9uPSJydGwiPs2Y2YjZgyDZhtmI2KfYqQpcL3RleHQ+Cjwvc3ZnPg==',
+            rating: 4.6,
+            type: 'فلم',
+            typeEn: 'Movie',
+            format: 'فيديو',
+            formatEn: 'Video',
+            ratingCategory: 'all',
+            chapters: [{ title: 'الجزء الأول', duration: '50:00' }, { title: 'الجزء الثاني', duration: '55:00' }],
             comments: []
         },
         // ==== ألعاب (Games) ====
@@ -4579,7 +4643,7 @@ function loadSampleProducts() {
             titleEn: 'Heroes Game',
             category: 'ألعاب',
             categoryEn: 'Games',
-            subcategory: 'العاب الشباب',
+            subcategory: 'ألعاب الشباب',
             subcategoryEn: 'Youth Games',
             price: '$29.99',
             description: 'لعبة مغامرات مثيرة للشباب مع تحديات شيقة',
@@ -4600,7 +4664,7 @@ function loadSampleProducts() {
             titleEn: 'Fun Garden',
             category: 'ألعاب',
             categoryEn: 'Games',
-            subcategory: 'العاب الاطفال',
+            subcategory: 'ألعاب الأطفال',
             subcategoryEn: 'Kids Games',
             price: '$19.99',
             description: 'لعبة تعليمية ممتعة للأطفال في حديقة المرح',
@@ -4802,7 +4866,7 @@ function addToCart(productId, event = null) {
     }
 }
 
-// إظهار إشعار
+// ====== إظهار إشعار ======
 function showNotification(message, type = 'success') {
     const notification = document.createElement('div');
     const bgColor = type === 'error' ? 'linear-gradient(135deg, #f44336, #d32f2f)' : 'linear-gradient(135deg, #FF6B35, #FF8E53)';
@@ -4836,13 +4900,13 @@ function goToCart() {
     window.location.href = 'basket.html';
 }
 
-// تبديل الإعدادات
+// ====== تبديل الإعدادات ======
 function toggleSettings() {
     const panel = document.getElementById('panel');
     panel.classList.toggle('show');
 }
 
-// تبديل اللغة
+// ====== تبديل اللغة ======
 function toggleLanguage() {
     currentLanguage = currentLanguage === 'ar' ? 'en' : 'ar';
     const languageValue = document.getElementById('language-value');
@@ -4854,7 +4918,6 @@ function toggleLanguage() {
         document.querySelectorAll('.rtl-text').forEach(el => el.style.display = '');
         document.querySelectorAll('.ltr-text').forEach(el => el.style.display = 'none');
         
-        // تحديث نصوص الإعدادات
         document.getElementById('theme-value').textContent = currentTheme;
         const modeNames = { random: 'عشوائي', rating: 'الأعلى تقييماً', newest: 'الأحدث' };
         document.getElementById('display-mode-value').textContent = modeNames[displayMode] || 'عشوائي';
@@ -4867,7 +4930,6 @@ function toggleLanguage() {
         document.querySelectorAll('.rtl-text').forEach(el => el.style.display = 'none');
         document.querySelectorAll('.ltr-text').forEach(el => el.style.display = '');
         
-        // تحديث نصوص الإعدادات بالإنجليزية
         const themeNames = {'داكن': 'Dark', 'فاتح': 'Light', 'تلقائي': 'Auto'};
         document.getElementById('theme-value').textContent = themeNames[currentTheme] || 'Dark';
         const modeNamesEn = { random: 'Random', rating: 'Highest Rated', newest: 'Newest' };
@@ -4882,7 +4944,7 @@ function toggleLanguage() {
     renderAllContent();
 }
 
-// تبديل وضع العرض (ترتيب المنتجات)
+// ====== تبديل وضع العرض ======
 function toggleDisplayMode() {
     const modes = ['random', 'rating', 'newest'];
     const modeNames = { random: 'عشوائي', rating: 'الأعلى تقييماً', newest: 'الأحدث' };
@@ -4903,7 +4965,7 @@ function toggleDisplayMode() {
     renderAllContent();
 }
 
-// دالة ترتيب المنتجات حسب الوضع
+// ====== ترتيب المنتجات ======
 function sortProducts(products) {
     const sortedProducts = [...products];
     switch(displayMode) {
@@ -4917,7 +4979,6 @@ function sortProducts(products) {
     }
 }
 
-// دالة خلط عشوائي
 function shuffleArray(array) {
     const newArray = [...array];
     for (let i = newArray.length - 1; i > 0; i--) {
@@ -4927,7 +4988,7 @@ function shuffleArray(array) {
     return newArray;
 }
 
-// تطبيق المظهر
+// ====== تطبيق المظهر ======
 function applyTheme() {
     const body = document.body;
     if (currentTheme === 'فاتح') {
@@ -4948,7 +5009,7 @@ function applyTheme() {
     }
 }
 
-// تغيير حجم النص
+// ====== تغيير حجم النص ======
 function updateTextSize(value) {
     const percent = parseInt(value);
     document.getElementById('textSizePercent').textContent = percent + '%';
@@ -5076,7 +5137,7 @@ function initializeManhwa() {
     });
 }
 
-// ====== إدارة الألعاب الملموسة ======
+// ====== إدارة الألعاب ======
 let gamePages = {
     'youth': { current: 0, total: 0, items: [] },
     'kids': { current: 0, total: 0, items: [] },
@@ -5087,13 +5148,13 @@ const gamesPerPage = 6;
 function initializeGames() {
     const gamesAll = filteredProducts.filter(p => p.category === 'ألعاب');
     
-    const gamesYouth = gamesAll.filter(p => p.subcategory === 'العاب الشباب');
+    const gamesYouth = gamesAll.filter(p => p.subcategory === 'ألعاب الشباب');
     const sortedYouth = sortProducts(gamesYouth);
     gamePages['youth'].items = sortedYouth;
     gamePages['youth'].total = Math.ceil(sortedYouth.length / gamesPerPage);
     showGamePage('youth', 0);
     
-    const gamesKids = gamesAll.filter(p => p.subcategory === 'العاب الاطفال');
+    const gamesKids = gamesAll.filter(p => p.subcategory === 'ألعاب الأطفال');
     const sortedKids = sortProducts(gamesKids);
     gamePages['kids'].items = sortedKids;
     gamePages['kids'].total = Math.ceil(sortedKids.length / gamesPerPage);
@@ -5243,8 +5304,9 @@ function switchNovelTab(index) {
     }
 }
 
-// ====== إدارة التقسيم للافلام ======
+// ====== إدارة التقسيم للافلام (مع التصنيفات الموحدة) ======
 function initializeVideos() {
+    // البحث عن المنتجات من فئة "أفلام" مع التصنيفات الموحدة
     const fantasyVideos = filteredProducts.filter(p => p.category === 'أفلام' && p.subcategory === 'الخيال السحري');
     const sortedFantasy = sortProducts(fantasyVideos);
     videoPages['fantasy'].items = sortedFantasy;
@@ -5303,6 +5365,11 @@ function showVideoPage(category, page) {
                     <div class="video-duration">
                         <i class="far fa-clock"></i>
                         ${chaptersDuration} ${currentLanguage === 'ar' ? 'دقيقة' : 'min'}
+                    </div>
+                    <div class="video-subcategory" style="font-size: 12px; color: var(--primary-color); margin-top: 4px;">
+                        <i class="fas fa-tag"></i>
+                        <span class="rtl-text">${product.subcategory}</span>
+                        <span class="ltr-text" style="display: none;">${product.subcategoryEn}</span>
                     </div>
                 </div>
             `;
@@ -5482,7 +5549,7 @@ async function checkProductPurchase(productId) {
     }
 }
 
-// ====== الحصول على تقييم المستخدم للمنتج ======
+// ====== الحصول على تقييم المستخدم ======
 async function getUserRatingForProduct(productId, userId) {
     try {
         const userRatingRef = query(ref(database, `ratings/${productId}`), orderByChild('userId'), equalTo(userId));
@@ -5559,98 +5626,7 @@ function updateProductRatingDisplay(averageRating, ratingCount) {
     }
 }
 
-// ====== إنشاء واجهة التقييم في قسم معلومات المنتج ======
-function createRatingInProductInfo(hasPurchased, userRating = null) {
-    const summaryGrid = document.querySelector('.product-detail-summary-grid');
-    if (!summaryGrid) return;
-    
-    let ratingItem = document.querySelector('.summary-item:has(i.fa-star)');
-    if (!ratingItem) {
-        ratingItem = document.createElement('div');
-        ratingItem.className = 'summary-item';
-        ratingItem.innerHTML = `
-            <i class="fas fa-star"></i>
-            <div>
-                <div class="summary-label rtl-text">التقييم</div>
-                <div class="summary-label ltr-text" style="display: none;">Rating</div>
-                <div class="summary-value" id="product-rating-display"></div>
-            </div>
-        `;
-        const existingItems = summaryGrid.querySelectorAll('.summary-item');
-        if (existingItems.length > 0) {
-            const priceItem = Array.from(existingItems).find(item => 
-                item.querySelector('i.fa-dollar-sign') || item.querySelector('i.fa-tag')
-            );
-            if (priceItem) {
-                summaryGrid.insertBefore(ratingItem, priceItem.nextSibling);
-            } else {
-                summaryGrid.appendChild(ratingItem);
-            }
-        } else {
-            summaryGrid.appendChild(ratingItem);
-        }
-    }
-    
-    const ratingDisplay = document.getElementById('product-rating-display');
-    if (!ratingDisplay) return;
-    ratingDisplay.innerHTML = '';
-    
-    if (hasPurchased) {
-        if (userRating) {
-            ratingDisplay.innerHTML = `
-                <div class="user-rating-display" style="display: flex; align-items: center; gap: 10px;">
-                    <div class="rating-stars-small">
-                        ${[1, 2, 3, 4, 5].map(star => `
-                            <i class="${star <= userRating.rating ? 'fas' : 'far'} fa-star" 
-                               style="color: ${star <= userRating.rating ? '#FFD700' : '#666'}; font-size: 16px; cursor: pointer;"
-                               data-rating="${star}"
-                               onmouseover="hoverStar(${star})"
-                               onmouseout="resetStars()"
-                               onclick="selectStar(${star})"></i>
-                        `).join('')}
-                    </div>
-                    <span style="color: var(--text-secondary); font-size: 14px;">(${userRating.rating}/5)</span>
-                    <button onclick="editRating()" style="background: none; border: none; color: var(--primary-color); cursor: pointer; font-size: 12px;">
-                        <i class="fas fa-edit"></i>
-                    </button>
-                </div>
-            `;
-        } else {
-            ratingDisplay.innerHTML = `
-                <div class="rating-input-inline" style="display: flex; align-items: center; gap: 10px;">
-                    <div class="stars-container-small">
-                        ${[1, 2, 3, 4, 5].map(star => `
-                            <i class="far fa-star" 
-                               style="color: #666; font-size: 16px; cursor: pointer;"
-                               data-rating="${star}"
-                               onmouseover="hoverStar(${star})"
-                               onmouseout="resetStars()"
-                               onclick="selectStar(${star})"></i>
-                        `).join('')}
-                    </div>
-                    <button onclick="submitRating()" style="padding: 5px 15px; background: var(--gradient-primary); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">
-                        <i class="fas fa-check"></i>
-                        <span class="rtl-text">تقييم</span>
-                        <span class="ltr-text" style="display: none;">Rate</span>
-                    </button>
-                </div>
-            `;
-        }
-    } else {
-        ratingDisplay.innerHTML = `
-            <div style="color: var(--text-secondary); font-size: 14px;">
-                <i class="fas fa-shopping-cart" style="margin-left: 5px;"></i>
-                <span class="rtl-text">شراء مطلوب للتقييم</span>
-                <span class="ltr-text" style="display: none;">Purchase required for rating</span>
-            </div>
-        `;
-    }
-    if (selectedRating > 0) {
-        updateStarsDisplay();
-    }
-}
-
-// ====== دوال النجوم ======
+// ====== دوال التقييم ======
 function hoverStar(rating) {
     hoveredRating = rating;
     updateStarsDisplay();
@@ -5695,7 +5671,6 @@ function updateStarsDisplay() {
     });
 }
 
-// ====== إرسال التقييم ======
 async function submitRating() {
     if (selectedRating === 0) {
         showNotification(currentLanguage === 'ar' ? 'الرجاء اختيار تقييم' : 'Please select a rating');
@@ -5736,7 +5711,6 @@ async function submitRating() {
     }
 }
 
-// ====== تحديث متوسط تقييم المنتج ======
 async function updateProductAverageRating(productId) {
     try {
         const ratingsRef = ref(database, `ratings/${productId}`);
@@ -5767,7 +5741,6 @@ async function updateProductAverageRating(productId) {
     }
 }
 
-// ====== تعديل التقييم ======
 async function editRating() {
     if (!currentProductId || !userRatingForCurrentProduct) return;
     selectedRating = userRatingForCurrentProduct.rating;
@@ -5799,7 +5772,6 @@ async function editRating() {
     updateStarsDisplay();
 }
 
-// ====== تحديث التقييم ======
 async function updateRating() {
     if (selectedRating === 0) {
         showNotification(currentLanguage === 'ar' ? 'الرجاء اختيار تقييم' : 'Please select a rating');
@@ -5820,7 +5792,6 @@ async function updateRating() {
     }
 }
 
-// ====== إلغاء التعديل ======
 function cancelEdit() {
     if (userRatingForCurrentProduct) {
         createRatingInProductInfo(true, userRatingForCurrentProduct);
@@ -6221,7 +6192,7 @@ function escapeHtml(str) {
     }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) { return c; });
 }
 
-// ====== دوال تأكيد الحذف ======
+// ====== دوال التعليقات ======
 function openConfirmDelete(productId, commentId) {
     deletePendingProductId = productId;
     deletePendingCommentId = commentId;
@@ -6253,7 +6224,6 @@ async function executeDeleteComment() {
     closeConfirmDelete();
 }
 
-// ====== إضافة تعليق مع Firebase ======
 async function addProductComment() {
     const user = checkAuth();
     if (!user) {
@@ -6292,7 +6262,6 @@ async function addProductComment() {
     }
 }
 
-// ====== حذف تعليق ======
 function deleteComment(productId, commentId) {
     if (!currentUser) {
         showNotification(currentLanguage === 'ar' ? 'الرجاء تسجيل الدخول' : 'Please login');
@@ -6301,7 +6270,6 @@ function deleteComment(productId, commentId) {
     openConfirmDelete(productId, commentId);
 }
 
-// ====== تحميل التعليقات من Firebase ======
 async function loadCommentsFromFirebase(productId) {
     try {
         const commentsRef = ref(database, 'comments/' + productId);
@@ -6356,7 +6324,6 @@ async function loadCommentsFromFirebase(productId) {
     }
 }
 
-// ====== تحديث عداد التعليقات ======
 function updateCommentsCount() {
     const commentsContainer = document.getElementById('product-comments');
     if (!commentsContainer) return;
@@ -6411,7 +6378,7 @@ function purchaseProduct() {
     closeProductDetail();
 }
 
-// ====== تحديث دالة البحث ======
+// ====== دالة البحث ======
 async function searchProducts() {
     const searchTerm = document.getElementById('search-input').value.toLowerCase();
     if (!searchTerm.trim()) {
@@ -6624,7 +6591,7 @@ function toggleTheme() {
     applyTheme();
 }
 
-// ====== تهيئة الصفحة عند التحميل ======
+// ====== تهيئة الصفحة ======
 async function initializePage() {
     const user = checkAuth();
     if (!user) return;
@@ -6740,7 +6707,7 @@ async function updateUserProfile() {
     }
 }
 
-// حفظ الإعدادات عند الخروج
+// ====== حفظ الإعدادات عند الخروج ======
 window.addEventListener('beforeunload', () => {
     localStorage.setItem('theme', currentTheme);
     localStorage.setItem('language', currentLanguage);
@@ -6749,10 +6716,10 @@ window.addEventListener('beforeunload', () => {
     localStorage.setItem('adultContentEnabled', adultContentEnabled ? 'true' : 'false');
 });
 
-// تشغيل تهيئة الصفحة عند تحميل DOM
+// ====== تشغيل تهيئة الصفحة ======
 document.addEventListener('DOMContentLoaded', initializePage);
 
-// جعل الدوال متاحة عالمياً للاستدعاء من HTML
+// ====== جعل الدوال متاحة عالمياً ======
 window.logout = logout;
 window.addToCart = addToCart;
 window.goToCart = goToCart;
@@ -6798,6 +6765,7 @@ window.closeAgeVerification = closeAgeVerification;
 window.switchGameTab = switchGameTab;
 window.openConfirmDelete = openConfirmDelete;
 window.closeConfirmDelete = closeConfirmDelete;
-window.executeDeleteComment = executeDeleteComment;</script>
+window.executeDeleteComment = executeDeleteComment;
+</script>
 </body>
 </html>
