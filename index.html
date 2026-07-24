@@ -4065,7 +4065,7 @@ let hasVerifiedAgeOnce = false;
 
 // إعدادات التقسيم
 const novelsPerPage = 6;
-const videosPerPage = 4; // زيادة عدد الأفلام المعروضة في الصفحة
+const videosPerPage = 4;
 
 // حالات التقسيم
 let novelPages = {
@@ -4530,7 +4530,7 @@ function loadSampleProducts() {
             chapters: [],
             comments: []
         },
-        // ==== أفلام (Movies) مع التصنيفات الموحدة ====
+        // أفلام
         {
             id: 'movie1',
             title: 'رحلة الخيال السحري',
@@ -4636,7 +4636,7 @@ function loadSampleProducts() {
             chapters: [{ title: 'الجزء الأول', duration: '50:00' }, { title: 'الجزء الثاني', duration: '55:00' }],
             comments: []
         },
-        // ==== ألعاب (Games) ====
+        // ألعاب
         {
             id: 'game1',
             title: 'لعبة الأبطال',
@@ -4679,7 +4679,7 @@ function loadSampleProducts() {
             chapters: [],
             comments: []
         },
-        // ==== مانهوا (Manhwa) ====
+        // مانهوا
         {
             id: 'manhwa1',
             title: 'أسطورة السيف',
@@ -4722,7 +4722,7 @@ function loadSampleProducts() {
             chapters: [],
             comments: []
         },
-        // ==== ألعاب رقمية (Digital Games) ====
+        // ألعاب رقمية
         {
             id: 'digital1',
             title: 'لعبة الفضاء',
@@ -5304,9 +5304,8 @@ function switchNovelTab(index) {
     }
 }
 
-// ====== إدارة التقسيم للافلام (مع التصنيفات الموحدة) ======
+// ====== إدارة التقسيم للافلام ======
 function initializeVideos() {
-    // البحث عن المنتجات من فئة "أفلام" مع التصنيفات الموحدة
     const fantasyVideos = filteredProducts.filter(p => p.category === 'أفلام' && p.subcategory === 'الخيال السحري');
     const sortedFantasy = sortProducts(fantasyVideos);
     videoPages['fantasy'].items = sortedFantasy;
@@ -5412,12 +5411,11 @@ function switchVideoTab(index) {
     }
 }
 
-// ====== إنشاء بطاقة المنتج مع تصميم مخصص ======
+// ====== إنشاء بطاقة المنتج ======
 function createProductCard(product) {
     const card = document.createElement('div');
     card.className = 'product-card';
     
-    // إضافة تصميم مخصص حسب الفئة
     if (product.category === 'ألعاب رقمية') {
         card.classList.add('digital-game-card');
     } else if (product.category === 'أفلام') {
@@ -5829,8 +5827,14 @@ function viewProductFullscreen() {
 
 // ====== فتح تفاصيل المنتج ======
 async function openProductDetail(productId) {
+    console.log("Opening product detail for ID:", productId);
     const product = allProducts.find(p => p.id === productId);
-    if (!product) return;
+    if (!product) {
+        console.error("Product not found:", productId);
+        showNotification(currentLanguage === 'ar' ? 'المنتج غير موجود' : 'Product not found');
+        return;
+    }
+    
     if (isAdultProduct(product) && !adultContentEnabled) {
         showNotification(currentLanguage === 'ar' ? 
             '🔞 هذا المنتج مصنف +18. يرجى تفعيل التصنيف من الإعدادات أولاً.' : 
@@ -5838,10 +5842,12 @@ async function openProductDetail(productId) {
         toggleSettings();
         return;
     }
+    
     const searchOverlay = document.getElementById('search-overlay');
-    if (searchOverlay.style.display === 'block') {
+    if (searchOverlay && searchOverlay.style.display === 'block') {
         closeSearch();
     }
+    
     currentProductId = product.id;
     currentProductData = product;
     await displayProductInDetail(product);
@@ -5849,23 +5855,63 @@ async function openProductDetail(productId) {
 
 // ====== عرض منتج في تفاصيل المنتج ======
 async function displayProductInDetail(product) {
-    if (!product) return;
-    document.getElementById('product-detail-title').textContent = product.title;
-    document.getElementById('product-detail-title-en').textContent = product.titleEn;
-    document.getElementById('product-detail-poster').src = getProductImage(product);
-    document.getElementById('product-detail-category').textContent = product.subcategory;
-    document.getElementById('product-detail-category-en').textContent = product.subcategoryEn;
-    document.getElementById('product-detail-price').textContent = product.price;
-    document.getElementById('product-detail-description').textContent = product.description;
-    document.getElementById('product-detail-description-en').textContent = product.descriptionEn;
-    document.getElementById('product-detail-name').textContent = product.title;
-    document.getElementById('product-detail-name-en').textContent = product.titleEn;
-    document.getElementById('product-detail-type').textContent = `${product.type} - ${product.subcategory}`;
-    document.getElementById('product-detail-type-en').textContent = `${product.typeEn} - ${product.subcategoryEn}`;
+    if (!product) {
+        console.error("No product to display");
+        return;
+    }
+    
+    console.log("Displaying product:", product.title);
+    
+    const overlay = document.getElementById('product-detail-overlay');
+    if (!overlay) {
+        console.error("Product detail overlay not found!");
+        return;
+    }
+    
+    // تحديث العناصر الأساسية
+    const titleEl = document.getElementById('product-detail-title');
+    if (titleEl) titleEl.textContent = product.title;
+    
+    const titleEnEl = document.getElementById('product-detail-title-en');
+    if (titleEnEl) titleEnEl.textContent = product.titleEn;
+    
+    const posterEl = document.getElementById('product-detail-poster');
+    if (posterEl) posterEl.src = getProductImage(product);
+    
+    const categoryEl = document.getElementById('product-detail-category');
+    if (categoryEl) categoryEl.textContent = product.subcategory;
+    
+    const categoryEnEl = document.getElementById('product-detail-category-en');
+    if (categoryEnEl) categoryEnEl.textContent = product.subcategoryEn;
+    
+    const priceEl = document.getElementById('product-detail-price');
+    if (priceEl) priceEl.textContent = product.price;
+    
+    const descEl = document.getElementById('product-detail-description');
+    if (descEl) descEl.textContent = product.description;
+    
+    const descEnEl = document.getElementById('product-detail-description-en');
+    if (descEnEl) descEnEl.textContent = product.descriptionEn;
+    
+    const nameEl = document.getElementById('product-detail-name');
+    if (nameEl) nameEl.textContent = product.title;
+    
+    const nameEnEl = document.getElementById('product-detail-name-en');
+    if (nameEnEl) nameEnEl.textContent = product.titleEn;
+    
+    const typeEl = document.getElementById('product-detail-type');
+    if (typeEl) typeEl.textContent = `${product.type} - ${product.subcategory}`;
+    
+    const typeEnEl = document.getElementById('product-detail-type-en');
+    if (typeEnEl) typeEnEl.textContent = `${product.typeEn} - ${product.subcategoryEn}`;
     
     const detailTitle = document.querySelector('.product-detail-title');
-    if (isAdultProduct(product)) {
-        detailTitle.textContent = `🔞 ${product.title}`;
+    if (detailTitle) {
+        if (isAdultProduct(product)) {
+            detailTitle.textContent = `🔞 ${product.title}`;
+        } else {
+            detailTitle.textContent = product.title;
+        }
     }
     
     await loadProductRatings(product.id);
@@ -5999,9 +6045,75 @@ async function displayProductInDetail(product) {
     }
     
     await loadCommentsFromFirebase(product.id);
-    document.getElementById('product-detail-overlay').style.display = 'block';
+    
+    // إظهار النافذة
+    overlay.style.display = 'block';
+    overlay.style.visibility = 'visible';
+    overlay.style.opacity = '1';
     document.body.style.overflow = 'hidden';
-    updateLanguageElements();
+    
+    console.log("Product detail displayed successfully");
+}
+
+// ====== إنشاء واجهة التقييم ======
+function createRatingInProductInfo(hasPurchased, userRating) {
+    const ratingDisplay = document.getElementById('product-rating-display');
+    if (!ratingDisplay) return;
+    
+    if (!hasPurchased) {
+        ratingDisplay.innerHTML = `
+            <div style="color: var(--text-secondary); font-size: 14px;">
+                <i class="fas fa-lock" style="margin-left: 5px;"></i>
+                <span class="rtl-text">قم بشراء المنتج لتقيمه</span>
+                <span class="ltr-text" style="display: none;">Purchase the product to rate it</span>
+            </div>
+        `;
+        return;
+    }
+    
+    if (userRating) {
+        const rating = userRating.rating;
+        ratingDisplay.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <div class="stars-container-small" style="display: flex; gap: 2px;">
+                    ${[1, 2, 3, 4, 5].map(star => `
+                        <i class="${star <= rating ? 'fas' : 'far'} fa-star" 
+                           style="color: ${star <= rating ? '#FFD700' : '#666'}; font-size: 14px;"></i>
+                    `).join('')}
+                </div>
+                <span style="color: var(--text-secondary); font-size: 12px;">
+                    <span class="rtl-text">تقييمك: ${rating}/5</span>
+                    <span class="ltr-text" style="display: none;">Your rating: ${rating}/5</span>
+                </span>
+                <button onclick="editRating()" style="background: transparent; border: 1px solid var(--primary-color); color: var(--primary-color); padding: 2px 10px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                    <i class="fas fa-edit"></i>
+                    <span class="rtl-text">تعديل</span>
+                    <span class="ltr-text" style="display: none;">Edit</span>
+                </button>
+            </div>
+        `;
+        return;
+    }
+    
+    ratingDisplay.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <div class="stars-container-small" style="display: flex; gap: 2px;">
+                ${[1, 2, 3, 4, 5].map(star => `
+                    <i class="far fa-star" 
+                       style="color: #666; font-size: 18px; cursor: pointer; transition: all 0.2s;"
+                       data-rating="${star}"
+                       onmouseover="hoverStar(${star})"
+                       onmouseout="resetStars()"
+                       onclick="selectStar(${star})"></i>
+                `).join('')}
+            </div>
+            <button onclick="submitRating()" style="background: var(--gradient-secondary); color: white; border: none; padding: 4px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                <i class="fas fa-star"></i>
+                <span class="rtl-text">تقييم</span>
+                <span class="ltr-text" style="display: none;">Rate</span>
+            </button>
+        </div>
+    `;
 }
 
 // ====== إغلاق تفاصيل المنتج ======

@@ -7,13 +7,17 @@
 <link rel="icon" type="image/x-icon" href="img\Login library.jpg">
 <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-<!-- إضافة Leaflet للخرائط -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<!-- إضافة Geocoder للترجمة التلقائية -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
 <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-database-compat.js"></script>
+
 <style>
+/* جميع أنماط CSS السابقة تبقى كما هي */
 :root {
   --netflix-red: #e50914;
   --netflix-dark: #141414;
@@ -53,7 +57,6 @@ body {
   overflow-x: hidden;
 }
 
-/* ===== الشريط العلوي ===== */
 header {
   position: fixed; 
   top: 0; 
@@ -126,6 +129,7 @@ header h1 {
   align-items: center;
   gap: 6px;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .balance-box:hover {
@@ -134,7 +138,6 @@ header h1 {
   box-shadow: 0 5px 15px rgba(229, 9, 20, 0.2);
 }
 
-/* ===== عنوان الصفحة ===== */
 .page-title {
   padding: 20px 4% 10px;
   margin-bottom: 20px;
@@ -166,7 +169,6 @@ header h1 {
   margin: 5px 0 0 0;
 }
 
-/* ===== حاوية السلة ===== */
 .container { 
   max-width: 1200px; 
   margin: 0 auto; 
@@ -176,7 +178,6 @@ header h1 {
   gap: 20px; 
 }
 
-/* ===== قسم العنوان الذكي ===== */
 .address-section {
   background: var(--netflix-gray);
   border-radius: 12px;
@@ -307,7 +308,6 @@ header h1 {
   box-shadow: 0 5px 15px rgba(156, 39, 176, 0.3);
 }
 
-/* ===== عرض العنوان ===== */
 .address-display {
   background: rgba(0,0,0,0.2);
   border-radius: 10px;
@@ -426,7 +426,6 @@ header h1 {
   border-top: 1px solid rgba(255,255,255,0.1);
 }
 
-/* ===== أزرار ===== */
 .btn {
   padding: 10px 20px;
   border-radius: 25px;
@@ -502,7 +501,6 @@ header h1 {
   box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
 }
 
-/* ===== نافذة الخريطة الذكية ===== */
 #mapModal .modal-content {
   max-width: 900px;
   height: 80vh;
@@ -522,6 +520,15 @@ header h1 {
   border-radius: 10px;
   overflow: hidden;
   border: 2px solid rgba(255,255,255,0.1);
+}
+
+#smartMap {
+  flex: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,0.1);
+  min-height: 400px;
+  height: 500px;
 }
 
 .map-search-box {
@@ -619,7 +626,6 @@ header h1 {
   font-size: 1em;
 }
 
-/* ===== قائمة المنتجات ===== */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -717,7 +723,6 @@ header h1 {
   gap: 10px;
 }
 
-/* ===== المنتجات في السلة ===== */
 .cart-items {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -849,7 +854,6 @@ header h1 {
   gap: 10px;
 }
 
-/* ===== إحصائيات السلة ===== */
 .cart-stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -911,7 +915,6 @@ header h1 {
   font-size: 0.9em;
 }
 
-/* ===== الخصومات ===== */
 .discount-section {
   background: linear-gradient(135deg, var(--netflix-gray), #2a2a2a);
   border-radius: 15px;
@@ -1053,7 +1056,6 @@ header h1 {
   color: var(--success-green);
 }
 
-/* ===== ملخص الفاتورة ===== */
 .invoice-summary {
   background: linear-gradient(135deg, var(--netflix-gray), #2a2a2a);
   border-radius: 15px;
@@ -1093,7 +1095,6 @@ header h1 {
   color: var(--success-green) !important;
 }
 
-/* ===== الفوتر ===== */
 .footer {
   position: fixed; 
   bottom: 0; 
@@ -1196,7 +1197,6 @@ header h1 {
   opacity: 0.7;
 }
 
-/* ===== النوافذ المنبثقة ===== */
 .modal {
   position: fixed; 
   inset: 0; 
@@ -1266,7 +1266,6 @@ header h1 {
   transform: rotate(90deg);
 }
 
-/* ===== صناديق الرسائل ===== */
 .message-box {
   position: fixed; 
   top: 100px; 
@@ -1320,6 +1319,166 @@ header h1 {
   border-left: 5px solid #3498db;
 }
 
+/* ===== تنسيق نموذج العنوان ===== */
+.address-form .form-group {
+  margin-bottom: 18px;
+}
+
+.address-form .form-group label {
+  display: block;
+  color: var(--netflix-light-gray);
+  margin-bottom: 6px;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+.address-form .form-group label i {
+  color: var(--netflix-red);
+  margin-left: 6px;
+  width: 18px;
+}
+
+.address-form .form-group input,
+.address-form .form-group select,
+.address-form .form-group textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.08);
+  color: var(--netflix-white);
+  font-size: 1em;
+  font-family: 'Almarai', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.address-form .form-group input:focus,
+.address-form .form-group select:focus,
+.address-form .form-group textarea:focus {
+  outline: none;
+  border-color: var(--netflix-red);
+  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.15);
+  background: rgba(255,255,255,0.12);
+}
+
+.address-form .form-group select {
+  appearance: none;
+  cursor: pointer;
+}
+
+.address-form .form-group select option {
+  background: var(--netflix-gray);
+  color: white;
+}
+
+.address-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.address-form .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/* ===== تنسيق العناوين المحفوظة ===== */
+.address-item {
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.address-item:hover {
+  background: rgba(255,255,255,0.1);
+  transform: translateX(-5px);
+}
+
+.address-item.selected {
+  border-color: var(--netflix-red);
+  background: rgba(229, 9, 20, 0.1);
+}
+
+.address-item .address-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.address-item .address-actions button {
+  background: none;
+  border: none;
+  color: var(--netflix-light-gray);
+  cursor: pointer;
+  padding: 5px;
+  transition: all 0.3s ease;
+}
+
+.address-item .address-actions button:hover {
+  color: var(--netflix-red);
+}
+
+/* ===== بطاقات الدفع ===== */
+.card-option {
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.card-option:hover {
+  background: rgba(255,255,255,0.1);
+  transform: translateX(-5px);
+}
+
+.card-option.selected {
+  border-color: var(--netflix-red);
+  background: rgba(229, 9, 20, 0.1);
+}
+
+/* ===== سياسة الاسترجاع ===== */
+.policy-content {
+  padding: 15px 0;
+  line-height: 2;
+  color: var(--netflix-light-gray);
+}
+
+.policy-content p {
+  margin-bottom: 15px;
+  padding: 12px 15px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  border-right: 3px solid var(--netflix-red);
+}
+
+/* ===== شريط التمرير ===== */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--netflix-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, var(--netflix-red), #ff416c);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #ff416c, var(--netflix-red));
+}
+
 /* ===== التصميم المتجاوب ===== */
 @media(max-width: 768px){
   :root {
@@ -1342,6 +1501,10 @@ header h1 {
   }
   
   .address-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .address-form .form-row {
     grid-template-columns: 1fr;
   }
   
@@ -1396,6 +1559,10 @@ header h1 {
     width: 100%;
     justify-content: center;
   }
+
+  #smartMap {
+    height: 300px;
+  }
 }
 
 @media(max-width: 480px){
@@ -1427,24 +1594,10 @@ header h1 {
     font-size: 0.9em;
     top: 80px;
   }
-}
 
-/* ===== شريط التمرير المخصص ===== */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--netflix-dark);
-}
-
-::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, var(--netflix-red), #ff416c);
-  border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #ff416c, var(--netflix-red));
+  .modal-content {
+    padding: 20px 15px;
+  }
 }
 </style>
 </head>
@@ -1454,8 +1607,11 @@ header h1 {
   <h1><i class="fas fa-shopping-basket"></i> سلة الشراء</h1>
   <div class="header-actions">
     <a href="index.html" title="الرئيسية"><i class="fas fa-home"></i></a>
-    <div class="balance-box">
+    <a href="wallet.html" title="المحفظة" onclick="event.preventDefault(); window.location.href='wallet.html';">
       <i class="fas fa-wallet"></i>
+    </a>
+    <div class="balance-box" onclick="window.location.href='wallet.html'">
+      <i class="fas fa-coins"></i>
       رصيدك: <span id="globalBalance">0.00</span> ر.س
     </div>
   </div>
@@ -1723,29 +1879,27 @@ header h1 {
     
     <form id="addressForm" class="address-form">
       <div class="form-group">
-        <label for="addressName"><i class="fas fa-tag"></i> اسم العنوان</label>
-        <input type="text" id="addressName" placeholder="منزلي، مكتب، إلخ" required>
+        <label for="addressName"><i class="fas fa-tag"></i> اسم العنوان *</label>
+        <input type="text" id="addressName" placeholder="مثل: منزلي، مكتب، والدي..." required>
       </div>
       
-      <div class="form-row">
-        <div class="form-group">
-          <label for="addressCity"><i class="fas fa-city"></i> المدينة *</label>
-          <select id="addressCity" required>
-            <option value="">اختر المدينة</option>
-            <option value="الرياض">الرياض</option>
-            <option value="جدة">جدة</option>
-            <option value="مكة">مكة المكرمة</option>
-            <option value="المدينة">المدينة المنورة</option>
-            <option value="الدمام">الدمام</option>
-            <option value="الخبر">الخبر</option>
-            <option value="الطائف">الطائف</option>
-          </select>
-        </div>
-        
-        <div class="form-group">
-          <label for="addressDistrict"><i class="fas fa-neighborhood"></i> الحي *</label>
-          <input type="text" id="addressDistrict" placeholder="اسم الحي" required>
-        </div>
+      <div class="form-group">
+        <label for="addressCity"><i class="fas fa-city"></i> المدينة *</label>
+        <select id="addressCity" required>
+          <option value="">اختر المدينة</option>
+          <option value="الرياض">الرياض</option>
+          <option value="جدة">جدة</option>
+          <option value="مكة">مكة المكرمة</option>
+          <option value="المدينة">المدينة المنورة</option>
+          <option value="الدمام">الدمام</option>
+          <option value="الخبر">الخبر</option>
+          <option value="الطائف">الطائف</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="addressDistrict"><i class="fas fa-neighborhood"></i> الحي *</label>
+        <input type="text" id="addressDistrict" placeholder="اسم الحي" required>
       </div>
       
       <div class="form-group">
@@ -1758,7 +1912,6 @@ header h1 {
           <label for="addressBuilding"><i class="fas fa-building"></i> المبنى</label>
           <input type="text" id="addressBuilding" placeholder="رقم/اسم المبنى">
         </div>
-        
         <div class="form-group">
           <label for="addressApartment"><i class="fas fa-door-closed"></i> الشقة</label>
           <input type="text" id="addressApartment" placeholder="رقم الشقة">
@@ -1770,7 +1923,6 @@ header h1 {
           <label for="addressPostalCode"><i class="fas fa-map-pin"></i> الرمز البريدي</label>
           <input type="text" id="addressPostalCode" placeholder="12345" pattern="[0-9]{5}">
         </div>
-        
         <div class="form-group">
           <label for="addressPhone"><i class="fas fa-phone"></i> هاتف التوصيل *</label>
           <input type="tel" id="addressPhone" placeholder="05xxxxxxxx" pattern="05[0-9]{8}" required>
@@ -1781,16 +1933,13 @@ header h1 {
         <label for="addressNotes"><i class="fas fa-sticky-note"></i> ملاحظات إضافية</label>
         <textarea id="addressNotes" rows="3" placeholder="تفاصيل إضافية للموصل"></textarea>
       </div>
+      
+      <div class="form-actions" style="justify-content: center;">
+        <button type="button" class="btn btn-success" onclick="saveManualAddress()" style="padding: 12px 40px; font-size: 1.1em;">
+          <i class="fas fa-check"></i> حفظ العنوان
+        </button>
+      </div>
     </form>
-    
-    <div class="form-actions">
-      <button class="btn btn-secondary" onclick="closeManualAddress()">
-        <i class="fas fa-times"></i> إلغاء
-      </button>
-      <button class="btn btn-success" onclick="saveManualAddress()">
-        <i class="fas fa-check"></i> حفظ العنوان
-      </button>
-    </div>
   </div>
 </div>
 
@@ -1820,7 +1969,7 @@ header h1 {
 
 <!-- نافذة اختيار البطاقة -->
 <div id="cardModal" class="modal">
-  <div class="modal-content">
+  <div class="modal-content large">
     <div class="modal-header">
       <h3 class="modal-title"><i class="fas fa-credit-card"></i> اختيار طريقة الدفع</h3>
       <button class="close-modal" onclick="closeCardModal()">×</button>
@@ -1830,12 +1979,12 @@ header h1 {
       <!-- سيتم ملؤها ديناميكياً -->
     </div>
     
-    <div class="form-actions">
+    <div class="form-actions" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
       <button class="btn btn-secondary" onclick="closeCardModal()">
         <i class="fas fa-times"></i> إلغاء
       </button>
-      <button class="btn btn-primary" onclick="window.location.href='cards.html'">
-        <i class="fas fa-plus"></i> إضافة بطاقة جديدة
+      <button class="btn btn-primary" onclick="window.location.href='wallet.html'">
+        <i class="fas fa-plus"></i> إدارة البطاقات
       </button>
     </div>
   </div>
@@ -1875,22 +2024,50 @@ const user = JSON.parse(localStorage.getItem('user') || 'null');
 let loggedInUser = null;
 
 if (user && user.email) {
-  loggedInUser = user.email;
+    loggedInUser = user.email;
 } else {
-  setTimeout(() => {
-    window.location.href = 'login.html';
-  }, 1000);
-  document.body.innerHTML = `
-    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #141414; color: white; font-family: 'Almarai'; flex-direction: column; gap: 20px;">
-      <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #e50914;"></i>
-      <h2>يرجى تسجيل الدخول أولاً</h2>
-      <p>سيتم تحويلك إلى صفحة تسجيل الدخول...</p>
-    </div>
-  `;
-  throw new Error('No user logged in');
+    setTimeout(() => {
+        window.location.href = 'login.html';
+    }, 1000);
+    document.body.innerHTML = `
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #141414; color: white; font-family: 'Almarai'; flex-direction: column; gap: 20px;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #e50914;"></i>
+            <h2>يرجى تسجيل الدخول أولاً</h2>
+            <p>سيتم تحويلك إلى صفحة تسجيل الدخول...</p>
+        </div>
+    `;
+    throw new Error('No user logged in');
 }
 
-// مفاتيح التخزين
+// ====== إعداد Firebase ======
+const firebaseConfig = {
+    apiKey: "AIzaSyBlcKC2ncX9mTOPlhDOnfmyzdJ5mLinWYY",
+    authDomain: "al-fajr-digital-library.firebaseapp.com",
+    databaseURL: "https://al-fajr-digital-library-default-rtdb.firebaseio.com",
+    projectId: "al-fajr-digital-library",
+    storageBucket: "al-fajr-digital-library.firebasestorage.app",
+    appId: "1:739899495618:web:8e60409193ec1408b4d75b"
+};
+
+// تهيئة Firebase فقط إذا كانت متوفرة
+let db = null;
+let firebaseInitialized = false;
+
+try {
+    if (typeof firebase !== 'undefined' && firebase.initializeApp) {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.database();
+        firebaseInitialized = true;
+        console.log('✅ Firebase initialized successfully');
+    } else {
+        console.warn('⚠️ Firebase not available, using localStorage only');
+    }
+} catch (e) {
+    console.warn('⚠️ Firebase initialization failed:', e.message);
+}
+
+// ====== مفاتيح التخزين ======
+// استخدام نفس المفاتيح القديمة لضمان التوافق
 const CART_KEY = `cart_${loggedInUser}`;
 const BALANCE_KEY = `balance_${loggedInUser}`;
 const LIBRARY_KEY = `library_${loggedInUser}`;
@@ -1900,1345 +2077,1590 @@ const ADDRESSES_KEY = `addresses_${loggedInUser}`;
 const CURRENT_ADDRESS_KEY = `current_address_${loggedInUser}`;
 
 // ====== المتغيرات العامة ======
-let balance = parseFloat(localStorage.getItem(BALANCE_KEY)) || 0;
-let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-let library = JSON.parse(localStorage.getItem(LIBRARY_KEY)) || [];
-let orders = JSON.parse(localStorage.getItem(ORDERS_KEY)) || [];
-let cards = JSON.parse(localStorage.getItem(CARDS_KEY)) || [];
-let addresses = JSON.parse(localStorage.getItem(ADDRESSES_KEY)) || [];
-let currentAddress = JSON.parse(localStorage.getItem(CURRENT_ADDRESS_KEY)) || null;
+let balance = 0;
+let cart = [];
+let library = [];
+let orders = [];
+let cards = [];
+let addresses = [];
+let currentAddress = null;
 let currentDiscount = null;
 let discountCode = '';
 let smartMap = null;
 let smartMapMarker = null;
 let geocoder = null;
+let selectedCardForPayment = null;
+let selectedCardIndex = -1;
+let useFirebase = false;
 
-// ====== عناصر DOM ======
-const globalBalanceEl = document.getElementById('globalBalance');
-const cartItemsContainer = document.getElementById('cartItemsContainer');
-const totalItemsEl = document.getElementById('totalItems');
-const totalQuantityEl = document.getElementById('totalQuantity');
-const totalAmountStatsEl = document.getElementById('totalAmountStats');
-const savingsEl = document.getElementById('savings');
-const subtotalEl = document.getElementById('subtotal');
-const discountAmountEl = document.getElementById('discountAmount');
-const shippingFeeEl = document.getElementById('shippingFee');
-const finalTotalEl = document.getElementById('finalTotal');
-const totalAmountEl = document.getElementById('totalAmount');
-const itemsCountEl = document.getElementById('itemsCount');
-const payBtn = document.getElementById('payBtn');
-const addressWarning = document.getElementById('addressWarning');
-const balanceWarning = document.getElementById('balanceWarning');
-const addressDisplay = document.getElementById('addressDisplay');
-const discountCodeInput = document.getElementById('discountCode');
-const messageBox = document.getElementById('messageBox');
-const discountInfo = document.getElementById('discountInfo');
-const removeDiscountBtn = document.getElementById('removeDiscountBtn');
+// ====== تحميل البيانات من localStorage ======
+function loadAllData() {
+    try {
+        cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+        library = JSON.parse(localStorage.getItem(LIBRARY_KEY)) || [];
+        orders = JSON.parse(localStorage.getItem(ORDERS_KEY)) || [];
+        cards = JSON.parse(localStorage.getItem(CARDS_KEY)) || [];
+        addresses = JSON.parse(localStorage.getItem(ADDRESSES_KEY)) || [];
+        currentAddress = JSON.parse(localStorage.getItem(CURRENT_ADDRESS_KEY)) || null;
+        
+        console.log('📦 تم تحميل البيانات من localStorage:');
+        console.log('  - المنتجات في السلة:', cart.length);
+        console.log('  - البطاقات:', cards.length);
+        console.log('  - العناوين:', addresses.length);
+        
+        return true;
+    } catch (e) {
+        console.error('❌ خطأ في تحميل البيانات:', e);
+        return false;
+    }
+}
+
+// ====== حفظ البيانات في localStorage ======
+function saveAllData() {
+    try {
+        localStorage.setItem(CART_KEY, JSON.stringify(cart));
+        localStorage.setItem(LIBRARY_KEY, JSON.stringify(library));
+        localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+        localStorage.setItem(CARDS_KEY, JSON.stringify(cards));
+        localStorage.setItem(ADDRESSES_KEY, JSON.stringify(addresses));
+        if (currentAddress) {
+            localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
+        } else {
+            localStorage.removeItem(CURRENT_ADDRESS_KEY);
+        }
+        return true;
+    } catch (e) {
+        console.error('❌ خطأ في حفظ البيانات:', e);
+        return false;
+    }
+}
+
+// ====== دالة جلب البطاقات من Firebase ======
+async function loadCardsFromFirebase() {
+    if (!firebaseInitialized || !db || !loggedInUser) {
+        console.log('⚠️ Firebase غير متاح، استخدام localStorage فقط');
+        return false;
+    }
+    
+    try {
+        // محاولة جلب uid من localStorage
+        const userData = JSON.parse(localStorage.getItem('user') || '{}');
+        const uid = userData.uid;
+        
+        if (!uid) {
+            console.warn('⚠️ لا يوجد UID للمستخدم');
+            return false;
+        }
+        
+        const cardsRef = db.ref(`digitalCards/${uid}`);
+        const snapshot = await cardsRef.once('value');
+        
+        let firebaseCards = [];
+        if (snapshot.exists()) {
+            const cardsData = snapshot.val();
+            for (let cardId in cardsData) {
+                firebaseCards.push({ id: cardId, ...cardsData[cardId] });
+            }
+        }
+        
+        // إذا وجدنا بطاقات في Firebase، نستخدمها بدلاً من localStorage
+        if (firebaseCards.length > 0) {
+            console.log('🔥 تم جلب البطاقات من Firebase:', firebaseCards.length);
+            cards = firebaseCards;
+            localStorage.setItem(CARDS_KEY, JSON.stringify(cards));
+            useFirebase = true;
+            return true;
+        }
+        
+        return false;
+    } catch (e) {
+        console.error('❌ خطأ في جلب البطاقات من Firebase:', e);
+        return false;
+    }
+}
+
+// ====== دالة تحديث الرصيد ======
+function updateBalanceFromWallet() {
+    // جلب البطاقات من localStorage أولاً
+    cards = JSON.parse(localStorage.getItem(CARDS_KEY)) || [];
+    
+    // حساب الرصيد الكلي = مجموع أرصدة البطاقات
+    balance = cards.reduce((sum, card) => sum + (card.balance || 0), 0);
+    
+    // حفظ الرصيد الكلي في localStorage
+    localStorage.setItem(BALANCE_KEY, balance.toFixed(2));
+    
+    // تحديث العرض
+    const globalBalanceEl = document.getElementById('globalBalance');
+    if (globalBalanceEl) {
+        globalBalanceEl.textContent = balance.toFixed(2);
+    }
+    
+    return balance;
+}
+
+// ====== دالة حساب الإحصائيات ======
+function calculateCartStats() {
+    const subtotal = cart.reduce((sum, item) => sum + (parseProductPrice(item.price) * (item.quantity || 1)), 0);
+    
+    let discountAmount = 0;
+    if (currentDiscount) {
+        if (currentDiscount.type === 'percentage') {
+            discountAmount = subtotal * (currentDiscount.percentage / 100);
+        } else if (currentDiscount.type === 'fixed') {
+            discountAmount = Math.min(currentDiscount.amount, subtotal);
+        }
+    }
+    
+    const hasPhysicalProducts = cart.some(item => !isDigitalProduct(item));
+    let shippingFee = 0;
+    
+    if (hasPhysicalProducts) {
+        if (currentDiscount && currentDiscount.type === 'free_shipping') {
+            shippingFee = 0;
+        } else {
+            shippingFee = 15.00;
+        }
+    }
+    
+    const finalTotal = Math.max(0, subtotal - discountAmount + shippingFee);
+    
+    return { subtotal, discountAmount, shippingFee, finalTotal, hasPhysicalProducts };
+}
 
 // ====== وظائف المساعدة ======
 function showMessage(msg, type = 'success', duration = 4000) {
-  messageBox.textContent = msg;
-  messageBox.className = `message-box message-${type} show`;
-  setTimeout(() => messageBox.classList.remove('show'), duration);
+    const messageBox = document.getElementById('messageBox');
+    if (!messageBox) return;
+    
+    messageBox.textContent = msg;
+    messageBox.className = `message-box message-${type} show`;
+    clearTimeout(messageBox._timeout);
+    messageBox._timeout = setTimeout(() => {
+        messageBox.classList.remove('show');
+    }, duration);
 }
 
 function parseProductPrice(priceString) {
-  if (!priceString) return 0;
-  if (typeof priceString === 'number') return priceString;
-  const priceMatch = priceString.toString().match(/[\d.]+/);
-  return priceMatch ? parseFloat(priceMatch[0]) : 0;
+    if (!priceString) return 0;
+    if (typeof priceString === 'number') return priceString;
+    const priceMatch = priceString.toString().match(/[\d.]+/);
+    return priceMatch ? parseFloat(priceMatch[0]) : 0;
 }
 
 function formatPrice(price) {
-  return price.toFixed(2) + ' ر.س';
+    return price.toFixed(2) + ' ر.س';
 }
 
 function isDigitalProduct(product) {
-  if (product.format) {
-    return product.format === 'رقمي' || 
-           product.format.toLowerCase().includes('digital');
-  }
-  if (product.type) {
-    return product.type === 'قصة' || 
-           product.type === 'مانجا' || 
-           product.type === 'فيديو';
-  }
-  return true;
+    if (product.format) {
+        return product.format === 'رقمي' || 
+               product.format.toLowerCase().includes('digital');
+    }
+    if (product.type) {
+        return product.type === 'قصة' || 
+               product.type === 'مانجا' || 
+               product.type === 'فيديو';
+    }
+    // افتراضياً، إذا كان المنتج له ISBN أو كان كتاباً، فهو ورقي
+    if (product.isbn || product.pages) {
+        return false;
+    }
+    return false;
+}
+
+function generateTrackingNumber() {
+    return 'TRK' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substr(2, 4).toUpperCase();
+}
+
+function getEstimatedDeliveryDate() {
+    const date = new Date();
+    date.setDate(date.getDate() + 7);
+    return date.toLocaleDateString('ar-SA');
+}
+
+// ====== دالة فحص المتطلبات ======
+function checkRequirements() {
+    // تحديث الرصيد أولاً من البطاقات
+    updateBalanceFromWallet();
+    
+    const stats = calculateCartStats();
+    const hasPhysicalProducts = cart.some(item => !isDigitalProduct(item));
+    const hasEnoughBalance = balance >= stats.finalTotal;
+    
+    const payBtn = document.getElementById('payBtn');
+    const addressWarning = document.getElementById('addressWarning');
+    const balanceWarning = document.getElementById('balanceWarning');
+    
+    // إخفاء جميع التحذيرات أولاً
+    if (addressWarning) addressWarning.style.display = 'none';
+    if (balanceWarning) balanceWarning.style.display = 'none';
+    
+    // إذا كانت السلة فارغة
+    if (cart.length === 0) {
+        if (payBtn) {
+            payBtn.disabled = true;
+            payBtn.style.background = '#555';
+            payBtn.style.cursor = 'not-allowed';
+            payBtn.style.opacity = '0.7';
+            payBtn.title = "السلة فارغة - أضف منتجات أولاً";
+        }
+        return;
+    }
+    
+    // التحقق من العنوان للمنتجات الورقية فقط
+    if (hasPhysicalProducts && !currentAddress) {
+        if (addressWarning) {
+            addressWarning.style.display = 'flex';
+        }
+        if (payBtn) {
+            payBtn.disabled = true;
+            payBtn.style.background = '#555';
+            payBtn.style.cursor = 'not-allowed';
+            payBtn.style.opacity = '0.7';
+            payBtn.title = "العنوان مطلوب للمنتجات الورقية - أضف عنوان التوصيل";
+        }
+        return;
+    }
+    
+    // التحقق من الرصيد
+    if (!hasEnoughBalance) {
+        if (balanceWarning) {
+            balanceWarning.style.display = 'flex';
+            balanceWarning.innerHTML = `
+                <i class="fas fa-wallet"></i>
+                رصيدك غير كافٍ (المطلوب: ${formatPrice(stats.finalTotal)} - رصيدك: ${formatPrice(balance)})
+            `;
+        }
+        if (payBtn) {
+            payBtn.disabled = true;
+            payBtn.style.background = '#555';
+            payBtn.style.cursor = 'not-allowed';
+            payBtn.style.opacity = '0.7';
+            payBtn.title = `رصيدك غير كافٍ (المطلوب: ${formatPrice(stats.finalTotal)} - رصيدك: ${formatPrice(balance)})`;
+        }
+        return;
+    }
+    
+    // جميع الشروط متحققة - تمكين الزر
+    if (payBtn) {
+        payBtn.disabled = false;
+        payBtn.style.background = 'linear-gradient(45deg, var(--netflix-red), #ff416c)';
+        payBtn.style.cursor = 'pointer';
+        payBtn.style.opacity = '1';
+        payBtn.title = "إتمام عملية الشراء";
+    }
+}
+
+// ====== دالة تحديث إحصائيات السلة ======
+function updateCartStats() {
+    const stats = calculateCartStats();
+    
+    const totalItemsEl = document.getElementById('totalItems');
+    const totalQuantityEl = document.getElementById('totalQuantity');
+    const totalAmountStatsEl = document.getElementById('totalAmountStats');
+    const savingsEl = document.getElementById('savings');
+    const subtotalEl = document.getElementById('subtotal');
+    const discountAmountEl = document.getElementById('discountAmount');
+    const shippingFeeEl = document.getElementById('shippingFee');
+    const finalTotalEl = document.getElementById('finalTotal');
+    const totalAmountEl = document.getElementById('totalAmount');
+    const itemsCountEl = document.getElementById('itemsCount');
+    
+    if (totalItemsEl) totalItemsEl.textContent = cart.length;
+    if (totalQuantityEl) totalQuantityEl.textContent = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    if (totalAmountStatsEl) totalAmountStatsEl.textContent = formatPrice(stats.subtotal);
+    if (savingsEl) savingsEl.textContent = formatPrice(stats.discountAmount);
+    
+    if (subtotalEl) subtotalEl.textContent = formatPrice(stats.subtotal);
+    if (discountAmountEl) discountAmountEl.textContent = stats.discountAmount > 0 ? `-${formatPrice(stats.discountAmount)}` : formatPrice(0);
+    if (shippingFeeEl) shippingFeeEl.textContent = formatPrice(stats.shippingFee);
+    if (finalTotalEl) finalTotalEl.textContent = formatPrice(stats.finalTotal);
+    
+    if (totalAmountEl) totalAmountEl.textContent = formatPrice(stats.finalTotal);
+    if (itemsCountEl) itemsCountEl.textContent = `${cart.reduce((sum, item) => sum + (item.quantity || 1), 0)} منتج في السلة`;
+    
+    // تحديث الرصيد
+    updateBalanceFromWallet();
+    
+    // تمكين/تعطيل زر الدفع
+    checkRequirements();
+    
+    // تحديث معلومات الخصم
+    const discountCodeInput = document.getElementById('discountCode');
+    const discountInfo = document.getElementById('discountInfo');
+    const removeDiscountBtn = document.getElementById('removeDiscountBtn');
+    
+    if (!currentDiscount) {
+        if (discountCodeInput) {
+            discountCodeInput.style.borderColor = 'rgba(255,255,255,0.2)';
+            discountCodeInput.style.boxShadow = 'none';
+            discountCodeInput.value = '';
+        }
+        if (discountInfo) {
+            discountInfo.innerHTML = `
+                <i class="fas fa-info-circle"></i>
+                يمكنك استخدام كود خصم واحد لكل عملية شراء
+            `;
+        }
+        if (removeDiscountBtn) removeDiscountBtn.style.display = 'none';
+    }
+    
+    return stats;
 }
 
 // ====== نظام العناوين الذكي ======
 function updateAddressDisplay() {
-  if (currentAddress) {
-    document.getElementById('displayAddressName').textContent = currentAddress.name || 'عنوان التوصيل';
-    document.getElementById('displayCity').textContent = currentAddress.city || '-';
-    document.getElementById('displayDistrict').textContent = currentAddress.district || '-';
-    document.getElementById('displayStreet').textContent = currentAddress.street || '-';
+    const addressDisplay = document.getElementById('addressDisplay');
     
-    const fullAddress = [];
-    if (currentAddress.building) fullAddress.push(`مبنى ${currentAddress.building}`);
-    if (currentAddress.apartment) fullAddress.push(`شقة ${currentAddress.apartment}`);
-    document.getElementById('displayFullAddress').textContent = fullAddress.join('، ') || '-';
-    
-    const coordsDisplay = document.getElementById('coordinatesDisplay');
-    if (currentAddress.latitude && currentAddress.longitude) {
-      coordsDisplay.innerHTML = `<i class="fas fa-globe"></i> الإحداثيات: ${currentAddress.latitude.toFixed(6)}°, ${currentAddress.longitude.toFixed(6)}°`;
-    }
-    
-    const sourceBadge = document.getElementById('addressSourceBadge');
-    if (currentAddress.source === 'gps') {
-      sourceBadge.innerHTML = '<i class="fas fa-satellite"></i> GPS';
-    } else if (currentAddress.source === 'map') {
-      sourceBadge.innerHTML = '<i class="fas fa-map-marked-alt"></i> خريطة';
+    if (currentAddress) {
+        const nameEl = document.getElementById('displayAddressName');
+        const cityEl = document.getElementById('displayCity');
+        const districtEl = document.getElementById('displayDistrict');
+        const streetEl = document.getElementById('displayStreet');
+        const fullEl = document.getElementById('displayFullAddress');
+        const coordsEl = document.getElementById('coordinatesDisplay');
+        const badgeEl = document.getElementById('addressSourceBadge');
+        
+        if (nameEl) nameEl.textContent = currentAddress.name || 'عنوان التوصيل';
+        if (cityEl) cityEl.textContent = currentAddress.city || '-';
+        if (districtEl) districtEl.textContent = currentAddress.district || '-';
+        if (streetEl) streetEl.textContent = currentAddress.street || '-';
+        
+        const fullAddress = [];
+        if (currentAddress.building) fullAddress.push(`مبنى ${currentAddress.building}`);
+        if (currentAddress.apartment) fullAddress.push(`شقة ${currentAddress.apartment}`);
+        if (fullEl) fullEl.textContent = fullAddress.join('، ') || '-';
+        
+        if (coordsEl && currentAddress.latitude && currentAddress.longitude) {
+            coordsEl.innerHTML = `<i class="fas fa-globe"></i> الإحداثيات: ${currentAddress.latitude.toFixed(6)}°, ${currentAddress.longitude.toFixed(6)}°`;
+        }
+        
+        if (badgeEl) {
+            if (currentAddress.source === 'gps') {
+                badgeEl.innerHTML = '<i class="fas fa-satellite"></i> GPS';
+            } else if (currentAddress.source === 'map') {
+                badgeEl.innerHTML = '<i class="fas fa-map-marked-alt"></i> خريطة';
+            } else {
+                badgeEl.innerHTML = '<i class="fas fa-edit"></i> يدوي';
+            }
+        }
+        
+        if (addressDisplay) addressDisplay.classList.add('active');
     } else {
-      sourceBadge.innerHTML = '<i class="fas fa-edit"></i> يدوي';
+        if (addressDisplay) addressDisplay.classList.remove('active');
     }
     
-    addressDisplay.classList.add('active');
-  } else {
-    addressDisplay.classList.remove('active');
-  }
-  
-  checkRequirements();
-}
-
-// ====== دالة فحص المتطلبات المعدلة ======
-function checkRequirements() {
-  const hasPhysicalProducts = cart.some(item => !isDigitalProduct(item));
-  const stats = updateCartStats();
-  const hasEnoughBalance = balance >= stats.finalTotal;
-  
-  // إخفاء جميع التحذيرات أولاً
-  addressWarning.style.display = 'none';
-  balanceWarning.style.display = 'none';
-  
-  // إذا كانت السلة فارغة
-  if (cart.length === 0) {
-    payBtn.disabled = true;
-    payBtn.style.background = '#555';
-    payBtn.style.cursor = 'not-allowed';
-    payBtn.style.opacity = '0.7';
-    payBtn.title = "السلة فارغة - أضف منتجات أولاً";
-    return;
-  }
-  
-  // التحقق من العنوان للمنتجات الورقية فقط
-  if (hasPhysicalProducts && !currentAddress) {
-    addressWarning.style.display = 'flex';
-    payBtn.disabled = true;
-    payBtn.style.background = '#555';
-    payBtn.style.cursor = 'not-allowed';
-    payBtn.style.opacity = '0.7';
-    payBtn.title = "العنوان مطلوب للمنتجات الورقية - أضف عنوان التوصيل";
-    return;
-  }
-  
-  // التحقق من الرصيد
-  if (!hasEnoughBalance) {
-    balanceWarning.style.display = 'flex';
-    payBtn.disabled = true;
-    payBtn.style.background = '#555';
-    payBtn.style.cursor = 'not-allowed';
-    payBtn.style.opacity = '0.7';
-    payBtn.title = `رصيدك غير كافٍ (المطلوب: ${formatPrice(stats.finalTotal)} - رصيدك: ${formatPrice(balance)})`;
-    return;
-  }
-  
-  // جميع الشروط متحققة - تمكين الزر
-  payBtn.disabled = false;
-  payBtn.style.background = 'linear-gradient(45deg, var(--netflix-red), #ff416c)';
-  payBtn.style.cursor = 'pointer';
-  payBtn.style.opacity = '1';
-  payBtn.title = "إتمام عملية الشراء";
+    checkRequirements();
 }
 
 // ====== GPS: الموقع الحالي ======
 function getCurrentLocation() {
-  if (!navigator.geolocation) {
-    showMessage('متصفحك لا يدعم تحديد الموقع', 'error');
-    return;
-  }
-  
-  showMessage('جاري تحديد موقعك الحالي...', 'info', 2000);
-  
-  navigator.geolocation.getCurrentPosition(
-    async (position) => {
-      const { latitude, longitude } = position.coords;
-      
-      try {
-        const response = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1&accept-language=ar`
-        );
-        
-        const data = await response.json();
-        
-        if (data.address) {
-          const addr = data.address;
-          
-          currentAddress = {
-            name: 'موقعي الحالي',
-            city: addr.city || addr.town || addr.village || addr.municipality || 'غير محدد',
-            district: addr.suburb || addr.neighbourhood || addr.quarter || 'غير محدد',
-            street: addr.road || 'غير محدد',
-            building: '',
-            apartment: '',
-            postalCode: addr.postcode || '',
-            phone: user.phone || '',
-            latitude: latitude,
-            longitude: longitude,
-            source: 'gps',
-            timestamp: new Date().toISOString()
-          };
-          
-          localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
-          updateAddressDisplay();
-          openNameAddressModal();
-          showMessage('تم تحديد موقعك بنجاح!', 'success');
-        } else {
-          throw new Error('لا يمكن تحديد العنوان');
-        }
-        
-      } catch (error) {
-        console.error('Geocoding error:', error);
-        currentAddress = {
-          name: 'موقع GPS',
-          city: 'غير محدد',
-          district: 'غير محدد',
-          street: 'غير محدد',
-          latitude: latitude,
-          longitude: longitude,
-          source: 'gps',
-          timestamp: new Date().toISOString()
-        };
-        
-        localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
-        updateAddressDisplay();
-        openNameAddressModal();
-        showMessage('تم تحديد الموقع، يرجى إكمال العنوان يدوياً', 'warning');
-      }
-    },
-    (error) => {
-      let errorMessage = 'تعذر تحديد الموقع. ';
-      switch(error.code) {
-        case error.PERMISSION_DENIED:
-          errorMessage += 'تم رفض الإذن. يرجى السماح بالوصول للموقع';
-          break;
-        case error.POSITION_UNAVAILABLE:
-          errorMessage += 'معلومات الموقع غير متوفرة.';
-          break;
-        case error.TIMEOUT:
-          errorMessage += 'انتهت المهلة.';
-          break;
-        default:
-          errorMessage += 'حدث خطأ غير معروف.';
-      }
-      showMessage(errorMessage, 'error');
-    },
-    {
-      enableHighAccuracy: true,
-      timeout: 10000,
-      maximumAge: 0
+    if (!navigator.geolocation) {
+        showMessage('متصفحك لا يدعم تحديد الموقع', 'error');
+        return;
     }
-  );
+    
+    showMessage('جاري تحديد موقعك الحالي...', 'info', 2000);
+    
+    navigator.geolocation.getCurrentPosition(
+        async (position) => {
+            const { latitude, longitude } = position.coords;
+            
+            try {
+                const response = await fetch(
+                    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1&accept-language=ar`
+                );
+                
+                const data = await response.json();
+                
+                if (data.address) {
+                    const addr = data.address;
+                    
+                    currentAddress = {
+                        name: 'موقعي الحالي',
+                        city: addr.city || addr.town || addr.village || addr.municipality || 'غير محدد',
+                        district: addr.suburb || addr.neighbourhood || addr.quarter || 'غير محدد',
+                        street: addr.road || 'غير محدد',
+                        building: '',
+                        apartment: '',
+                        postalCode: addr.postcode || '',
+                        phone: user.phone || '',
+                        latitude: latitude,
+                        longitude: longitude,
+                        source: 'gps',
+                        timestamp: new Date().toISOString()
+                    };
+                    
+                    localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
+                    updateAddressDisplay();
+                    openNameAddressModal();
+                    showMessage('تم تحديد موقعك بنجاح!', 'success');
+                } else {
+                    throw new Error('لا يمكن تحديد العنوان');
+                }
+                
+            } catch (error) {
+                console.error('Geocoding error:', error);
+                currentAddress = {
+                    name: 'موقع GPS',
+                    city: 'غير محدد',
+                    district: 'غير محدد',
+                    street: 'غير محدد',
+                    latitude: latitude,
+                    longitude: longitude,
+                    source: 'gps',
+                    timestamp: new Date().toISOString()
+                };
+                
+                localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
+                updateAddressDisplay();
+                openNameAddressModal();
+                showMessage('تم تحديد الموقع، يرجى إكمال العنوان يدوياً', 'warning');
+            }
+        },
+        (error) => {
+            let errorMessage = 'تعذر تحديد الموقع. ';
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage += 'تم رفض الإذن. يرجى السماح بالوصول للموقع';
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage += 'معلومات الموقع غير متوفرة.';
+                    break;
+                case error.TIMEOUT:
+                    errorMessage += 'انتهت المهلة.';
+                    break;
+                default:
+                    errorMessage += 'حدث خطأ غير معروف.';
+            }
+            showMessage(errorMessage, 'error');
+        },
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        }
+    );
 }
 
 // ====== الخريطة الذكية ======
 function openSmartMap() {
-  document.getElementById('smartMapModal').style.display = 'flex';
-  
-  setTimeout(() => {
-    if (!smartMap) {
-      initSmartMap();
-    }
+    document.getElementById('smartMapModal').style.display = 'flex';
     
-    if (currentAddress && currentAddress.latitude && currentAddress.longitude) {
-      smartMap.setView([currentAddress.latitude, currentAddress.longitude], 15);
-      updateMapMarker(currentAddress.latitude, currentAddress.longitude);
-      reverseGeocode(currentAddress.latitude, currentAddress.longitude);
-    } else {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            smartMap.setView([latitude, longitude], 15);
-            updateMapMarker(latitude, longitude);
-            reverseGeocode(latitude, longitude);
-          },
-          () => {
-            smartMap.setView([24.7136, 46.6753], 6);
-          }
-        );
-      } else {
-        smartMap.setView([24.7136, 46.6753], 6);
-      }
-    }
-  }, 100);
+    setTimeout(() => {
+        if (!smartMap) {
+            initSmartMap();
+        }
+        
+        if (currentAddress && currentAddress.latitude && currentAddress.longitude) {
+            smartMap.setView([currentAddress.latitude, currentAddress.longitude], 15);
+            updateMapMarker(currentAddress.latitude, currentAddress.longitude);
+            reverseGeocode(currentAddress.latitude, currentAddress.longitude);
+        } else {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        smartMap.setView([latitude, longitude], 15);
+                        updateMapMarker(latitude, longitude);
+                        reverseGeocode(latitude, longitude);
+                    },
+                    () => {
+                        smartMap.setView([24.7136, 46.6753], 6);
+                    }
+                );
+            } else {
+                smartMap.setView([24.7136, 46.6753], 6);
+            }
+        }
+    }, 100);
 }
 
 function initSmartMap() {
-  smartMap = L.map('smartMap').setView([24.7136, 46.6753], 6);
-  
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors',
-    maxZoom: 19
-  }).addTo(smartMap);
-  
-  geocoder = L.Control.geocoder({
-    defaultMarkGeocode: false,
-    placeholder: 'ابحث عن موقع...',
-    errorMessage: 'لم يتم العثور على الموقع'
-  }).addTo(smartMap);
-  
-  geocoder.on('markgeocode', function(e) {
-    const { center, name } = e.geocode;
-    smartMap.setView(center, 16);
-    updateMapMarker(center.lat, center.lng);
-    updateAddressFromGeocode(name, center.lat, center.lng);
-  });
-  
-  smartMapMarker = L.marker([0, 0], {
-    draggable: true
-  }).addTo(smartMap);
-  
-  smartMapMarker.on('dragend', function() {
-    const latLng = smartMapMarker.getLatLng();
-    updateCoordinates(latLng.lat, latLng.lng);
-    reverseGeocode(latLng.lat, latLng.lng);
-  });
-  
-  smartMap.on('click', function(e) {
-    updateMapMarker(e.latlng.lat, e.latlng.lng);
-    reverseGeocode(e.latlng.lat, e.latlng.lng);
-  });
-}
-
-function updateMapMarker(lat, lng) {
-  smartMapMarker.setLatLng([lat, lng]);
-  updateCoordinates(lat, lng);
-}
-
-function updateCoordinates(lat, lng) {
-  document.getElementById('mapLat').textContent = lat.toFixed(6);
-  document.getElementById('mapLng').textContent = lng.toFixed(6);
-}
-
-async function reverseGeocode(lat, lng) {
-  try {
-    const response = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1&accept-language=ar`
-    );
+    smartMap = L.map('smartMap').setView([24.7136, 46.6753], 6);
     
-    const data = await response.json();
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 19
+    }).addTo(smartMap);
     
-    if (data.display_name) {
-      document.getElementById('extractedAddress').textContent = data.display_name;
-      
-      if (data.address) {
-        const addr = data.address;
-        currentAddress = {
-          city: addr.city || addr.town || addr.village || addr.municipality || '',
-          district: addr.suburb || addr.neighbourhood || addr.quarter || '',
-          street: addr.road || '',
-          building: addr.house_number || '',
-          latitude: lat,
-          longitude: lng,
-          source: 'map'
-        };
-        
-        document.getElementById('addressNameInput').value = 'عنوان من الخريطة';
-      }
-    } else {
-      document.getElementById('extractedAddress').textContent = 'لا يمكن استخراج العنوان من هذا الموقع';
-    }
-  } catch (error) {
-    console.error('Reverse geocoding error:', error);
-    document.getElementById('extractedAddress').textContent = 'خطأ في استخراج العنوان';
-  }
-}
-
-function updateAddressFromGeocode(addressText, lat, lng) {
-  document.getElementById('extractedAddress').textContent = addressText;
-  updateCoordinates(lat, lng);
-}
-
-function searchLocation() {
-  const query = document.getElementById('mapSearch').value.trim();
-  if (!query) return;
-  
-  fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1&accept-language=ar`)
-    .then(response => response.json())
-    .then(data => {
-      if (data.length > 0) {
-        const result = data[0];
-        smartMap.setView([result.lat, result.lon], 16);
-        updateMapMarker(parseFloat(result.lat), parseFloat(result.lon));
-        document.getElementById('extractedAddress').textContent = result.display_name;
-        document.getElementById('addressNameInput').value = query;
-      } else {
-        showMessage('لم يتم العثور على الموقع', 'error');
-      }
-    })
-    .catch(error => {
-      console.error('Search error:', error);
-      showMessage('حدث خطأ أثناء البحث', 'error');
+    geocoder = L.Control.geocoder({
+        defaultMarkGeocode: false,
+        placeholder: 'ابحث عن موقع...',
+        errorMessage: 'لم يتم العثور على الموقع'
+    }).addTo(smartMap);
+    
+    geocoder.on('markgeocode', function(e) {
+        const { center, name } = e.geocode;
+        smartMap.setView(center, 16);
+        updateMapMarker(center.lat, center.lng);
+        updateAddressFromGeocode(name, center.lat, center.lng);
+    });
+    
+    smartMapMarker = L.marker([0, 0], {
+        draggable: true
+    }).addTo(smartMap);
+    
+    smartMapMarker.on('dragend', function() {
+        const latLng = smartMapMarker.getLatLng();
+        updateCoordinates(latLng.lat, latLng.lng);
+        reverseGeocode(latLng.lat, latLng.lng);
+    });
+    
+    smartMap.on('click', function(e) {
+        updateMapMarker(e.latlng.lat, e.latlng.lng);
+        reverseGeocode(e.latlng.lat, e.latlng.lng);
     });
 }
 
+function updateMapMarker(lat, lng) {
+    smartMapMarker.setLatLng([lat, lng]);
+    updateCoordinates(lat, lng);
+}
+
+function updateCoordinates(lat, lng) {
+    document.getElementById('mapLat').textContent = lat.toFixed(6);
+    document.getElementById('mapLng').textContent = lng.toFixed(6);
+}
+
+async function reverseGeocode(lat, lng) {
+    try {
+        const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1&accept-language=ar`
+        );
+        
+        const data = await response.json();
+        
+        if (data.display_name) {
+            document.getElementById('extractedAddress').textContent = data.display_name;
+            
+            if (data.address) {
+                const addr = data.address;
+                currentAddress = {
+                    city: addr.city || addr.town || addr.village || addr.municipality || '',
+                    district: addr.suburb || addr.neighbourhood || addr.quarter || '',
+                    street: addr.road || '',
+                    building: addr.house_number || '',
+                    latitude: lat,
+                    longitude: lng,
+                    source: 'map'
+                };
+                
+                document.getElementById('addressNameInput').value = 'عنوان من الخريطة';
+            }
+        } else {
+            document.getElementById('extractedAddress').textContent = 'لا يمكن استخراج العنوان من هذا الموقع';
+        }
+    } catch (error) {
+        console.error('Reverse geocoding error:', error);
+        document.getElementById('extractedAddress').textContent = 'خطأ في استخراج العنوان';
+    }
+}
+
+function updateAddressFromGeocode(addressText, lat, lng) {
+    document.getElementById('extractedAddress').textContent = addressText;
+    updateCoordinates(lat, lng);
+}
+
+function searchLocation() {
+    const query = document.getElementById('mapSearch').value.trim();
+    if (!query) return;
+    
+    fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1&accept-language=ar`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length > 0) {
+                const result = data[0];
+                smartMap.setView([result.lat, result.lon], 16);
+                updateMapMarker(parseFloat(result.lat), parseFloat(result.lon));
+                document.getElementById('extractedAddress').textContent = result.display_name;
+                document.getElementById('addressNameInput').value = query;
+            } else {
+                showMessage('لم يتم العثور على الموقع', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Search error:', error);
+            showMessage('حدث خطأ أثناء البحث', 'error');
+        });
+}
+
 function useSmartMapLocation() {
-  const lat = parseFloat(document.getElementById('mapLat').textContent);
-  const lng = parseFloat(document.getElementById('mapLng').textContent);
-  const addressName = document.getElementById('addressNameInput').value.trim() || 'عنوان من الخريطة';
-  
-  currentAddress = {
-    name: addressName,
-    city: currentAddress?.city || '',
-    district: currentAddress?.district || '',
-    street: currentAddress?.street || '',
-    building: currentAddress?.building || '',
-    apartment: '',
-    latitude: lat,
-    longitude: lng,
-    source: 'map',
-    timestamp: new Date().toISOString()
-  };
-  
-  localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
-  updateAddressDisplay();
-  closeSmartMap();
-  
-  showMessage(`تم حفظ العنوان "${addressName}"`, 'success');
+    const lat = parseFloat(document.getElementById('mapLat').textContent);
+    const lng = parseFloat(document.getElementById('mapLng').textContent);
+    const addressName = document.getElementById('addressNameInput').value.trim() || 'عنوان من الخريطة';
+    
+    currentAddress = {
+        name: addressName,
+        city: currentAddress?.city || '',
+        district: currentAddress?.district || '',
+        street: currentAddress?.street || '',
+        building: currentAddress?.building || '',
+        apartment: '',
+        latitude: lat,
+        longitude: lng,
+        source: 'map',
+        timestamp: new Date().toISOString()
+    };
+    
+    localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
+    updateAddressDisplay();
+    closeSmartMap();
+    
+    showMessage(`تم حفظ العنوان "${addressName}"`, 'success');
 }
 
 function saveSmartAddress() {
-  useSmartMapLocation();
+    useSmartMapLocation();
 }
 
 function closeSmartMap() {
-  document.getElementById('smartMapModal').style.display = 'none';
+    document.getElementById('smartMapModal').style.display = 'none';
 }
 
 // ====== العناوين المحفوظة ======
 function openSavedAddresses() {
-  renderSavedAddresses();
-  document.getElementById('savedAddressesModal').style.display = 'flex';
+    // تحميل العناوين من localStorage
+    addresses = JSON.parse(localStorage.getItem(ADDRESSES_KEY)) || [];
+    renderSavedAddresses();
+    document.getElementById('savedAddressesModal').style.display = 'flex';
 }
 
 function closeSavedAddressesModal() {
-  document.getElementById('savedAddressesModal').style.display = 'none';
+    document.getElementById('savedAddressesModal').style.display = 'none';
 }
 
 function renderSavedAddresses() {
-  const container = document.getElementById('savedAddressesList');
-  if (!container) return;
-  
-  if (addresses.length === 0) {
-    container.innerHTML = `
-      <div style="text-align: center; padding: 40px 20px; color: var(--netflix-light-gray);">
-        <i class="fas fa-map-marker-alt" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
-        <h4 style="color: var(--netflix-white); margin-bottom: 10px;">لا توجد عناوين محفوظة</h4>
-        <p>يمكنك إضافة عنوان جديد باستخدام الزر أدناه</p>
-      </div>
-    `;
-    return;
-  }
-  
-  container.innerHTML = addresses.map((addr, index) => `
-    <div class="address-item ${currentAddress?.id === addr.id ? 'selected' : ''}" 
-         onclick="selectAddress('${addr.id}')"
-         style="background: rgba(255,255,255,0.05); border-radius: 10px; padding: 15px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s ease; border: 1px solid ${currentAddress?.id === addr.id ? 'var(--netflix-red)' : 'rgba(255,255,255,0.1)'};">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <i class="fas fa-map-marker-alt" style="color: var(--netflix-red);"></i>
-          <strong style="color: var(--netflix-white);">${addr.name}</strong>
-          ${addr.isDefault ? '<span style="background: var(--netflix-red); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">افتراضي</span>' : ''}
+    const container = document.getElementById('savedAddressesList');
+    if (!container) return;
+    
+    if (addresses.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px 20px; color: var(--netflix-light-gray);">
+                <i class="fas fa-map-marker-alt" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
+                <h4 style="color: var(--netflix-white); margin-bottom: 10px;">لا توجد عناوين محفوظة</h4>
+                <p>يمكنك إضافة عنوان جديد باستخدام الزر أدناه</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = addresses.map((addr, index) => `
+        <div class="address-item ${currentAddress?.id === addr.id ? 'selected' : ''}" 
+             onclick="selectAddress('${addr.id}')">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-map-marker-alt" style="color: var(--netflix-red);"></i>
+                    <strong style="color: var(--netflix-white);">${addr.name}</strong>
+                    ${addr.isDefault ? '<span style="background: var(--netflix-red); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">افتراضي</span>' : ''}
+                </div>
+                <div class="address-actions">
+                    <button onclick="event.stopPropagation(); setDefaultAddress('${addr.id}')" 
+                            style="background: none; border: none; color: ${addr.isDefault ? 'var(--netflix-red)' : 'var(--netflix-light-gray)'}; cursor: pointer; padding: 5px; margin-right: 5px;" title="تعيين كافتراضي">
+                        <i class="fas fa-star"></i>
+                    </button>
+                    <button onclick="event.stopPropagation(); deleteAddress('${addr.id}')" 
+                            style="background: none; border: none; color: var(--netflix-light-gray); cursor: pointer; padding: 5px;" title="حذف">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <div style="color: var(--netflix-light-gray); font-size: 0.9em;">
+                <div>${addr.city} - ${addr.district}</div>
+                <div>${addr.street} ${addr.building ? ' - مبنى ' + addr.building : ''} ${addr.apartment ? ' - شقة ' + addr.apartment : ''}</div>
+                <div><i class="fas fa-phone"></i> ${addr.phone}</div>
+            </div>
         </div>
-        <div>
-          <button onclick="event.stopPropagation(); setDefaultAddress('${addr.id}')" 
-                  style="background: none; border: none; color: ${addr.isDefault ? 'var(--netflix-red)' : 'var(--netflix-light-gray)'}; cursor: pointer; padding: 5px; margin-right: 5px;" title="تعيين كافتراضي">
-            <i class="fas fa-star"></i>
-          </button>
-          <button onclick="event.stopPropagation(); deleteAddress('${addr.id}')" 
-                  style="background: none; border: none; color: var(--netflix-light-gray); cursor: pointer; padding: 5px;" title="حذف">
-            <i class="fas fa-trash"></i>
-          </button>
-        </div>
-      </div>
-      <div style="color: var(--netflix-light-gray); font-size: 0.9em;">
-        <div>${addr.city} - ${addr.district}</div>
-        <div>${addr.street} ${addr.building ? ' - مبنى ' + addr.building : ''} ${addr.apartment ? ' - شقة ' + addr.apartment : ''}</div>
-        <div><i class="fas fa-phone"></i> ${addr.phone}</div>
-      </div>
-    </div>
-  `).join('');
+    `).join('');
 }
 
 function selectAddress(addressId) {
-  const address = addresses.find(addr => addr.id === addressId);
-  if (address) {
-    currentAddress = { ...address };
-    localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
-    updateAddressDisplay();
-    closeSavedAddressesModal();
-    showMessage(`تم تحديد "${address.name}"`, 'success');
-  }
+    const address = addresses.find(addr => addr.id === addressId);
+    if (address) {
+        currentAddress = { ...address };
+        localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
+        updateAddressDisplay();
+        closeSavedAddressesModal();
+        showMessage(`تم تحديد "${address.name}"`, 'success');
+    }
 }
 
 function setDefaultAddress(addressId) {
-  addresses.forEach(addr => {
-    addr.isDefault = addr.id === addressId;
-  });
-  
-  localStorage.setItem(ADDRESSES_KEY, JSON.stringify(addresses));
-  renderSavedAddresses();
-  showMessage('تم تحديث العنوان الافتراضي', 'success');
+    addresses.forEach(addr => {
+        addr.isDefault = addr.id === addressId;
+    });
+    
+    localStorage.setItem(ADDRESSES_KEY, JSON.stringify(addresses));
+    renderSavedAddresses();
+    showMessage('تم تحديث العنوان الافتراضي', 'success');
 }
 
 function deleteAddress(addressId) {
-  if (!confirm('هل أنت متأكد من حذف هذا العنوان؟')) return;
-  
-  addresses = addresses.filter(addr => addr.id !== addressId);
-  localStorage.setItem(ADDRESSES_KEY, JSON.stringify(addresses));
-  
-  if (currentAddress?.id === addressId) {
-    currentAddress = null;
-    localStorage.removeItem(CURRENT_ADDRESS_KEY);
-    updateAddressDisplay();
-  }
-  
-  renderSavedAddresses();
-  showMessage('تم حذف العنوان', 'warning');
+    if (!confirm('هل أنت متأكد من حذف هذا العنوان؟')) return;
+    
+    addresses = addresses.filter(addr => addr.id !== addressId);
+    localStorage.setItem(ADDRESSES_KEY, JSON.stringify(addresses));
+    
+    if (currentAddress?.id === addressId) {
+        currentAddress = null;
+        localStorage.removeItem(CURRENT_ADDRESS_KEY);
+        updateAddressDisplay();
+    }
+    
+    renderSavedAddresses();
+    showMessage('تم حذف العنوان', 'warning');
 }
 
 // ====== العنوان اليدوي ======
 function openManualAddress() {
-  if (currentAddress) {
-    document.getElementById('addressName').value = currentAddress.name || '';
-    document.getElementById('addressCity').value = currentAddress.city || '';
-    document.getElementById('addressDistrict').value = currentAddress.district || '';
-    document.getElementById('addressStreet').value = currentAddress.street || '';
-    document.getElementById('addressBuilding').value = currentAddress.building || '';
-    document.getElementById('addressApartment').value = currentAddress.apartment || '';
-    document.getElementById('addressPostalCode').value = currentAddress.postalCode || '';
-    document.getElementById('addressPhone').value = currentAddress.phone || user.phone || '';
-    document.getElementById('addressNotes').value = currentAddress.notes || '';
-  } else {
-    document.getElementById('addressName').value = '';
-    document.getElementById('addressCity').value = '';
-    document.getElementById('addressDistrict').value = '';
-    document.getElementById('addressStreet').value = '';
-    document.getElementById('addressBuilding').value = '';
-    document.getElementById('addressApartment').value = '';
-    document.getElementById('addressPostalCode').value = '';
-    document.getElementById('addressPhone').value = user.phone || '';
-    document.getElementById('addressNotes').value = '';
-  }
-  
-  document.getElementById('manualAddressModal').style.display = 'flex';
+    if (currentAddress) {
+        document.getElementById('addressName').value = currentAddress.name || '';
+        document.getElementById('addressCity').value = currentAddress.city || '';
+        document.getElementById('addressDistrict').value = currentAddress.district || '';
+        document.getElementById('addressStreet').value = currentAddress.street || '';
+        document.getElementById('addressBuilding').value = currentAddress.building || '';
+        document.getElementById('addressApartment').value = currentAddress.apartment || '';
+        document.getElementById('addressPostalCode').value = currentAddress.postalCode || '';
+        document.getElementById('addressPhone').value = currentAddress.phone || user.phone || '';
+        document.getElementById('addressNotes').value = currentAddress.notes || '';
+    } else {
+        document.getElementById('addressName').value = '';
+        document.getElementById('addressCity').value = '';
+        document.getElementById('addressDistrict').value = '';
+        document.getElementById('addressStreet').value = '';
+        document.getElementById('addressBuilding').value = '';
+        document.getElementById('addressApartment').value = '';
+        document.getElementById('addressPostalCode').value = '';
+        document.getElementById('addressPhone').value = user.phone || '';
+        document.getElementById('addressNotes').value = '';
+    }
+    
+    document.getElementById('manualAddressModal').style.display = 'flex';
 }
 
 function closeManualAddress() {
-  document.getElementById('manualAddressModal').style.display = 'none';
+    document.getElementById('manualAddressModal').style.display = 'none';
 }
 
 function saveManualAddress() {
-  const name = document.getElementById('addressName').value.trim();
-  const city = document.getElementById('addressCity').value.trim();
-  const district = document.getElementById('addressDistrict').value.trim();
-  const street = document.getElementById('addressStreet').value.trim();
-  const phone = document.getElementById('addressPhone').value.trim();
-  
-  if (!name || !city || !district || !street || !phone) {
-    showMessage('يرجى ملء جميع الحقول المطلوبة', 'error');
-    return;
-  }
-  
-  if (!phone.match(/^05[0-9]{8}$/)) {
-    showMessage('رقم الهاتف غير صحيح. يجب أن يكون 05xxxxxxxx', 'error');
-    return;
-  }
-  
-  const address = {
-    id: 'addr_' + Date.now(),
-    name: name,
-    city: city,
-    district: district,
-    street: street,
-    building: document.getElementById('addressBuilding').value.trim(),
-    apartment: document.getElementById('addressApartment').value.trim(),
-    postalCode: document.getElementById('addressPostalCode').value.trim(),
-    phone: phone,
-    notes: document.getElementById('addressNotes').value.trim(),
-    latitude: currentAddress?.latitude || null,
-    longitude: currentAddress?.longitude || null,
-    source: 'manual',
-    createdAt: new Date().toISOString(),
-    isDefault: addresses.length === 0
-  };
-  
-  currentAddress = address;
-  localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
-  
-  addresses.push({ ...address });
-  localStorage.setItem(ADDRESSES_KEY, JSON.stringify(addresses));
-  
-  updateAddressDisplay();
-  closeManualAddress();
-  
-  showMessage(`تم حفظ "${name}"`, 'success');
+    const name = document.getElementById('addressName').value.trim();
+    const city = document.getElementById('addressCity').value.trim();
+    const district = document.getElementById('addressDistrict').value.trim();
+    const street = document.getElementById('addressStreet').value.trim();
+    const phone = document.getElementById('addressPhone').value.trim();
+    
+    if (!name || !city || !district || !street || !phone) {
+        showMessage('يرجى ملء جميع الحقول المطلوبة (*)', 'error');
+        return;
+    }
+    
+    if (!phone.match(/^05[0-9]{8}$/)) {
+        showMessage('رقم الهاتف غير صحيح. يجب أن يكون 05xxxxxxxx', 'error');
+        return;
+    }
+    
+    const address = {
+        id: 'addr_' + Date.now(),
+        name: name,
+        city: city,
+        district: district,
+        street: street,
+        building: document.getElementById('addressBuilding').value.trim(),
+        apartment: document.getElementById('addressApartment').value.trim(),
+        postalCode: document.getElementById('addressPostalCode').value.trim(),
+        phone: phone,
+        notes: document.getElementById('addressNotes').value.trim(),
+        latitude: currentAddress?.latitude || null,
+        longitude: currentAddress?.longitude || null,
+        source: 'manual',
+        createdAt: new Date().toISOString(),
+        isDefault: addresses.length === 0
+    };
+    
+    currentAddress = address;
+    localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
+    
+    addresses.push({ ...address });
+    localStorage.setItem(ADDRESSES_KEY, JSON.stringify(addresses));
+    
+    updateAddressDisplay();
+    closeManualAddress();
+    
+    showMessage(`تم حفظ "${name}"`, 'success');
 }
 
 function editCurrentAddress() {
-  if (!currentAddress) return;
-  openManualAddress();
+    if (!currentAddress) return;
+    openManualAddress();
 }
 
 // ====== تسمية العنوان ======
 function openNameAddressModal() {
-  document.getElementById('saveAddressName').value = currentAddress?.name || 'عنوان جديد';
-  document.getElementById('nameAddressModal').style.display = 'flex';
+    document.getElementById('saveAddressName').value = currentAddress?.name || 'عنوان جديد';
+    document.getElementById('nameAddressModal').style.display = 'flex';
 }
 
 function closeNameAddress() {
-  document.getElementById('nameAddressModal').style.display = 'none';
+    document.getElementById('nameAddressModal').style.display = 'none';
 }
 
 function confirmSaveAddress() {
-  const name = document.getElementById('saveAddressName').value.trim();
-  if (!name) {
-    showMessage('يرجى إدخال اسم للعنوان', 'error');
-    return;
-  }
-  
-  if (!currentAddress) {
-    showMessage('لا يوجد عنوان لحفظه', 'error');
-    return;
-  }
-  
-  currentAddress.name = name;
-  
-  if (!currentAddress.id) {
-    currentAddress.id = 'addr_' + Date.now();
-    currentAddress.createdAt = new Date().toISOString();
-    currentAddress.isDefault = addresses.length === 0;
-  }
-  
-  const existingIndex = addresses.findIndex(addr => addr.id === currentAddress.id);
-  if (existingIndex === -1) {
-    addresses.push({ ...currentAddress });
-  } else {
-    addresses[existingIndex] = { ...currentAddress };
-  }
-  
-  localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
-  localStorage.setItem(ADDRESSES_KEY, JSON.stringify(addresses));
-  
-  updateAddressDisplay();
-  closeNameAddress();
-  
-  showMessage(`تم حفظ "${name}"`, 'success');
+    const name = document.getElementById('saveAddressName').value.trim();
+    if (!name) {
+        showMessage('يرجى إدخال اسم للعنوان', 'error');
+        return;
+    }
+    
+    if (!currentAddress) {
+        showMessage('لا يوجد عنوان لحفظه', 'error');
+        return;
+    }
+    
+    currentAddress.name = name;
+    
+    if (!currentAddress.id) {
+        currentAddress.id = 'addr_' + Date.now();
+        currentAddress.createdAt = new Date().toISOString();
+        currentAddress.isDefault = addresses.length === 0;
+    }
+    
+    const existingIndex = addresses.findIndex(addr => addr.id === currentAddress.id);
+    if (existingIndex === -1) {
+        addresses.push({ ...currentAddress });
+    } else {
+        addresses[existingIndex] = { ...currentAddress };
+    }
+    
+    localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
+    localStorage.setItem(ADDRESSES_KEY, JSON.stringify(addresses));
+    
+    updateAddressDisplay();
+    closeNameAddress();
+    
+    showMessage(`تم حفظ "${name}"`, 'success');
 }
 
 function saveAddressWithName() {
-  if (!currentAddress) {
-    showMessage('لا يوجد عنوان لحفظه', 'error');
-    return;
-  }
-  
-  openNameAddressModal();
+    if (!currentAddress) {
+        showMessage('لا يوجد عنوان لحفظه', 'error');
+        return;
+    }
+    
+    openNameAddressModal();
 }
 
 // ====== نظام السلة ======
 function renderCart() {
-  const container = document.getElementById('cartItemsContainer');
-  
-  if (cart.length === 0) {
-    container.innerHTML = `
-      <div style="text-align: center; padding: 60px 20px; color: var(--netflix-light-gray);">
-        <i class="fas fa-shopping-basket" style="font-size: 64px; margin-bottom: 20px; opacity: 0.5;"></i>
-        <h3 style="color: var(--netflix-white); margin-bottom: 15px;">سلة الشراء فارغة</h3>
-        <p style="max-width: 500px; margin: 0 auto 30px; line-height: 1.6;">
-          لم تقم بإضافة أي منتجات إلى سلة الشراء بعد.
-          تصفح المتجر وأضف المنتجات التي تريدها.
-        </p>
-        <a href="index.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(45deg, var(--netflix-red), #ff416c); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease;">
-          <i class="fas fa-store"></i> تصفح المتجر
-        </a>
-      </div>
-    `;
-    updateCartStats();
-    return;
-  }
-  
-  container.innerHTML = `
-    <h3 style="color: var(--netflix-white); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-      <i class="fas fa-box-open"></i> المنتجات في سلتك (${cart.length})
-    </h3>
-    <div class="cart-items">
-      ${cart.map((item, index) => {
-        const isDigital = isDigitalProduct(item);
-        const price = parseProductPrice(item.price);
-        const total = price * (item.quantity || 1);
-        
-        return `
-          <div class="cart-item">
-            <div style="position: relative;">
-              <img src="${item.image || 'https://via.placeholder.com/300x180/222/fff?text=No+Image'}" 
-                   alt="${item.title}" 
-                   class="cart-item-image">
-              <div class="product-badge">
-                ${isDigital ? 'رقمي' : 'ورقي'}
-              </div>
+    const container = document.getElementById('cartItemsContainer');
+    if (!container) return;
+    
+    // تحميل السلة من localStorage
+    cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+    
+    if (cart.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 60px 20px; color: var(--netflix-light-gray);">
+                <i class="fas fa-shopping-basket" style="font-size: 64px; margin-bottom: 20px; opacity: 0.5;"></i>
+                <h3 style="color: var(--netflix-white); margin-bottom: 15px;">سلة الشراء فارغة</h3>
+                <p style="max-width: 500px; margin: 0 auto 30px; line-height: 1.6;">
+                    لم تقم بإضافة أي منتجات إلى سلة الشراء بعد.
+                    تصفح المتجر وأضف المنتجات التي تريدها.
+                </p>
+                <a href="index.html" style="display: inline-block; padding: 12px 30px; background: linear-gradient(45deg, var(--netflix-red), #ff416c); color: white; text-decoration: none; border-radius: 25px; font-weight: 600; transition: all 0.3s ease;">
+                    <i class="fas fa-store"></i> تصفح المتجر
+                </a>
             </div>
-            <div class="cart-item-content">
-              <div class="cart-item-header">
-                <div class="cart-item-title">${item.title || 'منتج بدون عنوان'}</div>
-                <div class="cart-item-type">
-                  ${item.category || 'عام'}
-                </div>
-              </div>
-              
-              <div class="cart-item-details">
-                ${item.description ? `
-                <div class="cart-item-detail">
-                  <i class="fas fa-info-circle"></i>
-                  <span>${item.description.substring(0, 50)}${item.description.length > 50 ? '...' : ''}</span>
-                </div>
-                ` : ''}
-                
-                ${item.rating ? `
-                <div class="cart-item-detail">
-                  <i class="fas fa-star"></i>
-                  <span>${item.rating}</span>
-                </div>
-                ` : ''}
-              </div>
-              
-              <div class="quantity-control">
-                <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">
-                  <i class="fas fa-minus"></i>
-                </button>
-                <span class="quantity-display">${item.quantity || 1}</span>
-                <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">
-                  <i class="fas fa-plus"></i>
-                </button>
-              </div>
-              
-              <div class="cart-item-footer">
-                <div class="item-total-price">
-                  ${formatPrice(total)}
-                </div>
-                <div class="item-actions">
-                  <button class="btn btn-secondary" onclick="saveForLater(${index})" style="padding: 8px 15px; font-size: 0.9em;">
-                    <i class="far fa-bookmark"></i> حفظ
-                  </button>
-                  <button class="btn btn-secondary" onclick="removeFromCart(${index})" style="padding: 8px 15px; font-size: 0.9em; background: rgba(244, 67, 54, 0.2); border-color: rgba(244, 67, 54, 0.4);">
-                    <i class="fas fa-trash"></i> حذف
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
         `;
-      }).join('')}
-    </div>
-  `;
-  
-  updateCartStats();
+        updateCartStats();
+        return;
+    }
+    
+    container.innerHTML = `
+        <h3 style="color: var(--netflix-white); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-box-open"></i> المنتجات في سلتك (${cart.length})
+        </h3>
+        <div class="cart-items">
+            ${cart.map((item, index) => {
+                const isDigital = isDigitalProduct(item);
+                const price = parseProductPrice(item.price);
+                const total = price * (item.quantity || 1);
+                
+                return `
+                    <div class="cart-item">
+                        <div style="position: relative;">
+                            <img src="${item.image || 'https://via.placeholder.com/300x180/222/fff?text=No+Image'}" 
+                                 alt="${item.title || 'منتج'}" 
+                                 class="cart-item-image"
+                                 onerror="this.src='https://via.placeholder.com/300x180/222/fff?text=No+Image'">
+                            <div class="product-badge">
+                                ${isDigital ? 'رقمي' : 'ورقي'}
+                            </div>
+                        </div>
+                        <div class="cart-item-content">
+                            <div class="cart-item-header">
+                                <div class="cart-item-title">${item.title || 'منتج بدون عنوان'}</div>
+                                <div class="cart-item-type">
+                                    ${item.category || 'عام'}
+                                </div>
+                            </div>
+                            
+                            <div class="cart-item-details">
+                                ${item.description ? `
+                                <div class="cart-item-detail">
+                                    <i class="fas fa-info-circle"></i>
+                                    <span>${item.description.substring(0, 50)}${item.description.length > 50 ? '...' : ''}</span>
+                                </div>
+                                ` : ''}
+                                
+                                ${item.rating ? `
+                                <div class="cart-item-detail">
+                                    <i class="fas fa-star"></i>
+                                    <span>${item.rating}</span>
+                                </div>
+                                ` : ''}
+                            </div>
+                            
+                            <div class="quantity-control">
+                                <button class="quantity-btn" onclick="updateQuantity(${index}, -1)">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <span class="quantity-display">${item.quantity || 1}</span>
+                                <button class="quantity-btn" onclick="updateQuantity(${index}, 1)">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="cart-item-footer">
+                                <div class="item-total-price">
+                                    ${formatPrice(total)}
+                                </div>
+                                <div class="item-actions">
+                                    <button class="btn btn-secondary" onclick="saveForLater(${index})" style="padding: 8px 15px; font-size: 0.9em;">
+                                        <i class="far fa-bookmark"></i> حفظ
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="removeFromCart(${index})" style="padding: 8px 15px; font-size: 0.9em; background: rgba(244, 67, 54, 0.2); border-color: rgba(244, 67, 54, 0.4);">
+                                        <i class="fas fa-trash"></i> حذف
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+    
+    updateCartStats();
 }
 
 function updateQuantity(index, change) {
-  if (!cart[index]) return;
-  
-  const newQuantity = (cart[index].quantity || 1) + change;
-  
-  if (newQuantity < 1) {
-    showMessage('الكمية لا يمكن أن تكون أقل من 1', 'error');
-    return;
-  }
-  
-  cart[index].quantity = newQuantity;
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  renderCart();
-  
-  const itemName = cart[index].title || 'المنتج';
-  showMessage(`تم ${change > 0 ? 'زيادة' : 'تقليل'} كمية "${itemName}" إلى ${newQuantity}`, 'success');
+    if (!cart[index]) return;
+    
+    const newQuantity = (cart[index].quantity || 1) + change;
+    
+    if (newQuantity < 1) {
+        showMessage('الكمية لا يمكن أن تكون أقل من 1', 'error');
+        return;
+    }
+    
+    cart[index].quantity = newQuantity;
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    renderCart();
+    
+    const itemName = cart[index].title || 'المنتج';
+    showMessage(`تم ${change > 0 ? 'زيادة' : 'تقليل'} كمية "${itemName}" إلى ${newQuantity}`, 'success');
 }
 
 function removeFromCart(index) {
-  if (!cart[index]) return;
-  
-  const itemName = cart[index].title || 'المنتج';
-  
-  if (confirm(`هل تريد حذف "${itemName}" من السلة؟`)) {
-    cart.splice(index, 1);
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
-    renderCart();
-    showMessage(`تم حذف "${itemName}" من السلة`, 'warning');
-  }
+    if (!cart[index]) return;
+    
+    const itemName = cart[index].title || 'المنتج';
+    
+    if (confirm(`هل تريد حذف "${itemName}" من السلة؟`)) {
+        cart.splice(index, 1);
+        localStorage.setItem(CART_KEY, JSON.stringify(cart));
+        renderCart();
+        showMessage(`تم حذف "${itemName}" من السلة`, 'warning');
+    }
 }
 
 function saveForLater(index) {
-  const item = cart[index];
-  let savedItems = JSON.parse(localStorage.getItem('savedItems') || '[]');
-  
-  if (savedItems.find(saved => saved.id === item.id)) {
-    showMessage('هذا المنتج محفوظ بالفعل', 'warning');
-    return;
-  }
-  
-  savedItems.push(item);
-  localStorage.setItem('savedItems', JSON.stringify(savedItems));
-  
-  cart.splice(index, 1);
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  
-  renderCart();
-  showMessage(`تم حفظ "${item.title}" للمستقبل`, 'success');
+    const item = cart[index];
+    let savedItems = JSON.parse(localStorage.getItem('savedItems') || '[]');
+    
+    if (savedItems.find(saved => saved.id === item.id)) {
+        showMessage('هذا المنتج محفوظ بالفعل', 'warning');
+        return;
+    }
+    
+    savedItems.push(item);
+    localStorage.setItem('savedItems', JSON.stringify(savedItems));
+    
+    cart.splice(index, 1);
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    
+    renderCart();
+    showMessage(`تم حفظ "${item.title}" للمستقبل`, 'success');
 }
 
-// ====== دالة تحديث إحصائيات السلة المعدلة ======
-function updateCartStats() {
-  const totalItems = cart.length;
-  const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-  const subtotal = cart.reduce((sum, item) => sum + (parseProductPrice(item.price) * (item.quantity || 1)), 0);
-  
-  // حساب الخصم حسب نوعه
-  let discountAmount = 0;
-  if (currentDiscount) {
-    if (currentDiscount.type === 'percentage') {
-      // خصم نسبة مئوية
-      discountAmount = subtotal * (currentDiscount.percentage / 100);
-    } else if (currentDiscount.type === 'fixed') {
-      // خصم مبلغ ثابت (لا يمكن أن يتجاوز المجموع الفرعي)
-      discountAmount = Math.min(currentDiscount.amount, subtotal);
-    } else if (currentDiscount.type === 'balance') {
-      // رصيد إضافي (يضاف للرصيد وليس خصم)
-      discountAmount = 0;
-    }
-  }
-  
-  // حساب رسوم الشحن للمنتجات الورقية
-  const hasPhysicalProducts = cart.some(item => !isDigitalProduct(item));
-  let shippingFee = 0;
-  
-  // إذا كان الخصم شحن مجاني، لا تضف رسوم الشحن
-  if (hasPhysicalProducts) {
-    if (currentDiscount && currentDiscount.type === 'free_shipping') {
-      shippingFee = 0;
-    } else {
-      shippingFee = 15.00; // 15 ريال للمنتجات الورقية
-    }
-  }
-  
-  const finalTotal = Math.max(0, subtotal - discountAmount + shippingFee);
-  
-  // تحديث الإحصائيات
-  totalItemsEl.textContent = totalItems;
-  totalQuantityEl.textContent = totalQuantity;
-  totalAmountStatsEl.textContent = formatPrice(subtotal);
-  savingsEl.textContent = formatPrice(discountAmount);
-  
-  // تحديث الفاتورة
-  subtotalEl.textContent = formatPrice(subtotal);
-  discountAmountEl.textContent = discountAmount > 0 ? `-${formatPrice(discountAmount)}` : formatPrice(0);
-  shippingFeeEl.textContent = formatPrice(shippingFee);
-  finalTotalEl.textContent = formatPrice(finalTotal);
-  
-  // تحديث الفوتر
-  totalAmountEl.textContent = formatPrice(finalTotal);
-  itemsCountEl.textContent = `${totalQuantity} منتج في السلة`;
-  
-  // تحديث الرصيد
-  globalBalanceEl.textContent = balance.toFixed(2);
-  
-  // تمكين/تعطيل زر الدفع
-  checkRequirements();
-  
-  // تحديث معلومات الخصم
-  if (!currentDiscount) {
-    discountCodeInput.style.borderColor = 'rgba(255,255,255,0.2)';
-    discountCodeInput.style.boxShadow = 'none';
-    discountCodeInput.value = '';
-    if (discountInfo) {
-      discountInfo.innerHTML = `
-        <i class="fas fa-info-circle"></i>
-        يمكنك استخدام كود خصم واحد لكل عملية شراء
-      `;
-    }
-    removeDiscountBtn.style.display = 'none';
-  }
-  
-  return { subtotal, discountAmount, shippingFee, finalTotal, hasPhysicalProducts };
-}
-
-// ====== دالة تطبيق الخصم المعدلة ======
+// ====== الخصومات ======
 function applyDiscount() {
-  const code = discountCodeInput.value.trim().toUpperCase();
-  
-  if (!code) {
-    showMessage('الرجاء إدخال كود الخصم', 'error');
-    return;
-  }
-  
-  if (cart.length === 0) {
-    showMessage('السلة فارغة! أضف منتجات أولاً', 'error');
-    return;
-  }
-  
-  showMessage('جاري التحقق من كود الخصم...', 'info', 2000);
-  
-  // تحميل الخصومات من نفس المفتاح المستخدم في صفحة إدارة الخصومات
-  const allDiscounts = JSON.parse(localStorage.getItem('admin_discounts') || '[]');
-  
-  // البحث عن الخصم
-  const discount = allDiscounts.find(d => d.code === code && d.isActive);
-  
-  if (!discount) {
-    showMessage('كود الخصم غير صالح أو غير مفعل', 'error');
-    return;
-  }
-  
-  // التحقق من تاريخ الانتهاء
-  if (discount.expiryDate && new Date(discount.expiryDate) < new Date()) {
-    showMessage('عذراً، كود الخصم منتهي الصلاحية', 'error');
-    return;
-  }
-  
-  // التحقق من تاريخ البدء
-  if (discount.startDate && new Date(discount.startDate) > new Date()) {
-    showMessage('عذراً، كود الخصم لم يبدأ بعد', 'error');
-    return;
-  }
-  
-  // حساب المجموع الفرعي
-  const subtotal = cart.reduce((sum, item) => sum + (parseProductPrice(item.price) * (item.quantity || 1)), 0);
-  
-  // التحقق من الحد الأدنى للشراء
-  if (discount.minPurchase && subtotal < discount.minPurchase) {
-    showMessage(`الحد الأدنى للشراء لتطبيق هذا الخصم هو ${formatPrice(discount.minPurchase)}`, 'error');
-    return;
-  }
-  
-  // التحقق من عدد مرات الاستخدام
-  if (discount.maxUses && discount.usedCount >= discount.maxUses) {
-    showMessage('عذراً، تم استخدام كود الخصم لأقصى عدد من المرات', 'error');
-    return;
-  }
-  
-  // التحقق من المستخدمين المحددين
-  if (discount.targetType === 'specific' && discount.targetUsers && discount.targetUsers.length > 0) {
-    if (!discount.targetUsers.includes(loggedInUser)) {
-      showMessage('عذراً، كود الخصم غير متاح لحسابك', 'error');
-      return;
-    }
-  }
-  
-  // التحقق من نطاق المنتجات
-  if (discount.productScope && discount.productScope !== 'all') {
-    let applicable = true;
+    const discountCodeInput = document.getElementById('discountCode');
+    const code = discountCodeInput.value.trim().toUpperCase();
     
-    if (discount.productScope === 'digital') {
-      applicable = cart.every(item => isDigitalProduct(item));
-    } else if (discount.productScope === 'physical') {
-      applicable = cart.every(item => !isDigitalProduct(item));
+    if (!code) {
+        showMessage('الرجاء إدخال كود الخصم', 'error');
+        return;
     }
     
-    if (!applicable) {
-      showMessage('كود الخصم لا ينطبق على المنتجات في سلتك', 'error');
-      return;
+    if (cart.length === 0) {
+        showMessage('السلة فارغة! أضف منتجات أولاً', 'error');
+        return;
     }
-  }
-  
-  // تطبيق الخصم
-  currentDiscount = {
-    code: discount.code,
-    type: discount.type,
-    percentage: discount.percentage || 0,
-    amount: discount.amount || 0,
-    balanceAmount: discount.balanceAmount || 0,
-    minPurchase: discount.minPurchase || 0
-  };
-  
-  discountCode = code;
-  
-  // تحديث عدد مرات الاستخدام
-  discount.usedCount = (discount.usedCount || 0) + 1;
-  localStorage.setItem('admin_discounts', JSON.stringify(allDiscounts));
-  
-  // تحديث عرض السلة
-  updateCartStats();
-  
-  // رسالة نجاح مع تفاصيل الخصم
-  let successMsg = `تم تطبيق الخصم بنجاح! `;
-  if (discount.type === 'percentage') {
-    successMsg += `(خصم ${discount.percentage}%)`;
-  } else if (discount.type === 'fixed') {
-    successMsg += `(خصم ${formatPrice(discount.amount)})`;
-  } else if (discount.type === 'free_shipping') {
-    successMsg += `(شحن مجاني)`;
-  } else if (discount.type === 'balance') {
-    successMsg += `(رصيد إضافي ${formatPrice(discount.balanceAmount)})`;
-  }
-  
-  showMessage(successMsg, 'success');
-  
-  // تغيير لون حقل الخصم للإشارة للنجاح
-  discountCodeInput.style.borderColor = 'var(--success-green)';
-  discountCodeInput.style.boxShadow = '0 0 0 3px rgba(76, 175, 80, 0.1)';
-  
-  // إظهار زر إزالة الخصم
-  removeDiscountBtn.style.display = 'flex';
-  
-  // تحديث معلومات الخصم
-  if (discountInfo) {
-    discountInfo.innerHTML = `
-      <i class="fas fa-check-circle" style="color: var(--success-green);"></i>
-      <span style="color: var(--success-green);">الخصم النشط: <strong>${discount.code}</strong> - ${successMsg}</span>
-    `;
-  }
+    
+    showMessage('جاري التحقق من كود الخصم...', 'info', 2000);
+    
+    const allDiscounts = JSON.parse(localStorage.getItem('admin_discounts') || '[]');
+    const discount = allDiscounts.find(d => d.code === code && d.isActive);
+    
+    if (!discount) {
+        showMessage('كود الخصم غير صالح أو غير مفعل', 'error');
+        return;
+    }
+    
+    if (discount.expiryDate && new Date(discount.expiryDate) < new Date()) {
+        showMessage('عذراً، كود الخصم منتهي الصلاحية', 'error');
+        return;
+    }
+    
+    if (discount.startDate && new Date(discount.startDate) > new Date()) {
+        showMessage('عذراً، كود الخصم لم يبدأ بعد', 'error');
+        return;
+    }
+    
+    const subtotal = cart.reduce((sum, item) => sum + (parseProductPrice(item.price) * (item.quantity || 1)), 0);
+    
+    if (discount.minPurchase && subtotal < discount.minPurchase) {
+        showMessage(`الحد الأدنى للشراء لتطبيق هذا الخصم هو ${formatPrice(discount.minPurchase)}`, 'error');
+        return;
+    }
+    
+    if (discount.maxUses && discount.usedCount >= discount.maxUses) {
+        showMessage('عذراً، تم استخدام كود الخصم لأقصى عدد من المرات', 'error');
+        return;
+    }
+    
+    if (discount.targetType === 'specific' && discount.targetUsers && discount.targetUsers.length > 0) {
+        if (!discount.targetUsers.includes(loggedInUser)) {
+            showMessage('عذراً، كود الخصم غير متاح لحسابك', 'error');
+            return;
+        }
+    }
+    
+    if (discount.productScope && discount.productScope !== 'all') {
+        let applicable = true;
+        
+        if (discount.productScope === 'digital') {
+            applicable = cart.every(item => isDigitalProduct(item));
+        } else if (discount.productScope === 'physical') {
+            applicable = cart.every(item => !isDigitalProduct(item));
+        }
+        
+        if (!applicable) {
+            showMessage('كود الخصم لا ينطبق على المنتجات في سلتك', 'error');
+            return;
+        }
+    }
+    
+    currentDiscount = {
+        code: discount.code,
+        type: discount.type,
+        percentage: discount.percentage || 0,
+        amount: discount.amount || 0,
+        balanceAmount: discount.balanceAmount || 0,
+        minPurchase: discount.minPurchase || 0
+    };
+    
+    discountCode = code;
+    
+    discount.usedCount = (discount.usedCount || 0) + 1;
+    localStorage.setItem('admin_discounts', JSON.stringify(allDiscounts));
+    
+    updateCartStats();
+    
+    let successMsg = `تم تطبيق الخصم بنجاح! `;
+    if (discount.type === 'percentage') {
+        successMsg += `(خصم ${discount.percentage}%)`;
+    } else if (discount.type === 'fixed') {
+        successMsg += `(خصم ${formatPrice(discount.amount)})`;
+    } else if (discount.type === 'free_shipping') {
+        successMsg += `(شحن مجاني)`;
+    } else if (discount.type === 'balance') {
+        successMsg += `(رصيد إضافي ${formatPrice(discount.balanceAmount)})`;
+    }
+    
+    showMessage(successMsg, 'success');
+    
+    discountCodeInput.style.borderColor = 'var(--success-green)';
+    discountCodeInput.style.boxShadow = '0 0 0 3px rgba(76, 175, 80, 0.1)';
+    
+    const removeDiscountBtn = document.getElementById('removeDiscountBtn');
+    if (removeDiscountBtn) removeDiscountBtn.style.display = 'flex';
+    
+    const discountInfo = document.getElementById('discountInfo');
+    if (discountInfo) {
+        discountInfo.innerHTML = `
+            <i class="fas fa-check-circle" style="color: var(--success-green);"></i>
+            <span style="color: var(--success-green);">الخصم النشط: <strong>${discount.code}</strong> - ${successMsg}</span>
+        `;
+    }
 }
 
-// ====== دالة إزالة الخصم ======
 function removeDiscount() {
-  currentDiscount = null;
-  discountCode = '';
-  discountCodeInput.value = '';
-  
-  // إعادة تعيين لون الحقل
-  discountCodeInput.style.borderColor = 'rgba(255,255,255,0.2)';
-  discountCodeInput.style.boxShadow = 'none';
-  
-  // إخفاء زر الإزالة
-  removeDiscountBtn.style.display = 'none';
-  
-  // إعادة تعيين معلومات الخصم
-  if (discountInfo) {
-    discountInfo.innerHTML = `
-      <i class="fas fa-info-circle"></i>
-      يمكنك استخدام كود خصم واحد لكل عملية شراء
-    `;
-  }
-  
-  updateCartStats();
-  showMessage('تم إزالة الخصم', 'warning');
+    currentDiscount = null;
+    discountCode = '';
+    
+    const discountCodeInput = document.getElementById('discountCode');
+    if (discountCodeInput) {
+        discountCodeInput.value = '';
+        discountCodeInput.style.borderColor = 'rgba(255,255,255,0.2)';
+        discountCodeInput.style.boxShadow = 'none';
+    }
+    
+    const removeDiscountBtn = document.getElementById('removeDiscountBtn');
+    if (removeDiscountBtn) removeDiscountBtn.style.display = 'none';
+    
+    const discountInfo = document.getElementById('discountInfo');
+    if (discountInfo) {
+        discountInfo.innerHTML = `
+            <i class="fas fa-info-circle"></i>
+            يمكنك استخدام كود خصم واحد لكل عملية شراء
+        `;
+    }
+    
+    updateCartStats();
+    showMessage('تم إزالة الخصم', 'warning');
 }
 
 function openDiscountsPage() {
-  window.location.href = 'discounts.html';
+    window.location.href = 'discounts.html';
 }
 
-// ====== عملية الدفع ======
-payBtn.addEventListener('click', () => {
-  const stats = updateCartStats();
-  
-  if (cart.length === 0) {
-    showMessage('السلة فارغة! أضف منتجات أولاً', 'error');
-    return;
-  }
-  
-  if (balance < stats.finalTotal) {
-    showMessage(`رصيدك غير كافٍ! المطلوب: ${formatPrice(stats.finalTotal)}`, 'error');
-    return;
-  }
-  
-  if (stats.hasPhysicalProducts && !currentAddress) {
-    showMessage('يرجى تحديد عنوان التوصيل للمنتجات الورقية', 'error');
-    return;
-  }
-  
-  // التحقق من البطاقات
-  if (cards.length === 0) {
-    if (confirm('لا توجد بطاقات في محفظتك. هل تريد إضافة بطاقة أولاً؟')) {
-      window.location.href = 'cards.html';
-      return;
-    }
-    return;
-  }
-  
-  // عرض نافذة اختيار البطاقة
-  showCardSelection();
-});
+// ====== نظام البطاقات والدفع ======
 
+// دالة عرض البطاقات مع التحقق من الرصيد
 function showCardSelection() {
-  const container = document.getElementById('cardsContainer');
-  const stats = updateCartStats();
-  
-  if (cards.length === 0) {
+    const container = document.getElementById('cardsContainer');
+    if (!container) return;
+    
+    const stats = calculateCartStats();
+    
+    // تحديث قائمة البطاقات من localStorage
+    cards = JSON.parse(localStorage.getItem(CARDS_KEY)) || [];
+    
+    // تحديث الرصيد الكلي
+    updateBalanceFromWallet();
+    
+    if (cards.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 30px 20px; color: var(--netflix-light-gray);">
+                <i class="fas fa-credit-card" style="font-size: 48px; margin-bottom: 15px;"></i>
+                <p style="margin-bottom: 15px;">لا توجد بطاقات في محفظتك</p>
+                <p style="margin: 15px 0; color: var(--netflix-red); font-weight: 600;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    إجمالي المطلوب: ${formatPrice(stats.finalTotal)}
+                </p>
+                <button class="btn btn-primary" onclick="window.location.href='cards.html'" style="margin-top: 15px;">
+                    <i class="fas fa-plus"></i> إضافة بطاقة جديدة
+                </button>
+            </div>
+        `;
+        document.getElementById('cardModal').style.display = 'flex';
+        return;
+    }
+    
+    // عرض البطاقات مع حالة الرصيد لكل منها
     container.innerHTML = `
-      <div style="text-align: center; padding: 30px 20px; color: var(--netflix-light-gray);">
-        <i class="fas fa-credit-card" style="font-size: 48px; margin-bottom: 15px;"></i>
-        <p style="margin-bottom: 15px;">لا توجد بطاقات في محفظتك</p>
-        <p style="margin: 15px 0; color: var(--netflix-red); font-weight: 600;">
-          <i class="fas fa-exclamation-triangle"></i>
-          إجمالي المطلوب: ${formatPrice(stats.finalTotal)}
-        </p>
-      </div>
-    `;
-  } else {
-    container.innerHTML = `
-      <div style="background: rgba(229, 9, 20, 0.1); border: 1px solid rgba(229, 9, 20, 0.3); border-radius: 10px; padding: 15px; margin-bottom: 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-          <span style="font-weight: 600; color: white;">إجمالي المبلغ:</span>
-          <span style="font-weight: 700; color: var(--netflix-red); font-size: 1.3em;">${formatPrice(stats.finalTotal)}</span>
-        </div>
-        <div style="color: var(--netflix-light-gray); font-size: 0.9em;">
-          <i class="fas fa-info-circle"></i>
-          اختر بطاقة للدفع من القائمة أدناه
-        </div>
-      </div>
-      ${cards.map((card, index) => {
-        const hasEnoughBalance = card.balance >= stats.finalTotal;
-        return `
-          <div class="card-option" onclick="${hasEnoughBalance ? `selectCard(${index})` : ''}" 
-               style="background: rgba(255,255,255,0.05); border-radius: 10px; padding: 15px; margin-bottom: 10px; cursor: ${hasEnoughBalance ? 'pointer' : 'not-allowed'}; opacity: ${hasEnoughBalance ? '1' : '0.7'}; border: 1px solid rgba(255,255,255,0.1); transition: all 0.3s ease;">
+        <div style="background: rgba(229, 9, 20, 0.1); border: 1px solid rgba(229, 9, 20, 0.3); border-radius: 10px; padding: 15px; margin-bottom: 20px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-credit-card" style="color: var(--netflix-red);"></i>
-                <strong style="color: var(--netflix-white);">${card.name || 'بطاقة'}</strong>
-                ${card.isPrimary ? '<span style="background: var(--netflix-red); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">رئيسية</span>' : ''}
-              </div>
-              <div style="color: ${hasEnoughBalance ? 'var(--success-green)' : 'var(--error-red)'};">
-                ${hasEnoughBalance ? '🟢' : '🔴'}
-              </div>
+                <span style="font-weight: 600; color: white;">إجمالي المبلغ المطلوب:</span>
+                <span style="font-weight: 700; color: var(--netflix-red); font-size: 1.3em;">${formatPrice(stats.finalTotal)}</span>
             </div>
-            <div style="color: var(--netflix-light-gray); font-size: 0.9em; margin-bottom: 8px;">
-              ${card.number || '**** **** **** ****'}
-            </div>
-            <div style="color: var(--netflix-light-gray); font-size: 0.9em; margin-bottom: 8px;">
-              انتهاء الصلاحية: ${card.expiry || 'MM/YY'}
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                <span style="color: var(--netflix-light-gray); font-size: 0.9em;">
+                    <i class="fas fa-wallet"></i> رصيد المحفظة الكلي:
+                </span>
+                <span style="font-weight: 700; color: ${balance >= stats.finalTotal ? 'var(--success-green)' : 'var(--error-red)'}; font-size: 1.1em;">
+                    ${formatPrice(balance)}
+                </span>
             </div>
             <div style="color: var(--netflix-light-gray); font-size: 0.9em;">
-              الرصيد: <strong style="color: var(--netflix-white);">${formatPrice(card.balance)}</strong>
+                <i class="fas fa-info-circle"></i>
+                اختر بطاقة للدفع (يجب أن يكون رصيدها كافياً)
             </div>
-            ${!hasEnoughBalance ? `
-            <div style="color: var(--error-red); font-size: 0.85em; margin-top: 10px; padding: 8px; background: rgba(244, 67, 54, 0.1); border-radius: 5px;">
-              <i class="fas fa-exclamation-triangle"></i>
-              رصيد غير كافٍ (المطلوب: ${formatPrice(stats.finalTotal)})
-            </div>
-            ` : ''}
-          </div>
-        `;
-      }).join('')}
+        </div>
+        
+        <div style="max-height: 400px; overflow-y: auto; padding: 5px;">
+            ${cards.map((card, index) => {
+                const hasEnoughBalance = card.balance >= stats.finalTotal;
+                return `
+                    <div class="card-option" onclick="${hasEnoughBalance ? `selectCardForPayment(${index})` : ''}" 
+                         style="
+                           background: ${hasEnoughBalance ? 'rgba(255,255,255,0.05)' : 'rgba(255,0,0,0.05)'}; 
+                           border-radius: 10px; 
+                           padding: 15px; 
+                           margin-bottom: 10px; 
+                           cursor: ${hasEnoughBalance ? 'pointer' : 'not-allowed'}; 
+                           opacity: ${hasEnoughBalance ? '1' : '0.6'}; 
+                           border: 2px solid ${hasEnoughBalance ? 'rgba(76, 175, 80, 0.3)' : 'rgba(244, 67, 54, 0.3)'};
+                           transition: all 0.3s ease;
+                         ">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-credit-card" style="color: ${hasEnoughBalance ? 'var(--netflix-red)' : 'var(--netflix-light-gray)'};"></i>
+                                <strong style="color: var(--netflix-white);">${card.name || 'بطاقة'}</strong>
+                                ${card.isPrimary ? '<span style="background: var(--netflix-red); color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.8em;">رئيسية</span>' : ''}
+                            </div>
+                            <div style="color: ${hasEnoughBalance ? 'var(--success-green)' : 'var(--error-red)'}; font-weight: 600; font-size: 0.9em;">
+                                ${hasEnoughBalance ? '✅ رصيد كافٍ' : '❌ رصيد غير كافٍ'}
+                            </div>
+                        </div>
+                        
+                        <div style="color: var(--netflix-light-gray); font-size: 0.9em; margin-bottom: 5px;">
+                            <i class="fas fa-credit-card"></i> ${card.number || '**** **** **** ****'}
+                        </div>
+                        
+                        <div style="color: var(--netflix-light-gray); font-size: 0.9em; margin-bottom: 5px;">
+                            <i class="fas fa-calendar-alt"></i> انتهاء الصلاحية: ${card.expiry || 'MM/YY'}
+                        </div>
+                        
+                        <div style="color: var(--netflix-light-gray); font-size: 0.9em; margin-top: 5px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.1);">
+                            <i class="fas fa-wallet"></i> الرصيد المتاح: 
+                            <strong style="color: ${hasEnoughBalance ? 'var(--success-green)' : 'var(--error-red)'};">
+                                ${formatPrice(card.balance)}
+                            </strong>
+                        </div>
+                        
+                        ${!hasEnoughBalance ? `
+                        <div style="color: var(--error-red); font-size: 0.85em; margin-top: 10px; padding: 8px; background: rgba(244, 67, 54, 0.1); border-radius: 5px;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            عذراً، رصيد البطاقة غير كافٍ (المطلوب: ${formatPrice(stats.finalTotal)})
+                            <br>
+                            <span style="font-size: 0.85em;">الفرق: ${formatPrice(stats.finalTotal - card.balance)}</span>
+                        </div>
+                        ` : `
+                        <div style="color: var(--success-green); font-size: 0.85em; margin-top: 10px; padding: 8px; background: rgba(76, 175, 80, 0.1); border-radius: 5px;">
+                            <i class="fas fa-check-circle"></i>
+                            يمكن الدفع من هذه البطاقة (الرصيد كافٍ)
+                        </div>
+                        `}
+                    </div>
+                `;
+            }).join('')}
+        </div>
+        
+        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="btn btn-secondary" onclick="closeCardModal()" style="flex: 1;">
+                <i class="fas fa-times"></i> إلغاء
+            </button>
+            <button class="btn btn-primary" onclick="window.location.href='cards.html'" style="flex: 2;">
+                <i class="fas fa-plus"></i> إضافة بطاقة جديدة
+            </button>
+        </div>
     `;
-  }
-  
-  document.getElementById('cardModal').style.display = 'flex';
-}
-
-function selectCard(cardIndex) {
-  const selectedCard = cards[cardIndex];
-  const stats = updateCartStats();
-  
-  if (selectedCard.balance < stats.finalTotal) {
-    showMessage('رصيد البطاقة غير كافٍ', 'error');
-    return;
-  }
-  
-  closeCardModal();
-  document.getElementById('policyModal').style.display = 'flex';
-  
-  // تخزين معلومات الدفع
-  window.selectedCardIndex = cardIndex;
-}
-
-function closeCardModal() {
-  document.getElementById('cardModal').style.display = 'none';
-}
-
-function closePolicyModal() {
-  document.getElementById('policyModal').style.display = 'none';
-}
-
-function confirmPurchase() {
-  const cardIndex = window.selectedCardIndex;
-  if (cardIndex === undefined) {
-    showMessage('لم يتم اختيار بطاقة', 'error');
-    return;
-  }
-  
-  const selectedCard = cards[cardIndex];
-  const stats = updateCartStats();
-  
-  if (selectedCard.balance < stats.finalTotal) {
-    showMessage('رصيد البطاقة غير كافٍ', 'error');
-    return;
-  }
-  
-  // خصم المبلغ من البطاقة
-  selectedCard.balance -= stats.finalTotal;
-  cards[cardIndex] = selectedCard;
-  localStorage.setItem(CARDS_KEY, JSON.stringify(cards));
-  
-  // تحديث الرصيد الكلي
-  balance = cards.reduce((sum, card) => sum + card.balance, 0);
-  localStorage.setItem(BALANCE_KEY, balance.toFixed(2));
-  
-  // معالجة المنتجات
-  const digitalProducts = [];
-  const physicalProducts = [];
-  const today = new Date().toLocaleString('ar-SA');
-  const transactionId = 'TXN' + Date.now();
-  
-  cart.forEach(item => {
-    const isDigital = isDigitalProduct(item);
-    const price = parseProductPrice(item.price);
     
-    for (let i = 0; i < (item.quantity || 1); i++) {
-      const productData = {
-        id: item.id,
-        title: item.title,
-        price: price,
-        image: item.image,
-        category: item.category,
-        type: item.type,
-        format: item.format,
-        purchaseDate: today,
-        transactionId: transactionId,
-        paymentMethod: `بطاقة ${selectedCard.number || '****'}`,
-        discountApplied: currentDiscount ? `${currentDiscount.code} (${currentDiscount.type === 'percentage' ? currentDiscount.percentage + '%' : formatPrice(currentDiscount.amount)})` : 'لا يوجد',
-        finalPrice: price
-      };
-      
-      if (isDigital) {
-        productData.downloadLink = `download/${item.id}.zip`;
-        digitalProducts.push(productData);
-      } else {
-        productData.shippingAddress = currentAddress;
-        productData.trackingNumber = generateTrackingNumber();
-        productData.estimatedDelivery = getEstimatedDeliveryDate();
-        physicalProducts.push(productData);
-      }
+    document.getElementById('cardModal').style.display = 'flex';
+}
+
+// اختيار البطاقة للدفع
+function selectCardForPayment(cardIndex) {
+    const selectedCard = cards[cardIndex];
+    const stats = calculateCartStats();
+    
+    // التحقق من الرصيد مرة أخرى للتأكد
+    if (selectedCard.balance < stats.finalTotal) {
+        showMessage('رصيد البطاقة غير كافٍ!', 'error');
+        return;
     }
-  });
-  
-  // حفظ المنتجات الرقمية في المكتبة
-  if (digitalProducts.length > 0) {
-    library = [...library, ...digitalProducts];
-    localStorage.setItem(LIBRARY_KEY, JSON.stringify(library));
-  }
-  
-  // حفظ المنتجات الورقية في الطلبات
-  if (physicalProducts.length > 0) {
-    const order = {
-      orderId: transactionId,
-      orderDate: today,
-      totalAmount: stats.finalTotal,
-      products: physicalProducts,
-      shippingAddress: currentAddress,
-      paymentMethod: `بطاقة ${selectedCard.number || '****'}`,
-      status: 'قيد التجهيز',
-      trackingNumber: generateTrackingNumber()
-    };
     
-    orders.push(order);
-    localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
-  }
-  
-  // إعادة تعيين السلة
-  cart = [];
-  currentDiscount = null;
-  discountCode = '';
-  discountCodeInput.value = '';
-  removeDiscountBtn.style.display = 'none';
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  
-  // تحديث الواجهة
-  renderCart();
-  updateAddressDisplay();
-  
-  // رسالة النجاح
-  let successMessage = `تم الدفع بنجاح! المبلغ: ${formatPrice(stats.finalTotal)}<br>`;
-  
-  if (digitalProducts.length > 0 && physicalProducts.length > 0) {
-    successMessage += `تمت إضافة ${digitalProducts.length} منتج رقمي إلى المكتبة<br>`;
-    successMessage += `وتم إنشاء طلب لـ ${physicalProducts.length} منتج ورقي`;
+    // تخزين البطاقة المختارة
+    selectedCardIndex = cardIndex;
+    selectedCardForPayment = selectedCard;
+    
+    // إغلاق نافذة البطاقات
+    closeCardModal();
+    
+    // عرض سياسة الاسترجاع
+    document.getElementById('policyModal').style.display = 'flex';
+    
+    showMessage(`تم اختيار بطاقة "${selectedCard.name || 'البطاقة'}"`, 'success', 2000);
+}
+
+// إغلاق نافذة البطاقات
+function closeCardModal() {
+    document.getElementById('cardModal').style.display = 'none';
+}
+
+// إغلاق نافذة السياسة
+function closePolicyModal() {
+    document.getElementById('policyModal').style.display = 'none';
+}
+
+// تأكيد عملية الشراء
+function confirmPurchase() {
+    // التحقق من وجود بطاقة مختارة
+    if (selectedCardIndex === -1 || !selectedCardForPayment) {
+        showMessage('لم يتم اختيار بطاقة صالحة', 'error');
+        return;
+    }
+    
+    const stats = calculateCartStats();
+    
+    // التحقق النهائي من الرصيد
+    if (selectedCardForPayment.balance < stats.finalTotal) {
+        showMessage('رصيد البطاقة غير كافٍ!', 'error');
+        return;
+    }
+    
+    // خصم المبلغ من البطاقة
+    selectedCardForPayment.balance -= stats.finalTotal;
+    cards[selectedCardIndex] = selectedCardForPayment;
+    localStorage.setItem(CARDS_KEY, JSON.stringify(cards));
+    
+    // تحديث الرصيد الكلي (مجموع أرصدة البطاقات)
+    updateBalanceFromWallet();
+    
+    // ====== معالجة المنتجات ======
+    const digitalProducts = [];
+    const physicalProducts = [];
+    const today = new Date().toLocaleString('ar-SA');
+    const transactionId = 'TXN' + Date.now();
+    
+    cart.forEach(item => {
+        const isDigital = isDigitalProduct(item);
+        const price = parseProductPrice(item.price);
+        
+        for (let i = 0; i < (item.quantity || 1); i++) {
+            const productData = {
+                id: item.id,
+                title: item.title,
+                price: price,
+                image: item.image,
+                category: item.category,
+                type: item.type,
+                format: item.format,
+                purchaseDate: today,
+                transactionId: transactionId,
+                paymentMethod: `بطاقة ${selectedCardForPayment.number || '****'}`,
+                discountApplied: currentDiscount ? `${currentDiscount.code} (${currentDiscount.type === 'percentage' ? currentDiscount.percentage + '%' : formatPrice(currentDiscount.amount)})` : 'لا يوجد',
+                finalPrice: price
+            };
+            
+            if (isDigital) {
+                productData.downloadLink = `download/${item.id}.zip`;
+                digitalProducts.push(productData);
+            } else {
+                productData.shippingAddress = currentAddress;
+                productData.trackingNumber = generateTrackingNumber();
+                productData.estimatedDelivery = getEstimatedDeliveryDate();
+                physicalProducts.push(productData);
+            }
+        }
+    });
+    
+    // حفظ المنتجات الرقمية في المكتبة
+    if (digitalProducts.length > 0) {
+        library = JSON.parse(localStorage.getItem(LIBRARY_KEY)) || [];
+        library = [...library, ...digitalProducts];
+        localStorage.setItem(LIBRARY_KEY, JSON.stringify(library));
+    }
+    
+    // حفظ المنتجات الورقية في الطلبات
+    if (physicalProducts.length > 0) {
+        orders = JSON.parse(localStorage.getItem(ORDERS_KEY)) || [];
+        const order = {
+            orderId: transactionId,
+            orderDate: today,
+            totalAmount: stats.finalTotal,
+            products: physicalProducts,
+            shippingAddress: currentAddress,
+            paymentMethod: `بطاقة ${selectedCardForPayment.number || '****'}`,
+            status: 'قيد التجهيز',
+            trackingNumber: generateTrackingNumber()
+        };
+        
+        orders.push(order);
+        localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+    }
+    
+    // ====== تنظيف السلة ======
+    cart = [];
+    currentDiscount = null;
+    discountCode = '';
+    const discountCodeInput = document.getElementById('discountCode');
+    const removeDiscountBtn = document.getElementById('removeDiscountBtn');
+    if (discountCodeInput) discountCodeInput.value = '';
+    if (removeDiscountBtn) removeDiscountBtn.style.display = 'none';
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    
+    // تحديث الواجهة
+    renderCart();
+    updateAddressDisplay();
+    updateBalanceFromWallet();
+    
+    // ====== رسالة النجاح والتحويل ======
+    let successMessage = `✅ تم الدفع بنجاح!<br>`;
+    successMessage += `💰 المبلغ: ${formatPrice(stats.finalTotal)}<br>`;
+    successMessage += `💳 البطاقة: ${selectedCardForPayment.name || 'بطاقة'}<br>`;
+    successMessage += `📦 عدد المنتجات: ${cart.length}`;
+    
+    if (digitalProducts.length > 0) {
+        successMessage += `<br>📱 منتجات رقمية: ${digitalProducts.length}`;
+    }
+    if (physicalProducts.length > 0) {
+        successMessage += `<br>📦 منتجات ورقية: ${physicalProducts.length}`;
+    }
     
     showMessage(successMessage, 'success', 5000);
     
+    closePolicyModal();
+    
+    // إعادة تعيين البطاقة المختارة
+    selectedCardIndex = -1;
+    selectedCardForPayment = null;
+    
+    // التحويل إلى الصفحة المناسبة
     setTimeout(() => {
-      window.location.href = "library.html";
+        if (digitalProducts.length > 0) {
+            window.location.href = "library.html";
+        } else if (physicalProducts.length > 0) {
+            window.location.href = "Orders.html";
+        } else {
+            window.location.href = "index.html";
+        }
     }, 3000);
-    
-  } else if (digitalProducts.length > 0) {
-    successMessage += `تمت إضافة ${digitalProducts.length} منتج رقمي إلى المكتبة`;
-    
-    showMessage(successMessage, 'success', 4000);
-    
-    setTimeout(() => {
-      window.location.href = "library.html";
-    }, 2500);
-    
-  } else if (physicalProducts.length > 0) {
-    successMessage += `تم إنشاء طلب لـ ${physicalProducts.length} منتج ورقي`;
-    
-    showMessage(successMessage, 'success', 4000);
-    
-    setTimeout(() => {
-      window.location.href = "Orders.html";
-    }, 2500);
-  }
-  
-  closePolicyModal();
 }
 
-function generateTrackingNumber() {
-  return 'TRK' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substr(2, 4).toUpperCase();
-}
-
-function getEstimatedDeliveryDate() {
-  const date = new Date();
-  date.setDate(date.getDate() + 7);
-  return date.toLocaleDateString('ar-SA');
+// ====== حدث زر الدفع ======
+const payBtn = document.getElementById('payBtn');
+if (payBtn) {
+    payBtn.addEventListener('click', () => {
+        const stats = calculateCartStats();
+        
+        if (cart.length === 0) {
+            showMessage('السلة فارغة! أضف منتجات أولاً', 'error');
+            return;
+        }
+        
+        // تحديث الرصيد من البطاقات
+        updateBalanceFromWallet();
+        
+        if (balance < stats.finalTotal) {
+            showMessage(`رصيدك غير كافٍ! المطلوب: ${formatPrice(stats.finalTotal)}`, 'error');
+            return;
+        }
+        
+        if (stats.hasPhysicalProducts && !currentAddress) {
+            showMessage('يرجى تحديد عنوان التوصيل للمنتجات الورقية', 'error');
+            return;
+        }
+        
+        // جلب البطاقات من localStorage
+        cards = JSON.parse(localStorage.getItem(CARDS_KEY)) || [];
+        
+        if (cards.length === 0) {
+            if (confirm('لا توجد بطاقات في محفظتك. هل تريد إضافة بطاقة أولاً؟')) {
+                window.location.href = 'cards.html';
+                return;
+            }
+            return;
+        }
+        
+        // عرض البطاقات للاختيار
+        showCardSelection();
+    });
 }
 
 // ====== التهيئة ======
 function initializePage() {
-  if (!loggedInUser) return;
-  
-  // تحديث الرصيد
-  globalBalanceEl.textContent = balance.toFixed(2);
-  
-  // عرض السلة
-  renderCart();
-  
-  // عرض العنوان الحالي
-  updateAddressDisplay();
-  
-  // تحميل العناوين
-  addresses = JSON.parse(localStorage.getItem(ADDRESSES_KEY)) || [];
-  
-  // استماع لتغييرات التخزين
-  window.addEventListener('storage', (e) => {
-    if (e.key === CART_KEY) {
-      cart = JSON.parse(e.newValue || '[]');
-      renderCart();
+    if (!loggedInUser) return;
+    
+    console.log('👤 المستخدم:', loggedInUser);
+    
+    // تحميل البيانات من localStorage
+    loadAllData();
+    
+    // محاولة جلب البطاقات من Firebase (إذا كانت متوفرة)
+    if (firebaseInitialized) {
+        loadCardsFromFirebase().then(success => {
+            if (success) {
+                console.log('✅ تم جلب البطاقات من Firebase بنجاح');
+                updateBalanceFromWallet();
+                updateCartStats();
+            } else {
+                console.log('ℹ️ استخدام البطاقات من localStorage');
+            }
+        });
     }
-    if (e.key === BALANCE_KEY) {
-      balance = parseFloat(e.newValue || 0);
-      globalBalanceEl.textContent = balance.toFixed(2);
-      updateCartStats();
-    }
-    if (e.key === ADDRESSES_KEY) {
-      addresses = JSON.parse(e.newValue || '[]');
-    }
-  });
-  
-  // اختصارات لوحة المفاتيح
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      const modals = document.querySelectorAll('.modal');
-      modals.forEach(modal => {
-        if (modal.style.display === 'flex') {
-          modal.style.display = 'none';
+    
+    // تحديث الرصيد من البطاقات
+    updateBalanceFromWallet();
+    
+    // عرض السلة والعناوين
+    renderCart();
+    updateAddressDisplay();
+    
+    console.log('✅ تم تهيئة صفحة سلة الشراء بنجاح');
+    console.log('📦 عدد المنتجات في السلة:', cart.length);
+    console.log('💳 عدد البطاقات:', cards.length);
+    console.log('📍 عدد العناوين:', addresses.length);
+    
+    // الاستماع لتغييرات التخزين
+    window.addEventListener('storage', (e) => {
+        if (e.key === CART_KEY) {
+            cart = JSON.parse(e.newValue || '[]');
+            renderCart();
         }
-      });
-    }
-    if (e.ctrlKey && e.key === 'Enter' && !payBtn.disabled) {
-      payBtn.click();
-    }
-  });
+        if (e.key === CARDS_KEY) {
+            cards = JSON.parse(e.newValue || '[]');
+            updateBalanceFromWallet();
+            updateCartStats();
+        }
+        if (e.key === ADDRESSES_KEY) {
+            addresses = JSON.parse(e.newValue || '[]');
+        }
+        if (e.key === CURRENT_ADDRESS_KEY) {
+            currentAddress = JSON.parse(e.newValue || 'null');
+            updateAddressDisplay();
+        }
+        if (e.key === BALANCE_KEY) {
+            balance = parseFloat(e.newValue || 0);
+            const globalBalanceEl = document.getElementById('globalBalance');
+            if (globalBalanceEl) globalBalanceEl.textContent = balance.toFixed(2);
+            updateCartStats();
+        }
+    });
+    
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (modal.style.display === 'flex') {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+        if (e.ctrlKey && e.key === 'Enter') {
+            const payBtn = document.getElementById('payBtn');
+            if (payBtn && !payBtn.disabled) {
+                payBtn.click();
+            }
+        }
+    });
 }
 
-// جعل الدوال متاحة عالمياً
+// ====== جعل الدوال متاحة عالمياً ======
 window.updateQuantity = updateQuantity;
 window.removeFromCart = removeFromCart;
 window.saveForLater = saveForLater;
@@ -3264,30 +3686,29 @@ window.confirmSaveAddress = confirmSaveAddress;
 window.applyDiscount = applyDiscount;
 window.removeDiscount = removeDiscount;
 window.openDiscountsPage = openDiscountsPage;
-window.selectCard = selectCard;
+window.selectCardForPayment = selectCardForPayment;
 window.closeCardModal = closeCardModal;
 window.closePolicyModal = closePolicyModal;
 window.confirmPurchase = confirmPurchase;
+window.showCardSelection = showCardSelection;
 
-// تشغيل التهيئة عند تحميل الصفحة
+// ====== تشغيل التهيئة ======
 document.addEventListener('DOMContentLoaded', initializePage);
 
-// تحديث عند العودة للصفحة
+// ====== تحديث عند العودة للصفحة ======
 window.addEventListener('pageshow', () => {
-  cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-  currentAddress = JSON.parse(localStorage.getItem(CURRENT_ADDRESS_KEY)) || null;
-  addresses = JSON.parse(localStorage.getItem(ADDRESSES_KEY)) || [];
-  balance = parseFloat(localStorage.getItem(BALANCE_KEY)) || 0;
-  
-  renderCart();
-  updateAddressDisplay();
-  globalBalanceEl.textContent = balance.toFixed(2);
+    loadAllData();
+    updateBalanceFromWallet();
+    renderCart();
+    updateAddressDisplay();
 });
 
-// حفظ البيانات عند الخروج
+// ====== حفظ البيانات عند الخروج ======
 window.addEventListener('beforeunload', () => {
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
 });
+
+console.log('✅ تم تحميل سلة الشراء مع دعم localStorage و Firebase');
 </script>
 </body>
 </html>
