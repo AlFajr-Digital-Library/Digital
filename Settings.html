@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <link rel="icon" type="image/x-icon" href="img\Login library.jpg">
+  <link rel="icon" type="image/x-icon" href="img\Login library.jpg">
 
   <style>
     * {
@@ -575,6 +575,188 @@
       background: #2c2c2c;
     }
 
+    /* ==========================================
+       زر نسيت كلمة المرور - جديد
+    ========================================== */
+    .forgot-password-section {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+    }
+    .forgot-password-section .btn-forgot {
+      background: rgba(255, 107, 53, 0.1);
+      border: 1px solid rgba(255, 107, 53, 0.2);
+      color: var(--clr-primary);
+      padding: 0.7rem 1.8rem;
+      border-radius: 40px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .forgot-password-section .btn-forgot:hover {
+      background: rgba(255, 107, 53, 0.2);
+      border-color: var(--clr-primary);
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================
+       مودال تغيير كلمة المرور
+    ========================================== */
+    .password-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 1001;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+    .password-modal .modal-container {
+      background: var(--clr-bg-card);
+      border: 1px solid var(--clr-primary);
+      border-radius: 28px;
+      width: 100%;
+      max-width: 480px;
+      padding: 2rem;
+      box-shadow: 0 30px 50px rgba(0,0,0,0.6);
+      animation: fadeSlideUp 0.3s ease;
+    }
+    .password-modal .modal-container h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: var(--grad-primary);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    .password-modal .modal-container .sub-text {
+      color: var(--txt-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+    .password-modal .modal-container .form-control {
+      margin-bottom: 1rem;
+    }
+    .password-modal .modal-container .btn-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 1rem;
+    }
+    .password-modal .modal-container .btn-group button {
+      flex: 1;
+      padding: 0.8rem;
+      border-radius: 40px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .password-modal .modal-container .btn-group .btn-primary {
+      background: var(--grad-primary);
+      color: white;
+    }
+    .password-modal .modal-container .btn-group .btn-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+    .password-modal .modal-container .btn-group .btn-secondary-modal {
+      background: #2c2c2c;
+      color: var(--txt-secondary);
+    }
+    .password-modal .modal-container .btn-group .btn-secondary-modal:hover {
+      background: #3c3c3c;
+    }
+    .password-modal .modal-container .message-box {
+      padding: 0.8rem;
+      border-radius: var(--radius-sm);
+      margin-top: 1rem;
+      display: none;
+      text-align: center;
+      font-weight: 600;
+    }
+    .password-modal .modal-container .message-box.success {
+      display: block;
+      background: rgba(0, 212, 170, 0.1);
+      color: var(--status-active);
+      border: 1px solid rgba(0, 212, 170, 0.2);
+    }
+    .password-modal .modal-container .message-box.error {
+      display: block;
+      background: rgba(255, 71, 87, 0.1);
+      color: var(--status-banned);
+      border: 1px solid rgba(255, 71, 87, 0.2);
+    }
+    .password-modal .modal-container .message-box.loading {
+      display: block;
+      background: rgba(255, 107, 53, 0.1);
+      color: var(--clr-primary);
+      border: 1px solid rgba(255, 107, 53, 0.2);
+    }
+    .password-modal .modal-container .password-strength-bar {
+      height: 4px;
+      border-radius: 4px;
+      margin-top: -0.5rem;
+      margin-bottom: 1rem;
+      background: #333;
+      transition: var(--transition);
+    }
+    .password-modal .modal-container .password-strength-bar.weak {
+      background: var(--status-banned);
+      width: 25%;
+    }
+    .password-modal .modal-container .password-strength-bar.medium {
+      background: var(--status-frozen);
+      width: 50%;
+    }
+    .password-modal .modal-container .password-strength-bar.strong {
+      background: var(--status-active);
+      width: 75%;
+    }
+    .password-modal .modal-container .password-strength-bar.very-strong {
+      background: #00d4aa;
+      width: 100%;
+    }
+    .password-modal .modal-container .password-requirements {
+      font-size: 0.75rem;
+      color: var(--txt-muted);
+      margin-top: 0.5rem;
+      text-align: right;
+    }
+    .password-modal .modal-container .password-requirements ul {
+      list-style: none;
+      padding: 0;
+    }
+    .password-modal .modal-container .password-requirements ul li {
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .password-modal .modal-container .password-requirements ul li i {
+      font-size: 0.7rem;
+    }
+    .password-modal .modal-container .password-requirements ul li.valid {
+      color: var(--status-active);
+    }
+    .password-modal .modal-container .password-requirements ul li.invalid {
+      color: var(--txt-muted);
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
     .all-links-section {
       background: var(--clr-bg-card);
       border: 1px solid var(--border-color);
@@ -805,6 +987,12 @@
       .status-card-main .status-badge-large {
         align-self: center;
       }
+      .password-modal .modal-container {
+        padding: 1.5rem;
+      }
+      .password-modal .modal-container .btn-group {
+        flex-direction: column;
+      }
     }
     @media (max-width: 992px) {
       .dashboard {
@@ -987,6 +1175,18 @@
           <button type="button" class="btn-save btn-secondary" id="fullAccountDetailsBtn" style="background: linear-gradient(135deg, #8a2be2, #5a1eb0); margin-right: 12px;"><i class="fas fa-arrow-left"></i> الانتقال إلى كامل التفاصيل</button>
         </div>
       </form>
+
+      <!-- ========================================== -->
+      <!-- قسم نسيت كلمة المرور - جديد -->
+      <!-- ========================================== -->
+      <div class="forgot-password-section">
+        <button class="btn-forgot" id="forgotPasswordBtn">
+          <i class="fas fa-key"></i> نسيت كلمة المرور؟ تغيير كلمة المرور
+        </button>
+        <p style="font-size: 0.75rem; color: var(--txt-muted); margin-top: 0.5rem;">
+          <i class="fas fa-info-circle"></i> سيتم إرسال بريد إلكتروني لإعادة تعيين كلمة المرور
+        </p>
+      </div>
     </div>
 
     <!-- تخصيص المساعد الذكي (AI) -->
@@ -1057,6 +1257,43 @@
   </div>
 </div>
 
+<!-- ========================================== -->
+<!-- مودال نسيت كلمة المرور - جديد -->
+<!-- ========================================== -->
+<div id="forgotPasswordModal" class="password-modal">
+  <div class="modal-container">
+    <h2><i class="fas fa-key"></i> تغيير كلمة المرور</h2>
+    <p class="sub-text">أدخل كلمة المرور الجديدة لتحديث حسابك في Firebase</p>
+    
+    <div class="form-group">
+      <label>كلمة المرور الجديدة</label>
+      <input type="password" class="form-control" id="newPasswordInput" placeholder="أدخل كلمة المرور الجديدة" />
+      <div class="password-strength-bar" id="passwordStrengthBar"></div>
+      <div class="password-requirements">
+        <ul>
+          <li id="reqLength" class="invalid"><i class="fas fa-circle"></i> 8 أحرف على الأقل</li>
+          <li id="reqUppercase" class="invalid"><i class="fas fa-circle"></i> حرف كبير واحد على الأقل</li>
+          <li id="reqLowercase" class="invalid"><i class="fas fa-circle"></i> حرف صغير واحد على الأقل</li>
+          <li id="reqNumber" class="invalid"><i class="fas fa-circle"></i> رقم واحد على الأقل</li>
+          <li id="reqSpecial" class="invalid"><i class="fas fa-circle"></i> حرف خاص واحد على الأقل (!@#$%^&*)</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label>تأكيد كلمة المرور</label>
+      <input type="password" class="form-control" id="confirmPasswordInput" placeholder="أعد كتابة كلمة المرور" />
+    </div>
+    
+    <div class="message-box" id="passwordMessage"></div>
+    
+    <div class="btn-group">
+      <button class="btn-primary" id="changePasswordBtn"><i class="fas fa-save"></i> تغيير كلمة المرور</button>
+      <button class="btn-secondary-modal" id="closePasswordModalBtn"><i class="fas fa-times"></i> إلغاء</button>
+    </div>
+  </div>
+</div>
+
 <footer class="footer-note">
   <i class="fas fa-laptop-code"></i> المكتبة الرقمية المتكاملة | إدارة متقدمة للحساب ورصيد فوري من البطاقات
 </footer>
@@ -1076,8 +1313,8 @@
 
 <script type="module">
   import { initializeApp } from "firebase/app";
-  import { getDatabase, ref, get, child, onValue } from "firebase/database";
-  import { getAuth, onAuthStateChanged } from "firebase/auth";
+  import { getDatabase, ref, get, child, onValue, push, update } from "firebase/database";
+  import { getAuth, onAuthStateChanged, updatePassword, sendPasswordResetEmail, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
 
   // ============================================
   // FIREBASE CONFIG
@@ -1145,6 +1382,7 @@
 
   let currentUserStatus = 'active';
   let currentUserData = null;
+  let currentUser = null;
 
   function updateStatusUI(status, reason = '', userData = null) {
     const card = document.getElementById('statusCard');
@@ -1158,7 +1396,6 @@
     const alertBox = document.getElementById('statusAlert');
     const alertText = document.getElementById('statusAlertText');
 
-    // Remove all status classes
     card.className = 'status-card-main';
     
     const statusData = statusMap[status] || statusMap.inactive;
@@ -1169,7 +1406,6 @@
     statusText.textContent = statusData.label;
     badge.textContent = statusData.badge;
 
-    // Show/Hide reason
     if ((status === 'banned' || status === 'frozen') && reason) {
       reasonBox.classList.add('show');
       reasonText.textContent = reason;
@@ -1178,7 +1414,6 @@
       reasonText.textContent = '';
     }
 
-    // Show/Hide alert
     if (status === 'banned' || status === 'frozen') {
       alertBox.className = `status-alert show ${status}`;
       alertText.textContent = statusData.alert;
@@ -1188,12 +1423,6 @@
     } else {
       alertBox.className = `status-alert show active`;
       alertText.textContent = statusData.alert;
-    }
-
-    // Update the dot
-    const dot = sub.querySelector('.dot');
-    if (dot) {
-      // CSS handles the color via parent class
     }
 
     currentUserStatus = status;
@@ -1230,10 +1459,8 @@
         const status = userData.status || 'active';
         const reason = userData.banReason || userData.frozenReason || '';
         
-        // تحديث واجهة المستخدم
         updateStatusUI(status, reason, userData);
         
-        // حفظ في localStorage
         let localUser = JSON.parse(localStorage.getItem('user') || '{}');
         localUser.uid = user.uid;
         localUser.email = user.email;
@@ -1243,19 +1470,13 @@
         localUser.phone = userData.phone || '';
         localStorage.setItem('user', JSON.stringify(localUser));
         
-        // تحديث حقول النموذج
         document.getElementById('displayNameInput').value = localUser.username || 'مستخدم';
         document.getElementById('emailSettingInput').value = user.email || '';
         document.getElementById('phoneSettingInput').value = localUser.phone || '';
         
-        // إرسال إشعار إلى الإدارة بأن المستخدم قد تحقق من حالته
-        await sendStatusNotification(user, status);
-        
       } else {
-        // المستخدم غير موجود في قاعدة البيانات - نعتبره نشط
         updateStatusUI('active');
         
-        // حفظ بيانات المستخدم الأساسية
         let localUser = JSON.parse(localStorage.getItem('user') || '{}');
         localUser.uid = user.uid;
         localUser.email = user.email;
@@ -1269,32 +1490,7 @@
   }
 
   // ============================================
-  // إرسال إشعار إلى الإدارة
-  // ============================================
-  async function sendStatusNotification(user, status) {
-    try {
-      const dbRef = ref(database);
-      const notificationsRef = ref(database, 'adminNotifications');
-      
-      const notification = {
-        type: 'status_check',
-        userId: user.uid,
-        userEmail: user.email,
-        status: status,
-        timestamp: new Date().toISOString(),
-        read: false,
-        message: `قام المستخدم بالتحقق من حالة حسابه (${status})`
-      };
-      
-      await push(notificationsRef, notification);
-      console.log('✅ تم إرسال إشعار إلى الإدارة');
-    } catch (error) {
-      console.error('❌ خطأ في إرسال الإشعار:', error);
-    }
-  }
-
-  // ============================================
-  // SETUP REAL-TIME STATUS UPDATES
+  // REAL-TIME STATUS UPDATES
   // ============================================
   function setupRealtimeStatus(user) {
     if (!user) return;
@@ -1307,7 +1503,6 @@
         const reason = userData.banReason || userData.frozenReason || '';
         updateStatusUI(status, reason, userData);
         
-        // تحديث localStorage
         let localUser = JSON.parse(localStorage.getItem('user') || '{}');
         localUser.status = status;
         localUser.statusReason = reason;
@@ -1322,12 +1517,12 @@
   // AUTH STATE LISTENER
   // ============================================
   onAuthStateChanged(auth, (user) => {
+    currentUser = user;
     if (user) {
       setLoadingStatus();
       fetchUserStatus(user);
       setupRealtimeStatus(user);
     } else {
-      // محاولة جلب من localStorage
       const localUser = JSON.parse(localStorage.getItem('user') || '{}');
       if (localUser && localUser.uid) {
         setLoadingStatus();
@@ -1341,7 +1536,7 @@
   });
 
   // ============================================
-  // وظائف المحفظة والإعدادات (من الكود الأصلي)
+  // وظائف المحفظة والإعدادات
   // ============================================
   function getTotalWalletBalanceFromCards() {
     try {
@@ -1428,7 +1623,262 @@
   function escapeHtml(str) { if(!str) return ''; return String(str).replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
 
   // ============================================
+  // وظائف تغيير كلمة المرور - جديدة
+  // ============================================
+  
+  // التحقق من قوة كلمة المرور
+  function checkPasswordStrength(password) {
+    const bar = document.getElementById('passwordStrengthBar');
+    const reqLength = document.getElementById('reqLength');
+    const reqUppercase = document.getElementById('reqUppercase');
+    const reqLowercase = document.getElementById('reqLowercase');
+    const reqNumber = document.getElementById('reqNumber');
+    const reqSpecial = document.getElementById('reqSpecial');
+
+    const hasLength = password.length >= 8;
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasLowercase = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecial = /[!@#$%^&*]/.test(password);
+
+    reqLength.className = hasLength ? 'valid' : 'invalid';
+    reqLength.innerHTML = `<i class="fas ${hasLength ? 'fa-check-circle' : 'fa-circle'}"></i> 8 أحرف على الأقل`;
+    reqUppercase.className = hasUppercase ? 'valid' : 'invalid';
+    reqUppercase.innerHTML = `<i class="fas ${hasUppercase ? 'fa-check-circle' : 'fa-circle'}"></i> حرف كبير واحد على الأقل`;
+    reqLowercase.className = hasLowercase ? 'valid' : 'invalid';
+    reqLowercase.innerHTML = `<i class="fas ${hasLowercase ? 'fa-check-circle' : 'fa-circle'}"></i> حرف صغير واحد على الأقل`;
+    reqNumber.className = hasNumber ? 'valid' : 'invalid';
+    reqNumber.innerHTML = `<i class="fas ${hasNumber ? 'fa-check-circle' : 'fa-circle'}"></i> رقم واحد على الأقل`;
+    reqSpecial.className = hasSpecial ? 'valid' : 'invalid';
+    reqSpecial.innerHTML = `<i class="fas ${hasSpecial ? 'fa-check-circle' : 'fa-circle'}"></i> حرف خاص واحد على الأقل (!@#$%^&*)`;
+
+    const strength = [hasLength, hasUppercase, hasLowercase, hasNumber, hasSpecial].filter(Boolean).length;
+    bar.className = 'password-strength-bar';
+    if (strength === 0) bar.className = 'password-strength-bar';
+    else if (strength <= 2) bar.className = 'password-strength-bar weak';
+    else if (strength === 3) bar.className = 'password-strength-bar medium';
+    else if (strength === 4) bar.className = 'password-strength-bar strong';
+    else bar.className = 'password-strength-bar very-strong';
+
+    return strength >= 4;
+  }
+
+  // إظهار رسالة في مودال كلمة المرور
+  function showPasswordMessage(text, type = 'loading') {
+    const msg = document.getElementById('passwordMessage');
+    msg.textContent = text;
+    msg.className = `message-box ${type}`;
+  }
+
+  // تغيير كلمة المرور في Firebase
+  async function handleChangePassword() {
+    const newPassword = document.getElementById('newPasswordInput').value;
+    const confirmPassword = document.getElementById('confirmPasswordInput').value;
+
+    if (!newPassword || !confirmPassword) {
+      showPasswordMessage('❌ الرجاء إدخال كلمة المرور الجديدة وتأكيدها', 'error');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      showPasswordMessage('❌ كلمتا المرور غير متطابقتين', 'error');
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      showPasswordMessage('❌ كلمة المرور يجب أن تتكون من 8 أحرف على الأقل', 'error');
+      return;
+    }
+
+    // التحقق من قوة كلمة المرور
+    const isStrong = checkPasswordStrength(newPassword);
+    if (!isStrong) {
+      showPasswordMessage('⚠️ كلمة المرور ضعيفة. الرجاء استخدام كلمة مرور أقوى.', 'error');
+      return;
+    }
+
+    const user = auth.currentUser;
+    if (!user) {
+      showPasswordMessage('❌ يجب أن تكون مسجلاً للدخول لتغيير كلمة المرور', 'error');
+      return;
+    }
+
+    // تعطيل الأزرار أثناء المعالجة
+    const btn = document.getElementById('changePasswordBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="fa fa-spinner fa-spin"></span> جاري التغيير...';
+    showPasswordMessage('⏳ جاري تغيير كلمة المرور في Firebase...', 'loading');
+
+    try {
+      // محاولة تغيير كلمة المرور مباشرة (يتطلب إعادة المصادقة)
+      await updatePassword(user, newPassword);
+      
+      // تحديث قاعدة البيانات
+      const userRef = ref(database, `users/${user.uid}`);
+      await update(userRef, {
+        passwordUpdatedAt: new Date().toISOString(),
+        lastPasswordChange: new Date().toISOString()
+      });
+
+      // إرسال إشعار إلى المشرفين
+      const notificationsRef = ref(database, 'adminNotifications');
+      await push(notificationsRef, {
+        type: 'password_change',
+        userId: user.uid,
+        userEmail: user.email,
+        timestamp: new Date().toISOString(),
+        read: false,
+        message: `قام المستخدم ${user.email} بتغيير كلمة المرور بنجاح`
+      });
+
+      showPasswordMessage('✅ تم تغيير كلمة المرور بنجاح!', 'success');
+      
+      // إغلاق المودال بعد 2 ثانية
+      setTimeout(() => {
+        document.getElementById('forgotPasswordModal').style.display = 'none';
+        // تنظيف الحقول
+        document.getElementById('newPasswordInput').value = '';
+        document.getElementById('confirmPasswordInput').value = '';
+        document.getElementById('passwordMessage').className = 'message-box';
+        document.getElementById('passwordStrengthBar').className = 'password-strength-bar';
+        // إعادة تعيين الأزرار
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-save"></i> تغيير كلمة المرور';
+        
+        // عرض رسالة نجاح في الصفحة الرئيسية
+        const mainMessage = document.getElementById('message');
+        if (mainMessage) {
+          mainMessage.textContent = '✅ تم تغيير كلمة المرور بنجاح!';
+          mainMessage.className = 'message success';
+        }
+        alert('✅ تم تغيير كلمة المرور بنجاح في Firebase!');
+      }, 2000);
+
+    } catch (error) {
+      console.error('Error changing password:', error);
+      
+      let errorMessage = '❌ حدث خطأ أثناء تغيير كلمة المرور';
+      
+      if (error.code === 'auth/requires-recent-login') {
+        errorMessage = '⚠️ يجب تسجيل الدخول مرة أخرى لتغيير كلمة المرور. سيتم إرسال بريد إعادة تعيين إلى بريدك.';
+        
+        // محاولة إرسال بريد إعادة تعيين كبديل
+        try {
+          await sendPasswordResetEmail(auth, user.email);
+          errorMessage += '\n📧 تم إرسال بريد إعادة تعيين كلمة المرور إلى بريدك الإلكتروني.';
+          
+          // إرسال إشعار
+          const notificationsRef = ref(database, 'adminNotifications');
+          await push(notificationsRef, {
+            type: 'password_reset_request',
+            userId: user.uid,
+            userEmail: user.email,
+            timestamp: new Date().toISOString(),
+            read: false,
+            message: `طلب المستخدم ${user.email} إعادة تعيين كلمة المرور (عن طريق البريد)`
+          });
+          
+          showPasswordMessage('📧 تم إرسال بريد إعادة تعيين كلمة المرور إلى بريدك الإلكتروني', 'success');
+        } catch (resetError) {
+          errorMessage = '❌ فشل إرسال بريد إعادة التعيين. الرجاء المحاولة مرة أخرى.';
+          showPasswordMessage(errorMessage, 'error');
+        }
+      } else if (error.code === 'auth/weak-password') {
+        errorMessage = '❌ كلمة المرور ضعيفة. استخدم كلمة مرور أقوى.';
+        showPasswordMessage(errorMessage, 'error');
+      } else {
+        errorMessage = `❌ حدث خطأ: ${error.message}`;
+        showPasswordMessage(errorMessage, 'error');
+      }
+      
+      // إعادة تعيين الأزرار
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-save"></i> تغيير كلمة المرور';
+    }
+  }
+
+  // ============================================
   // EVENT LISTENERS
+  // ============================================
+  
+  // زر نسيت كلمة المرور
+  document.getElementById('forgotPasswordBtn')?.addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    // التأكد من وجود مستخدم مسجل
+    if (!auth.currentUser) {
+      alert('⚠️ يجب أن تكون مسجلاً للدخول لتغيير كلمة المرور. الرجاء تسجيل الدخول أولاً.');
+      return;
+    }
+    
+    // عرض المودال
+    document.getElementById('forgotPasswordModal').style.display = 'flex';
+    // تنظيف الحقول
+    document.getElementById('newPasswordInput').value = '';
+    document.getElementById('confirmPasswordInput').value = '';
+    document.getElementById('passwordMessage').className = 'message-box';
+    document.getElementById('passwordStrengthBar').className = 'password-strength-bar';
+    // إعادة تعيين متطلبات كلمة المرور
+    document.querySelectorAll('.password-requirements ul li').forEach(li => {
+      li.className = 'invalid';
+      li.innerHTML = `<i class="fas fa-circle"></i> ${li.textContent.replace(/[^\u0600-\u06FFa-zA-Z]/g, '').trim()}`;
+    });
+  });
+
+  // إغلاق مودال كلمة المرور
+  document.getElementById('closePasswordModalBtn')?.addEventListener('click', function() {
+    document.getElementById('forgotPasswordModal').style.display = 'none';
+  });
+
+  // إغلاق المودال عند النقر خارج المحتوى
+  document.getElementById('forgotPasswordModal')?.addEventListener('click', function(e) {
+    if (e.target === this) {
+      this.style.display = 'none';
+    }
+  });
+
+  // التحقق من قوة كلمة المرور أثناء الكتابة
+  document.getElementById('newPasswordInput')?.addEventListener('input', function() {
+    checkPasswordStrength(this.value);
+    
+    // التحقق من تطابق كلمة المرور
+    const confirm = document.getElementById('confirmPasswordInput').value;
+    if (confirm && this.value !== confirm) {
+      document.getElementById('confirmPasswordInput').style.borderColor = 'var(--status-banned)';
+    } else if (confirm) {
+      document.getElementById('confirmPasswordInput').style.borderColor = 'var(--status-active)';
+    }
+  });
+
+  // التحقق من تطابق كلمة المرور
+  document.getElementById('confirmPasswordInput')?.addEventListener('input', function() {
+    const newPass = document.getElementById('newPasswordInput').value;
+    if (this.value && this.value !== newPass) {
+      this.style.borderColor = 'var(--status-banned)';
+    } else if (this.value) {
+      this.style.borderColor = 'var(--status-active)';
+    } else {
+      this.style.borderColor = '';
+    }
+  });
+
+  // زر تغيير كلمة المرور
+  document.getElementById('changePasswordBtn')?.addEventListener('click', handleChangePassword);
+
+  // الضغط على Enter في حقول كلمة المرور
+  document.getElementById('newPasswordInput')?.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      document.getElementById('confirmPasswordInput').focus();
+    }
+  });
+  document.getElementById('confirmPasswordInput')?.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      handleChangePassword();
+    }
+  });
+
+  // ============================================
+  // باقي EVENT LISTENERS
   // ============================================
   const allLinksNavBtn = document.getElementById('allLinksNavBtn');
   const allLinksAnchor = document.getElementById('allLinksAnchor');
@@ -1541,8 +1991,8 @@
   // INITIALIZE
   // ============================================
   updateGlobalBalanceDisplay();
-  console.log('🚀 لوحة الإعدادات المتقدمة مع حالة الحساب تعمل بنجاح');
-  console.log('📌 يتم عرض حالة الحساب من Firebase (محظور/مجمد/نشط)');
+  console.log('🚀 لوحة الإعدادات المتقدمة مع تغيير كلمة المرور تعمل بنجاح');
+  console.log('📌 يمكن تغيير كلمة المرور وحفظها في Firebase');
 </script>
 
 </body>

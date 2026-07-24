@@ -913,9 +913,10 @@
                 <small style="color: #888; display: block; text-align: right; margin-top: 5px; font-size: 12px;">قوة كلمة المرور</small>
             </div>
 
-            <div class="show-password" onclick="document.getElementById('showPass').click()">
-                <input type="checkbox" id="showPass" />
-                <label for="showPass" style="cursor: pointer;">إظهار كلمة المرور</label>
+            <!-- ✅ تم إصلاح مشكلة إظهار كلمة المرور -->
+            <div class="show-password" id="showPasswordContainer">
+                <input type="checkbox" id="showPasswordCheckbox" />
+                <label for="showPasswordCheckbox" style="cursor: pointer;">إظهار كلمة المرور</label>
             </div>
 
             <div class="captcha-container">
@@ -1085,7 +1086,7 @@
         const messageDiv = document.getElementById('message');
         const toggleFormLink = document.getElementById('toggleForm');
         const toggleText = document.getElementById('toggleText');
-        const showPassCheckbox = document.getElementById('showPass');
+        const showPasswordCheckbox = document.getElementById('showPasswordCheckbox');
         const captchaCanvas = document.getElementById('captchaCanvas');
         const captchaInput = document.getElementById('captchaInput');
         const blockedOverlay = document.getElementById('blockedOverlay');
@@ -1280,25 +1281,20 @@
             authForm.classList.add('fade-in');
         }
 
-        // ====== التحقق من وجود البريد في قاعدة البيانات (محسّن) ======
+        // ====== التحقق من وجود البريد في قاعدة البيانات ======
         async function checkEmailExistsInDatabase(email) {
             try {
                 const db = window.firebaseDatabase;
-                // استخدام query للبحث المباشر عن البريد الإلكتروني
                 const usersRef = window.firebase.ref(db, 'users');
                 const emailQuery = window.firebase.query(usersRef, window.firebase.orderByChild('email'), window.firebase
                     .equalTo(email));
                 const snapshot = await window.firebase.get(emailQuery);
-
                 return snapshot.exists();
             } catch (error) {
                 console.error('خطأ في التحقق من البريد:', error);
-
-                // محاولة بديلة: جلب كل المستخدمين والبحث يدوياً
                 try {
                     const usersRef = window.firebase.ref(db, 'users');
                     const snapshot = await window.firebase.get(usersRef);
-
                     if (snapshot.exists()) {
                         let found = false;
                         snapshot.forEach((childSnapshot) => {
@@ -1668,7 +1664,7 @@
             }
         }
 
-        // ====== تسجيل الدخول (محسّن) ======
+        // ====== تسجيل الدخول ======
         async function handleLogin(email, password) {
             try {
                 if (!validateCaptcha()) {
@@ -1682,7 +1678,6 @@
                 btnLoader.style.display = 'inline';
                 submitBtn.disabled = true;
 
-                // محاولة تسجيل الدخول
                 const userCredential = await window.firebase.signInWithEmailAndPassword(
                     window.firebaseAuth,
                     email,
@@ -1690,8 +1685,6 @@
                 );
 
                 const user = userCredential.user;
-
-                // جلب بيانات المستخدم من قاعدة البيانات
                 const db = window.firebaseDatabase;
                 const userRef = window.firebase.ref(db, 'users/' + user.uid);
                 const snapshot = await window.firebase.get(userRef);
@@ -1700,7 +1693,6 @@
                 if (snapshot.exists()) {
                     userData = snapshot.val();
 
-                    // التحقق من حالة الحظر
                     if (userData.blockedUntil && new Date(userData.blockedUntil) > new Date()) {
                         await window.firebase.signOut(window.firebaseAuth);
                         showMessage('هذا الحساب محظور مؤقتاً. الرجاء التواصل مع المشرفين.', 'error');
@@ -1710,20 +1702,17 @@
                         return;
                     }
 
-                    // تحديث آخر تسجيل دخول
                     await window.firebase.update(userRef, {
                         lastLogin: new Date().toISOString(),
                         totalFailedAttempts: 0
                     });
                 } else {
-                    // إذا لم توجد بيانات المستخدم في Realtime Database، نقوم بإنشائها
                     const username = email.split('@')[0] || 'مستخدم';
                     const phone = '05' + Math.floor(Math.random() * 100000000).toString().padStart(8, '0');
                     await saveUserToFirebase(user.uid, email, username, phone);
                     userData = { username, phone, role: 'user' };
                 }
 
-                // حفظ بيانات المستخدم في localStorage
                 localStorage.setItem('user', JSON.stringify({
                     uid: user.uid,
                     email: user.email,
@@ -1732,7 +1721,6 @@
                     role: userData.role || 'user'
                 }));
 
-                // إعادة تعيين المحاولات الفاشلة
                 failedAttempts = 0;
                 localStorage.setItem('failedAttempts', '0');
                 updateAttemptsIndicator();
@@ -1752,8 +1740,7 @@
 
                 switch (error.code) {
                     case 'auth/user-not-found':
-                        errorMessage =
-                        '❌ البريد الإلكتروني غير مسجل في النظام. الرجاء التأكد من البريد أو إنشاء حساب جديد.';
+                        errorMessage = '❌ البريد الإلكتروني غير مسجل في النظام. الرجاء التأكد من البريد أو إنشاء حساب جديد.';
                         break;
                     case 'auth/wrong-password':
                         errorMessage = '❌ كلمة المرور غير صحيحة. حاول مرة أخرى.';
@@ -1781,7 +1768,7 @@
             }
         }
 
-        // ====== إنشاء حساب جديد ======
+        // ====== إنشاء حساب جديد (محسّن) ======
         async function handleSignup(email, password, username, phone) {
             try {
                 if (!validateCaptcha()) {
@@ -1800,15 +1787,10 @@
                     return;
                 }
 
-                // التحقق من وجود اسم المستخدم
-                const db = window.firebaseDatabase;
-                const usersRef = window.firebase.ref(db, 'users');
-                const usernameQuery = window.firebase.query(usersRef, window.firebase.orderByChild('username'), window
-                    .firebase.equalTo(username));
-                const snapshot = await window.firebase.get(usernameQuery);
-
-                if (snapshot.exists()) {
-                    showMessage('اسم المستخدم مستخدم بالفعل. الرجاء اختيار اسم آخر.', 'error');
+                // التحقق من وجود البريد الإلكتروني في قاعدة البيانات
+                const emailExists = await checkEmailExistsInDatabase(email);
+                if (emailExists) {
+                    showMessage('❌ البريد الإلكتروني مستخدم بالفعل. الرجاء استخدام بريد آخر أو تسجيل الدخول.', 'error');
                     return;
                 }
 
@@ -1816,6 +1798,7 @@
                 btnLoader.style.display = 'inline';
                 submitBtn.disabled = true;
 
+                // إنشاء المستخدم في Firebase Authentication
                 const userCredential = await window.firebase.createUserWithEmailAndPassword(
                     window.firebaseAuth,
                     email,
@@ -1823,6 +1806,8 @@
                 );
 
                 const user = userCredential.user;
+                
+                // حفظ بيانات المستخدم في Realtime Database
                 const saved = await saveUserToFirebase(user.uid, email, username, phone);
 
                 if (saved) {
@@ -1865,7 +1850,7 @@
             }
         }
 
-        // ====== معالجة طلب استرجاع كلمة المرور أو الحساب (محسّن) ======
+        // ====== معالجة طلب استرجاع كلمة المرور أو الحساب ======
         async function handleForgotRequest(email, type) {
             try {
                 if (!email) {
@@ -1876,7 +1861,6 @@
                 forgotSubmitBtn.disabled = true;
                 forgotSubmitBtn.innerHTML = '<span class="loader"></span> جاري المعالجة...';
 
-                // التحقق من وجود البريد في قاعدة البيانات
                 const existsInDB = await checkEmailExistsInDatabase(email);
 
                 if (!existsInDB) {
@@ -1887,13 +1871,9 @@
                     return;
                 }
 
-                // توليد رمز استرداد جديد
                 const recoveryCode = generateRecoveryCode();
-
-                // حفظ الرمز في قاعدة البيانات
                 await saveRecoveryCode(email, recoveryCode, type === 'password' ? 'password_reset' : 'account_recovery');
 
-                // إرسال إشعار للمشرفين
                 const notifType = type === 'password' ? 'password_reset_request' : 'account_recovery_request';
                 const actionText = type === 'password' ? 'طلب استرجاع كلمة المرور' : 'طلب استرجاع الحساب';
 
@@ -1904,7 +1884,6 @@
                     details: `المستخدم ${email} يطلب ${actionText}. رمز الاسترداد: ${recoveryCode}`
                 });
 
-                // حفظ البيانات محلياً
                 localStorage.setItem('lastRecoveryCode', recoveryCode);
                 localStorage.setItem('recoveryEmail', email);
                 localStorage.setItem('recoveryType', type);
@@ -1925,7 +1904,6 @@
 
                 forgotEmailInput.value = '';
 
-                // فتح نافذة إدخال رمز الاسترداد بعد 3 ثواني
                 setTimeout(() => {
                     closeForgotOverlay();
                     openRecoveryOverlay(email, recoveryCode);
@@ -1967,10 +1945,8 @@
                 verifiedRecoveryEmail = email;
                 showRecoveryMessage('✅ ' + result.message, 'success');
 
-                // حفظ الرمز المستخدم
                 localStorage.setItem('verifiedRecoveryCode', code);
 
-                // فتح نافذة تغيير كلمة المرور
                 setTimeout(() => {
                     closeRecoveryOverlay();
                     openNewPasswordOverlay();
@@ -2008,15 +1984,12 @@
             try {
                 const code = localStorage.getItem('verifiedRecoveryCode');
 
-                // تحديث الرمز كمستخدم
                 if (code) {
                     await markRecoveryCodeAsUsed(code);
                 }
 
-                // إرسال بريد إعادة تعيين كلمة المرور عبر Firebase
                 await window.firebase.sendPasswordResetEmail(window.firebaseAuth, verifiedRecoveryEmail);
 
-                // إرسال إشعار للمشرفين
                 await sendAdminNotification('password_changed', {
                     email: verifiedRecoveryEmail,
                     recoveryCode: code || '',
@@ -2027,7 +2000,6 @@
                 showNewPasswordMessage(
                     '✅ تم تغيير كلمة المرور بنجاح! تم إرسال بريد إعادة تعيين إلى بريدك الإلكتروني.', 'success');
 
-                // إعادة تعيين الحظر
                 fullReset();
 
                 setTimeout(() => {
@@ -2152,7 +2124,6 @@
         function checkUserStatus() {
             const user = JSON.parse(localStorage.getItem('user') || 'null');
             if (user && user.uid) {
-                // التحقق من صحة الجلسة مع Firebase
                 window.firebase.onAuthStateChanged(window.firebaseAuth, (currentUser) => {
                     if (currentUser) {
                         showMessage('👋 أنت مسجل الدخول بالفعل. يتم توجيهك...', 'info');
@@ -2160,7 +2131,6 @@
                             window.location.href = 'index.html';
                         }, 2000);
                     } else {
-                        // إذا لم يكن المستخدم مسجلاً في Firebase، نقوم بتسجيل الخروج محلياً
                         localStorage.removeItem('user');
                     }
                 });
@@ -2179,7 +2149,6 @@
 
             createParticles();
 
-            // التحقق من حالة المستخدم أولاً
             if (checkUserStatus()) {
                 return;
             }
@@ -2190,7 +2159,8 @@
 
             captchaCanvas.addEventListener('click', generateCaptcha);
 
-            showPassCheckbox.addEventListener('change', function() {
+            // ✅ إصلاح إظهار/إخفاء كلمة المرور
+            showPasswordCheckbox.addEventListener('change', function() {
                 passwordInput.type = this.checked ? 'text' : 'password';
             });
 
