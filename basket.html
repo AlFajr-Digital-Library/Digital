@@ -17,7 +17,6 @@
 <script src="https://www.gstatic.com/firebasejs/12.7.0/firebase-database-compat.js"></script>
 
 <style>
-/* جميع أنماط CSS السابقة تبقى كما هي */
 :root {
   --netflix-red: #e50914;
   --netflix-dark: #141414;
@@ -46,9 +45,6 @@
 body {
   font-family: 'Almarai', sans-serif;
   background-color: var(--netflix-dark);
-  background-image: 
-    radial-gradient(circle at 20% 80%, rgba(229, 9, 20, 0.05) 0%, transparent 40%),
-    radial-gradient(circle at 80% 20%, rgba(229, 9, 20, 0.05) 0%, transparent 40%);
   color: var(--netflix-white);
   padding-top: var(--header-height);
   padding-bottom: var(--footer-height);
@@ -72,7 +68,6 @@ header {
   color: white; 
   z-index: 10000;
   box-shadow: var(--shadow-heavy);
-  transition: all 0.3s ease;
   height: var(--header-height);
   min-height: 60px;
 }
@@ -82,9 +77,6 @@ header h1 {
   margin: 0; 
   color: var(--netflix-red);
   font-weight: 700;
-  letter-spacing: -0.5px;
-  position: relative;
-  padding-right: 10px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -188,17 +180,6 @@ header h1 {
   overflow: hidden;
 }
 
-.address-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 100px;
-  height: 100px;
-  background: radial-gradient(circle, rgba(229, 9, 20, 0.1) 0%, transparent 70%);
-  z-index: 0;
-}
-
 .address-header {
   display: flex;
   justify-content: space-between;
@@ -242,24 +223,6 @@ header h1 {
   align-items: center;
   gap: 8px;
   font-size: 0.9em;
-  position: relative;
-  overflow: hidden;
-}
-
-.address-btn::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
-  transform: translateX(-100%);
-  transition: transform 0.6s ease;
-}
-
-.address-btn:hover::after {
-  transform: translateX(100%);
 }
 
 .address-btn:hover {
@@ -437,24 +400,6 @@ header h1 {
   align-items: center;
   gap: 8px;
   font-size: 0.9em;
-  position: relative;
-  overflow: hidden;
-}
-
-.btn::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
-  transform: translateX(-100%);
-  transition: transform 0.6s ease;
-}
-
-.btn:hover::after {
-  transform: translateX(100%);
 }
 
 .btn-primary {
@@ -499,228 +444,6 @@ header h1 {
   background: linear-gradient(45deg, #1976d2, var(--info-blue));
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(33, 150, 243, 0.4);
-}
-
-#mapModal .modal-content {
-  max-width: 900px;
-  height: 80vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.map-container {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-#map {
-  flex: 1;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 2px solid rgba(255,255,255,0.1);
-}
-
-#smartMap {
-  flex: 1;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 2px solid rgba(255,255,255,0.1);
-  min-height: 400px;
-  height: 500px;
-}
-
-.map-search-box {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.map-search-box input {
-  flex: 1;
-  padding: 12px 20px;
-  border-radius: 25px;
-  border: 1px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.1);
-  color: var(--netflix-white);
-  font-size: 1em;
-}
-
-.map-search-box input:focus {
-  outline: none;
-  border-color: var(--netflix-red);
-  box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.1);
-}
-
-.map-search-box button {
-  padding: 12px 25px;
-  white-space: nowrap;
-}
-
-.map-controls {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px;
-  background: rgba(0,0,0,0.3);
-  border-radius: 10px;
-  margin-top: 10px;
-}
-
-.map-coordinates {
-  font-family: 'Courier New', monospace;
-  color: var(--netflix-light-gray);
-  font-size: 0.95em;
-}
-
-.map-coordinates span {
-  color: var(--netflix-white);
-  font-weight: 600;
-}
-
-.address-preview {
-  background: rgba(255,255,255,0.05);
-  border-radius: 10px;
-  padding: 15px;
-  margin-top: 10px;
-  border: 1px solid rgba(255,255,255,0.1);
-}
-
-.address-preview h4 {
-  color: var(--netflix-white);
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.address-preview h4 i {
-  color: var(--netflix-red);
-}
-
-.address-preview p {
-  color: var(--netflix-light-gray);
-  font-size: 0.9em;
-  line-height: 1.6;
-}
-
-.address-name-input {
-  margin-top: 15px;
-}
-
-.address-name-input label {
-  display: block;
-  color: var(--netflix-light-gray);
-  margin-bottom: 8px;
-  font-size: 0.9em;
-}
-
-.address-name-input input {
-  width: 100%;
-  padding: 10px 15px;
-  border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.2);
-  background: rgba(255,255,255,0.1);
-  color: var(--netflix-white);
-  font-size: 1em;
-}
-
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 25px;
-  margin: 30px 0;
-}
-
-.product-card {
-  background: var(--netflix-gray);
-  border-radius: 15px;
-  overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  border: 1px solid rgba(255,255,255,0.1);
-  position: relative;
-}
-
-.product-card:hover {
-  transform: translateY(-10px) scale(1.02);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-  border-color: var(--netflix-red);
-}
-
-.product-badge {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  background: linear-gradient(45deg, var(--netflix-red), #ff416c);
-  color: white;
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 0.8em;
-  font-weight: 600;
-  z-index: 2;
-}
-
-.product-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  transition: transform 0.5s ease;
-}
-
-.product-card:hover .product-image {
-  transform: scale(1.1);
-}
-
-.product-content {
-  padding: 20px;
-}
-
-.product-title {
-  font-size: 1.2em;
-  font-weight: 700;
-  color: var(--netflix-white);
-  margin-bottom: 10px;
-  line-height: 1.4;
-}
-
-.product-description {
-  color: var(--netflix-light-gray);
-  font-size: 0.9em;
-  margin-bottom: 15px;
-  line-height: 1.6;
-}
-
-.product-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.product-type {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: var(--netflix-light-gray);
-  font-size: 0.9em;
-}
-
-.product-type i {
-  color: var(--netflix-red);
-}
-
-.product-price {
-  font-size: 1.3em;
-  font-weight: 700;
-  color: var(--netflix-red);
-}
-
-.product-actions {
-  display: flex;
-  gap: 10px;
 }
 
 .cart-items {
@@ -868,27 +591,6 @@ header h1 {
   text-align: center;
   border: 1px solid rgba(255,255,255,0.1);
   transition: all 0.4s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.stat-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(45deg, transparent 30%, rgba(229, 9, 20, 0.05) 50%, transparent 70%);
-  transform: translateX(-100%);
-}
-
-.stat-card:hover::before {
-  animation: shimmer 1.5s infinite;
-}
-
-@keyframes shimmer {
-  100% { transform: translateX(100%); }
 }
 
 .stat-card:hover {
@@ -921,19 +623,6 @@ header h1 {
   padding: 25px;
   margin: 30px 0;
   border: 1px solid rgba(255,255,255,0.1);
-  position: relative;
-  overflow: hidden;
-}
-
-.discount-section::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(229, 9, 20, 0.1) 0%, transparent 50%);
-  z-index: 0;
 }
 
 .discount-header {
@@ -941,8 +630,6 @@ header h1 {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  position: relative;
-  z-index: 1;
 }
 
 .discount-title {
@@ -957,30 +644,9 @@ header h1 {
   color: var(--success-green);
 }
 
-.view-discounts-btn {
-  background: linear-gradient(45deg, var(--success-green), #45a049);
-  color: white;
-  padding: 10px 20px;
-  border-radius: 25px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.view-discounts-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
-}
-
 .discount-input-group {
   display: flex;
   gap: 15px;
-  position: relative;
-  z-index: 1;
 }
 
 .discount-input {
@@ -1048,8 +714,6 @@ header h1 {
   color: var(--netflix-light-gray);
   font-size: 0.9em;
   margin-top: 15px;
-  position: relative;
-  z-index: 1;
 }
 
 .discount-info i {
@@ -1162,24 +826,6 @@ header h1 {
   display: flex;
   align-items: center;
   gap: 10px;
-  position: relative;
-  overflow: hidden;
-}
-
-.pay-btn::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
-  transform: translateX(-100%);
-  transition: transform 0.8s ease;
-}
-
-.pay-btn:hover::after {
-  transform: translateX(100%);
 }
 
 .pay-btn:hover:not(:disabled) { 
@@ -1479,6 +1125,166 @@ header h1 {
   background: linear-gradient(to bottom, #ff416c, var(--netflix-red));
 }
 
+/* ===== تنسيق الخريطة المخصص ===== */
+#smartMap {
+  height: 450px;
+  border-radius: 15px;
+  border: 2px solid rgba(229, 9, 20, 0.3);
+  margin: 15px 0;
+  background: #1a1a1a;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+}
+
+.map-container {
+  background: rgba(0,0,0,0.3);
+  border-radius: 15px;
+  padding: 20px;
+}
+
+.map-search-box {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.map-search-box input {
+  flex: 1;
+  padding: 12px 20px;
+  border-radius: 25px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
+  color: white;
+  font-size: 1em;
+  font-family: 'Almarai', sans-serif;
+}
+
+.map-search-box input:focus {
+  outline: none;
+  border-color: var(--netflix-red);
+}
+
+.map-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0;
+  padding: 15px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 10px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.map-coordinates {
+  color: var(--netflix-light-gray);
+  font-size: 0.95em;
+  font-family: 'Courier New', monospace;
+}
+
+.map-coordinates span {
+  color: var(--netflix-white);
+  font-weight: 600;
+}
+
+.address-preview {
+  background: rgba(0,0,0,0.3);
+  padding: 15px;
+  border-radius: 10px;
+  margin: 15px 0;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.address-preview h4 {
+  color: var(--netflix-light-gray);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.address-preview h4 i {
+  color: var(--netflix-red);
+}
+
+.address-preview p {
+  color: var(--netflix-white);
+  font-size: 1em;
+}
+
+.address-name-input {
+  margin: 15px 0;
+}
+
+.address-name-input label {
+  display: block;
+  color: var(--netflix-light-gray);
+  margin-bottom: 8px;
+}
+
+.address-name-input input {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 25px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
+  color: white;
+  font-size: 1em;
+}
+
+.address-name-input input:focus {
+  outline: none;
+  border-color: var(--netflix-red);
+}
+
+/* ===== تنسيق اختيار موقع متعدد ===== */
+.address-selector {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin: 15px 0;
+}
+
+.address-option {
+  background: rgba(255,255,255,0.05);
+  border: 2px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.address-option:hover {
+  transform: translateY(-3px);
+  border-color: var(--netflix-red);
+  background: rgba(229, 9, 20, 0.1);
+}
+
+.address-option.selected {
+  border-color: var(--netflix-red);
+  background: rgba(229, 9, 20, 0.15);
+  box-shadow: 0 0 20px rgba(229, 9, 20, 0.2);
+}
+
+.address-option i {
+  font-size: 2em;
+  color: var(--netflix-red);
+  margin-bottom: 10px;
+  display: block;
+}
+
+.address-option .name {
+  font-weight: 700;
+  color: var(--netflix-white);
+  font-size: 1.1em;
+}
+
+.address-option .details {
+  color: var(--netflix-light-gray);
+  font-size: 0.85em;
+  margin-top: 5px;
+}
+
 /* ===== التصميم المتجاوب ===== */
 @media(max-width: 768px){
   :root {
@@ -1508,7 +1314,6 @@ header h1 {
     grid-template-columns: 1fr;
   }
   
-  .products-grid,
   .cart-items {
     grid-template-columns: 1fr;
   }
@@ -1540,16 +1345,6 @@ header h1 {
     padding: 20px 15px;
   }
   
-  .map-search-box {
-    flex-direction: column;
-  }
-  
-  .map-controls {
-    flex-direction: column;
-    gap: 15px;
-    align-items: stretch;
-  }
-  
   .discount-input-group {
     flex-direction: column;
   }
@@ -1559,9 +1354,18 @@ header h1 {
     width: 100%;
     justify-content: center;
   }
-
+  
   #smartMap {
     height: 300px;
+  }
+  
+  .map-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .address-selector {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -1647,6 +1451,17 @@ header h1 {
       </div>
     </div>
     
+    <!-- عرض العناوين المتعددة -->
+    <div id="multipleAddressesContainer" style="display: none;">
+      <h4 style="color: var(--netflix-light-gray); margin-bottom: 15px;">
+        <i class="fas fa-location-dot" style="color: var(--netflix-red);"></i>
+        اختر موقع التوصيل:
+      </h4>
+      <div class="address-selector" id="addressSelector">
+        <!-- سيتم ملؤها ديناميكياً -->
+      </div>
+    </div>
+    
     <div class="address-display" id="addressDisplay">
       <div class="address-display-header">
         <div class="address-name-display">
@@ -1727,9 +1542,6 @@ header h1 {
       <div class="discount-title">
         <i class="fas fa-tags"></i> كود الخصم
       </div>
-      <button class="view-discounts-btn" onclick="openDiscountsPage()">
-        <i class="fas fa-tag"></i> إدارة الخصومات
-      </button>
     </div>
     
     <div class="discount-input-group">
@@ -1805,9 +1617,12 @@ header h1 {
     
     <div class="map-container">
       <div class="map-search-box">
-        <input type="text" id="mapSearch" placeholder="ابحث عن موقع أو عنوان...">
+        <input type="text" id="mapSearch" placeholder="ابحث عن موقع أو عنوان..." onkeydown="if(event.key==='Enter') searchLocation()">
         <button class="btn btn-info" onclick="searchLocation()">
           <i class="fas fa-search"></i> بحث
+        </button>
+        <button class="btn btn-secondary" onclick="getCurrentLocation()" style="white-space: nowrap;">
+          <i class="fas fa-location-crosshairs"></i> موقعي
         </button>
       </div>
       
@@ -1824,7 +1639,7 @@ header h1 {
         </button>
       </div>
       
-      <div class="address-preview" id="addressPreview">
+      <div class="address-preview">
         <h4><i class="fas fa-map-marker-alt"></i> العنوان المستخرج</h4>
         <p id="extractedAddress">قم بتحديد موقع على الخريطة أو البحث عن عنوان</p>
       </div>
@@ -1835,7 +1650,7 @@ header h1 {
       </div>
     </div>
     
-    <div class="form-actions">
+    <div class="form-actions" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
       <button class="btn btn-secondary" onclick="closeSmartMap()">
         <i class="fas fa-times"></i> إلغاء
       </button>
@@ -1858,7 +1673,7 @@ header h1 {
       <!-- سيتم ملؤها ديناميكياً -->
     </div>
     
-    <div class="form-actions">
+    <div class="form-actions" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
       <button class="btn btn-secondary" onclick="closeSavedAddressesModal()">
         <i class="fas fa-times"></i> إغلاق
       </button>
@@ -1956,7 +1771,7 @@ header h1 {
       <input type="text" id="saveAddressName" placeholder="منزلي، مكتب، والدي..." value="عنوان جديد">
     </div>
     
-    <div class="form-actions">
+    <div class="form-actions" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
       <button class="btn btn-secondary" onclick="closeNameAddress()">
         <i class="fas fa-times"></i> إلغاء
       </button>
@@ -1979,7 +1794,7 @@ header h1 {
       <!-- سيتم ملؤها ديناميكياً -->
     </div>
     
-    <div class="form-actions" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+    <div class="form-actions" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
       <button class="btn btn-secondary" onclick="closeCardModal()">
         <i class="fas fa-times"></i> إلغاء
       </button>
@@ -2004,7 +1819,7 @@ header h1 {
       <p>✅ <strong>تأكيد الطلب:</strong> بمجرد الضغط على تأكيد، سيتم خصم المبلغ وإتمام العملية.</p>
     </div>
     
-    <div class="form-actions">
+    <div class="form-actions" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
       <button class="btn btn-secondary" onclick="closePolicyModal()">
         <i class="fas fa-times"></i> رجوع
       </button>
@@ -2019,6 +1834,10 @@ header h1 {
 <div id="messageBox" class="message-box"></div>
 
 <script>
+  // ============================================================
+// ملف: cart.js - كود الجافا سكريبت الكامل لصفحة سلة الشراء
+// ============================================================
+
 // ====== التهيئة الأساسية ======
 const user = JSON.parse(localStorage.getItem('user') || 'null');
 let loggedInUser = null;
@@ -2049,7 +1868,6 @@ const firebaseConfig = {
     appId: "1:739899495618:web:8e60409193ec1408b4d75b"
 };
 
-// تهيئة Firebase فقط إذا كانت متوفرة
 let db = null;
 let firebaseInitialized = false;
 
@@ -2067,7 +1885,6 @@ try {
 }
 
 // ====== مفاتيح التخزين ======
-// استخدام نفس المفاتيح القديمة لضمان التوافق
 const CART_KEY = `cart_${loggedInUser}`;
 const BALANCE_KEY = `balance_${loggedInUser}`;
 const LIBRARY_KEY = `library_${loggedInUser}`;
@@ -2075,6 +1892,7 @@ const ORDERS_KEY = `orders_${loggedInUser}`;
 const CARDS_KEY = `cards_${loggedInUser}`;
 const ADDRESSES_KEY = `addresses_${loggedInUser}`;
 const CURRENT_ADDRESS_KEY = `current_address_${loggedInUser}`;
+const USED_DISCOUNTS_KEY = `used_discounts_${loggedInUser}`;
 
 // ====== المتغيرات العامة ======
 let balance = 0;
@@ -2092,6 +1910,9 @@ let geocoder = null;
 let selectedCardForPayment = null;
 let selectedCardIndex = -1;
 let useFirebase = false;
+let usedDiscounts = [];
+let userAddresses = [];
+let selectedAddressId = null;
 
 // ====== تحميل البيانات من localStorage ======
 function loadAllData() {
@@ -2102,11 +1923,14 @@ function loadAllData() {
         cards = JSON.parse(localStorage.getItem(CARDS_KEY)) || [];
         addresses = JSON.parse(localStorage.getItem(ADDRESSES_KEY)) || [];
         currentAddress = JSON.parse(localStorage.getItem(CURRENT_ADDRESS_KEY)) || null;
+        usedDiscounts = JSON.parse(localStorage.getItem(USED_DISCOUNTS_KEY)) || [];
+        userAddresses = addresses;
         
         console.log('📦 تم تحميل البيانات من localStorage:');
         console.log('  - المنتجات في السلة:', cart.length);
         console.log('  - البطاقات:', cards.length);
         console.log('  - العناوين:', addresses.length);
+        console.log('  - الأكواد المستخدمة:', usedDiscounts.length);
         
         return true;
     } catch (e) {
@@ -2123,6 +1947,7 @@ function saveAllData() {
         localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
         localStorage.setItem(CARDS_KEY, JSON.stringify(cards));
         localStorage.setItem(ADDRESSES_KEY, JSON.stringify(addresses));
+        localStorage.setItem(USED_DISCOUNTS_KEY, JSON.stringify(usedDiscounts));
         if (currentAddress) {
             localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
         } else {
@@ -2135,53 +1960,8 @@ function saveAllData() {
     }
 }
 
-// ====== دالة جلب البطاقات من Firebase ======
-async function loadCardsFromFirebase() {
-    if (!firebaseInitialized || !db || !loggedInUser) {
-        console.log('⚠️ Firebase غير متاح، استخدام localStorage فقط');
-        return false;
-    }
-    
-    try {
-        // محاولة جلب uid من localStorage
-        const userData = JSON.parse(localStorage.getItem('user') || '{}');
-        const uid = userData.uid;
-        
-        if (!uid) {
-            console.warn('⚠️ لا يوجد UID للمستخدم');
-            return false;
-        }
-        
-        const cardsRef = db.ref(`digitalCards/${uid}`);
-        const snapshot = await cardsRef.once('value');
-        
-        let firebaseCards = [];
-        if (snapshot.exists()) {
-            const cardsData = snapshot.val();
-            for (let cardId in cardsData) {
-                firebaseCards.push({ id: cardId, ...cardsData[cardId] });
-            }
-        }
-        
-        // إذا وجدنا بطاقات في Firebase، نستخدمها بدلاً من localStorage
-        if (firebaseCards.length > 0) {
-            console.log('🔥 تم جلب البطاقات من Firebase:', firebaseCards.length);
-            cards = firebaseCards;
-            localStorage.setItem(CARDS_KEY, JSON.stringify(cards));
-            useFirebase = true;
-            return true;
-        }
-        
-        return false;
-    } catch (e) {
-        console.error('❌ خطأ في جلب البطاقات من Firebase:', e);
-        return false;
-    }
-}
-
 // ====== دالة تحديث الرصيد ======
 function updateBalanceFromWallet() {
-    // جلب البطاقات من localStorage أولاً
     cards = JSON.parse(localStorage.getItem(CARDS_KEY)) || [];
     
     // حساب الرصيد الكلي = مجموع أرصدة البطاقات
@@ -2228,6 +2008,28 @@ function calculateCartStats() {
     return { subtotal, discountAmount, shippingFee, finalTotal, hasPhysicalProducts };
 }
 
+// ====== تحديث إحصائيات السلة ======
+function updateCartStats() {
+    const stats = calculateCartStats();
+    const totalItems = cart.length;
+    const totalQuantity = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    
+    document.getElementById('totalItems').textContent = totalItems;
+    document.getElementById('totalQuantity').textContent = totalQuantity;
+    document.getElementById('totalAmountStats').textContent = formatPrice(stats.subtotal);
+    document.getElementById('savings').textContent = formatPrice(stats.discountAmount);
+    
+    document.getElementById('subtotal').textContent = formatPrice(stats.subtotal);
+    document.getElementById('discountAmount').textContent = formatPrice(stats.discountAmount);
+    document.getElementById('shippingFee').textContent = formatPrice(stats.shippingFee);
+    document.getElementById('finalTotal').textContent = formatPrice(stats.finalTotal);
+    
+    document.getElementById('totalAmount').textContent = formatPrice(stats.finalTotal);
+    document.getElementById('itemsCount').textContent = `${totalQuantity} منتج في السلة`;
+    
+    checkRequirements();
+}
+
 // ====== وظائف المساعدة ======
 function showMessage(msg, type = 'success', duration = 4000) {
     const messageBox = document.getElementById('messageBox');
@@ -2262,7 +2064,6 @@ function isDigitalProduct(product) {
                product.type === 'مانجا' || 
                product.type === 'فيديو';
     }
-    // افتراضياً، إذا كان المنتج له ISBN أو كان كتاباً، فهو ورقي
     if (product.isbn || product.pages) {
         return false;
     }
@@ -2281,7 +2082,6 @@ function getEstimatedDeliveryDate() {
 
 // ====== دالة فحص المتطلبات ======
 function checkRequirements() {
-    // تحديث الرصيد أولاً من البطاقات
     updateBalanceFromWallet();
     
     const stats = calculateCartStats();
@@ -2292,38 +2092,28 @@ function checkRequirements() {
     const addressWarning = document.getElementById('addressWarning');
     const balanceWarning = document.getElementById('balanceWarning');
     
-    // إخفاء جميع التحذيرات أولاً
     if (addressWarning) addressWarning.style.display = 'none';
     if (balanceWarning) balanceWarning.style.display = 'none';
     
-    // إذا كانت السلة فارغة
     if (cart.length === 0) {
         if (payBtn) {
             payBtn.disabled = true;
-            payBtn.style.background = '#555';
-            payBtn.style.cursor = 'not-allowed';
-            payBtn.style.opacity = '0.7';
-            payBtn.title = "السلة فارغة - أضف منتجات أولاً";
+            payBtn.innerHTML = '<i class="fas fa-credit-card"></i> <span>السلة فارغة</span>';
         }
         return;
     }
     
-    // التحقق من العنوان للمنتجات الورقية فقط
     if (hasPhysicalProducts && !currentAddress) {
         if (addressWarning) {
             addressWarning.style.display = 'flex';
         }
         if (payBtn) {
             payBtn.disabled = true;
-            payBtn.style.background = '#555';
-            payBtn.style.cursor = 'not-allowed';
-            payBtn.style.opacity = '0.7';
-            payBtn.title = "العنوان مطلوب للمنتجات الورقية - أضف عنوان التوصيل";
+            payBtn.innerHTML = '<i class="fas fa-credit-card"></i> <span>أضف عنواناً</span>';
         }
         return;
     }
     
-    // التحقق من الرصيد
     if (!hasEnoughBalance) {
         if (balanceWarning) {
             balanceWarning.style.display = 'flex';
@@ -2334,79 +2124,62 @@ function checkRequirements() {
         }
         if (payBtn) {
             payBtn.disabled = true;
-            payBtn.style.background = '#555';
-            payBtn.style.cursor = 'not-allowed';
-            payBtn.style.opacity = '0.7';
-            payBtn.title = `رصيدك غير كافٍ (المطلوب: ${formatPrice(stats.finalTotal)} - رصيدك: ${formatPrice(balance)})`;
+            payBtn.innerHTML = '<i class="fas fa-credit-card"></i> <span>رصيد غير كافٍ</span>';
         }
         return;
     }
     
-    // جميع الشروط متحققة - تمكين الزر
     if (payBtn) {
         payBtn.disabled = false;
-        payBtn.style.background = 'linear-gradient(45deg, var(--netflix-red), #ff416c)';
-        payBtn.style.cursor = 'pointer';
-        payBtn.style.opacity = '1';
-        payBtn.title = "إتمام عملية الشراء";
+        payBtn.innerHTML = '<i class="fas fa-credit-card"></i> <span>إتمام الشراء</span>';
     }
 }
 
-// ====== دالة تحديث إحصائيات السلة ======
-function updateCartStats() {
-    const stats = calculateCartStats();
+// ====== عرض العناوين المتعددة ======
+function renderMultipleAddresses() {
+    const container = document.getElementById('addressSelector');
+    const mainContainer = document.getElementById('multipleAddressesContainer');
     
-    const totalItemsEl = document.getElementById('totalItems');
-    const totalQuantityEl = document.getElementById('totalQuantity');
-    const totalAmountStatsEl = document.getElementById('totalAmountStats');
-    const savingsEl = document.getElementById('savings');
-    const subtotalEl = document.getElementById('subtotal');
-    const discountAmountEl = document.getElementById('discountAmount');
-    const shippingFeeEl = document.getElementById('shippingFee');
-    const finalTotalEl = document.getElementById('finalTotal');
-    const totalAmountEl = document.getElementById('totalAmount');
-    const itemsCountEl = document.getElementById('itemsCount');
+    if (!container) return;
     
-    if (totalItemsEl) totalItemsEl.textContent = cart.length;
-    if (totalQuantityEl) totalQuantityEl.textContent = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-    if (totalAmountStatsEl) totalAmountStatsEl.textContent = formatPrice(stats.subtotal);
-    if (savingsEl) savingsEl.textContent = formatPrice(stats.discountAmount);
-    
-    if (subtotalEl) subtotalEl.textContent = formatPrice(stats.subtotal);
-    if (discountAmountEl) discountAmountEl.textContent = stats.discountAmount > 0 ? `-${formatPrice(stats.discountAmount)}` : formatPrice(0);
-    if (shippingFeeEl) shippingFeeEl.textContent = formatPrice(stats.shippingFee);
-    if (finalTotalEl) finalTotalEl.textContent = formatPrice(stats.finalTotal);
-    
-    if (totalAmountEl) totalAmountEl.textContent = formatPrice(stats.finalTotal);
-    if (itemsCountEl) itemsCountEl.textContent = `${cart.reduce((sum, item) => sum + (item.quantity || 1), 0)} منتج في السلة`;
-    
-    // تحديث الرصيد
-    updateBalanceFromWallet();
-    
-    // تمكين/تعطيل زر الدفع
-    checkRequirements();
-    
-    // تحديث معلومات الخصم
-    const discountCodeInput = document.getElementById('discountCode');
-    const discountInfo = document.getElementById('discountInfo');
-    const removeDiscountBtn = document.getElementById('removeDiscountBtn');
-    
-    if (!currentDiscount) {
-        if (discountCodeInput) {
-            discountCodeInput.style.borderColor = 'rgba(255,255,255,0.2)';
-            discountCodeInput.style.boxShadow = 'none';
-            discountCodeInput.value = '';
-        }
-        if (discountInfo) {
-            discountInfo.innerHTML = `
-                <i class="fas fa-info-circle"></i>
-                يمكنك استخدام كود خصم واحد لكل عملية شراء
-            `;
-        }
-        if (removeDiscountBtn) removeDiscountBtn.style.display = 'none';
+    // جمع جميع العناوين المتاحة
+    const allAddresses = [...addresses];
+    if (currentAddress && !allAddresses.find(a => a.id === currentAddress.id)) {
+        allAddresses.push(currentAddress);
     }
     
-    return stats;
+    if (allAddresses.length <= 1) {
+        mainContainer.style.display = 'none';
+        return;
+    }
+    
+    mainContainer.style.display = 'block';
+    
+    container.innerHTML = allAddresses.map(addr => `
+        <div class="address-option ${selectedAddressId === addr.id ? 'selected' : ''}" 
+             onclick="selectAddressOption('${addr.id}')">
+            <i class="fas fa-${addr.source === 'gps' ? 'satellite' : addr.source === 'map' ? 'map-marked-alt' : 'edit'}"></i>
+            <div class="name">${addr.name || 'عنوان'}</div>
+            <div class="details">${addr.city || ''} - ${addr.district || ''}</div>
+            <div class="details" style="font-size: 0.75em; color: var(--netflix-light-gray);">
+                ${addr.latitude ? `${addr.latitude.toFixed(4)}°, ${addr.longitude?.toFixed(4) || ''}°` : 'لا توجد إحداثيات'}
+            </div>
+        </div>
+    `).join('');
+}
+
+function selectAddressOption(addressId) {
+    selectedAddressId = addressId;
+    const address = addresses.find(a => a.id === addressId) || 
+                    (currentAddress && currentAddress.id === addressId ? currentAddress : null);
+    
+    if (address) {
+        currentAddress = { ...address };
+        localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
+        updateAddressDisplay();
+        renderMultipleAddresses();
+        showMessage(`تم اختيار "${address.name}"`, 'success');
+    }
 }
 
 // ====== نظام العناوين الذكي ======
@@ -2447,6 +2220,9 @@ function updateAddressDisplay() {
         }
         
         if (addressDisplay) addressDisplay.classList.add('active');
+        
+        // تحديث العناوين المتعددة
+        renderMultipleAddresses();
     } else {
         if (addressDisplay) addressDisplay.classList.remove('active');
     }
@@ -2477,7 +2253,8 @@ function getCurrentLocation() {
                 if (data.address) {
                     const addr = data.address;
                     
-                    currentAddress = {
+                    const newAddress = {
+                        id: 'addr_' + Date.now(),
                         name: 'موقعي الحالي',
                         city: addr.city || addr.town || addr.village || addr.municipality || 'غير محدد',
                         district: addr.suburb || addr.neighbourhood || addr.quarter || 'غير محدد',
@@ -2489,12 +2266,19 @@ function getCurrentLocation() {
                         latitude: latitude,
                         longitude: longitude,
                         source: 'gps',
-                        timestamp: new Date().toISOString()
+                        timestamp: new Date().toISOString(),
+                        isDefault: addresses.length === 0
                     };
                     
+                    // حفظ في العناوين
+                    addresses.push(newAddress);
+                    currentAddress = newAddress;
+                    selectedAddressId = newAddress.id;
+                    
+                    localStorage.setItem(ADDRESSES_KEY, JSON.stringify(addresses));
                     localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
+                    
                     updateAddressDisplay();
-                    openNameAddressModal();
                     showMessage('تم تحديد موقعك بنجاح!', 'success');
                 } else {
                     throw new Error('لا يمكن تحديد العنوان');
@@ -2502,7 +2286,8 @@ function getCurrentLocation() {
                 
             } catch (error) {
                 console.error('Geocoding error:', error);
-                currentAddress = {
+                const newAddress = {
+                    id: 'addr_' + Date.now(),
                     name: 'موقع GPS',
                     city: 'غير محدد',
                     district: 'غير محدد',
@@ -2510,10 +2295,17 @@ function getCurrentLocation() {
                     latitude: latitude,
                     longitude: longitude,
                     source: 'gps',
-                    timestamp: new Date().toISOString()
+                    timestamp: new Date().toISOString(),
+                    isDefault: addresses.length === 0
                 };
                 
+                addresses.push(newAddress);
+                currentAddress = newAddress;
+                selectedAddressId = newAddress.id;
+                
+                localStorage.setItem(ADDRESSES_KEY, JSON.stringify(addresses));
                 localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
+                
                 updateAddressDisplay();
                 openNameAddressModal();
                 showMessage('تم تحديد الموقع، يرجى إكمال العنوان يدوياً', 'warning');
@@ -2578,28 +2370,72 @@ function openSmartMap() {
 }
 
 function initSmartMap() {
-    smartMap = L.map('smartMap').setView([24.7136, 46.6753], 6);
+    smartMap = L.map('smartMap', {
+        center: [24.7136, 46.6753],
+        zoom: 6,
+        zoomControl: true,
+        fadeAnimation: true,
+        zoomAnimation: true
+    });
     
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors',
-        maxZoom: 19
+        attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
+        maxZoom: 19,
+        minZoom: 3,
+        className: 'custom-map-tiles'
+    }).addTo(smartMap);
+    
+    L.control.zoom({
+        position: 'bottomright'
+    }).addTo(smartMap);
+    
+    L.control.scale({
+        position: 'bottomleft',
+        metric: true,
+        imperial: false
     }).addTo(smartMap);
     
     geocoder = L.Control.geocoder({
         defaultMarkGeocode: false,
         placeholder: 'ابحث عن موقع...',
-        errorMessage: 'لم يتم العثور على الموقع'
+        errorMessage: 'لم يتم العثور على الموقع',
+        showResultIcons: true,
+        collapsed: false,
+        position: 'topleft'
     }).addTo(smartMap);
     
     geocoder.on('markgeocode', function(e) {
         const { center, name } = e.geocode;
         smartMap.setView(center, 16);
         updateMapMarker(center.lat, center.lng);
-        updateAddressFromGeocode(name, center.lat, center.lng);
+        document.getElementById('extractedAddress').textContent = name;
+        document.getElementById('addressNameInput').value = name;
+    });
+    
+    const customIcon = L.divIcon({
+        className: 'custom-marker',
+        html: `<div style="
+            background: linear-gradient(135deg, #e50914, #ff416c);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid white;
+            box-shadow: 0 4px 20px rgba(229, 9, 20, 0.6);
+            font-size: 20px;
+            color: white;
+        "><i class="fas fa-map-pin"></i></div>`,
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+        popupAnchor: [0, -40]
     });
     
     smartMapMarker = L.marker([0, 0], {
-        draggable: true
+        draggable: true,
+        icon: customIcon,
+        zIndexOffset: 1000
     }).addTo(smartMap);
     
     smartMapMarker.on('dragend', function() {
@@ -2612,6 +2448,41 @@ function initSmartMap() {
         updateMapMarker(e.latlng.lat, e.latlng.lng);
         reverseGeocode(e.latlng.lat, e.latlng.lng);
     });
+    
+    L.Control.CustomMapControl = L.Control.extend({
+        onAdd: function(map) {
+            const div = L.DomUtil.create('div', 'custom-map-control');
+            div.innerHTML = '<i class="fas fa-marker" style="color: #e50914; font-size: 20px;"></i>';
+            div.style.cssText = `
+                background: rgba(20,20,20,0.9);
+                padding: 10px 15px;
+                border-radius: 8px;
+                border: 1px solid rgba(255,255,255,0.1);
+                cursor: pointer;
+                transition: all 0.3s ease;
+            `;
+            div.onclick = () => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const { latitude, longitude } = position.coords;
+                            smartMap.setView([latitude, longitude], 16);
+                            updateMapMarker(latitude, longitude);
+                            reverseGeocode(latitude, longitude);
+                        },
+                        () => showMessage('تعذر تحديد الموقع', 'error')
+                    );
+                }
+            };
+            return div;
+        }
+    });
+    
+    L.control.customMapControl = function(opts) {
+        return new L.Control.CustomMapControl(opts);
+    };
+    
+    L.control.customMapControl({ position: 'bottomright' }).addTo(smartMap);
 }
 
 function updateMapMarker(lat, lng) {
@@ -2637,7 +2508,7 @@ async function reverseGeocode(lat, lng) {
             
             if (data.address) {
                 const addr = data.address;
-                currentAddress = {
+                window._tempAddress = {
                     city: addr.city || addr.town || addr.village || addr.municipality || '',
                     district: addr.suburb || addr.neighbourhood || addr.quarter || '',
                     street: addr.road || '',
@@ -2647,7 +2518,9 @@ async function reverseGeocode(lat, lng) {
                     source: 'map'
                 };
                 
-                document.getElementById('addressNameInput').value = 'عنوان من الخريطة';
+                if (!document.getElementById('addressNameInput').value) {
+                    document.getElementById('addressNameInput').value = 'عنوان من الخريطة';
+                }
             }
         } else {
             document.getElementById('extractedAddress').textContent = 'لا يمكن استخراج العنوان من هذا الموقع';
@@ -2658,24 +2531,29 @@ async function reverseGeocode(lat, lng) {
     }
 }
 
-function updateAddressFromGeocode(addressText, lat, lng) {
-    document.getElementById('extractedAddress').textContent = addressText;
-    updateCoordinates(lat, lng);
-}
-
 function searchLocation() {
     const query = document.getElementById('mapSearch').value.trim();
-    if (!query) return;
+    if (!query) {
+        showMessage('الرجاء إدخال موقع للبحث', 'error');
+        return;
+    }
+    
+    showMessage('جاري البحث...', 'info', 1500);
     
     fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1&accept-language=ar`)
         .then(response => response.json())
         .then(data => {
             if (data.length > 0) {
                 const result = data[0];
-                smartMap.setView([result.lat, result.lon], 16);
-                updateMapMarker(parseFloat(result.lat), parseFloat(result.lon));
+                const lat = parseFloat(result.lat);
+                const lon = parseFloat(result.lon);
+                
+                smartMap.setView([lat, lon], 16);
+                updateMapMarker(lat, lon);
                 document.getElementById('extractedAddress').textContent = result.display_name;
                 document.getElementById('addressNameInput').value = query;
+                
+                showMessage('تم العثور على الموقع', 'success');
             } else {
                 showMessage('لم يتم العثور على الموقع', 'error');
             }
@@ -2691,20 +2569,30 @@ function useSmartMapLocation() {
     const lng = parseFloat(document.getElementById('mapLng').textContent);
     const addressName = document.getElementById('addressNameInput').value.trim() || 'عنوان من الخريطة';
     
-    currentAddress = {
+    const tempAddr = window._tempAddress || {};
+    
+    const newAddress = {
+        id: 'addr_' + Date.now(),
         name: addressName,
-        city: currentAddress?.city || '',
-        district: currentAddress?.district || '',
-        street: currentAddress?.street || '',
-        building: currentAddress?.building || '',
+        city: tempAddr.city || '',
+        district: tempAddr.district || '',
+        street: tempAddr.street || '',
+        building: tempAddr.building || '',
         apartment: '',
         latitude: lat,
         longitude: lng,
         source: 'map',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        isDefault: addresses.length === 0
     };
     
+    addresses.push(newAddress);
+    currentAddress = newAddress;
+    selectedAddressId = newAddress.id;
+    
+    localStorage.setItem(ADDRESSES_KEY, JSON.stringify(addresses));
     localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
+    
     updateAddressDisplay();
     closeSmartMap();
     
@@ -2721,7 +2609,6 @@ function closeSmartMap() {
 
 // ====== العناوين المحفوظة ======
 function openSavedAddresses() {
-    // تحميل العناوين من localStorage
     addresses = JSON.parse(localStorage.getItem(ADDRESSES_KEY)) || [];
     renderSavedAddresses();
     document.getElementById('savedAddressesModal').style.display = 'flex';
@@ -2748,7 +2635,7 @@ function renderSavedAddresses() {
     
     container.innerHTML = addresses.map((addr, index) => `
         <div class="address-item ${currentAddress?.id === addr.id ? 'selected' : ''}" 
-             onclick="selectAddress('${addr.id}')">
+             onclick="selectSavedAddress('${addr.id}')">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <i class="fas fa-map-marker-alt" style="color: var(--netflix-red);"></i>
@@ -2769,16 +2656,18 @@ function renderSavedAddresses() {
             <div style="color: var(--netflix-light-gray); font-size: 0.9em;">
                 <div>${addr.city} - ${addr.district}</div>
                 <div>${addr.street} ${addr.building ? ' - مبنى ' + addr.building : ''} ${addr.apartment ? ' - شقة ' + addr.apartment : ''}</div>
-                <div><i class="fas fa-phone"></i> ${addr.phone}</div>
+                <div><i class="fas fa-phone"></i> ${addr.phone || 'غير متوفر'}</div>
+                ${addr.latitude ? `<div><i class="fas fa-globe"></i> ${addr.latitude.toFixed(4)}°, ${addr.longitude?.toFixed(4) || ''}°</div>` : ''}
             </div>
         </div>
     `).join('');
 }
 
-function selectAddress(addressId) {
+function selectSavedAddress(addressId) {
     const address = addresses.find(addr => addr.id === addressId);
     if (address) {
         currentAddress = { ...address };
+        selectedAddressId = address.id;
         localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
         updateAddressDisplay();
         closeSavedAddressesModal();
@@ -2803,12 +2692,19 @@ function deleteAddress(addressId) {
     localStorage.setItem(ADDRESSES_KEY, JSON.stringify(addresses));
     
     if (currentAddress?.id === addressId) {
-        currentAddress = null;
-        localStorage.removeItem(CURRENT_ADDRESS_KEY);
+        const defaultAddress = addresses.find(a => a.isDefault) || addresses[0] || null;
+        currentAddress = defaultAddress;
+        selectedAddressId = defaultAddress?.id || null;
+        if (currentAddress) {
+            localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
+        } else {
+            localStorage.removeItem(CURRENT_ADDRESS_KEY);
+        }
         updateAddressDisplay();
     }
     
     renderSavedAddresses();
+    renderMultipleAddresses();
     showMessage('تم حذف العنوان', 'warning');
 }
 
@@ -2878,11 +2774,14 @@ function saveManualAddress() {
         isDefault: addresses.length === 0
     };
     
-    currentAddress = address;
-    localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
+    addresses.forEach(a => a.isDefault = false);
     
-    addresses.push({ ...address });
+    addresses.push(address);
+    currentAddress = address;
+    selectedAddressId = address.id;
+    
     localStorage.setItem(ADDRESSES_KEY, JSON.stringify(addresses));
+    localStorage.setItem(CURRENT_ADDRESS_KEY, JSON.stringify(currentAddress));
     
     updateAddressDisplay();
     closeManualAddress();
@@ -2891,7 +2790,10 @@ function saveManualAddress() {
 }
 
 function editCurrentAddress() {
-    if (!currentAddress) return;
+    if (!currentAddress) {
+        showMessage('لا يوجد عنوان لتعديله', 'error');
+        return;
+    }
     openManualAddress();
 }
 
@@ -2919,14 +2821,11 @@ function confirmSaveAddress() {
     
     currentAddress.name = name;
     
-    if (!currentAddress.id) {
+    const existingIndex = addresses.findIndex(addr => addr.id === currentAddress.id);
+    if (existingIndex === -1) {
         currentAddress.id = 'addr_' + Date.now();
         currentAddress.createdAt = new Date().toISOString();
         currentAddress.isDefault = addresses.length === 0;
-    }
-    
-    const existingIndex = addresses.findIndex(addr => addr.id === currentAddress.id);
-    if (existingIndex === -1) {
         addresses.push({ ...currentAddress });
     } else {
         addresses[existingIndex] = { ...currentAddress };
@@ -2955,7 +2854,6 @@ function renderCart() {
     const container = document.getElementById('cartItemsContainer');
     if (!container) return;
     
-    // تحميل السلة من localStorage
     cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
     
     if (cart.length === 0) {
@@ -2993,8 +2891,8 @@ function renderCart() {
                                  alt="${item.title || 'منتج'}" 
                                  class="cart-item-image"
                                  onerror="this.src='https://via.placeholder.com/300x180/222/fff?text=No+Image'">
-                            <div class="product-badge">
-                                ${isDigital ? 'رقمي' : 'ورقي'}
+                            <div style="position: absolute; top: 10px; left: 10px; background: ${isDigital ? 'linear-gradient(45deg, #2196f3, #1976d2)' : 'linear-gradient(45deg, var(--netflix-red), #ff416c)'}; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.8em; font-weight: 600;">
+                                ${isDigital ? '📱 رقمي' : '📄 ورقي'}
                             </div>
                         </div>
                         <div class="cart-item-content">
@@ -3036,9 +2934,6 @@ function renderCart() {
                                     ${formatPrice(total)}
                                 </div>
                                 <div class="item-actions">
-                                    <button class="btn btn-secondary" onclick="saveForLater(${index})" style="padding: 8px 15px; font-size: 0.9em;">
-                                        <i class="far fa-bookmark"></i> حفظ
-                                    </button>
                                     <button class="btn btn-secondary" onclick="removeFromCart(${index})" style="padding: 8px 15px; font-size: 0.9em; background: rgba(244, 67, 54, 0.2); border-color: rgba(244, 67, 54, 0.4);">
                                         <i class="fas fa-trash"></i> حذف
                                     </button>
@@ -3085,25 +2980,6 @@ function removeFromCart(index) {
     }
 }
 
-function saveForLater(index) {
-    const item = cart[index];
-    let savedItems = JSON.parse(localStorage.getItem('savedItems') || '[]');
-    
-    if (savedItems.find(saved => saved.id === item.id)) {
-        showMessage('هذا المنتج محفوظ بالفعل', 'warning');
-        return;
-    }
-    
-    savedItems.push(item);
-    localStorage.setItem('savedItems', JSON.stringify(savedItems));
-    
-    cart.splice(index, 1);
-    localStorage.setItem(CART_KEY, JSON.stringify(cart));
-    
-    renderCart();
-    showMessage(`تم حفظ "${item.title}" للمستقبل`, 'success');
-}
-
 // ====== الخصومات ======
 function applyDiscount() {
     const discountCodeInput = document.getElementById('discountCode');
@@ -3116,6 +2992,11 @@ function applyDiscount() {
     
     if (cart.length === 0) {
         showMessage('السلة فارغة! أضف منتجات أولاً', 'error');
+        return;
+    }
+    
+    if (usedDiscounts.includes(code)) {
+        showMessage('لقد استخدمت هذا الكود بالفعل! لا يمكن استخدامه مرة أخرى', 'error');
         return;
     }
     
@@ -3173,6 +3054,12 @@ function applyDiscount() {
         }
     }
     
+    usedDiscounts.push(code);
+    localStorage.setItem(USED_DISCOUNTS_KEY, JSON.stringify(usedDiscounts));
+    
+    discount.usedCount = (discount.usedCount || 0) + 1;
+    localStorage.setItem('admin_discounts', JSON.stringify(allDiscounts));
+    
     currentDiscount = {
         code: discount.code,
         type: discount.type,
@@ -3184,26 +3071,22 @@ function applyDiscount() {
     
     discountCode = code;
     
-    discount.usedCount = (discount.usedCount || 0) + 1;
-    localStorage.setItem('admin_discounts', JSON.stringify(allDiscounts));
-    
     updateCartStats();
     
-    let successMsg = `تم تطبيق الخصم بنجاح! `;
+    let successMsg = `✅ تم تطبيق الخصم بنجاح! `;
     if (discount.type === 'percentage') {
         successMsg += `(خصم ${discount.percentage}%)`;
     } else if (discount.type === 'fixed') {
         successMsg += `(خصم ${formatPrice(discount.amount)})`;
     } else if (discount.type === 'free_shipping') {
         successMsg += `(شحن مجاني)`;
-    } else if (discount.type === 'balance') {
-        successMsg += `(رصيد إضافي ${formatPrice(discount.balanceAmount)})`;
     }
     
     showMessage(successMsg, 'success');
     
     discountCodeInput.style.borderColor = 'var(--success-green)';
     discountCodeInput.style.boxShadow = '0 0 0 3px rgba(76, 175, 80, 0.1)';
+    discountCodeInput.disabled = true;
     
     const removeDiscountBtn = document.getElementById('removeDiscountBtn');
     if (removeDiscountBtn) removeDiscountBtn.style.display = 'flex';
@@ -3226,6 +3109,7 @@ function removeDiscount() {
         discountCodeInput.value = '';
         discountCodeInput.style.borderColor = 'rgba(255,255,255,0.2)';
         discountCodeInput.style.boxShadow = 'none';
+        discountCodeInput.disabled = false;
     }
     
     const removeDiscountBtn = document.getElementById('removeDiscountBtn');
@@ -3243,23 +3127,14 @@ function removeDiscount() {
     showMessage('تم إزالة الخصم', 'warning');
 }
 
-function openDiscountsPage() {
-    window.location.href = 'discounts.html';
-}
-
 // ====== نظام البطاقات والدفع ======
-
-// دالة عرض البطاقات مع التحقق من الرصيد
 function showCardSelection() {
     const container = document.getElementById('cardsContainer');
     if (!container) return;
     
     const stats = calculateCartStats();
     
-    // تحديث قائمة البطاقات من localStorage
     cards = JSON.parse(localStorage.getItem(CARDS_KEY)) || [];
-    
-    // تحديث الرصيد الكلي
     updateBalanceFromWallet();
     
     if (cards.length === 0) {
@@ -3271,7 +3146,7 @@ function showCardSelection() {
                     <i class="fas fa-exclamation-triangle"></i>
                     إجمالي المطلوب: ${formatPrice(stats.finalTotal)}
                 </p>
-                <button class="btn btn-primary" onclick="window.location.href='cards.html'" style="margin-top: 15px;">
+                <button class="btn btn-primary" onclick="window.location.href='wallet.html'" style="margin-top: 15px;">
                     <i class="fas fa-plus"></i> إضافة بطاقة جديدة
                 </button>
             </div>
@@ -3280,7 +3155,6 @@ function showCardSelection() {
         return;
     }
     
-    // عرض البطاقات مع حالة الرصيد لكل منها
     container.innerHTML = `
         <div style="background: rgba(229, 9, 20, 0.1); border: 1px solid rgba(229, 9, 20, 0.3); border-radius: 10px; padding: 15px; margin-bottom: 20px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -3364,7 +3238,7 @@ function showCardSelection() {
             <button class="btn btn-secondary" onclick="closeCardModal()" style="flex: 1;">
                 <i class="fas fa-times"></i> إلغاء
             </button>
-            <button class="btn btn-primary" onclick="window.location.href='cards.html'" style="flex: 2;">
+            <button class="btn btn-primary" onclick="window.location.href='wallet.html'" style="flex: 2;">
                 <i class="fas fa-plus"></i> إضافة بطاقة جديدة
             </button>
         </div>
@@ -3373,43 +3247,36 @@ function showCardSelection() {
     document.getElementById('cardModal').style.display = 'flex';
 }
 
-// اختيار البطاقة للدفع
 function selectCardForPayment(cardIndex) {
     const selectedCard = cards[cardIndex];
     const stats = calculateCartStats();
     
-    // التحقق من الرصيد مرة أخرى للتأكد
     if (selectedCard.balance < stats.finalTotal) {
         showMessage('رصيد البطاقة غير كافٍ!', 'error');
         return;
     }
     
-    // تخزين البطاقة المختارة
     selectedCardIndex = cardIndex;
     selectedCardForPayment = selectedCard;
     
-    // إغلاق نافذة البطاقات
     closeCardModal();
-    
-    // عرض سياسة الاسترجاع
     document.getElementById('policyModal').style.display = 'flex';
     
     showMessage(`تم اختيار بطاقة "${selectedCard.name || 'البطاقة'}"`, 'success', 2000);
 }
 
-// إغلاق نافذة البطاقات
 function closeCardModal() {
     document.getElementById('cardModal').style.display = 'none';
 }
 
-// إغلاق نافذة السياسة
 function closePolicyModal() {
     document.getElementById('policyModal').style.display = 'none';
 }
 
-// تأكيد عملية الشراء
+// ============================================================
+// ====== تأكيد عملية الشراء (النسخة المحسّنة) ======
+// ============================================================
 function confirmPurchase() {
-    // التحقق من وجود بطاقة مختارة
     if (selectedCardIndex === -1 || !selectedCardForPayment) {
         showMessage('لم يتم اختيار بطاقة صالحة', 'error');
         return;
@@ -3417,90 +3284,159 @@ function confirmPurchase() {
     
     const stats = calculateCartStats();
     
-    // التحقق النهائي من الرصيد
     if (selectedCardForPayment.balance < stats.finalTotal) {
         showMessage('رصيد البطاقة غير كافٍ!', 'error');
         return;
     }
     
-    // خصم المبلغ من البطاقة
+    // ====== خصم المبلغ من البطاقة ======
     selectedCardForPayment.balance -= stats.finalTotal;
     cards[selectedCardIndex] = selectedCardForPayment;
     localStorage.setItem(CARDS_KEY, JSON.stringify(cards));
     
-    // تحديث الرصيد الكلي (مجموع أرصدة البطاقات)
+    // تحديث الرصيد الكلي
     updateBalanceFromWallet();
     
     // ====== معالجة المنتجات ======
     const digitalProducts = [];
     const physicalProducts = [];
-    const today = new Date().toLocaleString('ar-SA');
-    const transactionId = 'TXN' + Date.now();
+    const today = new Date().toLocaleDateString('ar-SA');
+    const transactionId = 'ORD' + String(Date.now()).slice(-6) + String(Math.floor(Math.random() * 1000)).padStart(3, '0');
     
     cart.forEach(item => {
         const isDigital = isDigitalProduct(item);
         const price = parseProductPrice(item.price);
+        const finalPrice = price * (item.quantity || 1);
         
-        for (let i = 0; i < (item.quantity || 1); i++) {
-            const productData = {
-                id: item.id,
-                title: item.title,
-                price: price,
-                image: item.image,
-                category: item.category,
-                type: item.type,
-                format: item.format,
-                purchaseDate: today,
-                transactionId: transactionId,
-                paymentMethod: `بطاقة ${selectedCardForPayment.number || '****'}`,
-                discountApplied: currentDiscount ? `${currentDiscount.code} (${currentDiscount.type === 'percentage' ? currentDiscount.percentage + '%' : formatPrice(currentDiscount.amount)})` : 'لا يوجد',
-                finalPrice: price
-            };
-            
-            if (isDigital) {
-                productData.downloadLink = `download/${item.id}.zip`;
-                digitalProducts.push(productData);
-            } else {
-                productData.shippingAddress = currentAddress;
-                productData.trackingNumber = generateTrackingNumber();
-                productData.estimatedDelivery = getEstimatedDeliveryDate();
-                physicalProducts.push(productData);
-            }
+        const productData = {
+            id: item.id || 'prod_' + Date.now(),
+            title: item.title || 'منتج بدون عنوان',
+            price: price,
+            finalPrice: finalPrice,
+            quantity: item.quantity || 1,
+            image: item.image || 'https://via.placeholder.com/300x180/222/fff?text=No+Image',
+            category: item.category || 'عام',
+            type: item.type || 'كتاب',
+            format: item.format || 'ورقي',
+            purchaseDate: today,
+            transactionId: transactionId,
+            paymentMethod: `بطاقة ${selectedCardForPayment.number || '****'}`
+        };
+        
+        if (isDigital) {
+            productData.downloadLink = `download/${item.id || Date.now()}.zip`;
+            digitalProducts.push(productData);
+        } else {
+            // ====== إضافة معلومات الشحن الكاملة ======
+            productData.shippingAddress = currentAddress ? {
+                name: currentAddress.name || 'عنوان غير محدد',
+                city: currentAddress.city || 'غير محدد',
+                district: currentAddress.district || 'غير محدد',
+                street: currentAddress.street || 'غير محدد',
+                building: currentAddress.building || '',
+                apartment: currentAddress.apartment || '',
+                phone: currentAddress.phone || '',
+                notes: currentAddress.notes || '',
+                latitude: currentAddress.latitude || null,
+                longitude: currentAddress.longitude || null
+            } : null;
+            productData.trackingNumber = 'TRK' + String(Math.floor(Math.random() * 1000000)).padStart(6, '0');
+            productData.estimatedDelivery = getEstimatedDeliveryDate();
+            physicalProducts.push(productData);
         }
     });
     
-    // حفظ المنتجات الرقمية في المكتبة
+    // ====== حفظ المنتجات الرقمية في المكتبة ======
     if (digitalProducts.length > 0) {
         library = JSON.parse(localStorage.getItem(LIBRARY_KEY)) || [];
         library = [...library, ...digitalProducts];
         localStorage.setItem(LIBRARY_KEY, JSON.stringify(library));
+        console.log('📱 تم حفظ المنتجات الرقمية في المكتبة:', digitalProducts.length);
     }
     
-    // حفظ المنتجات الورقية في الطلبات
+    // ====== حفظ المنتجات الورقية في الطلبات (بالصيغة التي تتوقعها لوحة التحكم) ======
     if (physicalProducts.length > 0) {
-        orders = JSON.parse(localStorage.getItem(ORDERS_KEY)) || [];
+        // الحصول على اسم المستخدم
+        let userName = 'عميل';
+        try {
+            const userData = JSON.parse(localStorage.getItem('user') || 'null');
+            if (userData) {
+                userName = userData.displayName || userData.name || userData.username || 'عميل';
+            }
+        } catch (e) {}
+        
+        // إنشاء كائن الطلب بالصيغة الصحيحة للوحة التحكم
         const order = {
             orderId: transactionId,
             orderDate: today,
-            totalAmount: stats.finalTotal,
-            products: physicalProducts,
-            shippingAddress: currentAddress,
-            paymentMethod: `بطاقة ${selectedCardForPayment.number || '****'}`,
+            totalAmount: stats.finalTotal.toFixed(2),
             status: 'قيد التجهيز',
-            trackingNumber: generateTrackingNumber()
+            userEmail: loggedInUser,
+            userName: userName,
+            shippingAddress: currentAddress ? 
+                `${currentAddress.city || ''} - ${currentAddress.district || ''} - ${currentAddress.street || ''}` : 
+                'عنوان غير محدد',
+            paymentMethod: `بطاقة ${selectedCardForPayment.number || '****'}`,
+            trackingNumber: 'TRK' + String(Math.floor(Math.random() * 1000000)).padStart(6, '0'),
+            products: physicalProducts.map(p => ({
+                title: p.title,
+                price: p.price,
+                quantity: p.quantity,
+                total: p.finalPrice
+            })),
+            // حفظ العنوان الكامل للاستخدام المستقبلي
+            fullAddress: currentAddress ? {
+                name: currentAddress.name,
+                city: currentAddress.city,
+                district: currentAddress.district,
+                street: currentAddress.street,
+                building: currentAddress.building,
+                apartment: currentAddress.apartment,
+                phone: currentAddress.phone,
+                notes: currentAddress.notes,
+                latitude: currentAddress.latitude,
+                longitude: currentAddress.longitude
+            } : null
         };
         
+        // ====== حفظ الطلب في localStorage باستخدام المفتاح الصحيح ======
+        // المفتاح: orders_ + البريد الإلكتروني (نفس المفتاح الذي تبحث عنه لوحة التحكم)
+        const orderKey = `orders_${loggedInUser}`;
+        let userOrders = JSON.parse(localStorage.getItem(orderKey)) || [];
+        userOrders.push(order);
+        localStorage.setItem(orderKey, JSON.stringify(userOrders));
+        
+        // ====== أيضاً حفظ في المصفوفة العامة للطلبات ======
         orders.push(order);
         localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+        
+        console.log('📦 تم حفظ الطلب بنجاح:');
+        console.log('  - رقم الطلب:', transactionId);
+        console.log('  - المفتاح:', orderKey);
+        console.log('  - عدد الطلبات:', userOrders.length);
+        console.log('  - تفاصيل الطلب:', order);
+        
+        // ====== التحقق من الحفظ ======
+        const savedOrders = JSON.parse(localStorage.getItem(orderKey) || '[]');
+        const foundOrder = savedOrders.find(o => o.orderId === transactionId);
+        if (foundOrder) {
+            console.log('✅ تم التحقق من حفظ الطلب بنجاح');
+        } else {
+            console.error('❌ فشل حفظ الطلب!');
+        }
     }
     
-    // ====== تنظيف السلة ======
+    // ====== تنظيف السلة والخصم ======
     cart = [];
     currentDiscount = null;
     discountCode = '';
     const discountCodeInput = document.getElementById('discountCode');
     const removeDiscountBtn = document.getElementById('removeDiscountBtn');
-    if (discountCodeInput) discountCodeInput.value = '';
+    if (discountCodeInput) {
+        discountCodeInput.value = '';
+        discountCodeInput.disabled = false;
+        discountCodeInput.style.borderColor = 'rgba(255,255,255,0.2)';
+    }
     if (removeDiscountBtn) removeDiscountBtn.style.display = 'none';
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
     
@@ -3509,30 +3445,35 @@ function confirmPurchase() {
     updateAddressDisplay();
     updateBalanceFromWallet();
     
-    // ====== رسالة النجاح والتحويل ======
+    // ====== رسالة النجاح ======
     let successMessage = `✅ تم الدفع بنجاح!<br>`;
     successMessage += `💰 المبلغ: ${formatPrice(stats.finalTotal)}<br>`;
     successMessage += `💳 البطاقة: ${selectedCardForPayment.name || 'بطاقة'}<br>`;
-    successMessage += `📦 عدد المنتجات: ${cart.length}`;
+    successMessage += `📦 عدد المنتجات: ${digitalProducts.length + physicalProducts.length}`;
     
     if (digitalProducts.length > 0) {
         successMessage += `<br>📱 منتجات رقمية: ${digitalProducts.length}`;
     }
     if (physicalProducts.length > 0) {
         successMessage += `<br>📦 منتجات ورقية: ${physicalProducts.length}`;
+        successMessage += `<br>📍 رقم الطلب: ${transactionId}`;
+        if (currentAddress) {
+            successMessage += `<br>📍 عنوان التوصيل: ${currentAddress.name}`;
+        }
     }
     
     showMessage(successMessage, 'success', 5000);
     
     closePolicyModal();
     
-    // إعادة تعيين البطاقة المختارة
     selectedCardIndex = -1;
     selectedCardForPayment = null;
     
-    // التحويل إلى الصفحة المناسبة
+    // ====== التحويل إلى الصفحة المناسبة ======
     setTimeout(() => {
-        if (digitalProducts.length > 0) {
+        if (digitalProducts.length > 0 && physicalProducts.length > 0) {
+            window.location.href = "library.html";
+        } else if (digitalProducts.length > 0) {
             window.location.href = "library.html";
         } else if (physicalProducts.length > 0) {
             window.location.href = "Orders.html";
@@ -3540,6 +3481,129 @@ function confirmPurchase() {
             window.location.href = "index.html";
         }
     }, 3000);
+}
+
+// ============================================================
+// ====== دوال التصحيح والتحقق ======
+// ============================================================
+
+// ====== دالة لعرض جميع الطلبات في وحدة التحكم ======
+function debugOrders() {
+    console.log('===== جميع الطلبات المحفوظة =====');
+    console.log('📊 عدد الطلبات الكلي:', allOrders.length);
+    
+    // البحث عن جميع مفاتيح orders_
+    let foundKeys = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('orders_')) {
+            foundKeys.push(key);
+            try {
+                const orders = JSON.parse(localStorage.getItem(key));
+                console.log(`📦 ${key}:`, orders);
+                console.log(`   عدد الطلبات: ${orders.length}`);
+                orders.forEach((o, idx) => {
+                    console.log(`   [${idx+1}] ${o.orderId} - ${o.status} - ${o.totalAmount} ر.س`);
+                });
+            } catch (e) {
+                console.log(`❌ خطأ في قراءة ${key}:`, e);
+            }
+        }
+    }
+    
+    if (foundKeys.length === 0) {
+        console.log('⚠️ لا توجد مفاتيح orders_ في localStorage');
+    }
+    
+    // عرض الطلبات العامة
+    const generalOrders = JSON.parse(localStorage.getItem(ORDERS_KEY) || '[]');
+    console.log('📦 الطلبات العامة:', generalOrders);
+    console.log(`   عدد الطلبات: ${generalOrders.length}`);
+    
+    return { foundKeys, generalOrders };
+}
+
+// ====== دالة للتحقق من وجود طلب معين ======
+function verifyOrderExists(orderId) {
+    console.log(`🔍 التحقق من وجود الطلب: ${orderId}`);
+    let found = false;
+    
+    // التحقق في جميع مفاتيح orders_
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('orders_')) {
+            try {
+                const orders = JSON.parse(localStorage.getItem(key));
+                const order = orders.find(o => o.orderId === orderId);
+                if (order) {
+                    console.log(`✅ تم العثور على الطلب ${orderId} في ${key}`);
+                    console.log('   تفاصيل الطلب:', order);
+                    found = true;
+                    return true;
+                }
+            } catch (e) {}
+        }
+    }
+    
+    // التحقق في الطلبات العامة
+    const generalOrders = JSON.parse(localStorage.getItem(ORDERS_KEY) || '[]');
+    const order = generalOrders.find(o => o.orderId === orderId);
+    if (order) {
+        console.log(`✅ تم العثور على الطلب ${orderId} في الطلبات العامة`);
+        console.log('   تفاصيل الطلب:', order);
+        found = true;
+        return true;
+    }
+    
+    console.log(`❌ لم يتم العثور على الطلب ${orderId}`);
+    return false;
+}
+
+// ====== دالة لتصدير جميع الطلبات إلى JSON ======
+function exportOrdersToJSON() {
+    const allOrdersData = {};
+    
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('orders_')) {
+            try {
+                const orders = JSON.parse(localStorage.getItem(key));
+                allOrdersData[key] = orders;
+            } catch (e) {}
+        }
+    }
+    
+    const generalOrders = JSON.parse(localStorage.getItem(ORDERS_KEY) || '[]');
+    allOrdersData['general_orders'] = generalOrders;
+    
+    console.log('📊 جميع الطلبات (JSON):', JSON.stringify(allOrdersData, null, 2));
+    return allOrdersData;
+}
+
+// ====== دالة للحصول على اسم المستخدم ======
+function getUserName() {
+    try {
+        const userData = JSON.parse(localStorage.getItem('user') || 'null');
+        if (userData) {
+            return userData.displayName || userData.name || userData.username || 'عميل';
+        }
+        return 'عميل';
+    } catch (e) {
+        return 'عميل';
+    }
+}
+
+// ====== دالة للحصول على بريد المستخدم ======
+function getUserEmail() {
+    try {
+        const userData = JSON.parse(localStorage.getItem('user') || 'null');
+        if (userData && userData.email) {
+            return userData.email;
+        }
+        return loggedInUser || 'user@example.com';
+    } catch (e) {
+        return loggedInUser || 'user@example.com';
+    }
 }
 
 // ====== حدث زر الدفع ======
@@ -3553,7 +3617,6 @@ if (payBtn) {
             return;
         }
         
-        // تحديث الرصيد من البطاقات
         updateBalanceFromWallet();
         
         if (balance < stats.finalTotal) {
@@ -3566,48 +3629,30 @@ if (payBtn) {
             return;
         }
         
-        // جلب البطاقات من localStorage
         cards = JSON.parse(localStorage.getItem(CARDS_KEY)) || [];
         
         if (cards.length === 0) {
             if (confirm('لا توجد بطاقات في محفظتك. هل تريد إضافة بطاقة أولاً؟')) {
-                window.location.href = 'cards.html';
+                window.location.href = 'wallet.html';
                 return;
             }
             return;
         }
         
-        // عرض البطاقات للاختيار
         showCardSelection();
     });
 }
 
+// ============================================================
 // ====== التهيئة ======
+// ============================================================
 function initializePage() {
     if (!loggedInUser) return;
     
     console.log('👤 المستخدم:', loggedInUser);
     
-    // تحميل البيانات من localStorage
     loadAllData();
-    
-    // محاولة جلب البطاقات من Firebase (إذا كانت متوفرة)
-    if (firebaseInitialized) {
-        loadCardsFromFirebase().then(success => {
-            if (success) {
-                console.log('✅ تم جلب البطاقات من Firebase بنجاح');
-                updateBalanceFromWallet();
-                updateCartStats();
-            } else {
-                console.log('ℹ️ استخدام البطاقات من localStorage');
-            }
-        });
-    }
-    
-    // تحديث الرصيد من البطاقات
     updateBalanceFromWallet();
-    
-    // عرض السلة والعناوين
     renderCart();
     updateAddressDisplay();
     
@@ -3615,8 +3660,8 @@ function initializePage() {
     console.log('📦 عدد المنتجات في السلة:', cart.length);
     console.log('💳 عدد البطاقات:', cards.length);
     console.log('📍 عدد العناوين:', addresses.length);
+    console.log('🔑 عدد الأكواد المستخدمة:', usedDiscounts.length);
     
-    // الاستماع لتغييرات التخزين
     window.addEventListener('storage', (e) => {
         if (e.key === CART_KEY) {
             cart = JSON.parse(e.newValue || '[]');
@@ -3629,6 +3674,7 @@ function initializePage() {
         }
         if (e.key === ADDRESSES_KEY) {
             addresses = JSON.parse(e.newValue || '[]');
+            renderMultipleAddresses();
         }
         if (e.key === CURRENT_ADDRESS_KEY) {
             currentAddress = JSON.parse(e.newValue || 'null');
@@ -3663,7 +3709,6 @@ function initializePage() {
 // ====== جعل الدوال متاحة عالمياً ======
 window.updateQuantity = updateQuantity;
 window.removeFromCart = removeFromCart;
-window.saveForLater = saveForLater;
 window.getCurrentLocation = getCurrentLocation;
 window.openSmartMap = openSmartMap;
 window.closeSmartMap = closeSmartMap;
@@ -3672,7 +3717,8 @@ window.useSmartMapLocation = useSmartMapLocation;
 window.saveSmartAddress = saveSmartAddress;
 window.openSavedAddresses = openSavedAddresses;
 window.closeSavedAddressesModal = closeSavedAddressesModal;
-window.selectAddress = selectAddress;
+window.selectSavedAddress = selectSavedAddress;
+window.selectAddressOption = selectAddressOption;
 window.setDefaultAddress = setDefaultAddress;
 window.deleteAddress = deleteAddress;
 window.openManualAddress = openManualAddress;
@@ -3685,17 +3731,20 @@ window.closeNameAddress = closeNameAddress;
 window.confirmSaveAddress = confirmSaveAddress;
 window.applyDiscount = applyDiscount;
 window.removeDiscount = removeDiscount;
-window.openDiscountsPage = openDiscountsPage;
 window.selectCardForPayment = selectCardForPayment;
 window.closeCardModal = closeCardModal;
 window.closePolicyModal = closePolicyModal;
 window.confirmPurchase = confirmPurchase;
 window.showCardSelection = showCardSelection;
+window.debugOrders = debugOrders;
+window.verifyOrderExists = verifyOrderExists;
+window.exportOrdersToJSON = exportOrdersToJSON;
+window.getUserName = getUserName;
+window.getUserEmail = getUserEmail;
 
 // ====== تشغيل التهيئة ======
 document.addEventListener('DOMContentLoaded', initializePage);
 
-// ====== تحديث عند العودة للصفحة ======
 window.addEventListener('pageshow', () => {
     loadAllData();
     updateBalanceFromWallet();
@@ -3703,12 +3752,15 @@ window.addEventListener('pageshow', () => {
     updateAddressDisplay();
 });
 
-// ====== حفظ البيانات عند الخروج ======
 window.addEventListener('beforeunload', () => {
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
 });
 
-console.log('✅ تم تحميل سلة الشراء مع دعم localStorage و Firebase');
+console.log('✅ تم تحميل سلة الشراء مع جميع الإصلاحات');
+console.log('🔧 دوال التصحيح المتاحة:');
+console.log('   - debugOrders() لعرض جميع الطلبات');
+console.log('   - verifyOrderExists(ORDER_ID) للتحقق من وجود طلب');
+console.log('   - exportOrdersToJSON() لتصدير جميع الطلبات');
 </script>
 </body>
 </html>
