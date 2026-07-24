@@ -4,11 +4,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
     <title>المحفظة الذكية | بطاقاتي الرقمية</title>
-          <link rel="icon" type="image/x-icon" href="img\Login library.jpg">
+    <link rel="icon" type="image/x-icon" href="img\Login library.jpg">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js">
-        
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js">
     </script>
     <style>
         * {
@@ -37,6 +38,18 @@
             padding: 20px 30px;
             margin-bottom: 30px;
             border: 1px solid rgba(0, 208, 194, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
         }
 
         .header h1 {
@@ -48,7 +61,295 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 20px;
+        }
+
+        .nfc-status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(245, 158, 11, 0.1);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            font-size: 0.75rem;
+            color: #f59e0b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nfc-status-badge:hover {
+            background: rgba(245, 158, 11, 0.2);
+            transform: scale(1.02);
+        }
+
+        .nfc-status-badge .nfc-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #6b6b6b;
+            transition: all 0.3s ease;
+        }
+
+        .nfc-status-badge .nfc-dot.active {
+            background: #4caf50;
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.4);
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        .nfc-status-badge .nfc-dot.listening {
+            background: #f59e0b;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+            animation: pulse-dot-fast 0.8s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        @keyframes pulse-dot-fast {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.3);
+                opacity: 0.5;
+            }
+        }
+
+        .notifications-icon-wrapper {
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notifications-icon-wrapper .fa-bell {
+            font-size: 1.8rem;
+            color: #b0b0b0;
+            transition: all 0.3s ease;
+        }
+
+        .notifications-icon-wrapper .fa-bell:hover {
+            color: #00d0c2;
+            transform: scale(1.1);
+        }
+
+        .notifications-icon-wrapper .fa-bell.has-unread {
+            color: #00d0c2;
+            animation: ring 2s ease-in-out infinite;
+        }
+
+        @keyframes ring {
+            0%,
+            100% {
+                transform: rotate(0);
+            }
+            10%,
+            30% {
+                transform: rotate(-15deg);
+            }
+            20%,
+            40% {
+                transform: rotate(15deg);
+            }
+        }
+
+        .notif-badge-icon {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 0.65rem;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            border: 2px solid #0f1222;
+        }
+
+        .notif-badge-icon.show {
+            display: flex;
+        }
+
+        .notif-dropdown {
+            position: absolute;
+            top: 50px;
+            left: 0;
+            width: 380px;
+            max-height: 450px;
+            background: #0f1222;
+            border-radius: 16px;
+            border: 1px solid #2a2f45;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            display: none;
+            z-index: 2000;
+        }
+
+        .notif-dropdown.open {
+            display: block;
+        }
+
+        .notif-dropdown-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #2a2f45;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 208, 194, 0.05);
+        }
+
+        .notif-dropdown-header h4 {
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notif-dropdown-header .notif-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .notif-dropdown-header .notif-actions button {
+            background: none;
+            border: none;
+            color: #b0b0b0;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s ease;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .notif-dropdown-header .notif-actions button:hover {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .notif-dropdown-header .notif-actions .mark-all-read:hover {
+            background: rgba(0, 208, 194, 0.2);
+            color: #00d0c2;
+        }
+
+        .notif-dropdown-list {
+            max-height: 350px;
+            overflow-y: auto;
+            padding: 5px 0;
+        }
+
+        .notif-dropdown-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .notif-dropdown-list::-webkit-scrollbar-track {
+            background: #1a1f35;
+        }
+        .notif-dropdown-list::-webkit-scrollbar-thumb {
+            background: #00d0c2;
+            border-radius: 10px;
+        }
+
+        .notif-dropdown-item {
+            padding: 12px 20px;
+            border-bottom: 1px solid #1a1f35;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .notif-dropdown-item:hover {
+            background: rgba(0, 208, 194, 0.05);
+        }
+
+        .notif-dropdown-item.unread {
+            background: rgba(0, 208, 194, 0.05);
+            border-right: 3px solid #00d0c2;
+        }
+
+        .notif-dropdown-item .notif-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(0, 208, 194, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #00d0c2;
+            font-size: 0.9rem;
+        }
+
+        .notif-dropdown-item .notif-content {
+            flex: 1;
+            font-size: 0.85rem;
+        }
+
+        .notif-dropdown-item .notif-content .notif-title {
+            font-weight: 600;
+            color: #eef2ff;
+        }
+
+        .notif-dropdown-item .notif-content .notif-msg {
+            color: #b0b0b0;
+            margin-top: 3px;
+            font-size: 0.8rem;
+        }
+
+        .notif-dropdown-item .notif-content .notif-time {
+            color: #6b6b6b;
+            font-size: 0.7rem;
+            margin-top: 4px;
+        }
+
+        .notif-dropdown-item .delete-notif-btn {
+            background: none;
+            border: none;
+            color: #6b6b6b;
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            opacity: 0;
+        }
+
+        .notif-dropdown-item:hover .delete-notif-btn {
+            opacity: 1;
+        }
+
+        .notif-dropdown-item .delete-notif-btn:hover {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.15);
+        }
+
+        .notif-dropdown-empty {
+            padding: 40px 20px;
+            text-align: center;
+            color: #6b6b6b;
+        }
+
+        .notif-dropdown-empty i {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 10px;
+            color: #2a2f45;
         }
 
         .user-info {
@@ -74,64 +375,6 @@
             font-size: 1.3rem;
         }
 
-        /* الإشعارات */
-        .notifications-panel {
-            background: #0f1222;
-            border-radius: 20px;
-            margin-bottom: 25px;
-            border: 1px solid #2a2f45;
-            overflow: hidden;
-        }
-
-        .notifications-header {
-            padding: 15px 20px;
-            background: rgba(0, 208, 194, 0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            border-bottom: 1px solid #2a2f45;
-        }
-
-        .notifications-header h3 {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 1rem;
-        }
-
-        .badge {
-            background: #ef4444;
-            color: white;
-            border-radius: 20px;
-            padding: 2px 10px;
-            font-size: 0.7rem;
-        }
-
-        .notifications-list {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-
-        .notifications-list.open {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .notification-item {
-            padding: 12px 20px;
-            border-bottom: 1px solid #2a2f45;
-            display: flex;
-            gap: 12px;
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        .notification-item.unread {
-            background: rgba(0, 208, 194, 0.05);
-            border-right: 3px solid #00d0c2;
-        }
-
         .main-content {
             display: grid;
             grid-template-columns: 1fr 350px;
@@ -141,6 +384,17 @@
         @media (max-width: 900px) {
             .main-content {
                 grid-template-columns: 1fr;
+            }
+            .notif-dropdown {
+                width: 320px;
+                left: -120px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .notif-dropdown {
+                width: 290px;
+                left: -150px;
             }
         }
 
@@ -158,6 +412,14 @@
             margin-bottom: 25px;
             padding-bottom: 15px;
             border-bottom: 2px solid #2a2f45;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .section-header .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
 
         .cards-grid {
@@ -190,6 +452,44 @@
             box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
         }
 
+        .card-item .card-nfc-btn {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .card-item .card-nfc-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .card-item .card-nfc-btn.sharing {
+            background: #f59e0b;
+            animation: pulse-nfc-card 0.8s infinite;
+        }
+
+        @keyframes pulse-nfc-card {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+            }
+        }
+
         .card-badge {
             position: absolute;
             top: 15px;
@@ -217,6 +517,304 @@
         .card-balance {
             font-size: 1.3rem;
             font-weight: 700;
+        }
+
+        /* ===== بطاقات مع QR Code ===== */
+        .qr-card {
+            background: #0f1222;
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid #2a2f45;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qr-card:hover {
+            border-color: #00d0c2;
+        }
+
+        .qr-card .card-header {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .qr-card .card-name {
+            font-weight: 700;
+            color: #00d0c2;
+            font-size: 1.1rem;
+        }
+
+        .qr-card .card-balance-qr {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #eef2ff;
+        }
+
+        .qr-card .qr-wrapper {
+            position: relative;
+            width: 180px;
+            height: 180px;
+            margin: 10px auto;
+            background: white;
+            border-radius: 16px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s ease;
+        }
+
+        .qr-card .qr-wrapper.blurred #qrCodeContainer {
+            filter: blur(12px);
+            opacity: 0.6;
+            transition: all 0.5s ease;
+        }
+
+        .qr-card .qr-wrapper.blurred .qr-blur-overlay {
+            display: flex;
+        }
+
+        .qr-card .qr-wrapper #qrCodeContainer {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.5s ease;
+        }
+
+        .qr-card .qr-wrapper #qrCodeContainer canvas,
+        .qr-card .qr-wrapper #qrCodeContainer img {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .qr-card .qr-wrapper .qr-blur-overlay {
+            position: absolute;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .qr-card .qr-wrapper .qr-blur-overlay i {
+            font-size: 2.5rem;
+            color: #00d0c2;
+            text-shadow: 0 0 20px rgba(0, 208, 194, 0.5);
+        }
+
+        .qr-card .qr-wrapper .qr-blur-overlay span {
+            color: #eef2ff;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .qr-card .qr-wrapper:not(.blurred) .qr-blur-overlay {
+            display: none !important;
+        }
+
+        .qr-card .qr-wrapper:not(.blurred) #qrCodeContainer {
+            filter: none !important;
+            opacity: 1 !important;
+        }
+
+        .qr-card .qr-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .qr-card .qr-actions button {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .qr-card .qr-actions .btn-show-qr {
+            background: linear-gradient(135deg, #00d0c2, #00a9b8);
+            color: white;
+        }
+
+        .qr-card .qr-actions .btn-show-qr:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 208, 194, 0.3);
+        }
+
+        .qr-card .qr-actions .btn-show-qr.hidden {
+            background: #2a2f45;
+        }
+
+        .qr-card .qr-actions .btn-show-qr.hidden:hover {
+            background: #3a4055;
+        }
+
+        .qr-card .qr-actions .btn-pay {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .qr-card .qr-actions .btn-pay:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        .qr-card .qr-actions .btn-nfc-share {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+        }
+
+        .qr-card .qr-actions .btn-nfc-share:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .qr-card .qr-actions .btn-nfc-share.sharing {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            animation: pulse-nfc-btn 0.8s infinite;
+        }
+
+        @keyframes pulse-nfc-btn {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 25px rgba(245, 158, 11, 0.6);
+            }
+        }
+
+        .qr-card .qr-number {
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: #6b6b6b;
+            margin-top: 8px;
+            direction: ltr;
+        }
+
+        .qr-card .card-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            margin-top: 5px;
+        }
+
+        .qr-card .card-status.active {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+
+        .qr-card .card-status.inactive {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+        }
+
+        /* ===== نافذة عرض QR ===== */
+        .qr-popup {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(15px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 5000;
+            padding: 20px;
+        }
+
+        .qr-popup.active {
+            display: flex;
+        }
+
+        .qr-popup-content {
+            background: #0f1222;
+            border-radius: 24px;
+            padding: 30px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            border: 2px solid #00d0c2;
+            position: relative;
+        }
+
+        .qr-popup-content .close-qr-popup {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            background: none;
+            border: none;
+            color: #6b6b6b;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .qr-popup-content .close-qr-popup:hover {
+            color: #ef4444;
+            transform: rotate(90deg);
+        }
+
+        .qr-popup-content h3 {
+            margin-bottom: 15px;
+            color: #00d0c2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .qr-popup-content .qr-big {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0 20px;
+        }
+
+        .qr-popup-content .qr-big canvas,
+        .qr-popup-content .qr-big img {
+            width: 250px !important;
+            height: 250px !important;
+        }
+
+        .qr-popup-content .qr-info {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+        }
+
+        .qr-popup-content .qr-info .label {
+            color: #6b6b6b;
+        }
+
+        .qr-popup-content .qr-info .value {
+            color: #eef2ff;
+            font-weight: 600;
         }
 
         .control-panel {
@@ -264,6 +862,7 @@
             border-radius: 12px;
             color: white;
             font-family: 'Cairo', sans-serif;
+            font-size: 0.95rem;
         }
 
         .input-with-camera input:focus {
@@ -298,12 +897,116 @@
         }
 
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 15px rgba(239, 68, 68, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
         }
 
-        /* كاميرا المسح المنبثقة الصغيرة */
+        .btn-recharge {
+            width: 100%;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, #00d0c2, #009688);
+            color: white;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-recharge::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+        }
+
+        .btn-recharge:hover::before {
+            left: 100%;
+        }
+
+        .btn-recharge:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 208, 194, 0.4);
+            background: linear-gradient(135deg, #00e0d0, #00a090);
+        }
+
+        .btn-recharge:active {
+            transform: translateY(0px);
+            box-shadow: 0 4px 15px rgba(0, 208, 194, 0.2);
+        }
+
+        .btn-recharge i {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-recharge:hover i {
+            transform: rotate(-15deg) scale(1.1);
+        }
+
+        .btn-recharge .btn-text {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-recharge .btn-subtext {
+            font-size: 0.7rem;
+            opacity: 0.8;
+            font-weight: 400;
+        }
+
+        .btn-recharge:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .voucher-status {
+            margin-top: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            display: none;
+        }
+
+        .voucher-status.show {
+            display: block;
+        }
+
+        .voucher-status.valid {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .voucher-status.invalid {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
         .scanner-popup {
             display: none;
             position: fixed;
@@ -381,11 +1084,6 @@
             transition: all 0.3s ease;
         }
 
-        .scanner-actions .btn-primary {
-            background: linear-gradient(135deg, #00d0c2, #00a9b8);
-            color: white;
-        }
-
         .scanner-actions .btn-secondary {
             background: #2a2f45;
             color: white;
@@ -459,6 +1157,12 @@
             color: white;
         }
 
+        .btn-success:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
         .info-text {
             margin-top: 20px;
             padding: 15px;
@@ -475,7 +1179,6 @@
             gap: 8px;
         }
 
-        /* نافذة البطاقة (النقر المزدوج) */
         .modal {
             position: fixed;
             inset: 0;
@@ -498,87 +1201,232 @@
         .modal-content {
             background: #0f1222;
             border-radius: 24px;
-            padding: 30px;
+            padding: 20px 25px 25px;
             width: 90%;
-            max-width: 550px;
+            max-width: 560px;
             border-top: 4px solid #00d0c2;
-            max-height: 90vh;
-            overflow-y: auto;
+            max-height: 92vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 12px;
+            left: 16px;
+            background: none;
+            border: none;
+            color: #6b6b6b;
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .modal-close-btn:hover {
+            color: #ef4444;
+            transform: rotate(90deg);
         }
 
         .modal-content h3 {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 14px;
+            margin-left: 40px;
+            font-size: 1.1rem;
         }
 
         .modal-card-info {
             background: linear-gradient(135deg, #00d0c2, #008a7a);
-            padding: 20px;
-            border-radius: 16px;
-            margin-bottom: 20px;
+            padding: 14px 20px;
+            border-radius: 14px;
+            margin-bottom: 14px;
             color: white;
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .modal-card-info .card-left {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
         }
 
         .modal-card-info .card-number-display {
             font-family: monospace;
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-            margin: 10px 0;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+        }
+
+        .modal-card-info .card-owner {
+            font-size: 0.8rem;
+            opacity: 0.85;
+        }
+
+        .modal-card-info .card-right {
+            text-align: left;
         }
 
         .modal-card-info .balance-display {
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             font-weight: 800;
-            margin: 10px 0;
+        }
+
+        .modal-card-info .card-expiry {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        .tabs-container {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #2a2f45;
+            padding-bottom: 0;
+            flex-shrink: 0;
+        }
+
+        .tab-btn {
+            padding: 8px 16px;
+            background: none;
+            border: none;
+            color: #b0b0b0;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            border-radius: 6px 6px 0 0;
+            flex: 1;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            color: #eef2ff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn.active {
+            color: #00d0c2;
+            border-bottom-color: #00d0c2;
+            background: rgba(0, 208, 194, 0.05);
+        }
+
+        .tabs-content-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 3px;
+            margin-right: -3px;
+            min-height: 160px;
+            max-height: 260px;
+        }
+
+        .tabs-content-wrapper::-webkit-scrollbar {
+            width: 3px;
+        }
+        .tabs-content-wrapper::-webkit-scrollbar-track {
+            background: #1a1f35;
+            border-radius: 10px;
+        }
+        .tabs-content-wrapper::-webkit-scrollbar-thumb {
+            background: #00d0c2;
+            border-radius: 10px;
+        }
+
+        .tab-content {
+            display: none;
+            padding-top: 3px;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tab-content .input-group {
+            margin-bottom: 10px;
+        }
+
+        .tab-content .input-group label {
+            display: block;
+            margin-bottom: 4px;
+            color: #b0b0b0;
+            font-size: 0.78rem;
+            font-weight: 500;
+        }
+
+        .tab-content .input-group input,
+        .tab-content .input-group select {
+            width: 100%;
+            padding: 9px 12px;
+            background: #0a0e18;
+            border: 1px solid #2a2f45;
+            border-radius: 10px;
+            color: white;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .tab-content .input-group input:focus,
+        .tab-content .input-group select:focus {
+            outline: none;
+            border-color: #00d0c2;
+        }
+
+        .tab-content .input-group select option {
+            background: #0a0e18;
+        }
+
+        .tab-content .btn {
+            padding: 9px 12px;
+            font-size: 0.9rem;
+            border-radius: 10px;
+            margin-top: 2px;
+        }
+
+        .tab-content .btn i {
+            font-size: 0.9rem;
         }
 
         .modal-divider {
             border: none;
             border-top: 1px solid #2a2f45;
-            margin: 20px 0;
-        }
-
-        .modal .input-group {
-            margin-bottom: 15px;
-        }
-
-        .modal .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #b0b0b0;
-            font-size: 0.85rem;
-        }
-
-        .modal .input-group input,
-        .modal .input-group select {
-            width: 100%;
-            padding: 12px;
-            background: #0a0e18;
-            border: 1px solid #2a2f45;
-            border-radius: 12px;
-            color: white;
-            font-family: 'Cairo', sans-serif;
-        }
-
-        .modal .input-group select option {
-            background: #0a0e18;
+            margin: 10px 0 8px 0;
+            flex-shrink: 0;
         }
 
         .modal-actions {
             display: flex;
             gap: 10px;
-            margin-top: 15px;
-            flex-wrap: wrap;
+            margin-top: 6px;
+            flex-shrink: 0;
         }
 
         .modal-actions button {
             flex: 1;
-            min-width: 120px;
-            padding: 12px;
+            padding: 10px;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
             font-family: 'Cairo', sans-serif;
@@ -587,6 +1435,17 @@
             justify-content: center;
             gap: 8px;
             transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .modal-actions .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .modal-actions .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(239, 68, 68, 0.3);
         }
 
         .toast {
@@ -616,6 +1475,11 @@
             color: white;
         }
 
+        .toast.warning {
+            background: #78350f;
+            color: white;
+        }
+
         .loading {
             position: fixed;
             inset: 0;
@@ -642,7 +1506,6 @@
             }
         }
 
-        /* زر رفع صورة */
         .file-input-wrapper {
             position: relative;
             overflow: hidden;
@@ -659,18 +1522,345 @@
             cursor: pointer;
         }
 
+        .transaction-lock {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 5000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .transaction-lock.active {
+            display: flex;
+        }
+
+        .transaction-lock .lock-content {
+            background: #0f1222;
+            padding: 30px 40px;
+            border-radius: 20px;
+            border: 1px solid #00d0c2;
+            text-align: center;
+        }
+
+        .transaction-lock .lock-content i {
+            font-size: 3rem;
+            color: #00d0c2;
+            display: block;
+            margin-bottom: 15px;
+            animation: spin 1s linear infinite;
+        }
+
+        .confirm-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 6000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .confirm-overlay.active {
+            display: flex;
+        }
+
+        .confirm-box {
+            background: #0f1222;
+            padding: 30px 35px;
+            border-radius: 20px;
+            border: 1px solid #ef4444;
+            max-width: 420px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .confirm-box .confirm-icon {
+            font-size: 3rem;
+            color: #ef4444;
+            margin-bottom: 15px;
+        }
+
+        .confirm-box h3 {
+            color: #eef2ff;
+            margin-bottom: 10px;
+        }
+
+        .confirm-box p {
+            color: #b0b0b0;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .confirm-box .confirm-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .confirm-box .confirm-actions button {
+            padding: 10px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .confirm-box .confirm-actions .btn-confirm-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .confirm-box .confirm-actions .btn-confirm-danger:hover {
+            background: #dc2626;
+            transform: scale(1.05);
+        }
+
+        .confirm-box .confirm-actions .btn-confirm-cancel {
+            background: #2a2f45;
+            color: white;
+        }
+
+        .confirm-box .confirm-actions .btn-confirm-cancel:hover {
+            background: #3a4055;
+        }
+
+        /* ===== NFC Popup ===== */
+        .nfc-popup {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 4000;
+            padding: 20px;
+        }
+
+        .nfc-popup.active {
+            display: flex;
+        }
+
+        .nfc-popup-content {
+            background: #0f1222;
+            border-radius: 24px;
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            border: 2px solid #f59e0b;
+            position: relative;
+        }
+
+        .nfc-popup-content .close-nfc {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            background: none;
+            border: none;
+            color: #6b6b6b;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nfc-popup-content .close-nfc:hover {
+            color: #ef4444;
+        }
+
+        .nfc-popup-content .nfc-animation {
+            font-size: 4rem;
+            color: #f59e0b;
+            margin: 15px 0;
+            animation: pulse-nfc-icon 1.5s infinite;
+        }
+
+        @keyframes pulse-nfc-icon {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.7;
+            }
+        }
+
+        .nfc-popup-content .nfc-title {
+            font-size: 1.2rem;
+            color: #f59e0b;
+            font-weight: 700;
+        }
+
+        .nfc-popup-content .nfc-subtitle {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+
+        .nfc-popup-content .nfc-card-info {
+            background: rgba(0, 208, 194, 0.05);
+            padding: 15px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border: 1px solid rgba(0, 208, 194, 0.1);
+        }
+
+        .nfc-popup-content .nfc-card-info .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 0.85rem;
+            color: #b0b0b0;
+        }
+
+        .nfc-popup-content .nfc-card-info .info-row .val {
+            color: #eef2ff;
+            font-weight: 600;
+        }
+
+        .nfc-popup-content .nfc-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .nfc-popup-content .nfc-actions button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .nfc-popup-content .nfc-actions .btn-nfc-share {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .nfc-popup-content .nfc-actions .btn-nfc-share:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        .nfc-popup-content .nfc-actions .btn-nfc-close {
+            background: #2a2f45;
+            color: white;
+        }
+
+        .nfc-popup-content .nfc-actions .btn-nfc-close:hover {
+            background: #3a4055;
+        }
+
+        .qr-section {
+            background: #0f1222;
+            border-radius: 24px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid #2a2f45;
+        }
+
+        .qr-section h2 {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qr-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
         @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .header-left {
+                justify-content: space-between;
+                width: 100%;
+            }
             .header h1 {
-                font-size: 1.2rem;
+                font-size: 1rem;
             }
             .cards-grid {
                 grid-template-columns: 1fr;
             }
+            .qr-grid {
+                grid-template-columns: 1fr;
+            }
             .modal-content {
-                padding: 20px;
+                padding: 16px 18px 20px;
+                max-width: 100%;
             }
             .modal-actions button {
                 min-width: 100%;
+            }
+            .notif-dropdown {
+                width: 280px;
+                left: -180px;
+            }
+            .tab-btn {
+                padding: 6px 10px;
+                font-size: 0.75rem;
+            }
+            .tabs-content-wrapper {
+                max-height: 200px;
+                min-height: 130px;
+            }
+            .modal-card-info {
+                padding: 12px 16px;
+            }
+            .modal-card-info .balance-display {
+                font-size: 1.2rem;
+            }
+            .modal-card-info .card-number-display {
+                font-size: 0.85rem;
+            }
+            .tab-content .input-group {
+                margin-bottom: 8px;
+            }
+            .tab-content .input-group input,
+            .tab-content .input-group select {
+                padding: 7px 10px;
+                font-size: 0.85rem;
+            }
+            .tab-content .btn {
+                padding: 8px 10px;
+                font-size: 0.85rem;
+            }
+            .modal-actions button {
+                padding: 8px;
+                font-size: 0.85rem;
+            }
+            .qr-card .qr-wrapper {
+                width: 140px;
+                height: 140px;
+            }
+            .qr-popup-content .qr-big canvas,
+            .qr-popup-content .qr-big img {
+                width: 180px !important;
+                height: 180px !important;
+            }
+            .nfc-popup-content {
+                padding: 20px;
+            }
+            .nfc-popup-content .nfc-animation {
+                font-size: 3rem;
             }
         }
     </style>
@@ -678,7 +1868,32 @@
 <body>
     <div class="app-container">
         <header class="header">
-            <h1><i class="fas fa-wallet"></i> المحفظة الرقمية</h1>
+            <div class="header-left">
+                <h1><i class="fas fa-wallet"></i> المحفظة الرقمية</h1>
+
+                <!-- NFC Status -->
+                <div class="nfc-status-badge" id="nfcStatusBadge">
+                    <span class="nfc-dot" id="nfcStatusDot"></span>
+                    <span id="nfcStatusText">NFC</span>
+                </div>
+
+                <div class="notifications-icon-wrapper" id="notifIconWrapper">
+                    <i class="fas fa-bell" id="notifBellIcon"></i>
+                    <span class="notif-badge-icon" id="notifBadgeIcon">0</span>
+
+                    <div class="notif-dropdown" id="notifDropdown">
+                        <div class="notif-dropdown-header">
+                            <h4><i class="fas fa-bell" style="color: #00d0c2;"></i> الإشعارات</h4>
+                            <div class="notif-actions">
+                                <button class="mark-all-read" id="markAllReadBtn"><i class="fas fa-check-double"></i> قراءة الكل</button>
+                                <button id="clearAllNotifBtn"><i class="fas fa-trash-alt"></i> حذف الكل</button>
+                            </div>
+                        </div>
+                        <div class="notif-dropdown-list" id="notifDropdownList"></div>
+                    </div>
+                </div>
+            </div>
+
             <div class="user-info">
                 <div class="info-box">
                     <i class="fas fa-user"></i>
@@ -697,23 +1912,22 @@
             </div>
         </header>
 
-        <!-- لوحة الإشعارات -->
-        <div class="notifications-panel">
-            <div class="notifications-header" id="notificationsToggle">
-                <h3><i class="fas fa-bell"></i> الإشعارات</h3>
-                <span id="unreadCount" class="badge" style="display: none;">0</span>
-                <i class="fas fa-chevron-down"></i>
-            </div>
-            <div class="notifications-list" id="notificationsList"></div>
-        </div>
+        <!-- ===== قسم QR Code ===== -->
+        <section class="qr-section">
+            <h2><i class="fas fa-qrcode" style="color: #00d0c2;"></i> بطاقات الدفع (QR Code)</h2>
+            <p style="color: #b0b0b0; margin-bottom: 15px;">اضغط على "إظهار الباركود" لعرض QR Code، أو "مشاركة NFC" لمشاركة البطاقة عبر NFC</p>
+            <div class="qr-grid" id="qrGrid"></div>
+        </section>
 
         <div class="main-content">
             <section class="cards-section">
                 <div class="section-header">
                     <h2><i class="fas fa-credit-card"></i> بطاقاتي</h2>
-                    <button class="btn-secondary" id="addCardBtn" style="width: auto; padding: 8px 16px;">
-                        <i class="fas fa-plus"></i> بطاقة جديدة
-                    </button>
+                    <div class="header-actions">
+                        <button class="btn-secondary" id="addCardBtn" style="width: auto; padding: 8px 16px;">
+                            <i class="fas fa-plus"></i> بطاقة جديدة
+                        </button>
+                    </div>
                 </div>
                 <div id="cardsGrid" class="cards-grid"></div>
             </section>
@@ -729,22 +1943,85 @@
                                 <i class="fas fa-camera"></i>
                             </button>
                         </div>
+                        <div class="voucher-status" id="voucherStatus"></div>
                     </div>
-                    <button id="rechargeBtn" class="btn-primary">
-                        <i class="fas fa-bolt"></i> شحن البطاقة
-                    </button>
+                    <div class="recharge-btn-wrapper">
+                        <button id="rechargeBtn" class="btn-recharge">
+                            <i class="fas fa-bolt"></i>
+                            <span class="btn-text">
+                                شحن البطاقة
+                                <span class="btn-subtext">| إضافة رصيد</span>
+                            </span>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="info-text">
                     <p><i class="fas fa-info-circle"></i> انقر على البطاقة لاختيارها للشحن</p>
                     <p><i class="fas fa-exchange-alt"></i> انقر مرتين على البطاقة للتحويل أو الحذف</p>
                     <p><i class="fas fa-camera"></i> اضغط على أيقونة الكاميرا لمسح الباركود أو رفع صورة</p>
+                    <p><i class="fas fa-qrcode"></i> QR Code يستخدم للدفع عبر المسؤول</p>
+                    <p><i class="fas fa-wifi"></i> NFC لمشاركة البطاقة مع أجهزة الدعم</p>
                 </div>
             </aside>
         </div>
     </div>
 
-    <!-- نافذة الماسح الضوئي المنبثقة -->
+    <!-- ===== نافذة عرض QR ===== -->
+    <div class="qr-popup" id="qrPopup">
+        <div class="qr-popup-content">
+            <button class="close-qr-popup" id="closeQrPopup">&times;</button>
+            <h3><i class="fas fa-qrcode" style="color: #00d0c2;"></i> QR Code البطاقة</h3>
+            <div class="qr-big" id="qrBigContainer"></div>
+            <div class="qr-info">
+                <div><span class="label">رقم البطاقة:</span> <span class="value" id="qrPopupCardNumber">---</span></div>
+                <div><span class="label">المالك:</span> <span class="value" id="qrPopupCardOwner">---</span></div>
+                <div><span class="label">الرصيد:</span> <span class="value" id="qrPopupCardBalance">---</span></div>
+            </div>
+            <button class="btn-nfc-share" id="qrPopupNfcBtn" style="margin-top:15px;padding:12px 20px;border:none;border-radius:12px;background:linear-gradient(135deg,#f59e0b,#d97706);color:white;font-weight:600;cursor:pointer;font-family:'Cairo',sans-serif;width:100%;">
+                <i class="fas fa-wifi"></i> مشاركة البطاقة عبر NFC
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== NFC Popup ===== -->
+    <div class="nfc-popup" id="nfcPopup">
+        <div class="nfc-popup-content">
+            <button class="close-nfc" id="closeNfcPopup">&times;</button>
+            <div class="nfc-animation">
+                <i class="fas fa-wifi"></i>
+            </div>
+            <div class="nfc-title">📡 NFC جاهز للمشاركة</div>
+            <div class="nfc-subtitle">قرب جهازك من جهاز الاستقبال لمشاركة البطاقة</div>
+            <div class="nfc-card-info" id="nfcCardInfo">
+                <div class="info-row">
+                    <span>رقم البطاقة</span>
+                    <span class="val" id="nfcCardNumber">---</span>
+                </div>
+                <div class="info-row">
+                    <span>المالك</span>
+                    <span class="val" id="nfcCardOwner">---</span>
+                </div>
+                <div class="info-row">
+                    <span>الرصيد</span>
+                    <span class="val" id="nfcCardBalance">---</span>
+                </div>
+            </div>
+            <div class="nfc-actions">
+                <button class="btn-nfc-share" id="nfcShareBtn">
+                    <i class="fas fa-share"></i> مشاركة الآن
+                </button>
+                <button class="btn-nfc-close" id="nfcPopupCloseBtn">
+                    <i class="fas fa-times"></i> إغلاق
+                </button>
+            </div>
+            <div style="margin-top:10px;font-size:0.7rem;color:#6b6b6b;">
+                <i class="fas fa-info-circle"></i> تأكد من تشغيل NFC في جهاز الاستقبال
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== سكانر ===== -->
     <div id="scannerPopup" class="scanner-popup">
         <div class="scanner-container">
             <div class="scanner-header">
@@ -762,58 +2039,101 @@
         </div>
     </div>
 
-    <!-- نافذة البطاقة (النقر المزدوج) -->
+    <!-- ===== نافذة البطاقة ===== -->
     <div id="cardModal" class="modal">
         <div class="modal-content">
+            <button class="modal-close-btn" id="closeModalBtn">✕</button>
+
             <h3><i class="fas fa-id-card" style="color: #00d0c2;"></i> تفاصيل البطاقة</h3>
+
             <div id="modalCardInfo" class="modal-card-info"></div>
 
-            <hr class="modal-divider">
+            <div class="tabs-container">
+                <button class="tab-btn active" data-tab="tab-internal">
+                    <i class="fas fa-exchange-alt"></i> داخلي
+                </button>
+                <button class="tab-btn" data-tab="tab-external">
+                    <i class="fas fa-paper-plane"></i> خارجي
+                </button>
+                <button class="tab-btn" data-tab="tab-nfc">
+                    <i class="fas fa-wifi"></i> NFC
+                </button>
+            </div>
 
-            <h4 style="margin-bottom: 15px; color: #f59e0b;"><i class="fas fa-exchange-alt"></i> تحويل داخلي (بين البطاقات)</h4>
-            <div class="input-group">
-                <label>تحويل إلى بطاقة</label>
-                <select id="transferToCard">
-                    <option value="">اختر بطاقة</option>
-                </select>
-            </div>
-            <div class="input-group">
-                <label>المبلغ (ر.س)</label>
-                <input type="number" id="internalTransferAmount" step="0.01" placeholder="0.00">
-            </div>
-            <button id="confirmInternalTransferBtn" class="btn btn-warning">
-                <i class="fas fa-exchange-alt"></i> تحويل داخلي
-            </button>
+            <div class="tabs-content-wrapper">
+                <div class="tab-content active" id="tab-internal">
+                    <div class="input-group">
+                        <label>تحويل إلى بطاقة</label>
+                        <select id="transferToCard">
+                            <option value="">اختر بطاقة</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>المبلغ (ر.س)</label>
+                        <input type="number" id="internalTransferAmount" step="0.01" placeholder="0.00">
+                    </div>
+                    <button id="confirmInternalTransferBtn" class="btn btn-warning">
+                        <i class="fas fa-exchange-alt"></i> تحويل داخلي
+                    </button>
+                </div>
 
-            <hr class="modal-divider">
+                <div class="tab-content" id="tab-external">
+                    <div class="input-group">
+                        <label>اسم المستلم</label>
+                        <input type="text" id="externalTargetUser" placeholder="البريد الإلكتروني أو اسم المستخدم">
+                    </div>
+                    <div class="input-group">
+                        <label>المبلغ (ر.س)</label>
+                        <input type="number" id="externalTransferAmount" step="0.01" placeholder="0.00">
+                    </div>
+                    <div class="input-group">
+                        <label>رسالة (اختياري)</label>
+                        <input type="text" id="externalTransferMessage" placeholder="رسالة قصيرة">
+                    </div>
+                    <button id="confirmExternalTransferBtn" class="btn btn-success">
+                        <i class="fas fa-paper-plane"></i> تحويل خارجي
+                    </button>
+                </div>
 
-            <h4 style="margin-bottom: 15px; color: #10b981;"><i class="fas fa-paper-plane"></i> تحويل خارجي (لمستخدم آخر)</h4>
-            <div class="input-group">
-                <label>اسم المستلم (البريد الإلكتروني أو اسم المستخدم)</label>
-                <input type="text" id="externalTargetUser" placeholder="مثال: ahmed@example.com">
+                <div class="tab-content" id="tab-nfc">
+                    <div style="text-align:center;padding:10px 0;">
+                        <i class="fas fa-wifi" style="font-size:3rem;color:#f59e0b;margin-bottom:10px;display:block;"></i>
+                        <p style="color:#b0b0b0;font-size:0.9rem;">شارك هذه البطاقة عبر NFC مع جهاز الاستقبال</p>
+                        <p style="color:#6b6b6b;font-size:0.75rem;margin-top:5px;">تأكد من تشغيل NFC في كلا الجهازين</p>
+                        <button id="modalNfcShareBtn" class="btn btn-warning" style="margin-top:15px;width:100%;">
+                            <i class="fas fa-share"></i> مشاركة البطاقة عبر NFC
+                        </button>
+                    </div>
+                </div>
             </div>
-            <div class="input-group">
-                <label>المبلغ (ر.س)</label>
-                <input type="number" id="externalTransferAmount" step="0.01" placeholder="0.00">
-            </div>
-            <div class="input-group">
-                <label>رسالة (اختياري)</label>
-                <input type="text" id="externalTransferMessage" placeholder="رسالة قصيرة">
-            </div>
-            <button id="confirmExternalTransferBtn" class="btn btn-success">
-                <i class="fas fa-paper-plane"></i> تحويل خارجي
-            </button>
 
             <hr class="modal-divider">
 
             <div class="modal-actions">
-                <button id="deleteCardBtn" class="btn-danger" style="flex: 1;">
+                <button id="deleteCardBtn" class="btn-danger">
                     <i class="fas fa-trash"></i> حذف البطاقة
                 </button>
-                <button id="closeModalBtn" class="btn-secondary" style="flex: 1;">
-                    <i class="fas fa-times"></i> إغلاق
-                </button>
             </div>
+        </div>
+    </div>
+
+    <div class="confirm-overlay" id="confirmOverlay">
+        <div class="confirm-box">
+            <div class="confirm-icon"><i class="fas fa-exclamation-triangle"></i></div>
+            <h3>⚠️ تأكيد الحذف</h3>
+            <p id="confirmMessage">هل أنت متأكد من حذف هذا العنصر؟ لا يمكن التراجع عن هذا الإجراء.</p>
+            <div class="confirm-actions">
+                <button class="btn-confirm-cancel" id="confirmCancelBtn">إلغاء</button>
+                <button class="btn-confirm-danger" id="confirmDangerBtn">تأكيد الحذف</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="transaction-lock" id="transactionLock">
+        <div class="lock-content">
+            <i class="fas fa-spinner"></i>
+            <h3 style="color: white;">جاري تنفيذ المعاملة...</h3>
+            <p style="color: #b0b0b0; margin-top: 10px;">الرجاء الانتظار، لا تغلق الصفحة</p>
         </div>
     </div>
 
@@ -822,7 +2142,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-        import { getDatabase, ref, get, set, update, push, remove, onValue } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+        import { getDatabase, ref, get, set, update, push, remove, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBlcKC2ncX9mTOPlhDOnfmyzdJ5mLinWYY",
@@ -842,8 +2162,15 @@
         let currentModalCardId = null;
         let html5QrCode = null;
         let isScannerActive = false;
+        let isTransactionInProgress = false;
+        const processedTransactions = new Set();
+        let allNotifications = [];
 
-        // ========== دالة الإشعارات ==========
+        // ===== NFC State =====
+        let nfcReader = null;
+        let isNfcListening = false;
+        let nfcShareCardId = null;
+
         function showToast(msg, type = 'info') {
             const toast = document.getElementById('toast');
             toast.textContent = msg;
@@ -852,14 +2179,17 @@
             clearTimeout(toast._timeout);
             toast._timeout = setTimeout(() => {
                 toast.style.display = 'none';
-            }, 4000);
+            }, 5000);
         }
 
         function showLoading(show) {
             document.getElementById('loading').style.visibility = show ? 'visible' : 'hidden';
         }
 
-        // ========== دالة المستخدم ==========
+        function showTransactionLock(show) {
+            document.getElementById('transactionLock').classList.toggle('active', show);
+        }
+
         function getCurrentUser() {
             try {
                 const userData = localStorage.getItem('user');
@@ -876,13 +2206,133 @@
             }
         }
 
-        // ========== دوال البطاقات ==========
         function generateCardNumber() {
             let parts = [];
             for (let i = 0; i < 4; i++) {
                 parts.push(Math.floor(1000 + Math.random() * 9000));
             }
             return parts.join('');
+        }
+
+        // ===== NFC Functions =====
+        async function shareCardViaNFC(cardId) {
+            const card = userCards.find(c => c.id === cardId);
+            if (!card) {
+                showToast('البطاقة غير موجودة', 'error');
+                return;
+            }
+
+            if (!('NDEFReader' in window)) {
+                showToast('⚠️ جهازك لا يدعم تقنية NFC', 'warning');
+                return;
+            }
+
+            try {
+                const nfcPopup = document.getElementById('nfcPopup');
+                document.getElementById('nfcCardNumber').textContent = card.cardNumber || '---';
+                document.getElementById('nfcCardOwner').textContent = card.name || '---';
+                document.getElementById('nfcCardBalance').textContent = (card.balance || 0).toFixed(2) + ' ر.س';
+                nfcPopup.classList.add('active');
+                nfcShareCardId = cardId;
+
+                // تحديث حالة NFC
+                updateNfcStatus('listening', 'NFC جاهز للمشاركة');
+
+            } catch (err) {
+                console.error('NFC error:', err);
+                showToast('فشل تشغيل NFC: ' + err.message, 'error');
+            }
+        }
+
+        async function executeNfcShare() {
+            if (!nfcShareCardId) {
+                showToast('لا توجد بطاقة للمشاركة', 'error');
+                return;
+            }
+
+            const card = userCards.find(c => c.id === nfcShareCardId);
+            if (!card) {
+                showToast('البطاقة غير موجودة', 'error');
+                return;
+            }
+
+            try {
+                if (!('NDEFReader' in window)) {
+                    showToast('NFC غير مدعوم على هذا الجهاز', 'error');
+                    return;
+                }
+
+                nfcReader = new NDEFReader();
+                await nfcReader.write({
+                    records: [{
+                        recordType: 'text',
+                        data: card.cardNumber
+                    }]
+                });
+
+                showToast(`✅ تم مشاركة البطاقة ${card.cardNumber} عبر NFC بنجاح`, 'success');
+
+                // إغلاق النافذة المنبثقة
+                document.getElementById('nfcPopup').classList.remove('active');
+                nfcShareCardId = null;
+                updateNfcStatus('idle', 'NFC');
+
+                // إشعار
+                await push(ref(db, `notifications/${currentUser.uid}`), {
+                    type: 'nfc_share',
+                    title: '📡 مشاركة NFC',
+                    message: `تم مشاركة بطاقة ${card.name || 'البطاقة'} عبر NFC`,
+                    timestamp: new Date().toISOString(),
+                    read: false
+                });
+
+            } catch (err) {
+                console.error('NFC write error:', err);
+                showToast('فشل المشاركة عبر NFC: ' + err.message, 'error');
+            }
+        }
+
+        function updateNfcStatus(status, text) {
+            const dot = document.getElementById('nfcStatusDot');
+            const label = document.getElementById('nfcStatusText');
+
+            dot.className = 'nfc-dot';
+            if (status === 'active') {
+                dot.classList.add('active');
+            } else if (status === 'listening') {
+                dot.classList.add('listening');
+            }
+            label.textContent = text;
+        }
+
+        // ===== QR Code Functions =====
+        function generateQRCode(cardNumber, containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = '';
+            try {
+                if (typeof QRCode !== 'undefined') {
+                    new QRCode(container, {
+                        text: cardNumber,
+                        width: 180,
+                        height: 180,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                } else {
+                    container.innerHTML =
+                        `<div style="font-family:monospace;padding:20px;background:white;color:black;border-radius:12px;text-align:center;">
+                            <div style="font-size:0.8rem;color:#666;">${cardNumber}</div>
+                        </div>`;
+                }
+            } catch (e) {
+                console.error('خطأ في إنشاء QR Code:', e);
+                container.innerHTML =
+                    `<div style="font-family:monospace;padding:20px;background:white;color:black;border-radius:12px;text-align:center;">
+                        <div style="font-size:0.8rem;color:#666;">${cardNumber}</div>
+                    </div>`;
+            }
         }
 
         async function createDefaultCard() {
@@ -916,6 +2366,7 @@
                     return await loadUserCards();
                 }
                 renderCards();
+                renderQRCards();
                 updateTotalBalance();
             } catch (err) {
                 console.error('خطأ في تحميل البطاقات:', err);
@@ -941,14 +2392,18 @@
                 }
                 const last4 = card.cardNumber ? card.cardNumber.slice(-4) : '****';
                 cardDiv.innerHTML = `
-                    <div class="card-badge"><i class="fas fa-coins"></i> ${(card.balance || 0).toFixed(2)} ر.س</div>
-                    <div class="card-number">•••• •••• •••• ${last4}</div>
-                    <div class="card-details">
-                        <div>${card.name || 'مالك البطاقة'}</div>
-                        <div class="card-balance">${(card.balance || 0).toFixed(2)} ر.س</div>
-                    </div>
-                `;
+                        <div class="card-badge"><i class="fas fa-coins"></i> ${(card.balance || 0).toFixed(2)} ر.س</div>
+                        <div class="card-number">•••• •••• •••• ${last4}</div>
+                        <div class="card-details">
+                            <div>${card.name || 'مالك البطاقة'}</div>
+                            <div class="card-balance">${(card.balance || 0).toFixed(2)} ر.س</div>
+                        </div>
+                        <button class="card-nfc-btn" data-card-id="${card.id}" title="مشاركة عبر NFC">
+                            <i class="fas fa-wifi"></i>
+                        </button>
+                    `;
                 cardDiv.addEventListener('click', (e) => {
+                    if (e.target.closest('.card-nfc-btn')) return;
                     e.stopPropagation();
                     selectedCardId = card.id;
                     renderCards();
@@ -957,8 +2412,142 @@
                 cardDiv.addEventListener('dblclick', () => {
                     openCardModal(card.id);
                 });
+
+                // زر NFC في البطاقة
+                const nfcBtn = cardDiv.querySelector('.card-nfc-btn');
+                nfcBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    shareCardViaNFC(card.id);
+                });
+
                 grid.appendChild(cardDiv);
             });
+        }
+
+        function renderQRCards() {
+            const grid = document.getElementById('qrGrid');
+            if (!grid) return;
+            if (userCards.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:20px; color: #b0b0b0;">لا توجد بطاقات لعرض QR Code</div>';
+                return;
+            }
+            grid.innerHTML = '';
+
+            userCards.forEach(card => {
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'qr-card';
+
+                const status = (card.balance || 0) > 0 ? 'active' : 'inactive';
+                const qrContainerId = `qr_${card.id}`;
+
+                cardDiv.innerHTML = `
+                        <div class="card-header">
+                            <span class="card-name">${card.name || 'بطاقة'}</span>
+                            <span class="card-balance-qr">${(card.balance || 0).toFixed(2)} ر.س</span>
+                        </div>
+                        <div class="qr-wrapper blurred" id="qrWrapper_${card.id}">
+                            <div id="${qrContainerId}"></div>
+                            <div class="qr-blur-overlay">
+                                <i class="fas fa-eye"></i>
+                                <span>اضغط لإظهار QR</span>
+                            </div>
+                        </div>
+                        <div class="qr-number">${card.cardNumber}</div>
+                        <span class="card-status ${status}">${status === 'active' ? '✅ نشطة' : '⚠️ رصيد منخفض'}</span>
+                        <div class="qr-actions">
+                            <button class="btn-show-qr" data-card-id="${card.id}" data-wrapper="qrWrapper_${card.id}">
+                                <i class="fas fa-eye"></i> إظهار الباركود
+                            </button>
+                            <button class="btn-pay" data-card-id="${card.id}">
+                                <i class="fas fa-credit-card"></i> الدفع
+                            </button>
+                            <button class="btn-nfc-share" data-card-id="${card.id}">
+                                <i class="fas fa-wifi"></i> NFC
+                            </button>
+                        </div>
+                    `;
+
+                grid.appendChild(cardDiv);
+
+                setTimeout(() => {
+                    generateQRCode(card.cardNumber, qrContainerId);
+                }, 100);
+
+                const showBtn = cardDiv.querySelector('.btn-show-qr');
+                const wrapper = cardDiv.querySelector('.qr-wrapper');
+
+                showBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const isBlurred = wrapper.classList.contains('blurred');
+                    if (isBlurred) {
+                        wrapper.classList.remove('blurred');
+                        this.innerHTML = '<i class="fas fa-eye-slash"></i> إخفاء';
+                        this.classList.add('hidden');
+                    } else {
+                        wrapper.classList.add('blurred');
+                        this.innerHTML = '<i class="fas fa-eye"></i> إظهار';
+                        this.classList.remove('hidden');
+                    }
+                });
+
+                const payBtn = cardDiv.querySelector('.btn-pay');
+                payBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    showQRPopup(card.id);
+                });
+
+                // زر NFC في QR
+                const nfcShareBtn = cardDiv.querySelector('.btn-nfc-share');
+                nfcShareBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    shareCardViaNFC(card.id);
+                });
+
+                wrapper.addEventListener('click', function() {
+                    showQRPopup(card.id);
+                });
+            });
+        }
+
+        function showQRPopup(cardId) {
+            const card = userCards.find(c => c.id === cardId);
+            if (!card) return;
+
+            const popup = document.getElementById('qrPopup');
+            const container = document.getElementById('qrBigContainer');
+            container.innerHTML = '';
+
+            try {
+                if (typeof QRCode !== 'undefined') {
+                    new QRCode(container, {
+                        text: card.cardNumber,
+                        width: 250,
+                        height: 250,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                } else {
+                    container.innerHTML =
+                        `<div style="font-family:monospace;padding:20px;background:white;color:black;border-radius:12px;text-align:center;font-size:1.2rem;">${card.cardNumber}</div>`;
+                }
+            } catch (e) {
+                container.innerHTML =
+                    `<div style="font-family:monospace;padding:20px;background:white;color:black;border-radius:12px;text-align:center;font-size:1.2rem;">${card.cardNumber}</div>`;
+            }
+
+            document.getElementById('qrPopupCardNumber').textContent = card.cardNumber || '---';
+            document.getElementById('qrPopupCardOwner').textContent = card.name || '---';
+            document.getElementById('qrPopupCardBalance').textContent = (card.balance || 0).toFixed(2) + ' ر.س';
+
+            // زر NFC في النافذة المنبثقة
+            const nfcBtn = document.getElementById('qrPopupNfcBtn');
+            nfcBtn.onclick = function() {
+                popup.classList.remove('active');
+                shareCardViaNFC(cardId);
+            };
+
+            popup.classList.add('active');
         }
 
         function updateTotalBalance() {
@@ -991,7 +2580,6 @@
             }
         }
 
-        // ========== نافذة البطاقة (النقر المزدوج) ==========
         function openCardModal(cardId) {
             const card = userCards.find(c => c.id === cardId);
             if (!card) return;
@@ -999,13 +2587,16 @@
 
             const modalInfo = document.getElementById('modalCardInfo');
             modalInfo.innerHTML = `
-                <div class="card-number-display">رقم البطاقة: ${card.cardNumber || '----'}</div>
-                <div class="balance-display">${(card.balance || 0).toFixed(2)} ر.س</div>
-                <div>المالك: ${card.name || currentUser.username}</div>
-                <div>تاريخ الانتهاء: ${card.expiry || '12/26'}</div>
-            `;
+                    <div class="card-left">
+                        <div class="card-number-display">${card.cardNumber || '----'}</div>
+                        <div class="card-owner">${card.name || currentUser.username}</div>
+                    </div>
+                    <div class="card-right">
+                        <div class="balance-display">${(card.balance || 0).toFixed(2)} ر.س</div>
+                        <div class="card-expiry">انتهاء: ${card.expiry || '12/26'}</div>
+                    </div>
+                `;
 
-            // تعبئة قائمة التحويل الداخلي
             const transferSelect = document.getElementById('transferToCard');
             transferSelect.innerHTML = '<option value="">اختر بطاقة</option>';
             userCards.forEach(c => {
@@ -1020,15 +2611,36 @@
             document.getElementById('externalTransferAmount').value = '';
             document.getElementById('externalTransferMessage').value = '';
 
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+            document.querySelector('.tab-btn[data-tab="tab-internal"]').classList.add('active');
+            document.getElementById('tab-internal').classList.add('active');
+
             document.getElementById('cardModal').classList.add('active');
         }
 
-        // ========== التحويل الداخلي ==========
+        function setupTabs() {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+                    this.classList.add('active');
+                    document.getElementById(this.dataset.tab).classList.add('active');
+                });
+            });
+        }
+
+        // ===== Internal Transfer =====
         async function internalTransfer() {
             if (!currentModalCardId) {
                 showToast('خطأ في البيانات', 'error');
                 return;
             }
+            if (isTransactionInProgress) {
+                showToast('يوجد معاملة قيد التنفيذ، الرجاء الانتظار', 'warning');
+                return;
+            }
+
             const toCardId = document.getElementById('transferToCard').value;
             const amount = parseFloat(document.getElementById('internalTransferAmount').value);
 
@@ -1053,26 +2665,54 @@
                 return;
             }
 
-            showLoading(true);
+            const transactionId = `internal_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
+            if (processedTransactions.has(transactionId)) {
+                showToast('تم تنفيذ هذه المعاملة مسبقاً', 'warning');
+                return;
+            }
+
+            isTransactionInProgress = true;
+            showTransactionLock(true);
+
             try {
-                await update(ref(db, `digitalCards/${currentUser.uid}/${currentModalCardId}`), {
-                    balance: fromCard.balance - amount
-                });
-                await update(ref(db, `digitalCards/${currentUser.uid}/${toCardId}`), {
-                    balance: toCard.balance + amount
+                const fromCardRef = ref(db, `digitalCards/${currentUser.uid}/${currentModalCardId}`);
+                const toCardRef = ref(db, `digitalCards/${currentUser.uid}/${toCardId}`);
+
+                const fromResult = await runTransaction(fromCardRef, (currentData) => {
+                    if (currentData === null) return { success: false, error: 'البطاقة المصدر غير موجودة' };
+                    if ((currentData.balance || 0) < amount) return { success: false, error: 'الرصيد غير كافٍ' };
+                    currentData.balance = (currentData.balance || 0) - amount;
+                    return currentData;
                 });
 
+                if (!fromResult.committed) throw new Error('فشل الخصم من البطاقة المصدر');
+
+                const toResult = await runTransaction(toCardRef, (currentData) => {
+                    if (currentData === null) return { success: false, error: 'البطاقة الوجهة غير موجودة' };
+                    currentData.balance = (currentData.balance || 0) + amount;
+                    return currentData;
+                });
+
+                if (!toResult.committed) {
+                    await runTransaction(fromCardRef, (currentData) => {
+                        if (currentData !== null) currentData.balance = (currentData.balance || 0) + amount;
+                        return currentData;
+                    });
+                    throw new Error('فشل إضافة الرصيد للبطاقة الوجهة');
+                }
+
+                processedTransactions.add(transactionId);
                 const transferRef = ref(db, `transfers/${currentUser.uid}`);
                 await push(transferRef, {
                     type: 'internal',
                     fromCard: fromCard.cardNumber,
                     toCard: toCard.cardNumber,
                     amount: amount,
+                    transactionId: transactionId,
                     timestamp: new Date().toISOString()
                 });
 
-                const notifRef = ref(db, `notifications/${currentUser.uid}`);
-                await push(notifRef, {
+                await push(ref(db, `notifications/${currentUser.uid}`), {
                     type: 'transfer',
                     title: '🔄 تحويل داخلي ناجح',
                     message: `تم تحويل ${amount.toFixed(2)} ريال من بطاقة ${fromCard.name} إلى ${toCard.name}`,
@@ -1084,18 +2724,529 @@
                 document.getElementById('cardModal').classList.remove('active');
                 await loadUserCards();
                 await loadNotifications();
+
             } catch (err) {
-                console.error('خطأ في التحويل الداخلي:', err);
-                showToast('حدث خطأ أثناء التحويل', 'error');
+                showToast('حدث خطأ أثناء التحويل: ' + err.message, 'error');
+            } finally {
+                isTransactionInProgress = false;
+                showTransactionLock(false);
+            }
+        }
+
+        // ===== Voucher Check =====
+        async function checkVoucherCode(code) {
+            if (!code) return { valid: false, message: 'الرجاء إدخال كود' };
+
+            try {
+                const codesRef = ref(db, 'voucher_codes');
+                const snapshot = await get(codesRef);
+
+                if (!snapshot.exists()) {
+                    return { valid: false, message: 'لا توجد أكواد في النظام' };
+                }
+
+                let voucherData = null;
+                let voucherKey = null;
+                const codes = snapshot.val();
+
+                for (let key in codes) {
+                    if (codes[key].code === code) {
+                        voucherData = codes[key];
+                        voucherKey = key;
+                        break;
+                    }
+                }
+
+                if (!voucherData) {
+                    return { valid: false, message: 'الكود غير صحيح' };
+                }
+
+                if (voucherData.status === 'used') {
+                    return { valid: false, message: 'تم استخدام هذا الكود مسبقاً' };
+                }
+
+                const expiryDate = new Date(voucherData.expiry_date);
+                const now = new Date();
+
+                if (expiryDate < now) {
+                    return {
+                        valid: false,
+                        message: 'الكود منتهي الصلاحية',
+                        expired: true
+                    };
+                }
+
+                return {
+                    valid: true,
+                    amount: voucherData.amount,
+                    message: '✅ كود صالح بقيمة ' + voucherData.amount + ' ريال',
+                    expiryDate: expiryDate,
+                    voucherKey: voucherKey
+                };
+
+            } catch (error) {
+                return { valid: false, message: 'خطأ في التحقق من الكود' };
+            }
+        }
+
+        async function rechargeCard() {
+            if (!selectedCardId) {
+                showToast('الرجاء اختيار بطاقة أولاً (انقر على البطاقة)', 'error');
+                return;
+            }
+            if (isTransactionInProgress) {
+                showToast('يوجد معاملة قيد التنفيذ، الرجاء الانتظار', 'warning');
+                return;
+            }
+
+            const code = document.getElementById('voucherCode').value.trim();
+            if (!code) {
+                showToast('الرجاء إدخال كود الشحن', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('rechargeBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحقق...';
+
+            showTransactionLock(true);
+            try {
+                const result = await checkVoucherCode(code);
+
+                if (!result.valid) {
+                    showToast('❌ ' + result.message, 'error');
+                    return;
+                }
+
+                const amount = result.amount;
+
+                await update(ref(db, `voucher_codes/${result.voucherKey}`), {
+                    status: 'used',
+                    used_by: currentUser.uid,
+                    used_at: new Date().toISOString()
+                });
+
+                const cardRef = ref(db, `digitalCards/${currentUser.uid}/${selectedCardId}`);
+                const cardResult = await runTransaction(cardRef, (currentData) => {
+                    if (currentData === null) {
+                        return { success: false, error: 'البطاقة غير موجودة' };
+                    }
+                    currentData.balance = (currentData.balance || 0) + amount;
+                    return currentData;
+                });
+
+                if (!cardResult.committed) {
+                    await update(ref(db, `voucher_codes/${result.voucherKey}`), {
+                        status: 'active',
+                        used_by: null,
+                        used_at: null
+                    });
+                    throw new Error('فشل إضافة الرصيد للبطاقة');
+                }
+
+                await push(ref(db, `notifications/${currentUser.uid}`), {
+                    type: 'recharge',
+                    title: '💰 عملية شحن ناجحة',
+                    message: `تم شحن ${amount.toFixed(2)} ريال إلى بطاقتك`,
+                    timestamp: new Date().toISOString(),
+                    read: false
+                });
+
+                showToast(`✅ تم شحن ${amount.toFixed(2)} ر.س بنجاح`, 'success');
+                document.getElementById('voucherCode').value = '';
+                document.getElementById('voucherStatus').className = 'voucher-status';
+                await loadUserCards();
+                await loadNotifications();
+
+            } catch (err) {
+                console.error('خطأ في الشحن:', err);
+                showToast('حدث خطأ أثناء الشحن: ' + err.message, 'error');
+            } finally {
+                showTransactionLock(false);
+                btn.disabled = false;
+                btn.innerHTML =
+                    '<i class="fas fa-bolt"></i><span class="btn-text">شحن البطاقة<span class="btn-subtext">| إضافة رصيد</span></span>';
+            }
+        }
+
+        function setupVoucherCheck() {
+            const voucherInput = document.getElementById('voucherCode');
+            const statusEl = document.getElementById('voucherStatus');
+            let checkTimeout = null;
+
+            voucherInput.addEventListener('input', function() {
+                clearTimeout(checkTimeout);
+                const code = this.value.trim();
+
+                if (code.length < 6) {
+                    statusEl.className = 'voucher-status';
+                    statusEl.textContent = '';
+                    return;
+                }
+
+                checkTimeout = setTimeout(async () => {
+                    const result = await checkVoucherCode(code);
+                    statusEl.className = 'voucher-status show';
+
+                    if (result.valid) {
+                        statusEl.className = 'voucher-status show valid';
+                        statusEl.textContent = result.message;
+                    } else {
+                        statusEl.className = 'voucher-status show invalid';
+                        statusEl.textContent = '❌ ' + result.message;
+                    }
+                }, 500);
+            });
+        }
+
+        async function cleanupExpiredCodes() {
+            try {
+                const codesRef = ref(db, 'voucher_codes');
+                const snapshot = await get(codesRef);
+                if (!snapshot.exists()) return;
+
+                const now = new Date();
+                let expiredCount = 0;
+
+                snapshot.forEach(child => {
+                    const code = child.val();
+                    const expiryDate = new Date(code.expiry_date);
+
+                    if (expiryDate < now && code.status === 'active') {
+                        update(ref(db, `voucher_codes/${child.key}`), {
+                            status: 'expired'
+                        });
+                        expiredCount++;
+                    }
+                });
+
+                if (expiredCount > 0) {
+                    console.log(`✅ تم تحديث ${expiredCount} كود منتهي الصلاحية`);
+                }
+            } catch (error) {
+                console.error('خطأ في تنظيف الأكواد المنتهية:', error);
+            }
+        }
+
+        // ===== Notifications =====
+        async function loadNotifications() {
+            if (!currentUser) return;
+            try {
+                const notifRef = ref(db, `notifications/${currentUser.uid}`);
+                const snapshot = await get(notifRef);
+                const list = document.getElementById('notifDropdownList');
+                let unreadCount = 0;
+                allNotifications = [];
+
+                if (snapshot.exists()) {
+                    snapshot.forEach(child => {
+                        allNotifications.push({ id: child.key, ...child.val() });
+                    });
+                    allNotifications.reverse();
+
+                    list.innerHTML = '';
+                    allNotifications.forEach(notif => {
+                        if (!notif.read) unreadCount++;
+                        const div = document.createElement('div');
+                        div.className = `notif-dropdown-item ${!notif.read ? 'unread' : ''}`;
+                        const iconMap = {
+                            'recharge': 'fa-bolt',
+                            'transfer': 'fa-exchange-alt',
+                            'purchase': 'fa-shopping-cart',
+                            'refund': 'fa-undo',
+                            'nfc_share': 'fa-wifi',
+                            'atm_deduct': 'fa-credit-card'
+                        };
+                        div.innerHTML = `
+                                <div class="notif-icon"><i class="fas ${iconMap[notif.type] || 'fa-bell'}"></i></div>
+                                <div class="notif-content">
+                                    <div class="notif-title">${notif.title || 'تحديث'}</div>
+                                    <div class="notif-msg">${notif.message || ''}</div>
+                                    <div class="notif-time">${new Date(notif.timestamp).toLocaleString('ar')}</div>
+                                </div>
+                                <button class="delete-notif-btn" data-id="${notif.id}" title="حذف الإشعار"><i class="fas fa-times"></i></button>
+                            `;
+                        list.appendChild(div);
+                    });
+
+                    list.querySelectorAll('.delete-notif-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            const notifId = btn.dataset.id;
+                            showConfirmDialog(
+                                'هل أنت متأكد من حذف هذا الإشعار؟',
+                                () => deleteSingleNotification(notifId)
+                            );
+                        });
+                    });
+
+                } else {
+                    list.innerHTML = `
+                            <div class="notif-dropdown-empty">
+                                <i class="fas fa-bell-slash"></i>
+                                لا توجد إشعارات
+                            </div>
+                        `;
+                }
+
+                const badge = document.getElementById('notifBadgeIcon');
+                const bell = document.getElementById('notifBellIcon');
+                if (unreadCount > 0) {
+                    badge.textContent = unreadCount;
+                    badge.classList.add('show');
+                    bell.classList.add('has-unread');
+                } else {
+                    badge.classList.remove('show');
+                    bell.classList.remove('has-unread');
+                }
+
+            } catch (err) {
+                console.error('خطأ في تحميل الإشعارات:', err);
+            }
+        }
+
+        async function deleteSingleNotification(notifId) {
+            if (!currentUser) return;
+            showLoading(true);
+            try {
+                await remove(ref(db, `notifications/${currentUser.uid}/${notifId}`));
+                showToast('تم حذف الإشعار', 'success');
+                await loadNotifications();
+            } catch (err) {
+                showToast('خطأ في حذف الإشعار', 'error');
             } finally {
                 showLoading(false);
             }
         }
 
-        // ========== التحويل الخارجي ==========
+        async function deleteAllNotifications() {
+            if (!currentUser) return;
+            if (allNotifications.length === 0) {
+                showToast('لا توجد إشعارات للحذف', 'info');
+                return;
+            }
+            showConfirmDialog(
+                'هل أنت متأكد من حذف جميع الإشعارات؟ لا يمكن التراجع عن هذا الإجراء.',
+                async () => {
+                    showLoading(true);
+                    try {
+                        const notifRef = ref(db, `notifications/${currentUser.uid}`);
+                        await remove(notifRef);
+                        showToast('تم حذف جميع الإشعارات', 'success');
+                        await loadNotifications();
+                    } catch (err) {
+                        showToast('خطأ في حذف الإشعارات', 'error');
+                    } finally {
+                        showLoading(false);
+                    }
+                }
+            );
+        }
+
+        async function markAllAsRead() {
+            if (!currentUser) return;
+            if (allNotifications.length === 0) {
+                showToast('لا توجد إشعارات', 'info');
+                return;
+            }
+            showLoading(true);
+            try {
+                const updates = {};
+                allNotifications.forEach(notif => {
+                    if (!notif.read) {
+                        updates[`notifications/${currentUser.uid}/${notif.id}/read`] = true;
+                    }
+                });
+                if (Object.keys(updates).length > 0) {
+                    await update(ref(db), updates);
+                    showToast('تم تعيين جميع الإشعارات كمقروءة', 'success');
+                } else {
+                    showToast('جميع الإشعارات مقروءة بالفعل', 'info');
+                }
+                await loadNotifications();
+            } catch (err) {
+                showToast('خطأ في تحديث الإشعارات', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function showConfirmDialog(message, onConfirm) {
+            const overlay = document.getElementById('confirmOverlay');
+            document.getElementById('confirmMessage').textContent = message;
+            overlay.classList.add('active');
+
+            const confirmBtn = document.getElementById('confirmDangerBtn');
+            const cancelBtn = document.getElementById('confirmCancelBtn');
+
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            const newCancelBtn = cancelBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+
+            newConfirmBtn.addEventListener('click', () => {
+                overlay.classList.remove('active');
+                if (onConfirm) onConfirm();
+            });
+
+            newCancelBtn.addEventListener('click', () => {
+                overlay.classList.remove('active');
+            });
+
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                }
+            });
+        }
+
+        function setupNotifications() {
+            const iconWrapper = document.getElementById('notifIconWrapper');
+            const dropdown = document.getElementById('notifDropdown');
+
+            iconWrapper.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdown.classList.toggle('open');
+            });
+
+            document.addEventListener('click', () => {
+                dropdown.classList.remove('open');
+            });
+
+            document.getElementById('markAllReadBtn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                markAllAsRead();
+            });
+
+            document.getElementById('clearAllNotifBtn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                deleteAllNotifications();
+            });
+        }
+
+        // ===== Scanner =====
+        function setupScanner() {
+            const openBtn = document.getElementById('openScannerBtn');
+            const closeBtn = document.getElementById('closeScannerBtn');
+            const stopBtn = document.getElementById('stopScannerBtn');
+            const fileInput = document.getElementById('fileInput');
+            const popup = document.getElementById('scannerPopup');
+
+            openBtn.addEventListener('click', () => {
+                popup.classList.add('active');
+                startScanner();
+            });
+
+            closeBtn.addEventListener('click', () => {
+                stopScanner();
+                popup.classList.remove('active');
+            });
+
+            stopBtn.addEventListener('click', () => {
+                stopScanner();
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                if (html5QrCode) {
+                    html5QrCode.scanFile(file, true)
+                        .then(decodedText => {
+                            document.getElementById('voucherCode').value = decodedText;
+                            showToast('✅ تم قراءة الكود بنجاح! اضغط "شحن"', 'success');
+                            stopScanner();
+                            popup.classList.remove('active');
+                        })
+                        .catch(() => {
+                            showToast('❌ لم يتم التعرف على كود صالح في الصورة', 'error');
+                        });
+                }
+                fileInput.value = '';
+            });
+        }
+
+        function startScanner() {
+            if (isScannerActive) return;
+            html5QrCode = new Html5Qrcode("reader");
+            const config = { fps: 10, qrbox: { width: 280, height: 280 }, aspectRatio: 1.0 };
+            html5QrCode.start({ facingMode: "environment" }, config,
+                (decodedText) => {
+                    document.getElementById('voucherCode').value = decodedText;
+                    showToast('✅ تم مسح الكود! اضغط "شحن"', 'success');
+                    stopScanner();
+                    document.getElementById('scannerPopup').classList.remove('active');
+                },
+                (err) => { console.warn(err); }
+            );
+            isScannerActive = true;
+            document.getElementById('openScannerBtn').classList.add('scanning');
+        }
+
+        function stopScanner() {
+            if (html5QrCode && isScannerActive) {
+                html5QrCode.stop()
+                    .then(() => {
+                        isScannerActive = false;
+                        document.getElementById('openScannerBtn').classList.remove('scanning');
+                    })
+                    .catch(() => {});
+            }
+        }
+
+        // ===== QR Popup =====
+        function setupQRPopup() {
+            const popup = document.getElementById('qrPopup');
+            const closeBtn = document.getElementById('closeQrPopup');
+
+            closeBtn.addEventListener('click', () => {
+                popup.classList.remove('active');
+            });
+
+            popup.addEventListener('click', (e) => {
+                if (e.target === popup) {
+                    popup.classList.remove('active');
+                }
+            });
+        }
+
+        // ===== NFC Popup =====
+        function setupNfcPopup() {
+            const popup = document.getElementById('nfcPopup');
+            const closeBtn = document.getElementById('closeNfcPopup');
+            const closeBtn2 = document.getElementById('nfcPopupCloseBtn');
+            const shareBtn = document.getElementById('nfcShareBtn');
+
+            closeBtn.addEventListener('click', () => {
+                popup.classList.remove('active');
+                nfcShareCardId = null;
+                updateNfcStatus('idle', 'NFC');
+            });
+
+            closeBtn2.addEventListener('click', () => {
+                popup.classList.remove('active');
+                nfcShareCardId = null;
+                updateNfcStatus('idle', 'NFC');
+            });
+
+            shareBtn.addEventListener('click', executeNfcShare);
+
+            popup.addEventListener('click', (e) => {
+                if (e.target === popup) {
+                    popup.classList.remove('active');
+                    nfcShareCardId = null;
+                    updateNfcStatus('idle', 'NFC');
+                }
+            });
+        }
+
+        // ===== External Transfer =====
         async function externalTransfer() {
             if (!currentModalCardId) {
                 showToast('خطأ في البيانات', 'error');
+                return;
+            }
+            if (isTransactionInProgress) {
+                showToast('يوجد معاملة قيد التنفيذ، الرجاء الانتظار', 'warning');
                 return;
             }
 
@@ -1122,9 +3273,8 @@
                 return;
             }
 
-            showLoading(true);
+            showTransactionLock(true);
             try {
-                // البحث عن المستخدم المستلم
                 const usersSnapshot = await get(ref(db, 'users'));
                 let targetUid = null,
                     targetUserData = null;
@@ -1139,7 +3289,7 @@
                     }
                 }
                 if (!targetUid) {
-                    showToast('المستخدم غير موجود. تأكد من الاسم أو البريد الإلكتروني', 'error');
+                    showToast('المستخدم غير موجود', 'error');
                     return;
                 }
                 if (targetUid === currentUser.uid) {
@@ -1147,12 +3297,16 @@
                     return;
                 }
 
-                // خصم من المصدر
-                await update(ref(db, `digitalCards/${currentUser.uid}/${currentModalCardId}`), {
-                    balance: fromCard.balance - amount
+                const fromCardRef = ref(db, `digitalCards/${currentUser.uid}/${currentModalCardId}`);
+                const fromResult = await runTransaction(fromCardRef, (currentData) => {
+                    if (currentData === null) return { success: false, error: 'البطاقة غير موجودة' };
+                    if ((currentData.balance || 0) < amount) return { success: false, error: 'الرصيد غير كافٍ' };
+                    currentData.balance = (currentData.balance || 0) - amount;
+                    return currentData;
                 });
 
-                // إضافة للمستلم (إنشاء بطاقة إذا لم توجد)
+                if (!fromResult.committed) throw new Error('فشل الخصم من البطاقة المصدر');
+
                 let targetCardsSnap = await get(ref(db, `digitalCards/${targetUid}`));
                 let targetCardId = null;
                 if (targetCardsSnap.exists()) {
@@ -1169,13 +3323,21 @@
                     });
                 }
 
-                const targetCardSnap = await get(ref(db, `digitalCards/${targetUid}/${targetCardId}`));
-                const targetBalance = targetCardSnap.exists() ? (targetCardSnap.val().balance || 0) : 0;
-                await update(ref(db, `digitalCards/${targetUid}/${targetCardId}`), {
-                    balance: targetBalance + amount
+                const toCardRef = ref(db, `digitalCards/${targetUid}/${targetCardId}`);
+                const toResult = await runTransaction(toCardRef, (currentData) => {
+                    if (currentData === null) return { success: false, error: 'البطاقة غير موجودة' };
+                    currentData.balance = (currentData.balance || 0) + amount;
+                    return currentData;
                 });
 
-                // تسجيل المعاملة
+                if (!toResult.committed) {
+                    await runTransaction(fromCardRef, (currentData) => {
+                        if (currentData !== null) currentData.balance = (currentData.balance || 0) + amount;
+                        return currentData;
+                    });
+                    throw new Error('فشل إضافة الرصيد للمستلم');
+                }
+
                 const transferRef = ref(db, `transfers/${currentUser.uid}`);
                 await push(transferRef, {
                     type: 'external',
@@ -1186,7 +3348,6 @@
                     timestamp: new Date().toISOString()
                 });
 
-                // إشعار للمستلم
                 await push(ref(db, `notifications/${targetUid}`), {
                     type: 'transfer',
                     title: '💰 استلام أموال',
@@ -1195,256 +3356,18 @@
                     read: false
                 });
 
-                showToast(`تم تحويل ${amount.toFixed(2)} ريال بنجاح إلى ${targetUserData.username}`, 'success');
+                showToast(`تم تحويل ${amount.toFixed(2)} ريال بنجاح`, 'success');
                 document.getElementById('cardModal').classList.remove('active');
                 await loadUserCards();
                 await loadNotifications();
+
             } catch (err) {
-                console.error('خطأ في التحويل الخارجي:', err);
                 showToast('فشل التحويل: ' + err.message, 'error');
             } finally {
-                showLoading(false);
+                showTransactionLock(false);
             }
         }
 
-        // ========== حذف البطاقة ==========
-        async function deleteCard() {
-            if (!currentModalCardId) return;
-            const card = userCards.find(c => c.id === currentModalCardId);
-            if (!card) return;
-
-            if (card.balance > 0) {
-                showToast('لا يمكن حذف البطاقة لأن رصيدها أكبر من صفر', 'error');
-                return;
-            }
-
-            if (!confirm(`هل أنت متأكد من حذف بطاقة ${card.name || 'البطاقة'}؟`)) return;
-
-            showLoading(true);
-            try {
-                await remove(ref(db, `digitalCards/${currentUser.uid}/${currentModalCardId}`));
-                showToast('تم حذف البطاقة بنجاح', 'success');
-                document.getElementById('cardModal').classList.remove('active');
-                await loadUserCards();
-            } catch (err) {
-                console.error('خطأ في حذف البطاقة:', err);
-                showToast('حدث خطأ أثناء حذف البطاقة', 'error');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        // ========== شحن البطاقة ==========
-        async function rechargeCard() {
-            if (!selectedCardId) {
-                showToast('الرجاء اختيار بطاقة أولاً (انقر على البطاقة)', 'error');
-                return;
-            }
-            const code = document.getElementById('voucherCode').value.trim();
-            if (!code) {
-                showToast('الرجاء إدخال كود الشحن', 'error');
-                return;
-            }
-
-            showLoading(true);
-            try {
-                const codesRef = ref(db, 'voucher_codes');
-                const snapshot = await get(codesRef);
-                if (!snapshot.exists()) {
-                    showToast('الكود غير صالح', 'error');
-                    return;
-                }
-
-                let voucherData = null;
-                let voucherKey = null;
-                const codes = snapshot.val();
-                for (let key in codes) {
-                    if (codes[key].code === code) {
-                        voucherData = codes[key];
-                        voucherKey = key;
-                        break;
-                    }
-                }
-
-                if (!voucherData) {
-                    showToast('❌ الكود غير موجود', 'error');
-                    return;
-                }
-                if (voucherData.status === 'used') {
-                    showToast('⚠️ هذا الكود تم استخدامه مسبقاً!', 'error');
-                    return;
-                }
-
-                const amount = parseFloat(voucherData.amount);
-                if (isNaN(amount) || amount <= 0) {
-                    showToast('❌ قيمة الكود غير صالحة', 'error');
-                    return;
-                }
-
-                await update(ref(db, `voucher_codes/${voucherKey}`), {
-                    status: 'used',
-                    used_by: currentUser.uid,
-                    used_at: new Date().toISOString()
-                });
-
-                const card = userCards.find(c => c.id === selectedCardId);
-                if (!card) {
-                    showToast('خطأ في البطاقة', 'error');
-                    return;
-                }
-
-                await update(ref(db, `digitalCards/${currentUser.uid}/${selectedCardId}`), {
-                    balance: (card.balance || 0) + amount
-                });
-
-                await push(ref(db, `notifications/${currentUser.uid}`), {
-                    type: 'recharge',
-                    title: '💰 عملية شحن ناجحة',
-                    message: `تم شحن ${amount.toFixed(2)} ريال إلى بطاقة ${card.name || 'البطاقة'}`,
-                    timestamp: new Date().toISOString(),
-                    read: false
-                });
-
-                showToast(`✅ تم شحن ${amount.toFixed(2)} ر.س بنجاح`, 'success');
-                document.getElementById('voucherCode').value = '';
-                await loadUserCards();
-                await loadNotifications();
-            } catch (err) {
-                console.error('خطأ في الشحن:', err);
-                showToast('حدث خطأ أثناء الشحن', 'error');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        // ========== الإشعارات ==========
-        async function loadNotifications() {
-            if (!currentUser) return;
-            try {
-                const notifRef = ref(db, `notifications/${currentUser.uid}`);
-                const snapshot = await get(notifRef);
-                const notificationsList = document.getElementById('notificationsList');
-                let unreadCount = 0;
-
-                if (snapshot.exists()) {
-                    const notifications = [];
-                    snapshot.forEach(child => {
-                        notifications.push({ id: child.key, ...child.val() });
-                    });
-                    notifications.reverse();
-
-                    notificationsList.innerHTML = '';
-                    notifications.forEach(notif => {
-                        if (!notif.read) unreadCount++;
-                        const div = document.createElement('div');
-                        div.className = `notification-item ${!notif.read ? 'unread' : ''}`;
-                        div.innerHTML = `
-                            <div><i class="fas ${notif.type === 'recharge' ? 'fa-bolt' : 'fa-exchange-alt'}"></i></div>
-                            <div><b>${notif.title || 'تحديث'}</b><br>${notif.message || ''}<br><small>${new Date(notif.timestamp).toLocaleString('ar')}</small></div>
-                        `;
-                        notificationsList.appendChild(div);
-                    });
-                } else {
-                    notificationsList.innerHTML = '<div style="padding:15px; text-align:center;">لا توجد إشعارات</div>';
-                }
-
-                const unreadSpan = document.getElementById('unreadCount');
-                if (unreadCount > 0) {
-                    unreadSpan.style.display = 'inline-block';
-                    unreadSpan.textContent = unreadCount;
-                } else {
-                    unreadSpan.style.display = 'none';
-                }
-            } catch (err) {
-                console.error('خطأ في تحميل الإشعارات:', err);
-            }
-        }
-
-        // ========== الماسح الضوئي (QR / باركود) ==========
-        function setupScanner() {
-            const openBtn = document.getElementById('openScannerBtn');
-            const closeBtn = document.getElementById('closeScannerBtn');
-            const stopBtn = document.getElementById('stopScannerBtn');
-            const fileInput = document.getElementById('fileInput');
-            const popup = document.getElementById('scannerPopup');
-
-            openBtn.addEventListener('click', () => {
-                popup.classList.add('active');
-                startScanner();
-            });
-
-            closeBtn.addEventListener('click', () => {
-                stopScanner();
-                popup.classList.remove('active');
-            });
-
-            stopBtn.addEventListener('click', () => {
-                stopScanner();
-            });
-
-            // رفع صورة من المعرض
-            fileInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const img = new Image();
-                    img.onload = function() {
-                        // استخدام html5-qrcode لقراءة الصورة
-                        if (html5QrCode) {
-                            html5QrCode.scanFile(file, true)
-                                .then(decodedText => {
-                                    document.getElementById('voucherCode').value = decodedText;
-                                    showToast('✅ تم قراءة الكود بنجاح! اضغط "شحن"', 'success');
-                                    stopScanner();
-                                    popup.classList.remove('active');
-                                })
-                                .catch(err => {
-                                    showToast('❌ لم يتم التعرف على كود صالح في الصورة', 'error');
-                                });
-                        }
-                    };
-                    img.src = event.target.result;
-                };
-                reader.readAsDataURL(file);
-                fileInput.value = '';
-            });
-        }
-
-        function startScanner() {
-            if (isScannerActive) return;
-            const readerElement = document.getElementById('reader');
-            html5QrCode = new Html5Qrcode("reader");
-            const config = {
-                fps: 10,
-                qrbox: { width: 280, height: 280 },
-                aspectRatio: 1.0
-            };
-            html5QrCode.start({ facingMode: "environment" }, config,
-                (decodedText) => {
-                    document.getElementById('voucherCode').value = decodedText;
-                    showToast('✅ تم مسح الكود! اضغط "شحن"', 'success');
-                    stopScanner();
-                    document.getElementById('scannerPopup').classList.remove('active');
-                },
-                (err) => { console.warn(err); }
-            );
-            isScannerActive = true;
-            document.getElementById('openScannerBtn').classList.add('scanning');
-        }
-
-        function stopScanner() {
-            if (html5QrCode && isScannerActive) {
-                html5QrCode.stop()
-                    .then(() => {
-                        isScannerActive = false;
-                        document.getElementById('openScannerBtn').classList.remove('scanning');
-                    })
-                    .catch(() => {});
-            }
-        }
-
-        // ========== المستمعات الفورية ==========
         function listenToRealTimeUpdates() {
             if (!currentUser) return;
             const cardsRef = ref(db, `digitalCards/${currentUser.uid}`);
@@ -1457,35 +3380,84 @@
             });
         }
 
-        // ========== التبديل بين اللوحات ==========
-        function setupTogglePanels() {
-            const notifToggle = document.getElementById('notificationsToggle');
-            const notifList = document.getElementById('notificationsList');
-            notifToggle.addEventListener('click', () => {
-                notifList.classList.toggle('open');
-            });
-        }
-
-        // ========== التهيئة ==========
         async function init() {
             if (!getCurrentUser()) return;
-            setupTogglePanels();
+
+            await cleanupExpiredCodes();
+
+            setupTabs();
             setupScanner();
+            setupQRPopup();
+            setupNfcPopup();
+            setupNotifications();
+            setupVoucherCheck();
             await loadUserCards();
             await loadNotifications();
             listenToRealTimeUpdates();
+
+            // تحديث حالة NFC
+            updateNfcStatus('idle', 'NFC');
 
             document.getElementById('addCardBtn').addEventListener('click', addNewCard);
             document.getElementById('rechargeBtn').addEventListener('click', rechargeCard);
             document.getElementById('confirmInternalTransferBtn').addEventListener('click', internalTransfer);
             document.getElementById('confirmExternalTransferBtn').addEventListener('click', externalTransfer);
-            document.getElementById('deleteCardBtn').addEventListener('click', deleteCard);
+
+            // زر مشاركة NFC في المودال
+            document.getElementById('modalNfcShareBtn').addEventListener('click', function() {
+                if (currentModalCardId) {
+                    document.getElementById('cardModal').classList.remove('active');
+                    shareCardViaNFC(currentModalCardId);
+                }
+            });
+
             document.getElementById('closeModalBtn').addEventListener('click', () => {
                 document.getElementById('cardModal').classList.remove('active');
             });
 
+            // NFC badge click
+            document.getElementById('nfcStatusBadge').addEventListener('click', () => {
+                if (userCards.length > 0) {
+                    shareCardViaNFC(userCards[0].id);
+                } else {
+                    showToast('لا توجد بطاقات للمشاركة', 'warning');
+                }
+            });
+
+            document.getElementById('deleteCardBtn').addEventListener('click', function() {
+                if (!currentModalCardId) return;
+                const card = userCards.find(c => c.id === currentModalCardId);
+                if (!card) return;
+
+                if (card.balance > 0) {
+                    showToast('لا يمكن حذف البطاقة لأن رصيدها أكبر من صفر', 'error');
+                    return;
+                }
+
+                showConfirmDialog(
+                    `⚠️ هل أنت متأكد من حذف بطاقة "${card.name || 'البطاقة'}"؟\nلا يمكن التراجع عن هذا الإجراء.`,
+                    async () => {
+                        showLoading(true);
+                        try {
+                            await remove(ref(db, `digitalCards/${currentUser.uid}/${currentModalCardId}`));
+                            showToast('تم حذف البطاقة بنجاح', 'success');
+                            document.getElementById('cardModal').classList.remove('active');
+                            await loadUserCards();
+                        } catch (err) {
+                            showToast('حدث خطأ أثناء حذف البطاقة', 'error');
+                        } finally {
+                            showLoading(false);
+                        }
+                    }
+                );
+            });
+
             showToast('مرحباً بك في المحفظة الرقمية', 'info');
         }
+
+        setInterval(async () => {
+            await cleanupExpiredCodes();
+        }, 60 * 60 * 1000);
 
         init();
     </script>
