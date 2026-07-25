@@ -7,24 +7,29 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-          <link rel="icon" type="image/x-icon" href="img\Login library.jpg">
-    <style>
+    <link rel="icon" type="image/x-icon" href="img\Login library.jpg">
+<style>
         :root {
-            --accent: #ff6b35;
-            --accent-light: #ff8e53;
-            --bg: #f5f7fa;
-            --surface: #ffffff;
-            --text: #1a1a2e;
-            --text-light: #64748b;
-            --border: #e8ecf1;
-            --success: #10b981;
+            --accent: #e85d2c;
+            --accent-hover: #d44d1e;
+            --accent-light: #f0754a;
+            --green: #2d8f5c;
+            --green-light: #3aad73;
+            --bg: #0d1117;
+            --surface: #161b22;
+            --surface-light: #1c2333;
+            --text: #e6edf3;
+            --text-light: #8b949e;
+            --border: #30363d;
+            --shadow: 0 2px 10px rgba(0,0,0,0.4);
+            --danger: #ef4444;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Cairo', sans-serif;
-            background: #f5f7fa;
+            background: #0d1117;
             height: 100dvh;
             width: 100dvw;
             overflow: hidden;
@@ -37,155 +42,358 @@
             flex-direction: column;
             height: 100%;
             width: 100%;
-            background: #fff;
+            background: var(--bg);
+        }
+
+        /* Connection Status Bar */
+        .connection-status {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: #1a1414;
+            color: #ef4444;
+            text-align: center;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            border-bottom: 2px solid #ef4444;
+            transform: translateY(-100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: 'Cairo', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .connection-status.show {
+            transform: translateY(0);
+        }
+
+        .connection-status.online {
+            background: #0d1f14;
+            color: #4ade80;
+            border-bottom-color: #4ade80;
+        }
+
+        .connection-status .status-icon {
+            font-size: 16px;
         }
 
         /* Top Bar */
         .topbar {
-            background: #fff;
-            border-bottom: 1px solid #e8ecf1;
-            padding: 12px 20px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 8px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
+            gap: 8px;
             flex-shrink: 0;
-            min-height: 60px;
+            min-height: 52px;
+            transition: all 0.3s ease;
         }
 
         .topbar .brand {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .topbar .brand .icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #ff6b35, #ff8e53);
-            border-radius: 12px;
+            width: 34px;
+            height: 34px;
+            background: linear-gradient(135deg, var(--accent), var(--green));
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #fff;
-            font-size: 18px;
+            font-size: 15px;
         }
 
         .topbar .brand .title {
             font-weight: 700;
-            font-size: 16px;
-            color: #1a1a2e;
+            font-size: 15px;
+            color: var(--text);
         }
 
         .topbar .brand .subtitle {
-            font-size: 11px;
-            color: #94a3b8;
+            font-size: 10px;
+            color: var(--text-light);
         }
 
         .online-badge {
-            background: #ecfdf5;
-            border: 1px solid #a7f3d0;
-            color: #065f46;
-            padding: 8px 16px;
+            background: #0d1f14;
+            border: 1px solid #1a3d2a;
+            color: #4ade80;
+            padding: 4px 14px;
             border-radius: 30px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
         }
 
         .online-badge .dot {
-            width: 8px;
-            height: 8px;
-            background: #10b981;
+            width: 6px;
+            height: 6px;
+            background: #4ade80;
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
 
+        .online-badge.offline {
+            background: #1a1414;
+            border-color: #3d1a1a;
+            color: #ef4444;
+        }
+
+        .online-badge.offline .dot {
+            background: #ef4444;
+            animation: none;
+        }
+
         @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-            50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            0%, 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.4); }
+            50% { box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
+        }
+
+        .selection-mode {
+            background: #1a1510 !important;
+            border-bottom: 2px solid var(--accent) !important;
+        }
+
+        .selection-actions {
+            display: none;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .selection-actions.show {
+            display: flex;
+        }
+
+        .selection-actions button {
+            background: none;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .selection-actions .edit-selected {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .selection-actions .edit-selected:hover {
+            background: var(--accent-hover);
+        }
+
+        .selection-actions .delete-selected {
+            background: #2d1414;
+            color: #ef4444;
+        }
+
+        .selection-actions .delete-selected:hover {
+            background: #3d1a1a;
+        }
+
+        .selection-actions .cancel-selection {
+            background: var(--border);
+            color: var(--text-light);
+        }
+
+        .selection-actions .cancel-selection:hover {
+            background: #3d4550;
+        }
+
+        .selection-count {
+            font-size: 12px;
+            color: var(--text);
+            font-weight: 600;
         }
 
         /* Messages */
         .messages {
             flex: 1;
             overflow-y: auto;
-            padding: 16px 20px;
-            background: #fafbfc;
+            padding: 12px 16px;
+            background: var(--bg);
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
         }
 
         .messages::-webkit-scrollbar { width: 4px; }
-        .messages::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+        .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+        .messages::-webkit-scrollbar-track { background: transparent; }
 
         .date-separator {
             text-align: center;
             font-size: 11px;
-            color: #94a3b8;
-            margin: 12px 0;
+            color: var(--text-light);
+            margin: 8px 0;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
         .date-separator::before,
         .date-separator::after {
             content: '';
             flex: 1;
             height: 1px;
-            background: #e8ecf1;
+            background: var(--border);
         }
 
         .msg-row {
             display: flex;
             flex-direction: column;
-            animation: popIn 0.25s ease;
+            animation: popIn 0.2s ease;
+            position: relative;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border-radius: 4px;
+            padding: 2px 6px;
+            max-width: 100%;
         }
-        .msg-row.sent { align-items: flex-end; }
-        .msg-row.received { align-items: flex-start; }
+
+        .msg-row.sent { 
+            align-items: flex-end; 
+        }
+        .msg-row.received { 
+            align-items: flex-start; 
+        }
+
+        .msg-row.selected {
+            background: rgba(232, 93, 44, 0.08);
+            transform: scale(1.01);
+        }
+
+        .msg-row.selected .bubble {
+            border: 2px solid var(--accent);
+        }
 
         @keyframes popIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(4px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
+        @keyframes selectionPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .msg-row.selection-animation {
+            animation: selectionPop 0.2s ease;
+        }
+
+        /* ===== فقاعات صغيرة جداً بحجم النص ===== */
         .bubble {
-            max-width: 72%;
-            padding: 10px 16px;
-            border-radius: 16px;
-            font-size: 14px;
-            line-height: 1.6;
+            max-width: 100% !important;
+            width: fit-content !important;
+            min-width: 40px;
+            padding: 4px 8px !important;
+            border-radius: 8px !important;
+            font-size: 12px !important;
+            line-height: 1.4 !important;
             word-break: break-word;
+            position: relative;
+            transition: all 0.2s ease;
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            display: inline-block;
         }
 
         .bubble.sent {
-            background: linear-gradient(135deg, #ff6b35, #ff8e53);
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
             color: #fff;
-            border-bottom-right-radius: 4px;
-            box-shadow: 0 3px 10px rgba(255,107,53,0.2);
+            border-bottom-right-radius: 3px !important;
+            box-shadow: var(--shadow);
         }
 
         .bubble.received {
-            background: #fff;
-            color: #1a1a2e;
-            border-bottom-left-radius: 4px;
-            border: 1px solid #e8ecf1;
+            background: var(--surface-light);
+            color: var(--text);
+            border-bottom-left-radius: 3px !important;
+            border: 1px solid var(--border);
         }
 
         .bubble .time {
-            font-size: 10px;
+            font-size: 8px !important;
             opacity: 0.7;
-            margin-top: 3px;
+            margin-top: 1px;
             display: block;
             text-align: left;
         }
 
-        /* تم إخفاء اسم المرسل */
-        .bubble .sender-name {
+        .bubble.sent .time {
+            color: rgba(255,255,255,0.8);
+        }
+
+        .bubble.received .time {
+            color: var(--text-light);
+        }
+
+        .bubble .message-actions {
             display: none;
+            margin-top: 2px;
+            gap: 4px;
+            font-size: 9px;
+        }
+
+        .msg-row:hover .bubble .message-actions {
+            display: flex;
+        }
+
+        .bubble .message-actions button {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 9px;
+            padding: 1px 3px;
+            border-radius: 3px;
+            transition: 0.2s;
+        }
+
+        .bubble .message-actions button:hover {
+            background: rgba(255,255,255,0.05);
+            color: var(--accent);
+        }
+
+        .bubble .message-actions .delete-btn:hover {
+            color: #ef4444;
+        }
+
+        .bubble .edit-indicator {
+            font-size: 8px;
+            opacity: 0.5;
+            margin-top: 1px;
+            display: block;
+        }
+
+        .bubble.sent .edit-indicator {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .bubble.received .edit-indicator {
+            color: var(--text-light);
+        }
+
+        .bubble .deleted-message {
+            font-style: italic;
+            opacity: 0.6;
         }
 
         .empty-state {
@@ -194,144 +402,416 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            color: #94a3b8;
-            gap: 8px;
+            color: var(--text-light);
+            gap: 4px;
             text-align: center;
         }
         .empty-state .circle {
-            width: 72px;
-            height: 72px;
-            background: #e8ecf1;
+            width: 56px;
+            height: 56px;
+            background: var(--surface);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 30px;
-            margin-bottom: 8px;
+            font-size: 22px;
+            border: 1px solid var(--border);
+            color: var(--accent);
         }
-        .empty-state h5 { color: #64748b; }
-        .empty-state p { color: #94a3b8; font-size: 14px; }
-        
-        /* تم إخفاء قائمة المشرفين */
-        .empty-state .supervisors-list {
-            display: none;
-        }
+        .empty-state h5 { color: var(--text); font-size: 15px; margin: 4px 0; }
+        .empty-state p { color: var(--text-light); font-size: 13px; margin: 0; }
 
         /* Input */
         .input-area {
-            background: #fff;
-            padding: 10px 16px;
-            border-top: 1px solid #e8ecf1;
+            background: var(--surface);
+            padding: 6px 12px;
+            border-top: 1px solid var(--border);
             display: flex;
-            gap: 8px;
-            align-items: center;
+            gap: 6px;
+            align-items: flex-end;
             flex-shrink: 0;
+            min-height: 52px;
         }
 
-        .input-area input {
+        .input-wrapper {
+            display: flex;
+            gap: 6px;
             flex: 1;
-            border: 2px solid #e8ecf1;
-            border-radius: 14px;
-            padding: 12px 16px;
+            align-items: flex-end;
+            background: var(--bg);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            padding: 3px 8px;
+            transition: 0.2s;
+            min-height: 38px;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(232, 93, 44, 0.1);
+        }
+
+        .input-wrapper textarea {
+            flex: 1;
+            border: none;
+            outline: none;
             font-size: 14px;
             font-family: 'Cairo', sans-serif;
-            outline: none;
-            background: #f8fafc;
-            transition: 0.2s;
+            background: transparent;
+            resize: none;
+            padding: 6px 2px;
+            min-height: 24px;
+            max-height: 100px;
+            line-height: 1.6;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-x: hidden;
+            color: var(--text);
         }
 
-        .input-area input:focus {
-            border-color: #ff6b35;
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(255,107,53,0.08);
+        .input-wrapper textarea::placeholder {
+            color: var(--text-light);
+        }
+
+        .input-wrapper textarea::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .input-wrapper textarea::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        .cancel-edit {
+            background: var(--border);
+            border: none;
+            color: var(--text-light);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            display: none;
+            font-family: 'Cairo', sans-serif;
+            white-space: nowrap;
+            height: 30px;
+            align-self: center;
+        }
+
+        .cancel-edit.show {
+            display: block;
         }
 
         .btn-send {
-            background: linear-gradient(135deg, #ff6b35, #ff8e53);
+            background: linear-gradient(135deg, var(--accent), var(--green));
             border: none;
             color: #fff;
-            width: 46px;
-            height: 46px;
-            border-radius: 14px;
-            font-size: 18px;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            font-size: 16px;
             cursor: pointer;
             transition: 0.2s;
             flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(255,107,53,0.25);
+            align-self: flex-end;
+            box-shadow: 0 2px 8px rgba(232, 93, 44, 0.25);
         }
 
         .btn-send:hover:not(:disabled) {
             transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(255,107,53,0.35);
+            box-shadow: 0 4px 12px rgba(232, 93, 44, 0.3);
         }
 
         .btn-send:disabled {
-            background: #94a3b8;
+            background: var(--border);
             cursor: not-allowed;
             box-shadow: none;
         }
 
-        /* تحسينات للشاشات الصغيرة */
-        @media (max-width: 480px) {
+        .input-wrapper.editing-mode {
+            border-color: var(--accent) !important;
+        }
+
+        /* Checkbox selection */
+        .msg-row .selection-checkbox {
+            display: none;
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: var(--bg);
+            cursor: pointer;
+            transition: 0.2s;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            color: transparent;
+            z-index: 2;
+        }
+
+        .msg-row.received .selection-checkbox {
+            right: -6px;
+        }
+
+        .msg-row.sent .selection-checkbox {
+            left: -6px;
+            right: auto;
+        }
+
+        .msg-row .selection-checkbox.show {
+            display: flex;
+        }
+
+        .msg-row .selection-checkbox.checked {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .msg-row .selection-checkbox.checked i {
+            color: #fff;
+        }
+
+        .msg-row.selected .selection-checkbox {
+            border-color: var(--accent);
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
             .topbar {
-                padding: 10px 14px;
-                min-height: 50px;
+                padding: 6px 12px;
+                min-height: 44px;
             }
             .topbar .brand .icon {
-                width: 34px;
-                height: 34px;
-                font-size: 14px;
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+                border-radius: 6px;
             }
             .topbar .brand .title {
-                font-size: 14px;
+                font-size: 13px;
             }
             .topbar .brand .subtitle {
-                font-size: 10px;
+                font-size: 9px;
             }
             .online-badge {
                 font-size: 10px;
-                padding: 4px 10px;
+                padding: 3px 10px;
             }
             .messages {
-                padding: 12px 14px;
+                padding: 10px 12px;
             }
             .bubble {
-                max-width: 85%;
-                font-size: 13px;
-                padding: 8px 12px;
+                padding: 3px 6px !important;
+                font-size: 11px !important;
+                border-radius: 6px !important;
+                min-width: 30px;
+            }
+            .bubble .time {
+                font-size: 7px !important;
+            }
+            .msg-row .selection-checkbox {
+                width: 16px;
+                height: 16px;
+                font-size: 8px;
+            }
+            .msg-row.sent .selection-checkbox {
+                left: -4px;
+            }
+            .msg-row.received .selection-checkbox {
+                right: -4px;
+            }
+            .bubble .message-actions {
+                display: flex !important;
+                justify-content: flex-end;
+                margin-top: 2px;
+                gap: 3px;
+            }
+            .bubble .message-actions button {
+                padding: 1px 3px;
+                font-size: 8px;
             }
             .input-area {
-                padding: 8px 12px;
+                padding: 4px 10px;
+                min-height: 44px;
             }
-            .input-area input {
+            .input-wrapper {
+                min-height: 32px;
+                padding: 2px 6px;
+                border-radius: 10px;
+            }
+            .input-wrapper textarea {
                 font-size: 13px;
-                padding: 10px 12px;
-                min-height: 40px;
+                padding: 4px 2px;
+                min-height: 20px;
+                max-height: 80px;
             }
             .btn-send {
-                width: 40px;
-                height: 40px;
-                font-size: 15px;
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
+                border-radius: 10px;
+            }
+            .selection-actions button {
+                font-size: 11px;
+                padding: 3px 8px;
+            }
+            .selection-count {
+                font-size: 11px;
+            }
+            .cancel-edit {
+                font-size: 11px;
+                padding: 3px 8px;
+                height: 26px;
+            }
+            .date-separator {
+                font-size: 10px;
+                margin: 6px 0;
+            }
+            .empty-state h5 { font-size: 14px; }
+            .empty-state p { font-size: 12px; }
+            .empty-state .circle {
+                width: 48px;
+                height: 48px;
+                font-size: 18px;
+            }
+            .connection-status {
+                font-size: 12px;
+                padding: 6px 14px;
             }
         }
+
+        @media (max-width: 480px) {
+            .topbar {
+                padding: 4px 10px;
+                min-height: 38px;
+            }
+            .topbar .brand .icon {
+                width: 24px;
+                height: 24px;
+                font-size: 10px;
+                border-radius: 5px;
+            }
+            .topbar .brand .title {
+                font-size: 12px;
+            }
+            .topbar .brand .subtitle {
+                font-size: 8px;
+            }
+            .online-badge {
+                font-size: 9px;
+                padding: 2px 8px;
+            }
+            .messages {
+                padding: 8px 10px;
+                gap: 3px;
+            }
+            .bubble {
+                padding: 2px 5px !important;
+                font-size: 10px !important;
+                border-radius: 5px !important;
+                min-width: 25px;
+            }
+            .bubble .time {
+                font-size: 6px !important;
+            }
+            .bubble .edit-indicator {
+                font-size: 7px;
+            }
+            .input-area {
+                padding: 3px 8px;
+                min-height: 38px;
+            }
+            .input-wrapper {
+                min-height: 28px;
+                padding: 2px 4px;
+                border-radius: 8px;
+            }
+            .input-wrapper textarea {
+                font-size: 12px;
+                padding: 3px 2px;
+                min-height: 18px;
+                max-height: 60px;
+            }
+            .btn-send {
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
+                border-radius: 8px;
+            }
+            .selection-actions button {
+                font-size: 10px;
+                padding: 2px 6px;
+            }
+            .selection-count {
+                font-size: 10px;
+            }
+            .cancel-edit {
+                font-size: 10px;
+                padding: 2px 6px;
+                height: 22px;
+            }
+            .date-separator {
+                font-size: 9px;
+                margin: 4px 0;
+            }
+            .empty-state h5 { font-size: 12px; }
+            .empty-state p { font-size: 10px; }
+            .empty-state .circle {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+            .connection-status {
+                font-size: 10px;
+                padding: 4px 10px;
+            }
+        }
+
+        .msg-row.long-press-hint {
+            animation: pulseGlow 0.6s ease;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(232, 93, 44, 0.3); }
+            50% { box-shadow: 0 0 20px 6px rgba(232, 93, 44, 0.1); }
+            100% { box-shadow: 0 0 0 0 rgba(232, 93, 44, 0); }
+        }
     </style>
+    
 </head>
 <body>
 
 <div class="app">
+    <!-- Connection Status Bar -->
+    <div class="connection-status" id="connectionStatus">
+        <span class="status-icon"><i class="fas fa-wifi"></i></span>
+        <span id="connectionText">غير متصل بالإنترنت</span>
+    </div>
+
     <!-- Top Bar -->
-    <div class="topbar">
+    <div class="topbar" id="topbar">
         <div class="brand">
             <div class="icon"><i class="fas fa-headset"></i></div>
             <div>
-                <div class="title">الدعم الفني</div>
-                <div class="subtitle">مكتبة الفجر الرقمية · فريق الدعم متاح لمساعدتك</div>
+                <div class="title" id="topbarTitle">الدعم الفني</div>
+                <div class="subtitle" id="topbarSubtitle">مكتبة الفجر الرقمية</div>
             </div>
         </div>
-        <div class="online-badge">
+        <div class="selection-actions" id="selectionActions">
+            <span class="selection-count" id="selectionCount">0</span>
+            <button class="edit-selected" id="editSelectedBtn"><i class="fas fa-edit"></i> تعديل</button>
+            <button class="delete-selected" id="deleteSelectedBtn"><i class="fas fa-trash"></i> حذف</button>
+            <button class="cancel-selection" id="cancelSelectionBtn"><i class="fas fa-times"></i> إلغاء</button>
+        </div>
+        <div class="online-badge" id="onlineBadge">
             <span class="dot"></span> فريق الدعم متصل
         </div>
     </div>
@@ -347,7 +827,10 @@
 
     <!-- Input -->
     <div class="input-area">
-        <input type="text" id="messageInput" placeholder="اكتب رسالتك هنا..." />
+        <div class="input-wrapper" id="inputWrapper">
+            <textarea id="messageInput" rows="1" placeholder="اكتب رسالتك هنا..."></textarea>
+            <button class="cancel-edit" id="cancelEditBtn">إلغاء</button>
+        </div>
         <button class="btn-send" id="sendBtn">
             <i class="fas fa-paper-plane"></i>
         </button>
@@ -356,7 +839,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue, set, query, orderByChild, limitToLast, off, onChildAdded } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+    import { getDatabase, ref, push, onValue, set, query, orderByChild, limitToLast, update, remove, onChildAdded } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyBlcKC2ncX9mTOPlhDOnfmyzdJ5mLinWYY",
@@ -371,7 +854,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // Get current user from localStorage
     function getUser() {
         try {
             const u = JSON.parse(localStorage.getItem('user') || 'null');
@@ -386,23 +868,65 @@
     const USER_EMAIL = user.email;
     const USER_PHONE = user.phone;
 
-    // DOM
     const messagesContainer = document.getElementById('messagesContainer');
     const messageInput = document.getElementById('messageInput');
     const sendBtn = document.getElementById('sendBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const inputWrapper = document.getElementById('inputWrapper');
+    const topbar = document.getElementById('topbar');
+    const selectionActions = document.getElementById('selectionActions');
+    const selectionCount = document.getElementById('selectionCount');
+    const editSelectedBtn = document.getElementById('editSelectedBtn');
+    const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
+    const cancelSelectionBtn = document.getElementById('cancelSelectionBtn');
+    const topbarTitle = document.getElementById('topbarTitle');
+    const topbarSubtitle = document.getElementById('topbarSubtitle');
+    const onlineBadge = document.getElementById('onlineBadge');
+    const connectionStatus = document.getElementById('connectionStatus');
+    const connectionText = document.getElementById('connectionText');
 
-    // قائمة المشرفين (مخفية عن المستخدم، تستخدم فقط للخلفية)
-    const supervisorNames = {
-        'supervisor_hussain': 'حسين العصاري',
-        'supervisor_ahmed_j': 'أحمد الجويد',
-        'supervisor_hassan': 'حسن مالك',
-        'supervisor_rayan': 'ريان',
-        'supervisor_moayad': 'مؤيد رضا',
-        'supervisor_mohammed_a': 'محمد علي',
-        'supervisor_mohammed_t': 'محمد طاهر',
-        'supervisor_abdulaziz': 'عبد العزيز',
-        'supervisor_ali_t': 'علي طاهر'
-    };
+    let editingMessageId = null;
+    let editingMessageRef = null;
+    let selectedMessages = new Set();
+    let isSelectionMode = false;
+    let isOnline = navigator.onLine;
+
+    // Connection status handling
+    function updateConnectionStatus(online) {
+        isOnline = online;
+        
+        if (online) {
+            connectionStatus.className = 'connection-status online show';
+            connectionStatus.querySelector('.status-icon').innerHTML = '<i class="fas fa-check-circle"></i>';
+            connectionText.textContent = 'تم استعادة الاتصال بالإنترنت';
+            onlineBadge.className = 'online-badge';
+            onlineBadge.innerHTML = '<span class="dot"></span> فريق الدعم متصل';
+            
+            setTimeout(() => {
+                connectionStatus.classList.remove('show');
+            }, 3000);
+        } else {
+            connectionStatus.className = 'connection-status show';
+            connectionStatus.querySelector('.status-icon').innerHTML = '<i class="fas fa-wifi"></i>';
+            connectionText.textContent = 'غير متصل بالإنترنت - جاري المحاولة...';
+            onlineBadge.className = 'online-badge offline';
+            onlineBadge.innerHTML = '<span class="dot"></span> غير متصل';
+        }
+    }
+
+    window.addEventListener('online', () => {
+        updateConnectionStatus(true);
+    });
+
+    window.addEventListener('offline', () => {
+        updateConnectionStatus(false);
+    });
+
+    if (navigator.onLine) {
+        connectionStatus.classList.remove('show');
+    } else {
+        updateConnectionStatus(false);
+    }
 
     function fmtTime(ts) {
         if (!ts) return '';
@@ -418,7 +942,86 @@
         return d.toLocaleDateString('ar-SA', { weekday: 'long', month: 'long', day: 'numeric' });
     }
 
-    // Listen to all messages for this user
+    function getTimeDiff(timestamp) {
+        const now = Date.now();
+        const diff = now - timestamp;
+        const minutes = Math.floor(diff / 60000);
+        const hours = Math.floor(diff / 3600000);
+        const days = Math.floor(diff / 86400000);
+
+        if (minutes < 1) return 'الآن';
+        if (minutes < 60) return `منذ ${minutes} دقيقة`;
+        if (hours < 24) return `منذ ${hours} ساعة`;
+        if (days < 30) return `منذ ${days} يوم`;
+        return fmtDate(timestamp);
+    }
+
+    function autoResizeTextarea() {
+        messageInput.style.height = 'auto';
+        const newHeight = Math.min(messageInput.scrollHeight, 100);
+        messageInput.style.height = newHeight + 'px';
+        const wrapperHeight = Math.min(messageInput.scrollHeight + 8, 108);
+        inputWrapper.style.minHeight = Math.max(38, wrapperHeight) + 'px';
+    }
+
+    function updateSelectionUI() {
+        const count = selectedMessages.size;
+        if (count > 0) {
+            selectionActions.classList.add('show');
+            selectionCount.textContent = count;
+            topbar.classList.add('selection-mode');
+            topbarTitle.textContent = `تم اختيار ${count} رسالة`;
+            topbarSubtitle.textContent = 'اختر الإجراء المناسب';
+            onlineBadge.style.display = 'none';
+            isSelectionMode = true;
+        } else {
+            selectionActions.classList.remove('show');
+            topbar.classList.remove('selection-mode');
+            topbarTitle.textContent = 'الدعم الفني';
+            topbarSubtitle.textContent = 'مكتبة الفجر الرقمية';
+            onlineBadge.style.display = 'flex';
+            isSelectionMode = false;
+        }
+
+        document.querySelectorAll('.msg-row').forEach(row => {
+            const checkbox = row.querySelector('.selection-checkbox');
+            if (checkbox) {
+                const msgId = row.dataset.messageId;
+                if (selectedMessages.has(msgId)) {
+                    checkbox.classList.add('checked');
+                    checkbox.innerHTML = '<i class="fas fa-check"></i>';
+                } else {
+                    checkbox.classList.remove('checked');
+                    checkbox.innerHTML = '';
+                }
+            }
+        });
+    }
+
+    function toggleMessageSelection(messageId, event) {
+        if (event && event.type === 'click' && isSelectionMode) {
+            if (selectedMessages.has(messageId)) {
+                selectedMessages.delete(messageId);
+            } else {
+                selectedMessages.add(messageId);
+            }
+            updateSelectionUI();
+            return true;
+        }
+        return false;
+    }
+
+    function enterSelectionMode(messageId) {
+        selectedMessages.add(messageId);
+        updateSelectionUI();
+        const row = document.querySelector(`.msg-row[data-message-id="${messageId}"]`);
+        if (row) {
+            row.classList.add('selection-animation');
+            setTimeout(() => row.classList.remove('selection-animation'), 300);
+        }
+        document.querySelectorAll('.msg-row .selection-checkbox').forEach(cb => cb.classList.add('show'));
+    }
+
     function subscribeToMessages() {
         const userChatRef = ref(db, `users/${USER_ID}/messages`);
         const q = query(userChatRef, orderByChild('timestamp'), limitToLast(100));
@@ -445,6 +1048,21 @@
                 const md = m.timestamp ? fmtDate(m.timestamp) : '';
                 const isSent = m.sender === 'client';
                 const t = fmtTime(m.timestamp);
+                const isDeleted = m.deleted === true;
+                const isEdited = m.edited === true;
+                const editTime = m.editTimestamp ? getTimeDiff(m.editTimestamp) : '';
+                const deleteTime = m.deleteTimestamp ? getTimeDiff(m.deleteTimestamp) : '';
+                const isSelected = selectedMessages.has(m.id);
+                
+                let messageText = m.text;
+                let extraInfo = '';
+
+                if (isDeleted) {
+                    messageText = 'تم حذف هذه الرسالة';
+                    extraInfo = `<span class="edit-indicator" style="font-style: italic;">تم الحذف ${deleteTime}</span>`;
+                } else if (isEdited) {
+                    extraInfo = `<span class="edit-indicator">تم التعديل ${editTime}</span>`;
+                }
 
                 if (md && md !== lastDate) {
                     html += `<div class="date-separator">${md}</div>`;
@@ -452,56 +1070,199 @@
                 }
 
                 html += `
-                    <div class="msg-row ${isSent ? 'sent' : 'received'}">
+                    <div class="msg-row ${isSent ? 'sent' : 'received'} ${isSelected ? 'selected' : ''}" 
+                         data-message-id="${m.id}" 
+                         data-sender="${m.sender}"
+                         data-deleted="${isDeleted}">
+                        <div class="selection-checkbox ${isSelected ? 'checked' : ''}" onclick="event.stopPropagation();">
+                            ${isSelected ? '<i class="fas fa-check"></i>' : ''}
+                        </div>
                         <div class="bubble ${isSent ? 'sent' : 'received'}">
-                            ${m.text}
-                            <span class="time">${t} ${isSent ? '✓' : ''}</span>
+                            ${isDeleted ? `<span class="deleted-message">${messageText}</span>` : messageText}
+                            ${!isDeleted ? `<span class="time">${t} ${isSent ? '✓' : ''}</span>` : ''}
+                            ${extraInfo}
+                            ${!isDeleted && isSent && !isSelectionMode ? `
+                                <div class="message-actions">
+                                    <button class="edit-btn" onclick="event.stopPropagation(); window.editMessage('${m.id}')">
+                                        <i class="fas fa-edit"></i> تعديل
+                                    </button>
+                                    <button class="delete-btn" onclick="event.stopPropagation(); window.deleteMessage('${m.id}')">
+                                        <i class="fas fa-trash"></i> حذف
+                                    </button>
+                                </div>
+                            ` : ''}
+                            ${!isDeleted && !isSent && !isSelectionMode ? `
+                                <div class="message-actions">
+                                    <button class="delete-btn" onclick="event.stopPropagation(); window.deleteMessage('${m.id}')">
+                                        <i class="fas fa-trash"></i> حذف
+                                    </button>
+                                </div>
+                            ` : ''}
                         </div>
                     </div>`;
             });
 
             messagesContainer.innerHTML = html;
             messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            if (isSelectionMode) {
+                document.querySelectorAll('.msg-row .selection-checkbox').forEach(cb => cb.classList.add('show'));
+            }
+
+            document.querySelectorAll('.msg-row').forEach(row => {
+                const msgId = row.dataset.messageId;
+                const isDeleted = row.dataset.deleted === 'true';
+                
+                if (isDeleted) return;
+
+                row.addEventListener('click', (e) => {
+                    if (e.target.closest('button')) return;
+                    if (e.target.closest('.selection-checkbox')) return;
+
+                    if (isSelectionMode) {
+                        toggleMessageSelection(msgId, e);
+                    }
+                });
+
+                let pressTimer = null;
+
+                row.addEventListener('touchstart', (e) => {
+                    if (e.target.closest('button')) return;
+                    if (isSelectionMode) return;
+                    pressTimer = setTimeout(() => {
+                        enterSelectionMode(msgId);
+                        row.classList.add('long-press-hint');
+                        setTimeout(() => row.classList.remove('long-press-hint'), 600);
+                    }, 500);
+                });
+
+                row.addEventListener('touchmove', () => {
+                    clearTimeout(pressTimer);
+                });
+
+                row.addEventListener('touchend', () => {
+                    clearTimeout(pressTimer);
+                });
+
+                row.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    if (isSelectionMode) return;
+                    enterSelectionMode(msgId);
+                });
+            });
+
+            updateSelectionUI();
         });
+    }
+
+    function editSelectedMessages() {
+        if (selectedMessages.size === 0) return;
+        
+        if (selectedMessages.size === 1) {
+            const msgId = Array.from(selectedMessages)[0];
+            const row = document.querySelector(`.msg-row[data-message-id="${msgId}"]`);
+            if (row && row.dataset.sender === 'client' && row.dataset.deleted === 'false') {
+                exitSelectionMode();
+                window.editMessage(msgId);
+                return;
+            }
+        }
+        alert('يمكنك تعديل رسالة واحدة فقط من رسائلك المرسلة.');
+    }
+
+    function deleteSelectedMessages() {
+        if (selectedMessages.size === 0) return;
+        const count = selectedMessages.size;
+        if (confirm(`هل أنت متأكد من حذف ${count} رسالة؟`)) {
+            const promises = [];
+            selectedMessages.forEach(msgId => {
+                const messageRef = ref(db, `users/${USER_ID}/messages/${msgId}`);
+                promises.push(update(messageRef, {
+                    deleted: true,
+                    deleteTimestamp: Date.now(),
+                    text: 'تم حذف هذه الرسالة'
+                }));
+            });
+            Promise.all(promises)
+                .then(() => {
+                    selectedMessages.clear();
+                    exitSelectionMode();
+                })
+                .catch(error => {
+                    console.error('Delete error:', error);
+                    alert('فشل حذف بعض الرسائل. حاول مرة أخرى.');
+                });
+        }
+    }
+
+    function exitSelectionMode() {
+        selectedMessages.clear();
+        updateSelectionUI();
+        document.querySelectorAll('.msg-row .selection-checkbox').forEach(cb => {
+            cb.classList.remove('show');
+        });
+        document.querySelectorAll('.msg-row').forEach(row => {
+            row.classList.remove('selected');
+        });
+        isSelectionMode = false;
     }
 
     async function sendMessage() {
         const text = messageInput.value.trim();
         if (!text) return;
 
+        if (!navigator.onLine) {
+            alert('أنت غير متصل بالإنترنت. يرجى التحقق من اتصالك.');
+            return;
+        }
+
         sendBtn.disabled = true;
         messageInput.disabled = true;
 
         try {
-            // Save message under user's chat
-            const userMsgRef = ref(db, `users/${USER_ID}/messages`);
-            await set(push(userMsgRef), {
-                text: text,
-                sender: 'client',
-                senderId: USER_ID,
-                senderName: USER_NAME,
-                senderEmail: USER_EMAIL,
-                senderPhone: USER_PHONE,
-                timestamp: Date.now(),
-                read: false,
-                repliedBy: null,
-                supervisorName: null
-            });
+            if (editingMessageId) {
+                await update(editingMessageRef, {
+                    text: text,
+                    edited: true,
+                    editTimestamp: Date.now()
+                });
+                editingMessageId = null;
+                editingMessageRef = null;
+                inputWrapper.classList.remove('editing-mode');
+                cancelEditBtn.classList.remove('show');
+                messageInput.placeholder = 'اكتب رسالتك هنا...';
+            } else {
+                const userMsgRef = ref(db, `users/${USER_ID}/messages`);
+                await push(userMsgRef, {
+                    text: text,
+                    sender: 'client',
+                    senderId: USER_ID,
+                    senderName: USER_NAME,
+                    senderEmail: USER_EMAIL,
+                    senderPhone: USER_PHONE,
+                    timestamp: Date.now(),
+                    read: false,
+                    repliedBy: null,
+                    supervisorName: null,
+                    deleted: false,
+                    edited: false
+                });
 
-            // Also notify all supervisors by adding to a general support queue
-            const supportRef = ref(db, `support_queue/${USER_ID}`);
-            await set(supportRef, {
-                userId: USER_ID,
-                userName: USER_NAME,
-                userEmail: USER_EMAIL,
-                userPhone: USER_PHONE,
-                lastMessage: text,
-                lastTimestamp: Date.now(),
-                unreadCount: 1,
-                status: 'waiting'
-            });
+                const supportRef = ref(db, `support_queue/${USER_ID}`);
+                await set(supportRef, {
+                    userId: USER_ID,
+                    userName: USER_NAME,
+                    userEmail: USER_EMAIL,
+                    userPhone: USER_PHONE,
+                    lastMessage: text,
+                    lastTimestamp: Date.now(),
+                    unreadCount: 1,
+                    status: 'waiting'
+                });
+            }
 
             messageInput.value = '';
+            autoResizeTextarea();
             messageInput.focus();
         } catch (error) {
             console.error('Send error:', error);
@@ -512,15 +1273,62 @@
         }
     }
 
+    window.editMessage = function(messageId) {
+        const messageRef = ref(db, `users/${USER_ID}/messages/${messageId}`);
+        onValue(messageRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data && !data.deleted) {
+                editingMessageId = messageId;
+                editingMessageRef = messageRef;
+                messageInput.value = data.text;
+                inputWrapper.classList.add('editing-mode');
+                cancelEditBtn.classList.add('show');
+                messageInput.placeholder = 'تعديل الرسالة...';
+                autoResizeTextarea();
+                messageInput.focus();
+            }
+        }, { onlyOnce: true });
+    };
+
+    window.deleteMessage = function(messageId) {
+        if (confirm('هل أنت متأكد من حذف هذه الرسالة؟')) {
+            const messageRef = ref(db, `users/${USER_ID}/messages/${messageId}`);
+            update(messageRef, {
+                deleted: true,
+                deleteTimestamp: Date.now(),
+                text: 'تم حذف هذه الرسالة'
+            }).catch(error => {
+                console.error('Delete error:', error);
+                alert('فشل حذف الرسالة. حاول مرة أخرى.');
+            });
+        }
+    };
+
+    cancelEditBtn.addEventListener('click', function() {
+        editingMessageId = null;
+        editingMessageRef = null;
+        messageInput.value = '';
+        inputWrapper.classList.remove('editing-mode');
+        this.classList.remove('show');
+        messageInput.placeholder = 'اكتب رسالتك هنا...';
+        autoResizeTextarea();
+        messageInput.focus();
+    });
+
+    cancelSelectionBtn.addEventListener('click', exitSelectionMode);
+    editSelectedBtn.addEventListener('click', editSelectedMessages);
+    deleteSelectedBtn.addEventListener('click', deleteSelectedMessages);
+
     sendBtn.addEventListener('click', sendMessage);
-    messageInput.addEventListener('keydown', e => {
+    messageInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             sendMessage();
         }
     });
 
-    // Start listening
+    messageInput.addEventListener('input', autoResizeTextarea);
+
     subscribeToMessages();
     console.log('✅ نظام الدعم الفني جاهز | المستخدم:', USER_NAME);
 </script>

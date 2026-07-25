@@ -3003,6 +3003,312 @@ input:checked + .toggle-slider:before {
 .section:last-child {
     margin-bottom: 0 !important;
 }
+
+
+
+
+
+
+
+
+
+/* ====== تصميم الألعاب الرقمية - نمط المتاجر (Steam/Epic Games) ======
+.digital-game-card {
+    background: linear-gradient(145deg, #0d1117, #161b22) !important;
+    border: 1px solid #30363d !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+    position: relative;
+    overflow: hidden !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer;
+}
+
+.digital-game-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(ellipse at 20% 50%, rgba(0, 180, 255, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 50%, rgba(255, 50, 100, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.digital-game-card .card-image {
+    height: 160px;
+    width: 100%;
+    object-fit: cover;
+    position: relative;
+    z-index: 1;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+.digital-game-card .game-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #58a6ff;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.digital-game-card .game-badge i {
+    font-size: 12px;
+}
+
+.digital-game-card .age-rating {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #ff6b35;
+    color: #ff6b35;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 700;
+    z-index: 5;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.digital-game-card .progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.05);
+    z-index: 2;
+}
+
+.digital-game-card .progress-bar .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #58a6ff, #1f6feb);
+    transition: width 0.5s ease;
+}
+
+.digital-game-card:hover .progress-bar .progress-fill {
+    width: 30%;
+}
+
+.digital-game-card .card-content {
+    padding: 14px 16px 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.digital-game-card .card-title {
+    color: #f0f6fc !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    font-family: 'Segoe UI', Arial, sans-serif !important;
+    margin-bottom: 4px !important;
+    line-height: 1.3 !important;
+}
+
+.digital-game-card .card-category {
+    color: #8b949e !important;
+    font-size: 12px !important;
+    font-weight: 400;
+    font-family: 'Segoe UI', Arial, sans-serif !important;
+    margin-bottom: 8px !important;
+}
+
+.digital-game-card .game-tags {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.digital-game-card .game-tag {
+    background: rgba(255, 255, 255, 0.06);
+    color: #8b949e;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.digital-game-card .card-description {
+    color: rgba(255, 255, 255, 0.55) !important;
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    font-family: 'Segoe UI', Arial, sans-serif !important;
+    margin-bottom: 12px !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.digital-game-card .card-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.digital-game-card .card-price {
+    color: #58a6ff !important;
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    font-family: 'Segoe UI', Arial, sans-serif !important;
+    letter-spacing: -0.3px;
+}
+
+.digital-game-card .card-price .original-price {
+    font-size: 14px;
+    color: #8b949e;
+    text-decoration: line-through;
+    font-weight: 400;
+    margin-right: 8px;
+}
+
+.digital-game-card .card-button {
+    background: #238636 !important;
+    border: none !important;
+    color: white !important;
+    padding: 8px 20px !important;
+    border-radius: 4px !important;
+    font-weight: 600 !important;
+    font-family: 'Segoe UI', Arial, sans-serif !important;
+    font-size: 13px !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 2px 8px rgba(35, 134, 54, 0.3) !important;
+    gap: 6px !important;
+}
+
+.digital-game-card .card-button:hover {
+    background: #2ea043 !important;
+    transform: scale(1.02) !important;
+    box-shadow: 0 4px 16px rgba(35, 134, 54, 0.4) !important;
+}
+
+.digital-game-card .card-button i {
+    font-size: 14px;
+}
+
+.digital-game-card:hover {
+    border-color: #58a6ff !important;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6) !important;
+    transform: translateY(-4px) !important;
+}
+
+.digital-game-card:hover .card-image {
+    filter: brightness(1.1);
+}
+
+.digital-game-card .game-icon-bg {
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    font-size: 80px;
+    opacity: 0.03;
+    z-index: 0;
+    pointer-events: none;
+    color: #58a6ff;
+}
+
+
+.game-card {
+    background: linear-gradient(145deg, #0d1117, #161b22) !important;
+    border: 1px solid #30363d !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+    overflow: hidden !important;
+}
+
+.game-card .card-price {
+    color: #3fb950 !important;
+}
+
+.game-card .card-button {
+    background: #238636 !important;
+    border: none !important;
+    color: white !important;
+}
+
+.game-card .card-button:hover {
+    background: #2ea043 !important;
+}
+
+.game-card .card-title {
+    color: #f0f6fc !important;
+}
+
+.movie-card {
+    background: linear-gradient(145deg, #0d1117, #161b22) !important;
+    border: 1px solid #30363d !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+    overflow: hidden !important;
+}
+
+.movie-card .card-price {
+    color: #f0883e !important;
+}
+
+.movie-card .card-button {
+    background: #da3633 !important;
+    border: none !important;
+    color: white !important;
+}
+
+.movie-card .card-button:hover {
+    background: #f85149 !important;
+}
+
+.movie-card .card-title {
+    color: #f0f6fc !important;
+}
+
+.manhwa-card {
+    background: linear-gradient(145deg, #0d1117, #161b22) !important;
+    border: 1px solid #30363d !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+    overflow: hidden !important;
+}
+
+.manhwa-card .card-price {
+    color: #d2a8ff !important;
+}
+
+.manhwa-card .card-button {
+    background: #6e40c9 !important;
+    border: none !important;
+    color: white !important;
+}
+
+.manhwa-card .card-button:hover {
+    background: #8957e5 !important;
+}
+
+.manhwa-card .card-title {
+    color: #f0f6fc !important;
+} */
   </style>
 </head>
 
@@ -3614,7 +3920,7 @@ input:checked + .toggle-slider:before {
           <div class="product-detail-meta">
             <span class="product-detail-category rtl-text" id="product-detail-category">الفئة</span>
             <span class="product-detail-category ltr-text" style="display: none;" id="product-detail-category-en">Category</span>
-            <span class="product-detail-price" id="product-detail-price">$0.00</span>
+            <span class="product-detail-price" id="product-detail-price">⃁0.00</span>
             
             <div class="product-detail-rating">
               <div class="stars" id="product-detail-stars">
@@ -4031,7 +4337,7 @@ input:checked + .toggle-slider:before {
 </footer>
 
 <script type="module">
-  // ====== استيراد Firebase ======
+// ====== استيراد Firebase ======
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
 import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 import { getDatabase, ref, get, set, push, onValue, query, orderByChild, equalTo, remove } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
@@ -4109,6 +4415,43 @@ function getProductImage(product) {
     else {
         return 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMzMzMzMzIi8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgdGV4dC1kb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5ObyBJbWFnZTwvdGV4dD4KPC9zdmc+';
     }
+}
+
+// ====== دالة تنسيق السعر ======
+function formatPrice(price) {
+    if (!price && price !== 0) return '0.00 ر.س';
+    
+    let numericPrice = 0;
+    
+    if (typeof price === 'string') {
+        // إزالة كل ما ليس أرقام أو نقطة
+        const cleanPrice = price.replace(/[^0-9.]/g, '');
+        numericPrice = parseFloat(cleanPrice);
+        if (isNaN(numericPrice)) {
+            numericPrice = 0;
+        }
+    } else if (typeof price === 'number') {
+        numericPrice = price;
+    } else {
+        return '0.00 ر.س';
+    }
+    
+    return numericPrice.toFixed(2) + ' ر.س';
+}
+
+// ====== دالة استخراج القيمة الرقمية من السعر ======
+function extractNumericPrice(price) {
+    if (!price && price !== 0) return 0;
+    
+    if (typeof price === 'number') return price;
+    
+    if (typeof price === 'string') {
+        const cleanPrice = price.replace(/[^0-9.]/g, '');
+        const num = parseFloat(cleanPrice);
+        return isNaN(num) ? 0 : num;
+    }
+    
+    return 0;
 }
 
 // ====== التحقق من تسجيل الدخول ======
@@ -4398,7 +4741,7 @@ function setupRealtimeProductsListener() {
     }
 }
 
-// ====== بيانات عينة للمنتجات ======
+// ====== بيانات عينة للمنتجات (بالريال السعودي) ======
 function loadSampleProducts() {
     allProducts = [
         // قصص
@@ -4410,7 +4753,7 @@ function loadSampleProducts() {
             categoryEn: 'Stories',
             subcategory: 'ضحك، تفاهة',
             subcategoryEn: 'Comedy, Triviality',
-            price: '$9.99',
+            price: '37.49',
             description: 'قصة ممتعة تحكي مغامرات نبات أحمر في عالم غريب.',
             descriptionEn: 'A fun story about the adventures of a red plant in a strange world.',
             image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRkY2QjM1Ii8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZGlyZWN0aW9uPSJydGwiPiDZhdi52LHYp9inINin2YTZitmE2YrYpzwvdGV4dD4KPC9zdmc+',
@@ -4431,7 +4774,7 @@ function loadSampleProducts() {
             categoryEn: 'Stories',
             subcategory: 'مغامرة، خيال',
             subcategoryEn: 'Adventure, Fantasy',
-            price: '$12.99',
+            price: '48.71',
             description: 'مغامرات مثيرة في أعماق الغابات السحرية.',
             descriptionEn: 'Exciting adventures in the depths of magical forests.',
             image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjNDI4NUY0Ii8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZGlyZWN0aW9uPSJydGwiPiDZhdi52LHYp9inINin2YTZitmE2YrYpzwvdGV4dD4KPC9zdmc+',
@@ -4453,7 +4796,7 @@ function loadSampleProducts() {
             categoryEn: 'Manga',
             subcategory: 'خيال سحري',
             subcategoryEn: 'Magic Fantasy',
-            price: '$15.99',
+            price: '59.96',
             description: 'مانجا خيالية عن أمير يبحث عن حقيقته في عالم مظلم.',
             descriptionEn: 'Fantasy manga about a prince searching for his truth in a dark world.',
             image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMjIxMTQ0Ii8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZGlyZWN0aW9uPSJydGwiPiDZhdi52LHYp9inINin2YTZitmE2YrYpzwvdGV4dD4KPC9zdmc+',
@@ -4474,7 +4817,7 @@ function loadSampleProducts() {
             categoryEn: 'Manga',
             subcategory: 'مغامرة',
             subcategoryEn: 'Adventure',
-            price: '$14.99',
+            price: '56.21',
             description: 'مانجا مغامرات عن محارب يسيطر على قوة النار.',
             descriptionEn: 'Adventure manga about a warrior who controls the power of fire.',
             image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjN0IyNzI3Ii8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZGlyZWN0aW9uPSJydGwiPiDZhdi52LHYp9inINin2YTZitmE2YrYpzwvdGV4dD4KPC9zdmc+',
@@ -4496,7 +4839,7 @@ function loadSampleProducts() {
             categoryEn: 'Novels',
             subcategory: 'رعب، إثارة',
             subcategoryEn: 'Horror, Thriller',
-            price: '$16.99',
+            price: '63.71',
             description: 'رواية رعب مثيرة للمغامرين فقط. تحتوي على مشاهد عنيفة.',
             descriptionEn: 'A thrilling horror novel for adventurers only. Contains violent scenes.',
             image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjOGIwMDAwIi8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZGlyZWN0aW9uPSJydGwiPiDZhtmI2YrYp9mGINin2YTYs9in2K/Yp9mGIDghPC90ZXh0Pgo8L3N2Zz4=',
@@ -4517,7 +4860,7 @@ function loadSampleProducts() {
             categoryEn: 'Novels',
             subcategory: 'مغامرة، سفر',
             subcategoryEn: 'Adventure, Travel',
-            price: '$13.99',
+            price: '52.46',
             description: 'رواية عن رحلة شيقة عبر الزمان والمكان.',
             descriptionEn: 'A novel about an exciting journey through time and space.',
             image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMjg1NEE2Ii8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZGlyZWN0aW9uPSJydGwiPiDZhtmI2YrYp9mGINin2YTYs9in2K/Yp9mGPC90ZXh0Pgo8L3N2Zz4=',
@@ -4539,7 +4882,7 @@ function loadSampleProducts() {
             categoryEn: 'Movies',
             subcategory: 'الخيال السحري',
             subcategoryEn: 'Magic Fantasy',
-            price: '$14.99',
+            price: '56.21',
             description: 'فيلم مغامرات خيالي يأخذك في رحلة سحرية عبر العوالم',
             descriptionEn: 'A fantasy adventure movie that takes you on a magical journey across worlds',
             image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjN2IyN2ZmIi8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZGlyZWN0aW9uPSJydGwiPs2Y2YjZgyDZhtmI2KfYqQpcL3RleHQ+Cjwvc3ZnPg==',
@@ -4560,7 +4903,7 @@ function loadSampleProducts() {
             categoryEn: 'Movies',
             subcategory: 'الرعب',
             subcategoryEn: 'Horror',
-            price: '$16.99',
+            price: '63.71',
             description: 'فيلم رعب مثير يجعلك تعيش تجربة مرعبة',
             descriptionEn: 'A thrilling horror movie that gives you a terrifying experience',
             image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjOGIwMDAwIi8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZGlyZWN0aW9uPSJydGwiPs2Y2YjZgyDZhtmI2KfYqQpcL3RleHQ+Cjwvc3ZnPg==',
@@ -4581,7 +4924,7 @@ function loadSampleProducts() {
             categoryEn: 'Movies',
             subcategory: 'الغموض',
             subcategoryEn: 'Mystery',
-            price: '$15.99',
+            price: '59.96',
             description: 'فيلم غموض وإثارة حول قصر مسكون وأسراره',
             descriptionEn: 'A mystery and thriller movie about a haunted palace and its secrets',
             image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjNDQzM0I3Ii8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZGlyZWN0aW9uPSJydGwiPs2Y2YjZgyDZhtmI2KfYqQpcL3RleHQ+Cjwvc3ZnPg==',
@@ -4602,7 +4945,7 @@ function loadSampleProducts() {
             categoryEn: 'Movies',
             subcategory: 'السخرية',
             subcategoryEn: 'Comedy',
-            price: '$12.99',
+            price: '48.71',
             description: 'فيلم كوميدي سخرية عن مغامرات عائلة مضحكة',
             descriptionEn: 'A comedy satire movie about a funny family\'s adventures',
             image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRkVCMzUiLz4KICAgIDx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkaXJlY3Rpb249InJ0bCI+INmI2YrZg9mK2Kcg2KfZhNmI2YrZhCAhPC90ZXh0Pgo8L3N2Zz4=',
@@ -4623,7 +4966,7 @@ function loadSampleProducts() {
             categoryEn: 'Movies',
             subcategory: 'المغامرة',
             subcategoryEn: 'Adventure',
-            price: '$18.99',
+            price: '71.21',
             description: 'فيلم مغامرات مثير في أعماق الأدغال',
             descriptionEn: 'An exciting adventure movie in the depths of the jungle',
             image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMkU3QjMyIi8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZGlyZWN0aW9uPSJydGwiPs2Y2YjZgyDZhtmI2KfYqQpcL3RleHQ+Cjwvc3ZnPg==',
@@ -4645,7 +4988,7 @@ function loadSampleProducts() {
             categoryEn: 'Games',
             subcategory: 'ألعاب الشباب',
             subcategoryEn: 'Youth Games',
-            price: '$29.99',
+            price: '112.46',
             description: 'لعبة مغامرات مثيرة للشباب مع تحديات شيقة',
             descriptionEn: 'Exciting adventure game for youth with interesting challenges',
             image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMmQ2YjJkIi8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZGlyZWN0aW9uPSJydGwiPs2Y2YjZgyDZhtmI2KfYqQpcL3RleHQ+Cjwvc3ZnPg==',
@@ -4666,7 +5009,7 @@ function loadSampleProducts() {
             categoryEn: 'Games',
             subcategory: 'ألعاب الأطفال',
             subcategoryEn: 'Kids Games',
-            price: '$19.99',
+            price: '74.96',
             description: 'لعبة تعليمية ممتعة للأطفال في حديقة المرح',
             descriptionEn: 'Fun educational game for kids in the fun garden',
             image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRkVCMzUiLz4KICAgIDx0ZXh0IHg9IjIwMCIgeT0iMTUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkaXJlY3Rpb249InJ0bCI+INmI2YrZg9mK2Kcg2KfZhNmI2YrZhCAhPC90ZXh0Pgo8L3N2Zz4=',
@@ -4688,7 +5031,7 @@ function loadSampleProducts() {
             categoryEn: 'Manhwa',
             subcategory: 'مغامرة',
             subcategoryEn: 'Adventure',
-            price: '$12.99',
+            price: '48.71',
             description: 'مانهوا كورية عن مغامرات بطل السيف في عالم خيالي',
             descriptionEn: 'Korean manhwa about the adventures of a sword hero in a fantasy world',
             image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjNmIxYTZiIi8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZGlyZWN0aW9uPSJydGwiPs2Y2YjZgyDZhtmI2KfYqQpcL3RleHQ+Cjwvc3ZnPg==',
@@ -4709,7 +5052,7 @@ function loadSampleProducts() {
             categoryEn: 'Manhwa',
             subcategory: 'رومانسية',
             subcategoryEn: 'Romance',
-            price: '$11.99',
+            price: '44.96',
             description: 'مانهوا رومانسية عن حب خالد يتحدى الزمن',
             descriptionEn: 'Romantic manhwa about eternal love that defies time',
             image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRkY2QkM3Ii8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZGlyZWN0aW9uPSJydGwiPs2Y2YjZgyDZhtmI2KfYqQpcL3RleHQ+Cjwvc3ZnPg==',
@@ -4731,7 +5074,7 @@ function loadSampleProducts() {
             categoryEn: 'Digital Games',
             subcategory: 'مغامرات',
             subcategoryEn: 'Adventures',
-            price: '$19.99',
+            price: '74.96',
             description: 'لعبة فضائية رقمية عالية الجودة مع رسومات ثلاثية الأبعاد',
             descriptionEn: 'High quality digital space game with 3D graphics',
             image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMGYzNDYwIi8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZGlyZWN0aW9uPSJydGwiPs2Y2YjZgyDZhtmI2KfYqQpcL3RleHQ+Cjwvc3ZnPg==',
@@ -4752,7 +5095,7 @@ function loadSampleProducts() {
             categoryEn: 'Digital Games',
             subcategory: 'أكشن',
             subcategoryEn: 'Action',
-            price: '$24.99',
+            price: '93.71',
             description: 'لعبة قتال رقمية مثيرة مع شخصيات متعددة',
             descriptionEn: 'Exciting digital fighting game with multiple characters',
             image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRkY0NDQ0Ii8+CiAgICA8dGV4dCB4PSIyMDAiIHk9IjE1MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZGlyZWN0aW9uPSJydGwiPs2Y2YjZgyDZhtmI2KfYqQpcL3RleHQ+Cjwvc3ZnPg==',
@@ -4800,7 +5143,7 @@ function updateCartBadge() {
     }
 }
 
-// ====== دالة إضافة المنتج إلى السلة ======
+// ====== دالة إضافة المنتج إلى السلة (معدلة) ======
 function addToCart(productId, event = null) {
     if (event) {
         event.stopPropagation();
@@ -4824,14 +5167,36 @@ function addToCart(productId, event = null) {
         return;
     }
     
-    const priceValue = parseFloat(product.price.replace('$', ''));
+    // استخراج السعر الرقمي بشكل صحيح
+    let priceValue = extractNumericPrice(product.price);
+    
+    // التأكد من أن السعر رقم صحيح
+    if (isNaN(priceValue) || priceValue < 0) {
+        console.warn('Invalid price for product:', productId, 'Using default price 0');
+        priceValue = 0;
+    }
+    
     const userEmail = user.email;
     const CART_KEY = `cart_${userEmail}`;
-    let cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+    let cart = [];
+    
+    try {
+        const storedCart = localStorage.getItem(CART_KEY);
+        if (storedCart) {
+            cart = JSON.parse(storedCart);
+            if (!Array.isArray(cart)) {
+                cart = [];
+            }
+        }
+    } catch (error) {
+        console.error('Error parsing cart:', error);
+        cart = [];
+    }
+    
     const existingIndex = cart.findIndex(item => item.id === productId);
     
     if (existingIndex > -1) {
-        cart[existingIndex].quantity++;
+        cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
     } else {
         cart.push({
             id: product.id,
@@ -4842,7 +5207,7 @@ function addToCart(productId, event = null) {
             category: currentLanguage === 'ar' ? product.category : product.categoryEn,
             type: currentLanguage === 'ar' ? product.type : product.typeEn,
             format: currentLanguage === 'ar' ? product.format : product.formatEn,
-            rating: product.rating,
+            rating: product.rating || 0,
             description: currentLanguage === 'ar' ? product.description : product.descriptionEn
         });
     }
@@ -4853,16 +5218,16 @@ function addToCart(productId, event = null) {
         
         const productName = currentLanguage === 'ar' ? product.title : product.titleEn;
         showNotification(currentLanguage === 'ar' ? 
-            `تمت إضافة "${productName}" إلى السلة بنجاح!` : 
-            `"${productName}" added to cart successfully!`);
+            `✅ تمت إضافة "${productName}" إلى السلة بنجاح!` : 
+            `✅ "${productName}" added to cart successfully!`);
             
         trackUserActivity('add_to_cart', productId);
         
     } catch (error) {
         console.error('Error saving cart:', error);
         showNotification(currentLanguage === 'ar' ? 
-            'حدث خطأ أثناء حفظ السلة' : 
-            'Error saving cart');
+            '❌ حدث خطأ أثناء حفظ السلة' : 
+            '❌ Error saving cart');
     }
 }
 
@@ -5411,7 +5776,7 @@ function switchVideoTab(index) {
     }
 }
 
-// ====== إنشاء بطاقة المنتج ======
+// ====== إنشاء بطاقة المنتج (معدلة) ======
 function createProductCard(product) {
     const card = document.createElement('div');
     card.className = 'product-card';
@@ -5447,11 +5812,11 @@ function createProductCard(product) {
             <p class="card-description rtl-text">${product.description.substring(0, 80)}...</p>
             <p class="card-description ltr-text" style="display: none;">${product.descriptionEn.substring(0, 80)}...</p>
             <div class="card-footer">
-                <span class="card-price">${product.price}</span>
+                <span class="card-price">${formatPrice(product.price)}</span>
                 <button class="card-button" onclick="addToCart('${product.id}', event)">
                     <i class="fas fa-cart-plus"></i>
-                    <span class="rtl-text">شراء</span>
-                    <span class="ltr-text" style="display: none;">Buy</span>
+                    <span class="rtl-text">إضافة</span>
+                    <span class="ltr-text" style="display: none;">Add</span>
                 </button>
             </div>
         </div>
@@ -5825,6 +6190,374 @@ function viewProductFullscreen() {
     modal.focus();
 }
 
+// ====== دالة تشغيل الفيديو المحسنة ======
+function watchChapter(chapterId, videoUrl, videoTitle) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    if (!videoUrl) {
+        showNotification(currentLanguage === 'ar' ? 'لا يوجد رابط فيديو لهذا الجزء' : 'No video URL for this chapter', 'error');
+        return;
+    }
+    
+    let videoId = null;
+    let isYouTube = false;
+    const youtubePatterns = [
+        /(?:youtube\.com\/watch\?v=)([^&\n?#]+)/,
+        /(?:youtu\.be\/)([^&\n?#]+)/,
+        /(?:youtube\.com\/embed\/)([^&\n?#]+)/,
+        /(?:youtube\.com\/shorts\/)([^&\n?#]+)/
+    ];
+    for (const pattern of youtubePatterns) {
+        const match = videoUrl.match(pattern);
+        if (match && match[1]) {
+            videoId = match[1];
+            isYouTube = true;
+            break;
+        }
+    }
+    
+    // تحديد الألوان حسب تصنيف الفيديو
+    const product = currentProductData || allProducts.find(p => p.id === currentProductId);
+    let topGradient = ['#000000', '#F78738'];
+    let bottomGradient = ['#1a1a2e', '#2c3e50'];
+    let accentColor = '#F78738';
+    let isHorror = false;
+    
+    if (product) {
+        const category = product.subcategory || product.category || '';
+        const categoryLower = category.toLowerCase();
+        
+        const colorSchemes = {
+            'رعب': { top: ['#1a0000', '#cc0000'], bottom: ['#0a0000', '#4a0000'], accent: '#ff0000', horror: true },
+            'horror': { top: ['#1a0000', '#cc0000'], bottom: ['#0a0000', '#4a0000'], accent: '#ff0000', horror: true },
+            'الرعب': { top: ['#1a0000', '#cc0000'], bottom: ['#0a0000', '#4a0000'], accent: '#ff0000', horror: true },
+            'خيال سحري': { top: ['#1a0033', '#7b2ffc'], bottom: ['#0a001a', '#3d0066'], accent: '#7b2ffc', horror: false },
+            'magic': { top: ['#1a0033', '#7b2ffc'], bottom: ['#0a001a', '#3d0066'], accent: '#7b2ffc', horror: false },
+            'مغامرة': { top: ['#003300', '#00cc66'], bottom: ['#001a00', '#004400'], accent: '#00cc66', horror: false },
+            'adventure': { top: ['#003300', '#00cc66'], bottom: ['#001a00', '#004400'], accent: '#00cc66', horror: false },
+            'الخيال السحري': { top: ['#1a0033', '#7b2ffc'], bottom: ['#0a001a', '#3d0066'], accent: '#7b2ffc', horror: false },
+            'غموض': { top: ['#1a1a2e', '#2d3436'], bottom: ['#0a0a0a', '#1a1a2e'], accent: '#4a6fa5', horror: false },
+            'mystery': { top: ['#1a1a2e', '#2d3436'], bottom: ['#0a0a0a', '#1a1a2e'], accent: '#4a6fa5', horror: false },
+            'سخرية': { top: ['#4a3000', '#ff6b35'], bottom: ['#2a1a00', '#8a4a00'], accent: '#ff6b35', horror: false },
+            'comedy': { top: ['#4a3000', '#ff6b35'], bottom: ['#2a1a00', '#8a4a00'], accent: '#ff6b35', horror: false },
+            'أكشن': { top: ['#330000', '#ff2200'], bottom: ['#1a0000', '#660000'], accent: '#ff2200', horror: false },
+            'action': { top: ['#330000', '#ff2200'], bottom: ['#1a0000', '#660000'], accent: '#ff2200', horror: false },
+            'رومانسية': { top: ['#4a0033', '#ff6b9d'], bottom: ['#2a001a', '#8a0044'], accent: '#ff6b9d', horror: false },
+            'romance': { top: ['#4a0033', '#ff6b9d'], bottom: ['#2a001a', '#8a0044'], accent: '#ff6b9d', horror: false }
+        };
+        
+        for (const [key, scheme] of Object.entries(colorSchemes)) {
+            if (categoryLower.includes(key) || product.category?.toLowerCase().includes(key)) {
+                topGradient = scheme.top;
+                bottomGradient = scheme.bottom;
+                accentColor = scheme.accent;
+                isHorror = scheme.horror;
+                break;
+            }
+        }
+    }
+    
+    const modal = document.createElement('div');
+    modal.id = 'video-popup-modal';
+    modal.style.cssText = `
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        height: 100%;
+        background: rgba(0, 0, 0, 0.95); 
+        z-index: 10000;
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        backdrop-filter: blur(8px); 
+        animation: fadeInModal 0.3s ease-out;
+    `;
+    
+    const container = document.createElement('div');
+    container.style.cssText = `
+        position: relative; 
+        width: 100%; 
+        height: 100vh;
+        max-height: 100vh;
+        background: #0f0f0f; 
+        display: flex;
+        flex-direction: column;
+        animation: slideUpModal 0.3s ease-out;
+    `;
+    
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = `
+        @keyframes fadeInModal { 
+            from { opacity: 0; } 
+            to { opacity: 1; } 
+        }
+        @keyframes slideUpModal { 
+            from { transform: translateY(50px); opacity: 0; } 
+            to { transform: translateY(0); opacity: 1; } 
+        }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        @keyframes horrorPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,0,0,0.3); }
+            50% { box-shadow: 0 0 60px rgba(255,0,0,0.6); }
+        }
+    `;
+    document.head.appendChild(styleSheet);
+    
+    // الشريط العلوي
+    const header = document.createElement('div');
+    const headerGradient = isHorror ? 
+        `linear-gradient(135deg, ${topGradient[0]}, ${topGradient[1]})` : 
+        `linear-gradient(135deg, ${topGradient[0]}, ${topGradient[1]})`;
+    
+    header.style.cssText = `
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center;
+        padding: 15px 25px;
+        background: ${headerGradient};
+        color: white;
+        border-bottom: ${isHorror ? '2px solid #ff0000' : '1px solid rgba(255,255,255,0.1)'};
+        flex-shrink: 0;
+        min-height: 70px;
+        animation: ${isHorror ? 'horrorPulse 2s infinite' : 'none'};
+    `;
+    
+    if (isHorror) {
+        header.style.boxShadow = '0 0 30px rgba(255,0,0,0.2)';
+    }
+    
+    header.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="fas ${isHorror ? 'fa-skull' : 'fa-film'}" 
+                   style="font-size: 24px; ${isHorror ? 'animation: pulseGlow 1.5s infinite;' : ''}"></i>
+                <span style="font-weight: 600; font-size: 18px; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                    ${escapeHtml(videoTitle) || (currentLanguage === 'ar' ? 'تشغيل الفيديو' : 'Playing Video')}
+                </span>
+            </div>
+            ${isHorror ? `
+                <span style="
+                    background: rgba(255,0,0,0.3);
+                    padding: 4px 12px;
+                    border-radius: 20px;
+                    font-size: 12px;
+                    border: 1px solid rgba(255,0,0,0.5);
+                    font-weight: bold;
+                ">
+                    🔞 رعب
+                </span>
+            ` : ''}
+        </div>
+        <button id="close-video-popup" style="
+            background: rgba(255,255,255,0.15); 
+            border: none; 
+            color: white; 
+            font-size: 20px; 
+            cursor: pointer; 
+            width: 44px; 
+            height: 44px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        ">
+            <i class="fas fa-times"></i>
+        </button>
+    `;
+    
+    // حاوية الفيديو
+    const videoWrapper = document.createElement('div');
+    videoWrapper.style.cssText = `
+        position: relative; 
+        flex: 1;
+        width: 100%;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 0;
+    `;
+    
+    let iframe = null;
+    if (isYouTube && videoId) {
+        iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1&rel=0&modestbranding=0&showinfo=1&iv_load_policy=3&enablejsapi=1&origin=${window.location.origin}`;
+        iframe.style.cssText = `
+            width: 100%; 
+            height: 100%; 
+            border: none;
+            background: #000;
+        `;
+        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+        iframe.allowFullscreen = true;
+        videoWrapper.appendChild(iframe);
+    } else if (videoUrl.match(/\.(mp4|webm|ogg|mov)$/i)) {
+        const video = document.createElement('video');
+        video.style.cssText = `
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; 
+            background: #000;
+        `;
+        video.controls = true;
+        video.autoplay = true;
+        const source = document.createElement('source');
+        source.src = videoUrl;
+        source.type = `video/${videoUrl.split('.').pop()}`;
+        video.appendChild(source);
+        video.innerHTML = currentLanguage === 'ar' ? 'متصفحك لا يدعم تشغيل الفيديو' : 'Your browser does not support video playback';
+        videoWrapper.appendChild(video);
+        video.play().catch(e => console.log('Auto-play prevented:', e));
+    } else {
+        iframe = document.createElement('iframe');
+        iframe.src = videoUrl;
+        iframe.style.cssText = `
+            width: 100%; 
+            height: 100%; 
+            border: none;
+            background: #000;
+        `;
+        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+        iframe.allowFullscreen = true;
+        videoWrapper.appendChild(iframe);
+    }
+    
+    // الشريط السفلي
+    const controlsBar = document.createElement('div');
+    const bottomGradientStr = `linear-gradient(135deg, ${bottomGradient[0]}, ${bottomGradient[1]})`;
+    controlsBar.style.cssText = `
+        display: flex; 
+        justify-content: center; 
+        align-items: center;
+        padding: 12px 20px;
+        background: ${bottomGradientStr};
+        border-top: ${isHorror ? '2px solid #ff0000' : '1px solid rgba(255,255,255,0.05)'};
+        flex-shrink: 0;
+        min-height: 50px;
+        ${isHorror ? 'box-shadow: 0 -5px 30px rgba(255,0,0,0.15);' : ''}
+    `;
+    
+    controlsBar.innerHTML = `
+        <div style="display: flex; gap: 20px; align-items: center; width: 100%; justify-content: center;">
+            <button id="fullscreen-btn" style="
+                background: rgba(255,255,255,0.12); 
+                border: 1px solid rgba(255,255,255,0.15);
+                color: white; 
+                padding: 10px 24px; 
+                border-radius: 10px; 
+                cursor: pointer; 
+                display: flex; 
+                align-items: center; 
+                gap: 10px; 
+                transition: all 0.3s;
+                font-weight: 500;
+                backdrop-filter: blur(10px);
+            ">
+                <i class="fas fa-expand" style="font-size: 16px;"></i>
+                <span>${currentLanguage === 'ar' ? 'ملء الشاشة' : 'Fullscreen'}</span>
+            </button>
+            
+            <div style="
+                color: rgba(255,255,255,0.8); 
+                font-size: 14px;
+                background: rgba(255,255,255,0.08);
+                padding: 6px 16px;
+                border-radius: 20px;
+                border: 1px solid rgba(255,255,255,0.1);
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-weight: 500;
+                letter-spacing: 0.5px;
+            ">
+                <span style="
+                    display: inline-block;
+                    width: 6px;
+                    height: 6px;
+                    background: ${isHorror ? '#ff0000' : '#00cc66'};
+                    border-radius: 50%;
+                    animation: pulseGlow 1.5s infinite;
+                "></span>
+                <span style="font-size: 13px;">${currentLanguage === 'ar' ? 'دعاية' : 'Promo'}</span>
+            </div>
+        </div>
+    `;
+    
+    container.appendChild(header);
+    container.appendChild(videoWrapper);
+    container.appendChild(controlsBar);
+    modal.appendChild(container);
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+    
+    function closeModal() {
+        if (iframe) {
+            if (isYouTube && iframe.contentWindow) {
+                try { iframe.contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', '*'); } catch(e) {}
+            }
+            iframe.src = 'about:blank';
+        }
+        modal.remove();
+        document.body.style.overflow = '';
+        document.removeEventListener('keydown', escHandler);
+    }
+    
+    const closeBtn = document.getElementById('close-video-popup');
+    if (closeBtn) {
+        closeBtn.onclick = closeModal;
+        closeBtn.onmouseenter = () => {
+            closeBtn.style.background = 'rgba(255,255,255,0.3)';
+            closeBtn.style.transform = 'scale(1.05)';
+        };
+        closeBtn.onmouseleave = () => {
+            closeBtn.style.background = 'rgba(255,255,255,0.15)';
+            closeBtn.style.transform = 'scale(1)';
+        };
+    }
+    
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    if (fullscreenBtn) {
+        fullscreenBtn.onclick = () => {
+            const elem = container;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        };
+        fullscreenBtn.onmouseenter = () => {
+            fullscreenBtn.style.background = 'rgba(255,255,255,0.25)';
+            fullscreenBtn.style.transform = 'scale(1.05)';
+        };
+        fullscreenBtn.onmouseleave = () => {
+            fullscreenBtn.style.background = 'rgba(255,255,255,0.12)';
+            fullscreenBtn.style.transform = 'scale(1)';
+        };
+    }
+    
+    modal.onclick = (e) => { 
+        if (e.target === modal) closeModal(); 
+    };
+    
+    const escHandler = (e) => {
+        if (e.key === 'Escape') { 
+            closeModal(); 
+        }
+    };
+    document.addEventListener('keydown', escHandler);
+}
+
 // ====== فتح تفاصيل المنتج ======
 async function openProductDetail(productId) {
     console.log("Opening product detail for ID:", productId);
@@ -5868,7 +6601,6 @@ async function displayProductInDetail(product) {
         return;
     }
     
-    // تحديث العناصر الأساسية
     const titleEl = document.getElementById('product-detail-title');
     if (titleEl) titleEl.textContent = product.title;
     
@@ -5885,7 +6617,7 @@ async function displayProductInDetail(product) {
     if (categoryEnEl) categoryEnEl.textContent = product.subcategoryEn;
     
     const priceEl = document.getElementById('product-detail-price');
-    if (priceEl) priceEl.textContent = product.price;
+    if (priceEl) priceEl.textContent = formatPrice(product.price);
     
     const descEl = document.getElementById('product-detail-description');
     if (descEl) descEl.textContent = product.description;
@@ -5949,7 +6681,7 @@ async function displayProductInDetail(product) {
                         <div>
                             <div class="summary-label rtl-text">السعر</div>
                             <div class="summary-label ltr-text" style="display: none;">Price</div>
-                            <div class="summary-value">${product.price}</div>
+                            <div class="summary-value">${formatPrice(product.price)}</div>
                         </div>
                     </div>
                     <div class="summary-item">
@@ -6046,7 +6778,6 @@ async function displayProductInDetail(product) {
     
     await loadCommentsFromFirebase(product.id);
     
-    // إظهار النافذة
     overlay.style.display = 'block';
     overlay.style.visibility = 'visible';
     overlay.style.opacity = '1';
@@ -6125,173 +6856,6 @@ function closeProductDetail() {
     selectedRating = 0;
     hoveredRating = 0;
     userRatingForCurrentProduct = null;
-}
-
-// ====== دالة تشغيل الفيديو ======
-function watchChapter(chapterId, videoUrl, videoTitle) {
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
-    if (!videoUrl) {
-        showNotification(currentLanguage === 'ar' ? 'لا يوجد رابط فيديو لهذا الجزء' : 'No video URL for this chapter', 'error');
-        return;
-    }
-    let videoId = null;
-    let isYouTube = false;
-    const youtubePatterns = [
-        /(?:youtube\.com\/watch\?v=)([^&\n?#]+)/,
-        /(?:youtu\.be\/)([^&\n?#]+)/,
-        /(?:youtube\.com\/embed\/)([^&\n?#]+)/,
-        /(?:youtube\.com\/shorts\/)([^&\n?#]+)/
-    ];
-    for (const pattern of youtubePatterns) {
-        const match = videoUrl.match(pattern);
-        if (match && match[1]) {
-            videoId = match[1];
-            isYouTube = true;
-            break;
-        }
-    }
-    const modal = document.createElement('div');
-    modal.id = 'video-popup-modal';
-    modal.style.cssText = `
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0, 0, 0, 0.95); z-index: 10000;
-        display: flex; align-items: center; justify-content: center;
-        backdrop-filter: blur(8px); animation: fadeInModal 0.3s ease-out;
-    `;
-    const container = document.createElement('div');
-    container.style.cssText = `
-        position: relative; width: 90%; max-width: 1000px;
-        background: #0f0f0f; border-radius: 16px; overflow: hidden;
-        box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-        border: 1px solid #3f3f3f; animation: slideUpModal 0.3s ease-out;
-    `;
-    const styleSheet = document.createElement('style');
-    styleSheet.textContent = `
-        @keyframes fadeInModal { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUpModal { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    `;
-    document.head.appendChild(styleSheet);
-    const header = document.createElement('div');
-    header.style.cssText = `
-        display: flex; justify-content: space-between; align-items: center;
-        padding: 12px 20px; background: linear-gradient(135deg, #000000, #F78738);
-        color: white; border-bottom: 1px solid #000000;
-    `;
-    header.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 12px;">
-            <span style="font-weight: 500; font-size: 16px;">${escapeHtml(videoTitle) || (currentLanguage === 'ar' ? 'تشغيل الفيديو' : 'Playing Video')}</span>
-        </div>
-        <button id="close-video-popup" style="background: rgba(255,255,255,0.1); border: none; color: white; font-size: 18px; cursor: pointer; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
-            <i class="fas fa-times"></i>
-        </button>
-    `;
-    const videoWrapper = document.createElement('div');
-    videoWrapper.style.cssText = `position: relative; width: 100%; padding-bottom: 56.25%; background: #000;`;
-    let iframe = null;
-    if (isYouTube && videoId) {
-        iframe = document.createElement('iframe');
-        iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=1&rel=0&modestbranding=0&showinfo=1&iv_load_policy=3&enablejsapi=1&origin=${window.location.origin}`;
-        iframe.style.cssText = `position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;`;
-        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-        iframe.allowFullscreen = true;
-        videoWrapper.appendChild(iframe);
-    } else if (videoUrl.match(/\.(mp4|webm|ogg|mov)$/i)) {
-        const video = document.createElement('video');
-        video.style.cssText = `position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; background: #000;`;
-        video.controls = true;
-        video.autoplay = true;
-        const source = document.createElement('source');
-        source.src = videoUrl;
-        source.type = `video/${videoUrl.split('.').pop()}`;
-        video.appendChild(source);
-        video.innerHTML = currentLanguage === 'ar' ? 'متصفحك لا يدعم تشغيل الفيديو' : 'Your browser does not support video playback';
-        videoWrapper.appendChild(video);
-        video.play().catch(e => console.log('Auto-play prevented:', e));
-    } else {
-        iframe = document.createElement('iframe');
-        iframe.src = videoUrl;
-        iframe.style.cssText = `position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;`;
-        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-        iframe.allowFullscreen = true;
-        videoWrapper.appendChild(iframe);
-    }
-    container.appendChild(header);
-    container.appendChild(videoWrapper);
-    const controlsBar = document.createElement('div');
-    controlsBar.style.cssText = `
-        display: flex; justify-content: space-between; align-items: center;
-        padding: 12px 20px; background: #1a1a2e; border-top: 1px solid #2c3e50; flex-wrap: wrap; gap: 10px;
-    `;
-    controlsBar.innerHTML = `
-        <div style="display: flex; gap: 15px;">
-            <button id="fullscreen-btn" style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;">
-                <i class="fas fa-expand"></i>
-                <span>${currentLanguage === 'ar' ? 'ملء الشاشة' : 'Fullscreen'}</span>
-            </button>
-            <button id="copy-link-btn" style="background: rgba(255,255,255,0.1); border: none; color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;">
-                <i class="fas fa-link"></i>
-                <span>${currentLanguage === 'ar' ? 'نسخ الرابط' : 'Copy Link'}</span>
-            </button>
-        </div>
-        <div style="color: #888; font-size: 12px;">
-            <i class="fas fa-info-circle"></i>
-            <span>${currentLanguage === 'ar' ? 'يتم تشغيل الفيديو مباشرة في هذه الصفحة' : 'Video playing directly on this page'}</span>
-        </div>
-    `;
-    container.appendChild(controlsBar);
-    modal.appendChild(container);
-    document.body.appendChild(modal);
-    document.body.style.overflow = 'hidden';
-    
-    function closeModal() {
-        if (iframe) {
-            if (isYouTube && iframe.contentWindow) {
-                try { iframe.contentWindow.postMessage('{"event":"command","func":"stopVideo","args":""}', '*'); } catch(e) {}
-            }
-            iframe.src = 'about:blank';
-        }
-        modal.remove();
-        document.body.style.overflow = '';
-    }
-    const closeBtn = document.getElementById('close-video-popup');
-    if (closeBtn) {
-        closeBtn.onclick = closeModal;
-        closeBtn.onmouseenter = () => closeBtn.style.background = 'rgba(255,255,255,0.2)';
-        closeBtn.onmouseleave = () => closeBtn.style.background = 'rgba(255,255,255,0.1)';
-    }
-    modal.onclick = (e) => { if (e.target === modal) closeModal(); };
-    const fullscreenBtn = document.getElementById('fullscreen-btn');
-    if (fullscreenBtn) {
-        fullscreenBtn.onclick = () => {
-            const elem = container;
-            if (elem.requestFullscreen) { elem.requestFullscreen(); }
-            else if (elem.webkitRequestFullscreen) { elem.webkitRequestFullscreen(); }
-            else if (elem.msRequestFullscreen) { elem.msRequestFullscreen(); }
-        };
-        fullscreenBtn.onmouseenter = () => fullscreenBtn.style.background = 'rgba(255,255,255,0.2)';
-        fullscreenBtn.onmouseleave = () => fullscreenBtn.style.background = 'rgba(255,255,255,0.1)';
-    }
-    const copyLinkBtn = document.getElementById('copy-link-btn');
-    if (copyLinkBtn) {
-        copyLinkBtn.onclick = async () => {
-            try {
-                await navigator.clipboard.writeText(videoUrl);
-                showNotification(currentLanguage === 'ar' ? 'تم نسخ رابط الفيديو' : 'Video link copied');
-            } catch(err) {
-                console.error('Failed to copy:', err);
-                showNotification(currentLanguage === 'ar' ? 'فشل نسخ الرابط' : 'Failed to copy link', 'error');
-            }
-        };
-        copyLinkBtn.onmouseenter = () => copyLinkBtn.style.background = 'rgba(255,255,255,0.2)';
-        copyLinkBtn.onmouseleave = () => copyLinkBtn.style.background = 'rgba(255,255,255,0.1)';
-    }
-    const escHandler = (e) => {
-        if (e.key === 'Escape') { closeModal(); document.removeEventListener('keydown', escHandler); }
-    };
-    document.addEventListener('keydown', escHandler);
 }
 
 function escapeHtml(str) {
@@ -6582,12 +7146,12 @@ function renderSearchResults(products) {
                     </div>
                     <p class="card-description rtl-text" style="font-size: 14px; margin-bottom: 15px;">${product.description.substring(0, 100)}...</p>
                     <p class="card-description ltr-text" style="display: none; font-size: 14px; margin-bottom: 15px;">${product.descriptionEn.substring(0, 100)}...</p>
-                    <div class="search-product-card-price">${product.price}</div>
+                    <div class="search-product-card-price">${formatPrice(product.price)}</div>
                     <div class="search-product-card-footer">
                         <button class="search-product-card-button" onclick="addToCart('${product.id}', event)">
                             <i class="fas fa-cart-plus"></i>
-                            <span class="rtl-text">شراء</span>
-                            <span class="ltr-text" style="display: none;">Buy</span>
+                            <span class="rtl-text">إضافة</span>
+                            <span class="ltr-text" style="display: none;">Add</span>
                         </button>
                         <button class="search-product-card-button view-btn" onclick="event.stopPropagation(); openProductDetail('${product.id}')">
                             <i class="fas fa-eye"></i>
