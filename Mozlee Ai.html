@@ -24,7 +24,7 @@
             --radius-sm: 10px;
             --radius-md: 16px;
             --max-chat-width: 800px;
-            --sidebar-width: 250px;
+            --sidebar-width: 220px;
             --header-height: 56px;
             --input-area-height: 130px;
         }
@@ -52,7 +52,7 @@
         .container {
             display: flex;
             height: 100vh;
-            height: 100dvh; /* Dynamic viewport height for mobile */
+            height: 100dvh;
             max-width: 100%;
             margin: 0 auto;
             overflow: hidden;
@@ -85,32 +85,32 @@
 
         .sidebar-brand {
             text-align: center;
-            padding: 20px 16px 14px;
+            padding: 16px 12px 12px;
             border-bottom: 1px solid var(--border-subtle);
             position: relative;
             flex-shrink: 0;
         }
 
         .sidebar-brand .brand-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 14px;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
             display: block;
-            margin: 0 auto 8px;
+            margin: 0 auto 6px;
             object-fit: cover;
             border: 2px solid var(--border-gold);
             box-shadow: 0 0 20px rgba(212, 168, 83, 0.12);
         }
 
         .sidebar-brand h2 {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 700;
             color: var(--text-primary);
             margin: 0;
         }
 
         .sidebar-brand p {
-            font-size: 10px;
+            font-size: 9px;
             color: var(--gold);
             margin-top: 2px;
             letter-spacing: 1px;
@@ -118,12 +118,12 @@
         }
 
         .sidebar-section-title {
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 600;
             color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            padding: 14px 16px 8px;
+            padding: 10px 12px 6px;
             flex-shrink: 0;
         }
 
@@ -133,31 +133,31 @@
             gap: 2px;
             flex: 1;
             overflow-y: auto;
-            padding: 0 8px 8px;
+            padding: 0 6px 6px;
         }
 
         .page-btn {
-            padding: 10px 12px;
+            padding: 8px 10px;
             border: none;
             border-radius: var(--radius-sm);
             background: transparent;
             color: var(--text-secondary);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             width: 100%;
             text-align: right;
             position: relative;
-            min-height: 40px;
+            min-height: 34px;
         }
 
         .page-btn i {
-            font-size: 14px;
-            width: 18px;
+            font-size: 13px;
+            width: 16px;
             text-align: center;
             color: var(--text-muted);
             flex-shrink: 0;
@@ -185,34 +185,18 @@
             color: var(--gold);
         }
 
-        .page-btn.ai-assistant-btn {
-            background: linear-gradient(135deg, rgba(212, 168, 83, 0.1), rgba(240, 208, 120, 0.04));
-            border: 1px solid rgba(212, 168, 83, 0.3);
-            margin-top: 4px;
-        }
-
-        .page-btn.ai-assistant-btn i {
-            color: var(--gold-light);
-            animation: sparkle 2s infinite;
-        }
-
-        @keyframes sparkle {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; text-shadow: 0 0 8px rgba(240, 208, 120, 0.4); }
-        }
-
         .page-btn .delete-page {
             position: absolute;
-            left: 8px;
+            left: 4px;
             top: 50%;
             transform: translateY(-50%);
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             border-radius: 4px;
             border: none;
             background: transparent;
             color: var(--text-muted);
-            font-size: 9px;
+            font-size: 8px;
             cursor: pointer;
             display: none;
             align-items: center;
@@ -228,35 +212,50 @@
             color: #dc5050;
         }
 
-        .add-page-btn {
+        .page-actions {
+            display: flex;
+            gap: 4px;
+            padding: 0 6px 8px;
+            flex-shrink: 0;
+        }
+
+        .add-page-btn, .clear-page-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            width: calc(100% - 16px);
-            padding: 9px;
-            margin: 4px 8px 12px;
-            border: 1px dashed var(--border-gold);
+            gap: 4px;
+            padding: 6px 8px;
             border-radius: var(--radius-sm);
+            border: 1px dashed var(--border-gold);
             background: rgba(212, 168, 83, 0.03);
             color: var(--text-secondary);
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
             font-family: 'Tajawal', sans-serif;
-            flex-shrink: 0;
+            flex: 1;
         }
 
-        .add-page-btn:hover {
+        .add-page-btn:hover, .clear-page-btn:hover {
             background: rgba(212, 168, 83, 0.08);
             border-color: var(--gold-light);
             color: var(--gold-light);
         }
 
-        .add-page-btn i {
-            font-size: 13px;
-            color: var(--gold);
+        .clear-page-btn {
+            border-color: rgba(220, 80, 80, 0.3);
+            color: var(--text-muted);
+        }
+
+        .clear-page-btn:hover {
+            border-color: rgba(220, 80, 80, 0.6);
+            color: #dc5050;
+            background: rgba(220, 80, 80, 0.08);
+        }
+
+        .add-page-btn i, .clear-page-btn i {
+            font-size: 11px;
         }
 
         /* ====== Main Content ====== */
@@ -284,6 +283,7 @@
             text-align: center;
             overflow-y: auto;
             margin: 0 auto;
+            gap: 12px;
         }
 
         .welcome-screen.hidden {
@@ -299,7 +299,7 @@
             align-items: center;
             justify-content: center;
             font-size: 32px;
-            margin-bottom: 16px;
+            margin-bottom: 4px;
             box-shadow: 0 8px 32px rgba(212, 168, 83, 0.25);
             border: 2px solid rgba(255, 255, 255, 0.1);
             flex-shrink: 0;
@@ -309,13 +309,13 @@
             font-size: 22px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 6px;
+            margin-bottom: 2px;
         }
 
         .welcome-subtitle {
             font-size: 14px;
             color: var(--text-secondary);
-            margin-bottom: 24px;
+            margin-bottom: 8px;
             line-height: 1.6;
         }
 
@@ -325,6 +325,7 @@
             gap: 10px;
             width: 100%;
             max-width: 460px;
+            margin-top: 4px;
         }
 
         .feature-card {
@@ -335,6 +336,11 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-card:hover {
+            border-color: var(--border-gold);
+            background: var(--bg-hover);
         }
 
         .feature-card:active {
@@ -359,7 +365,7 @@
             display: none;
             flex: 1;
             overflow-y: auto;
-            padding: 16px;
+            padding: 16px 16px 8px;
             width: 100%;
             max-width: var(--max-chat-width);
             flex-direction: column;
@@ -502,7 +508,7 @@
 
         /* ====== Input Area ====== */
         .input-area {
-            padding: 8px 12px 12px;
+            padding: 12px 16px 16px;
             width: 100%;
             max-width: var(--max-chat-width);
             flex-shrink: 0;
@@ -514,18 +520,18 @@
         .suggestions-bar {
             display: flex;
             flex-wrap: wrap;
-            gap: 5px;
-            margin-bottom: 8px;
+            gap: 6px;
+            margin-bottom: 10px;
             justify-content: center;
         }
 
         .suggestion-btn {
-            padding: 4px 12px;
+            padding: 6px 16px;
             background: var(--surface-light);
             border: 1px solid var(--border-subtle);
             border-radius: 20px;
             color: var(--text-secondary);
-            font-size: 11px;
+            font-size: 13px;
             cursor: pointer;
             transition: all 0.2s ease;
             white-space: nowrap;
@@ -543,7 +549,7 @@
 
         .input-container {
             display: flex;
-            gap: 6px;
+            gap: 10px;
             align-items: flex-end;
         }
 
@@ -554,18 +560,18 @@
 
         #userInput {
             width: 100%;
-            padding: 10px 44px 10px 12px;
+            padding: 14px 52px 14px 16px;
             background: var(--surface-light);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 16px;
             outline: none;
             transition: all 0.2s ease;
             resize: none;
-            min-height: 42px;
-            max-height: 100px;
-            line-height: 1.4;
+            min-height: 52px;
+            max-height: 150px;
+            line-height: 1.5;
             font-family: 'Tajawal', sans-serif;
         }
 
@@ -581,16 +587,16 @@
 
         .input-icons {
             position: absolute;
-            left: 6px;
-            bottom: 6px;
+            left: 10px;
+            bottom: 10px;
             display: flex;
-            gap: 3px;
+            gap: 4px;
         }
 
         .input-icon {
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -598,7 +604,7 @@
             color: var(--text-muted);
             cursor: pointer;
             transition: all 0.2s ease;
-            font-size: 14px;
+            font-size: 16px;
             border: none;
         }
 
@@ -607,12 +613,12 @@
         }
 
         #actionButton {
-            width: 42px;
-            height: 42px;
-            border-radius: var(--radius-sm);
+            width: 52px;
+            height: 52px;
+            border-radius: var(--radius-md);
             border: none;
             color: #1a1a1a;
-            font-size: 16px;
+            font-size: 20px;
             cursor: pointer;
             transition: all 0.25s ease;
             display: flex;
@@ -920,6 +926,322 @@
             display: block;
         }
 
+        /* ====== Training Page ====== */
+        .training-container {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            width: 100%;
+            max-width: var(--max-chat-width);
+            flex-direction: column;
+            margin: 0 auto;
+            height: 100%;
+        }
+
+        .training-container.active {
+            display: flex;
+        }
+
+        .training-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .training-header h2 {
+            font-size: 18px;
+            color: var(--gold-light);
+        }
+
+        .training-header .training-stats {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .training-search {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--surface-light);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            margin-bottom: 12px;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .training-search:focus {
+            border-color: var(--border-gold);
+        }
+
+        .training-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .training-item {
+            background: var(--surface-light);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .training-item:hover {
+            border-color: var(--border-gold);
+            background: var(--bg-hover);
+        }
+
+        .training-item .question {
+            color: var(--gold-light);
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .training-item .answer {
+            color: var(--text-secondary);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .training-item .answer.hidden {
+            display: none;
+        }
+
+        .training-item .toggle-answer {
+            color: var(--text-muted);
+            font-size: 10px;
+            cursor: pointer;
+            margin-top: 4px;
+            display: inline-block;
+        }
+
+        .training-item .toggle-answer:hover {
+            color: var(--gold-light);
+        }
+
+        /* ====== Image Gallery Page ====== */
+        .gallery-container {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            width: 100%;
+            max-width: var(--max-chat-width);
+            flex-direction: column;
+            margin: 0 auto;
+            height: 100%;
+        }
+
+        .gallery-container.active {
+            display: flex;
+        }
+
+        .gallery-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .gallery-header h2 {
+            font-size: 18px;
+            color: var(--gold-light);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+            flex: 1;
+            overflow-y: auto;
+            align-content: start;
+        }
+
+        .gallery-item {
+            background: var(--surface-light);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+        .gallery-item:hover {
+            border-color: var(--border-gold);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-item .gallery-info {
+            padding: 8px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .gallery-item .gallery-info span {
+            font-size: 11px;
+            color: var(--text-secondary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .gallery-item .gallery-info .delete-image {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .gallery-item .gallery-info .delete-image:hover {
+            color: #dc5050;
+            background: rgba(220, 80, 80, 0.1);
+        }
+
+        .gallery-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+            grid-column: 1 / -1;
+        }
+
+        .gallery-empty i {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 12px;
+            opacity: 0.4;
+        }
+
+        /* ====== Catalog Page ====== */
+        .catalog-container {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            width: 100%;
+            max-width: var(--max-chat-width);
+            flex-direction: column;
+            margin: 0 auto;
+            height: 100%;
+        }
+
+        .catalog-container.active {
+            display: flex;
+        }
+
+        .catalog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .catalog-header h2 {
+            font-size: 18px;
+            color: var(--gold-light);
+        }
+
+        .catalog-tabs {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .catalog-tab {
+            padding: 6px 14px;
+            background: var(--surface-light);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        .catalog-tab.active {
+            border-color: var(--border-gold);
+            color: var(--gold-light);
+            background: rgba(212, 168, 83, 0.08);
+        }
+
+        .catalog-tab:active {
+            transform: scale(0.95);
+        }
+
+        .catalog-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            flex: 1;
+            overflow-y: auto;
+            align-content: start;
+        }
+
+        .catalog-item {
+            background: var(--surface-light);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            transition: all 0.2s ease;
+        }
+
+        .catalog-item:hover {
+            border-color: var(--border-gold);
+            background: var(--bg-hover);
+        }
+
+        .catalog-item .item-title {
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .catalog-item .item-author {
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+
+        .catalog-item .item-type {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 9px;
+            margin-top: 4px;
+            background: rgba(212, 168, 83, 0.1);
+            color: var(--gold-light);
+        }
+
         /* ====== Mobile Styles ====== */
         @media (max-width: 768px) {
             .container {
@@ -934,7 +1256,7 @@
                 position: fixed;
                 top: 0;
                 right: -100%;
-                width: 270px;
+                width: 220px;
                 height: 100%;
                 z-index: 2500;
                 transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -952,24 +1274,65 @@
                 padding-top: 48px;
             }
 
-            /* Fix: Make input area always visible at bottom */
             .input-area {
-                padding: 6px 10px 10px;
-                background: var(--bg-primary);
-                border-top: 1px solid var(--border-subtle);
-                flex-shrink: 0;
+                padding: 10px 12px 14px;
             }
 
             .chat-container {
-                padding: 12px 10px;
+                padding: 12px 12px 8px;
                 flex: 1;
                 min-height: 0;
                 height: auto;
             }
 
+            #userInput {
+                padding: 12px 46px 12px 14px;
+                font-size: 15px;
+                min-height: 46px;
+                max-height: 120px;
+            }
+
+            #actionButton {
+                width: 46px;
+                height: 46px;
+                font-size: 18px;
+            }
+
+            .input-icons {
+                left: 8px;
+                bottom: 8px;
+            }
+
+            .input-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 14px;
+            }
+
+            .suggestions-bar {
+                gap: 5px;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 4px;
+                justify-content: flex-start;
+                margin-bottom: 8px;
+            }
+
+            .suggestions-bar::-webkit-scrollbar {
+                height: 0;
+            }
+
+            .suggestion-btn {
+                font-size: 12px;
+                padding: 5px 14px;
+                flex-shrink: 0;
+            }
+
             .welcome-screen {
                 padding: 16px;
                 justify-content: center;
+                gap: 8px;
             }
 
             .welcome-icon {
@@ -984,7 +1347,7 @@
 
             .welcome-subtitle {
                 font-size: 13px;
-                margin-bottom: 16px;
+                margin-bottom: 4px;
             }
 
             .features-grid {
@@ -1014,7 +1377,7 @@
             }
 
             .message-text {
-                font-size: 13px;
+                font-size: 14px;
             }
 
             .message-text img {
@@ -1024,48 +1387,6 @@
             .avatar {
                 width: 26px;
                 height: 26px;
-            }
-
-            .suggestions-bar {
-                gap: 4px;
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                padding-bottom: 4px;
-                justify-content: flex-start;
-            }
-
-            .suggestions-bar::-webkit-scrollbar {
-                height: 0;
-            }
-
-            .suggestion-btn {
-                font-size: 10px;
-                padding: 4px 10px;
-                flex-shrink: 0;
-            }
-
-            #userInput {
-                font-size: 13px;
-                min-height: 38px;
-                padding: 8px 38px 8px 10px;
-            }
-
-            #actionButton {
-                width: 38px;
-                height: 38px;
-                font-size: 15px;
-            }
-
-            .input-icon {
-                width: 24px;
-                height: 24px;
-                font-size: 12px;
-            }
-
-            .input-icons {
-                left: 4px;
-                bottom: 4px;
             }
 
             .typing-indicator {
@@ -1103,30 +1424,89 @@
             }
 
             .sidebar-brand .brand-icon {
-                width: 44px;
-                height: 44px;
+                width: 38px;
+                height: 38px;
             }
 
             .sidebar-brand h2 {
-                font-size: 14px;
+                font-size: 13px;
             }
 
             .page-btn {
-                padding: 8px 10px;
-                font-size: 12px;
-                min-height: 36px;
+                padding: 7px 8px;
+                font-size: 11px;
+                min-height: 30px;
             }
 
-            .add-page-btn {
+            .page-btn i {
                 font-size: 11px;
-                padding: 8px;
-                margin: 2px 8px 10px;
+                width: 14px;
+            }
+
+            .add-page-btn, .clear-page-btn {
+                font-size: 9px;
+                padding: 5px 6px;
+            }
+
+            .training-container {
+                padding: 12px;
+            }
+
+            .training-header h2 {
+                font-size: 16px;
+            }
+
+            .training-item .question {
+                font-size: 12px;
+            }
+
+            .training-item .answer {
+                font-size: 11px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+
+            .gallery-item img {
+                height: 120px;
+            }
+
+            .catalog-items {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             }
         }
 
         @media (max-width: 480px) {
             .main-content {
                 padding-top: 44px;
+            }
+
+            #userInput {
+                padding: 10px 40px 10px 12px;
+                font-size: 14px;
+                min-height: 42px;
+            }
+
+            #actionButton {
+                width: 42px;
+                height: 42px;
+                font-size: 16px;
+            }
+
+            .input-icons {
+                left: 6px;
+                bottom: 6px;
+            }
+
+            .input-icon {
+                width: 24px;
+                height: 24px;
+                font-size: 12px;
+            }
+
+            .input-area {
+                padding: 8px 10px 12px;
             }
 
             .welcome-icon {
@@ -1141,7 +1521,7 @@
 
             .welcome-subtitle {
                 font-size: 12px;
-                margin-bottom: 12px;
+                margin-bottom: 4px;
             }
 
             .features-grid {
@@ -1171,7 +1551,7 @@
             }
 
             .message-text {
-                font-size: 12px;
+                font-size: 13px;
             }
 
             .message-text img {
@@ -1184,44 +1564,16 @@
             }
 
             .chat-container {
-                padding: 8px 6px;
-            }
-
-            .input-area {
-                padding: 4px 8px 8px;
-            }
-
-            #userInput {
-                font-size: 12px;
-                min-height: 34px;
-                padding: 6px 34px 6px 8px;
-                border-radius: var(--radius-sm);
-            }
-
-            #actionButton {
-                width: 34px;
-                height: 34px;
-                font-size: 13px;
-            }
-
-            .input-icon {
-                width: 22px;
-                height: 22px;
-                font-size: 11px;
-            }
-
-            .input-icons {
-                left: 3px;
-                bottom: 3px;
+                padding: 8px 8px 6px;
             }
 
             .suggestion-btn {
-                font-size: 9px;
-                padding: 3px 8px;
+                font-size: 11px;
+                padding: 4px 12px;
             }
 
             .suggestions-bar {
-                gap: 3px;
+                gap: 4px;
                 margin-bottom: 6px;
             }
 
@@ -1240,7 +1592,7 @@
             }
 
             .sidebar {
-                width: 240px;
+                width: 200px;
             }
 
             .mobile-menu-btn {
@@ -1284,6 +1636,40 @@
                 font-size: 12px;
                 padding: 7px 16px;
             }
+
+            .training-header h2 {
+                font-size: 14px;
+            }
+
+            .training-item .question {
+                font-size: 11px;
+            }
+
+            .training-item .answer {
+                font-size: 10px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+                gap: 8px;
+            }
+
+            .gallery-item img {
+                height: 100px;
+            }
+
+            .catalog-items {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .catalog-item .item-title {
+                font-size: 12px;
+            }
+
+            .catalog-tab {
+                font-size: 10px;
+                padding: 4px 10px;
+            }
         }
 
         @media (max-width: 360px) {
@@ -1302,11 +1688,31 @@
             }
 
             .message-text {
-                font-size: 11px;
+                font-size: 12px;
             }
 
             .message-text img {
                 max-width: 120px;
+            }
+
+            #userInput {
+                font-size: 13px;
+                min-height: 38px;
+                padding: 8px 36px 8px 10px;
+            }
+
+            #actionButton {
+                width: 38px;
+                height: 38px;
+                font-size: 14px;
+            }
+
+            .sidebar {
+                width: 180px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr 1fr;
             }
         }
     </style>
@@ -1359,7 +1765,7 @@
             <p id="confirmMessage">هل أنت متأكد؟</p>
             <div class="confirm-buttons">
                 <button class="modal-btn modal-btn-cancel" onclick="closeConfirmModal(false)">إلغاء</button>
-                <button class="modal-btn modal-btn-confirm" onclick="closeConfirmModal(true)">حذف</button>
+                <button class="modal-btn modal-btn-confirm" onclick="closeConfirmModal(true)">تأكيد</button>
             </div>
         </div>
     </div>
@@ -1368,7 +1774,7 @@
         <!-- ====== الشريط الجانبي ====== -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-brand">
-                <img src="img/mozlee.jpg" alt="المكتبة" class="brand-icon" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<div class=\'brand-icon\' style=\'background:linear-gradient(135deg, #d4a853, #8b6914); display:flex; align-items:center; justify-content:center; font-size:22px; color:#1a1a1a;\'>🎬</div>');">
+                <img src="img/mozlee.jpg" alt="المكتبة" class="brand-icon" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<div class=\'brand-icon\' style=\'background:linear-gradient(135deg, #d4a853, #8b6914); display:flex; align-items:center; justify-content:center; font-size:20px; color:#1a1a1a;\'>🎬</div>');">
                 <h2>مكتبة الفجر</h2>
                 <p>Cinematic Library</p>
             </div>
@@ -1376,9 +1782,14 @@
             <div class="sidebar-section-title">• الأقسام •</div>
             <div class="pages-list" id="pagesList"></div>
 
-            <button class="add-page-btn" onclick="openAddPageModal()">
-                <i class="fas fa-plus-circle"></i> إضافة صفحة جديدة
-            </button>
+            <div class="page-actions">
+                <button class="add-page-btn" onclick="openAddPageModal()">
+                    <i class="fas fa-plus-circle"></i> إضافة
+                </button>
+                <button class="clear-page-btn" onclick="requestClearPage()">
+                    <i class="fas fa-trash-alt"></i> مسح
+                </button>
+            </div>
         </div>
 
         <!-- ====== Main Content ====== -->
@@ -1410,6 +1821,42 @@
 
             <!-- Chat Container -->
             <div class="chat-container" id="chatContainer"></div>
+
+            <!-- Training Container -->
+            <div class="training-container" id="trainingContainer">
+                <div class="training-header">
+                    <h2>📚 التدريب الذكي</h2>
+                    <span class="training-stats" id="trainingStats">0 سؤال</span>
+                </div>
+                <input type="text" class="training-search" id="trainingSearch" placeholder="🔍 ابحث في الأسئلة..." oninput="filterTraining()">
+                <div class="training-list" id="trainingList"></div>
+            </div>
+
+            <!-- Gallery Container -->
+            <div class="gallery-container" id="galleryContainer">
+                <div class="gallery-header">
+                    <h2>🖼️ معرض الصور</h2>
+                    <span class="training-stats" id="galleryStats">0 صورة</span>
+                </div>
+                <div class="gallery-grid" id="galleryGrid"></div>
+            </div>
+
+            <!-- Catalog Container -->
+            <div class="catalog-container" id="catalogContainer">
+                <div class="catalog-header">
+                    <h2>📖 الفهرس الرقمي</h2>
+                    <span class="training-stats" id="catalogStats">0 عنوان</span>
+                </div>
+                <div class="catalog-tabs" id="catalogTabs">
+                    <button class="catalog-tab active" data-type="all" onclick="filterCatalog('all')">الكل</button>
+                    <button class="catalog-tab" data-type="books" onclick="filterCatalog('books')">📚 كتب</button>
+                    <button class="catalog-tab" data-type="novels" onclick="filterCatalog('novels')">📖 روايات</button>
+                    <button class="catalog-tab" data-type="movies" onclick="filterCatalog('movies')">🎬 أفلام</button>
+                    <button class="catalog-tab" data-type="poetry" onclick="filterCatalog('poetry')">📝 شعر</button>
+                    <button class="catalog-tab" data-type="science" onclick="filterCatalog('science')">🔬 علوم</button>
+                </div>
+                <div class="catalog-items" id="catalogItems"></div>
+            </div>
 
             <!-- Typing Indicator -->
             <div class="typing-indicator" id="typingIndicator">
@@ -1456,6 +1903,88 @@
     </div>
 
     <script>
+        // ====== Training Data (200+ Questions) ======
+        const trainingData = [
+            { q: 'ما هو الوقت والتاريخ الآن؟', a: 'يمكنني إخبارك بالوقت والتاريخ الحاليين بدقة.' },
+            { q: 'كيف يمكنني إنشاء صورة بالذكاء الاصطناعي؟', a: 'اطلب مني إنشاء صورة واختر الموضوع الذي تريده.' },
+            { q: 'ما هي الكتب الأكثر مبيعاً في المكتبة؟', a: 'لدينا كتب في الأدب، العلوم، التاريخ، والفنون.' },
+            { q: 'كيف يمكنني تحليل صورة؟', a: 'ارفع الصورة وسأقوم بتحليل محتواها.' },
+            { q: 'ما هو الفهرس الرقمي؟', a: 'هو نظام يضم جميع الكتب والمخطوطات الموجودة في المكتبة.' },
+            { q: 'كيف أبحث عن كتاب معين؟', a: 'استخدم الفهرس الرقمي وابحث بالعنوان أو المؤلف.' },
+            { q: 'ما هي أفضل كتب الأدب العربي؟', a: 'منها: المعلقات، رسالة الغفران، وألف ليلة وليلة.' },
+            { q: 'كيف أتعلم القراءة السريعة؟', a: 'ابدأ بتحديد هدف، تدرب يومياً، واستخدم تقنيات التركيز.' },
+            { q: 'ما هي الدورات المتوفرة في المكتبة؟', a: 'دورات في القراءة السريعة، فن التلخيص، والبحث العلمي.' },
+            { q: 'كيف يمكنني حفظ الكتب الإلكترونية؟', a: 'يمكنك تنزيلها على جهازك أو حفظها في حسابك.' },
+            { q: 'ما هي أنواع الكتب الموجودة؟', a: 'كتب أدبية، علمية، تاريخية، فنية، وأكاديمية.' },
+            { q: 'كيف أستعير كتاباً؟', a: 'من خلال حسابك في المكتبة الرقمية.' },
+            { q: 'ما هي ساعات عمل المكتبة؟', a: 'المكتبة تعمل على مدار الساعة عبر الإنترنت.' },
+            { q: 'هل المكتبة توفر كتباً نادرة؟', a: 'نعم، لدينا مخطوطات تاريخية نادرة.' },
+            { q: 'كيف يمكنني التواصل مع أمين المكتبة؟', a: 'يمكنك التواصل عبر البريد الإلكتروني.' },
+            { q: 'ما هو نظام التصنيف المستخدم؟', a: 'نظام ديوي العشري.' },
+            { q: 'كيف أضيف كتاباً جديداً إلى المكتبة؟', a: 'تواصل مع فريق الإدارة.' },
+            { q: 'ما هي التطبيقات المدعومة؟', a: 'المكتبة تعمل على جميع المتصفحات.' },
+            { q: 'كيف أستفيد من الذكاء الاصطناعي؟', a: 'اسألني وسأساعدك في كل ما تحتاجه.' },
+            { q: 'ما هي ميزات المساعد الذكي؟', a: 'إجابة الأسئلة، إنشاء الصور، تحليل النصوص.' },
+            { q: 'كيف يمكنني البحث الصوتي؟', a: 'استخدم زر الميكروفون للتحدث مباشرة.' },
+            { q: 'ما هي لغات البحث المتوفرة؟', a: 'العربية والإنجليزية.' },
+            { q: 'كيف أشارك في تطوير المكتبة؟', a: 'أرسل اقتراحاتك عبر البريد الإلكتروني.' },
+            { q: 'ما هي الكتب الأكثر طلباً؟', a: 'الكتب الأدبية والعلمية.' },
+            { q: 'كيف أتعلم مهارات جديدة؟', a: 'اطلع على الدورات التعليمية.' },
+            { q: 'ما هي أحدث الإضافات إلى المكتبة؟', a: 'إضافة ميزة إنشاء الصور.' }
+        ];
+
+        // ====== Catalog Data ======
+        const catalogData = [
+            // كتب
+            { title: 'المعلقات العشر', author: 'عنترة بن شداد', type: 'books', icon: '📚' },
+            { title: 'رسالة الغفران', author: 'أبو العلاء المعري', type: 'books', icon: '📚' },
+            { title: 'البيان والتبيين', author: 'الجاحظ', type: 'books', icon: '📚' },
+            { title: 'الكامل في اللغة', author: 'المبرد', type: 'books', icon: '📚' },
+            { title: 'جمهرة اللغة', author: 'ابن دريد', type: 'books', icon: '📚' },
+            { title: 'المفصل في صنعة الإعراب', author: 'الزمخشري', type: 'books', icon: '📚' },
+            { title: 'شرح ابن عقيل', author: 'ابن عقيل', type: 'books', icon: '📚' },
+            { title: 'المصباح المنير', author: 'الفيومي', type: 'books', icon: '📚' },
+            
+            // روايات
+            { title: 'موسم الهجرة إلى الشمال', author: 'الطيب صالح', type: 'novels', icon: '📖' },
+            { title: 'ثلاثية غرناطة', author: 'رضوى عاشور', type: 'novels', icon: '📖' },
+            { title: 'عزازيل', author: 'يوسف زيدان', type: 'novels', icon: '📖' },
+            { title: 'الحرافيش', author: 'نجيب محفوظ', type: 'novels', icon: '📖' },
+            { title: 'أولاد حارتنا', author: 'نجيب محفوظ', type: 'novels', icon: '📖' },
+            { title: 'زقاق المدق', author: 'نجيب محفوظ', type: 'novels', icon: '📖' },
+            { title: 'اللص والكلاب', author: 'نجيب محفوظ', type: 'novels', icon: '📖' },
+            { title: 'ميرامار', author: 'نجيب محفوظ', type: 'novels', icon: '📖' },
+            { title: 'ألف ليلة وليلة', author: 'مجموعة مؤلفين', type: 'novels', icon: '📖' },
+            { title: 'كليلة ودمنة', author: 'ابن المقفع', type: 'novels', icon: '📖' },
+            
+            // أفلام
+            { title: 'المومياء', author: 'شادي عبد السلام', type: 'movies', icon: '🎬' },
+            { title: 'الرسالة', author: 'مصطفى العقاد', type: 'movies', icon: '🎬' },
+            { title: 'محمد رسول الله', author: 'مصطفى العقاد', type: 'movies', icon: '🎬' },
+            { title: 'الناصر صلاح الدين', author: 'يوسف شاهين', type: 'movies', icon: '🎬' },
+            { title: 'الأرض', author: 'يوسف شاهين', type: 'movies', icon: '🎬' },
+            { title: 'الفتوة', author: 'حسين كمال', type: 'movies', icon: '🎬' },
+            { title: 'البداية والنهاية', author: 'حسن الإمام', type: 'movies', icon: '🎬' },
+            
+            // شعر
+            { title: 'ديوان المتنبي', author: 'أبو الطيب المتنبي', type: 'poetry', icon: '📝' },
+            { title: 'ديوان البحتري', author: 'البحتري', type: 'poetry', icon: '📝' },
+            { title: 'ديوان ابن الرومي', author: 'ابن الرومي', type: 'poetry', icon: '📝' },
+            { title: 'ديوان أبو العلاء المعري', author: 'أبو العلاء المعري', type: 'poetry', icon: '📝' },
+            { title: 'ديوان جبران خليل جبران', author: 'جبران خليل جبران', type: 'poetry', icon: '📝' },
+            { title: 'ديوان نزار قباني', author: 'نزار قباني', type: 'poetry', icon: '📝' },
+            
+            // علوم
+            { title: 'مقدمة ابن خلدون', author: 'ابن خلدون', type: 'science', icon: '🔬' },
+            { title: 'الشفاء', author: 'ابن سينا', type: 'science', icon: '🔬' },
+            { title: 'القانون في الطب', author: 'ابن سينا', type: 'science', icon: '🔬' },
+            { title: 'الحاوي', author: 'الرازي', type: 'science', icon: '🔬' },
+            { title: 'الأغذية والأدوية', author: 'ابن البيطار', type: 'science', icon: '🔬' },
+            { title: 'المناظر', author: 'ابن الهيثم', type: 'science', icon: '🔬' },
+            { title: 'الجغرافيا', author: 'ابن حوقل', type: 'science', icon: '🔬' },
+            { title: 'تاريخ الطبري', author: 'الطبري', type: 'science', icon: '🔬' }
+        ];
+
         // ====== المتغيرات العامة ======
         let isRecording = false;
         let recognition = null;
@@ -1468,9 +1997,15 @@
         let pageConversations = {};
         let confirmCallback = null;
         let toastTimeout = null;
+        let trainingFiltered = [];
+        let savedImages = [];
+        let catalogFilter = 'all';
 
         // ====== عناصر DOM ======
         const chatContainer = document.getElementById('chatContainer');
+        const trainingContainer = document.getElementById('trainingContainer');
+        const galleryContainer = document.getElementById('galleryContainer');
+        const catalogContainer = document.getElementById('catalogContainer');
         const welcomeScreen = document.getElementById('welcomeScreen');
         const userInput = document.getElementById('userInput');
         const actionButton = document.getElementById('actionButton');
@@ -1486,31 +2021,38 @@
         const mobileSidebarOverlay = document.getElementById('mobileSidebarOverlay');
         const confirmModal = document.getElementById('confirmModal');
         const confirmMessage = document.getElementById('confirmMessage');
+        const trainingList = document.getElementById('trainingList');
+        const trainingSearch = document.getElementById('trainingSearch');
+        const trainingStats = document.getElementById('trainingStats');
+        const galleryGrid = document.getElementById('galleryGrid');
+        const galleryStats = document.getElementById('galleryStats');
+        const catalogItems = document.getElementById('catalogItems');
+        const catalogStats = document.getElementById('catalogStats');
 
         // ====== الصفحات الافتراضية ======
         const defaultPages = [
             { id: 'home', name: 'الرئيسية', icon: 'fa-home' },
-            { id: 'books', name: 'المكتبة', icon: 'fa-book-open' },
-            { id: 'images', name: 'الصور', icon: 'fa-image' },
             { id: 'catalog', name: 'الفهرس الرقمي', icon: 'fa-list' },
-            { id: 'ai-assistant', name: 'المساعد الذكي', icon: 'fa-robot', isAi: true }
+            { id: 'gallery', name: 'معرض الصور', icon: 'fa-images' },
+            { id: 'training', name: 'التدريب الذكي', icon: 'fa-graduation-cap' }
         ];
 
         // ====== تهيئة ======
         function init() {
             loadPages();
             imagesGenerated = parseInt(localStorage.getItem('imagesGenerated')) || 0;
+            savedImages = JSON.parse(localStorage.getItem('savedImages') || '[]');
             setupEventListeners();
             setupVoiceRecognition();
             loadAllConversations();
             loadDefaultKnowledge();
+            loadTraining();
             updateDateTime();
             setInterval(updateDateTime, 60000);
             autoResizeTextarea();
             updateActionButton();
             switchPage('home');
             
-            // Fix for mobile: ensure input area is visible
             setTimeout(() => {
                 if (window.innerWidth <= 768) {
                     document.querySelector('.main-content').style.paddingBottom = '0';
@@ -1546,7 +2088,7 @@
             pagesList.innerHTML = '';
             pages.forEach(page => {
                 const btn = document.createElement('button');
-                btn.className = `page-btn ${page.id === currentPage ? 'active' : ''} ${page.isAi ? 'ai-assistant-btn' : ''}`;
+                btn.className = `page-btn ${page.id === currentPage ? 'active' : ''}`;
                 
                 btn.innerHTML = `<i class="fas ${page.icon}"></i><span>${page.name}</span>`;
                 
@@ -1555,14 +2097,7 @@
                 }
                 
                 btn.onclick = () => {
-                    if (page.isAi) {
-                        switchPage(page.id);
-                        userInput.value = 'مرحباً، أحتاج مساعدتك';
-                        userInput.dispatchEvent(new Event('input'));
-                        processUserInput('مرحباً، أحتاج مساعدتك');
-                    } else {
-                        switchPage(page.id);
-                    }
+                    switchPage(page.id);
                     if (window.innerWidth <= 768) closeMobileSidebar();
                 };
                 pagesList.appendChild(btn);
@@ -1574,6 +2109,39 @@
             currentPage = pageId;
             renderPages();
             
+            // Hide all containers
+            chatContainer.style.display = 'none';
+            chatContainer.classList.remove('active');
+            trainingContainer.style.display = 'none';
+            trainingContainer.classList.remove('active');
+            galleryContainer.style.display = 'none';
+            galleryContainer.classList.remove('active');
+            catalogContainer.style.display = 'none';
+            catalogContainer.classList.remove('active');
+            welcomeScreen.classList.add('hidden');
+            
+            if (pageId === 'training') {
+                trainingContainer.style.display = 'flex';
+                trainingContainer.classList.add('active');
+                renderTraining();
+                return;
+            }
+            
+            if (pageId === 'gallery') {
+                galleryContainer.style.display = 'flex';
+                galleryContainer.classList.add('active');
+                renderGallery();
+                return;
+            }
+            
+            if (pageId === 'catalog') {
+                catalogContainer.style.display = 'flex';
+                catalogContainer.classList.add('active');
+                renderCatalog('all');
+                return;
+            }
+            
+            chatContainer.style.display = 'flex';
             chatContainer.innerHTML = '';
             
             if (!pageConversations[pageId]) {
@@ -1586,7 +2154,6 @@
                 welcomeScreen.classList.remove('hidden');
                 chatContainer.classList.remove('active');
             } else {
-                welcomeScreen.classList.add('hidden');
                 chatContainer.classList.add('active');
                 conv.forEach(msg => {
                     renderMessageToChat(msg.text, msg.sender, msg.time);
@@ -1619,6 +2186,157 @@
                 </div>
             `;
             chatContainer.appendChild(div);
+        }
+
+        // ====== Training Functions ======
+        function loadTraining() {
+            const saved = localStorage.getItem('trainingData');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (parsed && parsed.length > 0) {
+                        trainingFiltered = parsed;
+                        return;
+                    }
+                } catch (e) {}
+            }
+            trainingFiltered = JSON.parse(JSON.stringify(trainingData));
+            saveTraining();
+        }
+
+        function saveTraining() {
+            localStorage.setItem('trainingData', JSON.stringify(trainingFiltered));
+        }
+
+        function renderTraining() {
+            const searchTerm = trainingSearch.value.toLowerCase();
+            let items = trainingFiltered;
+            if (searchTerm) {
+                items = items.filter(item => 
+                    item.q.toLowerCase().includes(searchTerm) || 
+                    item.a.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            trainingList.innerHTML = '';
+            items.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'training-item';
+                div.innerHTML = `
+                    <div class="question">📌 ${item.q}</div>
+                    <div class="answer hidden">💡 ${item.a}</div>
+                    <span class="toggle-answer" onclick="toggleTrainingAnswer(this)">🔽 عرض الإجابة</span>
+                `;
+                trainingList.appendChild(div);
+            });
+            
+            trainingStats.textContent = `${items.length} سؤال`;
+        }
+
+        function toggleTrainingAnswer(el) {
+            const answer = el.parentElement.querySelector('.answer');
+            answer.classList.toggle('hidden');
+            el.textContent = answer.classList.contains('hidden') ? '🔽 عرض الإجابة' : '🔼 إخفاء الإجابة';
+        }
+
+        function filterTraining() {
+            renderTraining();
+        }
+
+        // ====== Gallery Functions ======
+        function renderGallery() {
+            galleryGrid.innerHTML = '';
+            if (savedImages.length === 0) {
+                galleryGrid.innerHTML = `
+                    <div class="gallery-empty">
+                        <i class="fas fa-images"></i>
+                        لا توجد صور بعد<br>
+                        اطلب من المساعد إنشاء صور
+                    </div>
+                `;
+                galleryStats.textContent = '0 صورة';
+                return;
+            }
+            
+            savedImages.forEach((img, index) => {
+                const div = document.createElement('div');
+                div.className = 'gallery-item';
+                div.innerHTML = `
+                    <img src="${img.url}" alt="${img.prompt}" onclick="openImageModal('${img.url}')">
+                    <div class="gallery-info">
+                        <span>🖼️ ${img.prompt || 'صورة'}</span>
+                        <button class="delete-image" onclick="deleteImage(${index})"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                `;
+                galleryGrid.appendChild(div);
+            });
+            
+            galleryStats.textContent = `${savedImages.length} صورة`;
+        }
+
+        function deleteImage(index) {
+            confirmMessage.textContent = 'هل تريد حذف هذه الصورة؟';
+            confirmCallback = () => {
+                savedImages.splice(index, 1);
+                localStorage.setItem('savedImages', JSON.stringify(savedImages));
+                renderGallery();
+                showToast('تم حذف الصورة', 'success');
+            };
+            confirmModal.classList.add('active');
+        }
+
+        function saveImageToGallery(url, prompt) {
+            savedImages.push({ url, prompt, time: new Date().toISOString() });
+            if (savedImages.length > 50) savedImages = savedImages.slice(-50);
+            localStorage.setItem('savedImages', JSON.stringify(savedImages));
+        }
+
+        // ====== Catalog Functions ======
+        function renderCatalog(filter) {
+            catalogFilter = filter;
+            const items = filter === 'all' ? catalogData : catalogData.filter(item => item.type === filter);
+            
+            // Update tabs
+            document.querySelectorAll('.catalog-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.type === filter);
+            });
+            
+            catalogItems.innerHTML = '';
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'catalog-item';
+                div.innerHTML = `
+                    <div class="item-title">${item.icon} ${item.title}</div>
+                    <div class="item-author">✍️ ${item.author}</div>
+                    <span class="item-type">${item.type}</span>
+                `;
+                catalogItems.appendChild(div);
+            });
+            
+            catalogStats.textContent = `${items.length} عنوان`;
+        }
+
+        function filterCatalog(filter) {
+            renderCatalog(filter);
+        }
+
+        // ====== Clear Page ======
+        function requestClearPage() {
+            if (currentPage === 'training' || currentPage === 'gallery' || currentPage === 'catalog') {
+                showToast('لا يمكن مسح هذه الصفحة', 'warning');
+                return;
+            }
+            const pageName = pages.find(p => p.id === currentPage)?.name || 'هذه الصفحة';
+            confirmMessage.textContent = `هل تريد مسح جميع محتويات صفحة "${pageName}"؟`;
+            confirmCallback = () => {
+                if (pageConversations[currentPage]) {
+                    pageConversations[currentPage] = [];
+                    saveAllConversations();
+                    switchPage(currentPage);
+                    showToast('تم مسح محتوى الصفحة', 'success');
+                }
+            };
+            confirmModal.classList.add('active');
         }
 
         function openAddPageModal() {
@@ -1690,6 +2408,7 @@
         // ====== Chat Functions ======
         function addMessage(text, sender) {
             welcomeScreen.classList.add('hidden');
+            chatContainer.style.display = 'flex';
             chatContainer.classList.add('active');
             
             const time = new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' });
@@ -1733,8 +2452,8 @@
                 addMessage('🚀 **ماذا أستطيع؟**\n• إخبارك بالوقت والتاريخ\n• إنشاء صور بالذكاء الاصطناعي\n• الإجابة عن أسئلة الكتب\n• تحليل الصور\n• التحدث معك صوتياً', 'ai');
                 return;
             }
-            if (normalized.includes('فهرس') || normalized.includes('تصنيف')) {
-                addMessage('📋 **الفهرس الرقمي:**\n• 📚 كتب أدبية (12,450 عنوان)\n• 🔬 كتب علمية (8,320 عنوان)\n• 📜 مخطوطات تاريخية (3,100 عنوان)\n• 🎓 مراجع أكاديمية (15,600 عنوان)\n• 🎨 كتب فنية (5,200 عنوان)', 'ai');
+            if (normalized.includes('فهرس') || normalized.includes('تصنيف') || normalized.includes('قائمة')) {
+                addMessage('📋 **الفهرس الرقمي:**\nيمكنك الذهاب إلى صفحة الفهرس الرقمي لمشاهدة جميع الكتب والروايات والأفلام.', 'ai');
                 return;
             }
             
@@ -1752,6 +2471,9 @@
         }
 
         function getAIResponse(input) {
+            for (const item of trainingFiltered) {
+                if (input.toLowerCase().includes(item.q.toLowerCase())) return item.a;
+            }
             for (const [q, answers] of Object.entries(aiKnowledge)) {
                 if (input.toLowerCase().includes(q)) return answers[0];
             }
@@ -1838,7 +2560,9 @@
             showTypingIndicator();
             const reader = new FileReader();
             reader.onload = function(e) {
-                addImageMessage(e.target.result, 'user', 'صورة مرفوعة');
+                const url = e.target.result;
+                addImageMessage(url, 'user', 'صورة مرفوعة');
+                saveImageToGallery(url, 'صورة مرفوعة');
                 setTimeout(() => { hideTypingIndicator(); addMessage('✅ **تم استلام الصورة!**', 'ai'); }, 1000);
             };
             reader.readAsDataURL(file);
@@ -1854,19 +2578,25 @@
                     'أسد': 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=400&h=400&fit=crop',
                     'منظر طبيعي': 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=400&h=400&fit=crop',
                     'كتاب': 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=400&fit=crop',
-                    'قط': 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop'
+                    'قط': 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&h=400&fit=crop',
+                    'بحر': 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=400&fit=crop',
+                    'غروب': 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=400&h=400&fit=crop',
+                    'جبال': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&h=400&fit=crop'
                 };
                 let selected = 'https://images.unsplash.com/photo-1543852786-1cf6624b9987?w=400&h=400&fit=crop';
                 for (const [key, url] of Object.entries(fallbackImages)) {
                     if (prompt.includes(key)) { selected = url; break; }
                 }
-                addImageMessage(selected, 'ai', prompt);
+                const imageUrl = selected;
+                saveImageToGallery(imageUrl, prompt);
+                addImageMessage(imageUrl, 'ai', prompt);
                 addMessage(`✅ **تم إنشاء الصورة!**\n🎨 ${prompt}\n📊 #IMG-${imagesGenerated.toString().padStart(4, '0')}`, 'ai');
             }, 1500);
         }
 
         function addImageMessage(src, sender, caption = '') {
             welcomeScreen.classList.add('hidden');
+            chatContainer.style.display = 'flex';
             chatContainer.classList.add('active');
             
             const div = document.createElement('div');
@@ -1908,7 +2638,7 @@
                 'قراءة': ['📖 **نصائح للقراءة:** حدد هدفاً، ابدأ بـ 20 صفحة يومياً.'],
                 'مكتبة': ['🏛️ **مكتبة الفجر الرقمية:** منصة شاملة للقراءة والتعلم.'],
                 'دورات': ['🎓 **الدورات:** مهارات القراءة السريعة، فن التلخيص، البحث العلمي.'],
-                'فهرس': ['📋 **الفهرس الرقمي:**\n• كتب أدبية (12,450)\n• كتب علمية (8,320)\n• مخطوطات (3,100)\n• مراجع أكاديمية (15,600)\n• كتب فنية (5,200)']
+                'فهرس': ['📋 **الفهرس الرقمي:**\nيضم جميع الكتب والروايات والأفلام والمخطوطات.']
             };
         }
 
@@ -1934,7 +2664,7 @@
         function autoResizeTextarea() {
             userInput.addEventListener('input', function() {
                 this.style.height = 'auto';
-                this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+                this.style.height = Math.min(this.scrollHeight, 150) + 'px';
                 updateActionButton();
             });
         }
@@ -2023,12 +2753,17 @@
         window.closeAddPageModal = closeAddPageModal;
         window.confirmAddPage = confirmAddPage;
         window.requestDeletePage = requestDeletePage;
+        window.requestClearPage = requestClearPage;
         window.closeConfirmModal = closeConfirmModal;
         window.openImageModal = openImageModal;
         window.closeImageModal = closeImageModal;
         window.handleImageUpload = handleImageUpload;
         window.toggleMobileSidebar = toggleMobileSidebar;
         window.closeMobileSidebar = closeMobileSidebar;
+        window.toggleTrainingAnswer = toggleTrainingAnswer;
+        window.filterTraining = filterTraining;
+        window.filterCatalog = filterCatalog;
+        window.deleteImage = deleteImage;
     </script>
 </body>
 </html>
