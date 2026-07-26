@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دليل المتجر | متجر الأساطير</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --paper: #1a1a1a;
+            --paper-light: #222222;
+            --gold: #c9a050;
+            --gold-light: #dfc080;
+            --text: #d4c5a9;
+            --text-dark: #a89878;
+            --border: #3a3020;
+            --shadow: rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Naskh Arabic', 'Amiri', serif;
+            background-color: #111111;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255, 255, 255, 0.008) 2px, rgba(255, 255, 255, 0.008) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 255, 255, 0.008) 2px, rgba(255, 255, 255, 0.008) 4px);
+            min-height: 100vh;
+            color: var(--text);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* ============ نافذة الترحيب - زي صفحة ورقية ============ */
+        .welcome-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .welcome-overlay.hide {
+            animation: overlayFade 0.6s ease forwards;
+            pointer-events: none;
+        }
+
+        @keyframes overlayFade {
+            to {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        .paper-window {
+            background: var(--paper);
+            max-width: 620px;
+            width: 92%;
+            padding: 3rem 2.5rem;
+            border-radius: 4px;
+            position: relative;
+            box-shadow:
+                0 20px 60px var(--shadow),
+                0 0 0 1px var(--border),
+                inset 0 0 80px rgba(201, 160, 80, 0.03);
+            border: 1px solid var(--border);
+            transform-origin: bottom right;
+            animation: paperUnfold 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        @keyframes paperUnfold {
+            0% {
+                transform: rotate(-15deg) scale(0.1);
+                opacity: 0;
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            }
+            50% {
+                transform: rotate(2deg) scale(1.03);
+                opacity: 1;
+            }
+            70% {
+                transform: rotate(-1deg) scale(0.98);
+            }
+            100% {
+                transform: rotate(0deg) scale(1);
+                opacity: 1;
+                border-radius: 4px;
+            }
+        }
+
+        /* زخرفة ورقية */
+        .paper-window::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 1px solid rgba(201, 160, 80, 0.2);
+            pointer-events: none;
+        }
+
+        .paper-window::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            bottom: 8px;
+            border: 1px solid rgba(201, 160, 80, 0.08);
+            pointer-events: none;
+        }
+
+        .ornament-top {
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--gold);
+            letter-spacing: 8px;
+            margin-bottom: 1rem;
+            opacity: 0.7;
+        }
+
+        .ornament-bottom {
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--gold);
+            letter-spacing: 8px;
+            margin-top: 1.5rem;
+            opacity: 0.7;
+            transform: rotate(180deg);
+        }
+
+        .paper-title {
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 0.3rem;
+            letter-spacing: 2px;
+            font-family: 'Noto Naskh Arabic', serif;
+        }
+
+        .paper-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 2rem;
+            letter-spacing: 3px;
+            word-spacing: 5px;
+        }
+
+        .divider {
+            text-align: center;
+            color: var(--gold);
+            font-size: 0.8rem;
+            letter-spacing: 6px;
+            margin: 1.5rem 0;
+            opacity: 0.5;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .feature-list li {
+            padding: 0.9rem 1.5rem;
+            margin-bottom: 0.5rem;
+            border-right: 2px solid var(--border);
+            border-bottom: 1px dotted rgba(201, 160, 80, 0.15);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.15rem;
+        }
+
+        .feature-list li:hover {
+            border-right-color: var(--gold);
+            background: rgba(201, 160, 80, 0.03);
+            padding-right: 2rem;
+        }
+
+        .feature-list li .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--gold);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .feature-list li strong {
+            color: var(--gold-light);
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .close-paper-btn {
+            display: block;
+            margin: 2rem auto 0;
+            background: transparent;
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 0.8rem 2.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            font-family: 'Noto Naskh Arabic', serif;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 2;
+        }
+
+        .close-paper-btn:hover {
+            background: var(--gold);
+            color: #1a1a1a;
+            box-shadow: 0 0 30px rgba(201, 160, 80, 0.3);
+        }
+
+        /* ============ المحتوى الرئيسي - صفحة ورقية ============ */
+        .main-page {
+            display: none;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .main-page.show {
+            display: block;
+            animation: pageIn 0.8s ease forwards;
+        }
+
+        @keyframes pageIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .paper-header {
+            text-align: center;
+            padding: 2rem 0;
+            border-bottom: 2px solid var(--border);
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        .paper-header::after {
+            content: '✦';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #111111;
+            padding: 0 1rem;
+            color: var(--gold);
+            font-size: 1.2rem;
+        }
+
+        .store-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold);
+            letter-spacing: 3px;
+        }
+
+        .store-tagline {
+            color: var(--text-dark);
+            letter-spacing: 4px;
+            word-spacing: 6px;
+            font-size: 0.95rem;
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .info-card {
+            background: var(--paper-light);
+            border: 1px solid var(--border);
+            padding: 1.8rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .info-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .info-card:hover {
+            background: #1f1f1f;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .info-card .icon-circle {
+            width: 50px;
+            height: 50px;
+            border: 1px solid var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: var(--gold);
+            font-size: 1.3rem;
+        }
+
+        .info-card h3 {
+            color: var(--gold-light);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .info-card p {
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .arrow-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 2.5rem 0;
+            padding: 1.5rem;
+            border: 1px dashed var(--border);
+            text-align: center;
+        }
+
+        .arrow-item {
+            padding: 0.4rem 1rem;
+            background: var(--paper-light);
+            border: 1px solid var(--border);
+            color: var(--gold);
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        .arrow-icon {
+            color: var(--gold);
+            font-size: 1.2rem;
+            animation: arrowPulse 1.8s infinite;
+        }
+
+        @keyframes arrowPulse {
+            0%,
+            100% {
+                opacity: 0.4;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .summary-box {
+            text-align: center;
+            padding: 2rem;
+            border: 2px solid var(--border);
+            margin-top: 2rem;
+            background: var(--paper-light);
+        }
+
+        .summary-box .big {
+            font-size: 1.8rem;
+            color: var(--gold);
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-box .small {
+            color: var(--text-dark);
+            letter-spacing: 1px;
+        }
+
+        .page-footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-dark);
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+        }
+
+        @media (max-width: 600px) {
+            .paper-window {
+                padding: 2rem 1.2rem;
+            }
+            .paper-title {
+                font-size: 2rem;
+            }
+            .feature-list li {
+                font-size: 0.95rem;
+                padding: 0.7rem 1rem;
+            }
+            .cards-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== نافذة الترحيب الورقية ==================== -->
+    <div class="welcome-overlay" id="welcomeOverlay">
+        <div class="paper-window">
+            <div class="ornament-top">❦ ❦ ❦</div>
+            <h1 class="paper-title">متجر الأساطير</h1>
+            <p class="paper-subtitle">دليل المتجر الشامل</p>
+            <div class="divider">───── ✦ ─────</div>
+            <ul class="feature-list">
+                <li>
+                    <span class="dot"></span>
+                    <span><strong>مانجا</strong> — أحدث الإصدارات المترجمة</span>
+                </li>
+                <li>
+                    <span class="dot"></span>
+                    <span><strong>مانهو</strong> — روائع كورية وصينية ملونة</span>
+                </li>
+                <li>
+                    <span class="dot"></span>
+                    <span><strong>ألعاب رقمية</strong> — مكتبة ضخمة ومتنوعة</span>
+                </li>
+                <li>
+                    <span class="dot"></span>
+                    <span><strong>أفلام رسوم متحركة</strong> — أنمي وعالمي</span>
+                </li>
+            </ul>
+            <p style="text-align:center; color:var(--text-dark); margin-top:1.5rem; font-style:italic;">
+                كل شيء باختصار <span style="color:var(--gold);">مُسلٍّ</span>
+            </p>
+            <div class="ornament-bottom">❦ ❦ ❦</div>
+            <button class="close-paper-btn" id="closeWelcomeBtn">
+                ✦ استكشف الدليل ✦
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== الصفحة الرئيسية ==================== -->
+    <div class="main-page" id="mainPage">
+        <div class="paper-header">
+            <div class="store-name">دليل المتجر</div>
+            <div class="store-tagline">• مانجا • مانهو • ألعاب • أفلام •</div>
+        </div>
+
+        <div class="cards-container">
+            <div class="info-card">
+                <div class="icon-circle"><i class="fa-solid fa-book"></i></div>
+                <h3>مانجا</h3>
+                <p>أحدث إصدارات المانجا اليابانية المترجمة بدقة عالية</p>
+            </div>
+            <div class="info-card">
+                <div class="icon-circle"><i class="fa-solid fa-scroll"></i></div>
+                <h3>مانهو</h3>
+                <p>روائع المانهوا الكورية والصينية بألوان زاهية</p>
+            </div>
+            <div class="info-card">
+                <div class="icon-circle"><i class="fa-solid fa-gamepad"></i></div>
+                <h3>ألعاب رقمية</h3>
+                <p>مكتبة ألعاب متنوعة بين إندي وAAA</p>
+            </div>
+            <div class="info-card">
+                <div class="icon-circle"><i class="fa-solid fa-film"></i></div>
+                <h3>أفلام رسوم</h3>
+                <p>أنمي وأفلام رسوم متحركة عالمية حصرية</p>
+            </div>
+        </div>
+
+        <!-- أسهم الربط -->
+        <div class="arrow-section">
+            <span class="arrow-item">مانجا</span>
+            <span class="arrow-icon">←</span>
+            <span class="arrow-item">مانهو</span>
+            <span class="arrow-icon">←</span>
+            <span class="arrow-item">ألعاب</span>
+            <span class="arrow-icon">←</span>
+            <span class="arrow-item">أفلام</span>
+        </div>
+
+        <!-- ملخص -->
+        <div class="summary-box">
+            <div class="big">✦ كل شيء باختصار مُسلٍّ ✦</div>
+            <div class="small">مانجا • مانهو • ألعاب رقمية • أفلام رسوم متحركة — تجدها في دليل واحد متكامل</div>
+        </div>
+
+        <div class="page-footer">
+            © 2025 متجر الأساطير — الدليل المتكامل لعالم الترفيه
+        </div>
+    </div>
+
+    <script>
+        const welcomeOverlay = document.getElementById('welcomeOverlay');
+        const closeBtn = document.getElementById('closeWelcomeBtn');
+        const mainPage = document.getElementById('mainPage');
+
+        function openMainPage() {
+            welcomeOverlay.classList.add('hide');
+            mainPage.classList.add('show');
+            setTimeout(() => {
+                if (welcomeOverlay) welcomeOverlay.style.display = 'none';
+            }, 600);
+        }
+
+        if (closeBtn) {
+            closeBtn.addEventListener('click', openMainPage);
+        }
+
+        if (welcomeOverlay) {
+            welcomeOverlay.addEventListener('click', function(e) {
+                if (e.target === welcomeOverlay) {
+                    openMainPage();
+                }
+            });
+        }
+
+        // احتياط بعد 20 ثانية
+        setTimeout(() => {
+            if (welcomeOverlay && welcomeOverlay.style.display !== 'none') {
+                openMainPage();
+            }
+        }, 20000);
+    </script>
+</body>
+</html>
