@@ -11,9 +11,8 @@
 <!-- ====== Firebase SDK ====== -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
-import { getDatabase, ref, set, push, update, get, child, onValue } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
+import { getDatabase, ref, set, push, update, get, child, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-database.js";
 
-// ====== تهيئة Firebase ======
 const firebaseConfig = {
     apiKey: "AIzaSyBlcKC2ncX9mTOPlhDOnfmyzdJ5mLinWYY",
     authDomain: "al-fajr-digital-library.firebaseapp.com",
@@ -27,24 +26,57 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-// ====== جعل الدوال متاحة عالمياً ======
+// ====== جلب الطلبات من Firebase ======
+window.fetchAllOrdersFromFirebase = async function(userEmail) {
+    try {
+        const userRef = ref(database, `orders_by_user/${userEmail}`);
+        const snapshot = await get(userRef);
+        if (snapshot.exists()) {
+            const orders = Object.values(snapshot.val());
+            console.log(`✅ تم جلب ${orders.length} طلب من Firebase للمستخدم ${userEmail}`);
+            return orders;
+        }
+        return [];
+    } catch (error) {
+        console.error('❌ خطأ في جلب الطلبات من Firebase:', error);
+        return [];
+    }
+};
+
+// ====== جلب الطلبات الملغية من Firebase ======
+window.fetchCancelledOrdersFromFirebase = async function(userEmail) {
+    try {
+        const cancelledRef = ref(database, 'cancelled_orders');
+        const snapshot = await get(cancelledRef);
+        if (snapshot.exists()) {
+            const allCancelled = Object.values(snapshot.val());
+            if (userEmail) {
+                const userCancelled = allCancelled.filter(o => o.userEmail === userEmail);
+                return userCancelled;
+            }
+            return allCancelled;
+        }
+        return [];
+    } catch (error) {
+        console.error('❌ خطأ في جلب الطلبات الملغية:', error);
+        return [];
+    }
+};
 
 // ====== إرسال الطلب الملغي إلى Firebase ======
 window.sendCancelledOrderToFirebase = async function(order) {
     try {
-        console.log('📤 جاري إرسال الطلب الملغي إلى Firebase:', order.orderId);
-        
-        // 1. حفظ في cancelled_orders
-        const cancelRef = ref(database, 'cancelled_orders/' + order.orderId);
+        const orderId = order.orderId || order.id || `ORD-${Date.now()}`;
+        const cancelRef = ref(database, 'cancelled_orders/' + orderId);
         await set(cancelRef, {
-            orderId: order.orderId,
+            orderId: orderId,
             userEmail: order.userEmail || 'غير معروف',
             userName: order.userName || 'غير معروف',
-            orderDate: order.orderDate || new Date().toISOString(),
+            orderDate: order.orderDate || order.date || new Date().toISOString(),
             cancelledAt: new Date().toISOString(),
-            totalAmount: order.totalAmount || 0,
+            totalAmount: order.totalAmount || order.total || 0,
             status: 'ملغي',
-            products: order.products || [],
+            products: order.products || order.items || [],
             paymentMethod: order.paymentMethod || 'غير محدد',
             shippingAddress: order.shippingAddress || 'غير محدد',
             trackingNumber: order.trackingNumber || 'غير متوفر',
@@ -53,76 +85,145 @@ window.sendCancelledOrderToFirebase = async function(order) {
         });
         console.log('✅ تم حفظ في cancelled_orders');
 
-        // 2. إضافة سجل الإلغاء
         const logRef = push(ref(database, 'cancellation_log'));
         await set(logRef, {
-            orderId: order.orderId,
+            orderId: orderId,
             userEmail: order.userEmail || 'غير معروف',
             cancelledAt: new Date().toISOString(),
             cancelledBy: 'user',
             timestamp: Date.now()
         });
-        console.log('✅ تم إضافة سجل الإلغاء');
 
-        // 3. تحديث حالة الطلب في orders
         try {
-            const ordersRef = ref(database, 'orders/' + order.orderId);
+            const ordersRef = ref(database, 'orders/' + orderId);
             await update(ordersRef, {
                 status: 'ملغي',
                 cancelledAt: new Date().toISOString(),
                 cancelledBy: 'user',
                 updatedAt: new Date().toISOString()
             });
-            console.log('✅ تم تحديث الطلب في orders');
-        } catch (e) {
-            console.warn('⚠️ لم يتم تحديث الطلب في orders:', e);
-        }
+        } catch (e) {}
 
-        // 4. تحديث في orders_by_user
         try {
             if (order.userEmail) {
-                const userRef = ref(database, `orders_by_user/${order.userEmail}/${order.orderId}`);
+                const userRef = ref(database, `orders_by_user/${order.userEmail}/${orderId}`);
                 await update(userRef, {
                     status: 'ملغي',
                     cancelledAt: new Date().toISOString(),
                     cancelledBy: 'user'
                 });
-                console.log(`✅ تم تحديث في orders_by_user/${order.userEmail}`);
             }
-        } catch (e) {
-            console.warn('⚠️ لم يتم تحديث الطلب في orders_by_user:', e);
-        }
+        } catch (e) {}
 
-        console.log('✅ تم إرسال الطلب الملغي إلى Firebase بنجاح');
         return true;
     } catch (error) {
-        console.error('❌ خطأ في إرسال الطلب الملغي إلى Firebase:', error);
+        console.error('❌ خطأ في إرسال الطلب الملغي:', error);
         return false;
     }
 };
 
-// ====== جلب الطلبات من Firebase ======
-window.fetchOrdersFromFirebase = async function(userEmail) {
+// ====== إرسال اعتراض على منتج ======
+window.sendProductComplaint = async function(orderId, productIndex, reason, userEmail) {
     try {
-        const userRef = ref(database, `orders_by_user/${userEmail}`);
-        const snapshot = await get(userRef);
+        const complaintRef = push(ref(database, 'product_complaints'));
+        await set(complaintRef, {
+            orderId: orderId,
+            productIndex: productIndex,
+            reason: reason,
+            userEmail: userEmail,
+            status: 'pending',
+            createdAt: new Date().toISOString(),
+            resolvedAt: null,
+            resolvedBy: null,
+            resolution: null
+        });
+        console.log('✅ تم إرسال الاعتراض بنجاح');
+        
+        // إرسال إشعار للمشرف
+        const adminNotifRef = push(ref(database, 'admin_notifications'));
+        await set(adminNotifRef, {
+            type: 'complaint',
+            title: '⚠️ اعتراض جديد على منتج',
+            message: `العميل ${userEmail} اعترض على منتج في الطلب ${orderId}`,
+            orderId: orderId,
+            userEmail: userEmail,
+            timestamp: new Date().toISOString(),
+            read: false
+        });
+        
+        return true;
+    } catch (error) {
+        console.error('❌ خطأ في إرسال الاعتراض:', error);
+        return false;
+    }
+};
+
+// ====== طلب إرجاع المنتجات ======
+window.sendReturnRequest = async function(orderId, items, reason, userEmail) {
+    try {
+        const returnRef = push(ref(database, 'return_requests'));
+        await set(returnRef, {
+            orderId: orderId,
+            items: items,
+            reason: reason,
+            userEmail: userEmail,
+            status: 'pending',
+            createdAt: new Date().toISOString(),
+            resolvedAt: null,
+            resolvedBy: null,
+            resolution: null,
+            refundType: null, // 'wallet' or 'messenger'
+            refundAmount: null
+        });
+        console.log('✅ تم إرسال طلب الإرجاع بنجاح');
+        
+        // إرسال إشعار للمشرف
+        const adminNotifRef = push(ref(database, 'admin_notifications'));
+        await set(adminNotifRef, {
+            type: 'return',
+            title: '📦 طلب إرجاع جديد',
+            message: `العميل ${userEmail} طلب إرجاع ${items.length} منتج من الطلب ${orderId}`,
+            orderId: orderId,
+            userEmail: userEmail,
+            timestamp: new Date().toISOString(),
+            read: false
+        });
+        
+        return true;
+    } catch (error) {
+        console.error('❌ خطأ في إرسال طلب الإرجاع:', error);
+        return false;
+    }
+};
+
+// ====== الاستماع لتحديثات وقت التبقي ======
+window.listenToDeliveryTime = function(userEmail, callback) {
+    const userRef = ref(database, `orders_by_user/${userEmail}`);
+    onValue(userRef, (snapshot) => {
         if (snapshot.exists()) {
             const orders = Object.values(snapshot.val());
-            console.log(`✅ تم جلب ${orders.length} طلب من Firebase`);
-            return orders;
+            const ordersWithTime = orders.filter(o => o.daysRemaining !== undefined && o.daysRemaining !== null);
+            if (callback) callback(ordersWithTime);
         }
-        return [];
-    } catch (error) {
-        console.error('❌ خطأ في جلب الطلبات:', error);
-        return [];
-    }
+    });
+};
+
+// ====== الاستماع لتحديثات الإرجاع ======
+window.listenToReturnUpdates = function(userEmail, callback) {
+    const returnsRef = ref(database, 'return_requests');
+    onValue(returnsRef, (snapshot) => {
+        if (snapshot.exists()) {
+            const allReturns = Object.values(snapshot.val());
+            const userReturns = allReturns.filter(r => r.userEmail === userEmail);
+            if (callback) callback(userReturns);
+        }
+    });
 };
 
 console.log('✅ Firebase متصل وجاهز للاستخدام');
 </script>
 
 <style>
-/* ====== جميع الأنماط كما هي (نفس الكود السابق) ====== */
 :root {
   --primary-red: #c0392b;
   --dark-bg: #0d0d0d;
@@ -138,6 +239,7 @@ console.log('✅ Firebase متصل وجاهز للاستخدام');
   --warning-orange: #e67e22;
   --error-red: #e74c3c;
   --info-blue: #2980b9;
+  --accent-purple: #9b59b6;
 }
 
 * {
@@ -204,12 +306,6 @@ header h1 {
   transform: translateY(-2px);
 }
 
-.header-actions a.active {
-  color: var(--primary-red);
-  background: rgba(192, 57, 43, 0.15);
-  border-color: var(--primary-red);
-}
-
 .page-title {
   padding: 10px 0 20px;
 }
@@ -238,6 +334,25 @@ header h1 {
   color: var(--text-secondary);
   font-size: 0.95em;
   margin: 5px 0 0 0;
+}
+
+.page-title .sync-btn {
+  background: rgba(74, 140, 247, 0.15);
+  color: var(--info-blue);
+  border: 1px solid var(--info-blue);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Almarai', sans-serif;
+  font-size: 0.85em;
+  transition: all 0.3s ease;
+  margin-right: 15px;
+}
+
+.page-title .sync-btn:hover {
+  background: var(--info-blue);
+  color: white;
+  transform: translateY(-2px);
 }
 
 .container {
@@ -351,6 +466,7 @@ header h1 {
   align-items: center;
   gap: 6px;
   font-size: 0.85em;
+  font-family: 'Almarai', sans-serif;
 }
 
 .btn-primary {
@@ -391,10 +507,15 @@ header h1 {
   color: white;
 }
 
-.btn-danger:hover {
+.btn-danger:hover:not(:disabled) {
   background: #c0392b;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3);
+}
+
+.btn-danger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .btn-cancelled {
@@ -402,6 +523,64 @@ header h1 {
   color: var(--text-secondary);
   cursor: not-allowed;
   opacity: 0.6;
+}
+
+.btn-complaint {
+  background: rgba(241, 196, 15, 0.15);
+  color: var(--warning-orange);
+  border: 1px solid var(--warning-orange);
+}
+
+.btn-complaint:hover:not(:disabled) {
+  background: var(--warning-orange);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.btn-complaint:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-return {
+  background: rgba(155, 89, 182, 0.15);
+  color: var(--accent-purple);
+  border: 1px solid var(--accent-purple);
+}
+
+.btn-return:hover:not(:disabled) {
+  background: var(--accent-purple);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.btn-return:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-sync {
+  background: rgba(41, 128, 185, 0.15);
+  color: var(--info-blue);
+  border: 1px solid var(--info-blue);
+}
+
+.btn-sync:hover {
+  background: var(--info-blue);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.btn-return-status {
+  background: rgba(46, 204, 113, 0.15);
+  color: var(--success-green);
+  border: 1px solid var(--success-green);
+}
+
+.btn-return-status:hover {
+  background: var(--success-green);
+  color: white;
+  transform: translateY(-2px);
 }
 
 .orders-list {
@@ -444,12 +623,54 @@ header h1 {
   color: var(--error-red);
 }
 
-.order-card.cancelled .order-product-price {
-  color: var(--text-muted);
+.delivery-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 700;
 }
 
-.order-card.cancelled .order-product {
-  opacity: 0.7;
+.delivery-sent {
+  background: rgba(46, 204, 113, 0.15);
+  color: var(--success-green);
+  border: 1px solid var(--success-green);
+}
+
+.delivery-pending {
+  background: rgba(241, 196, 15, 0.15);
+  color: var(--warning-orange);
+  border: 1px solid var(--warning-orange);
+}
+
+.return-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75em;
+  font-weight: 700;
+}
+
+.return-pending {
+  background: rgba(241, 196, 15, 0.15);
+  color: var(--warning-orange);
+  border: 1px solid var(--warning-orange);
+}
+
+.return-approved {
+  background: rgba(46, 204, 113, 0.15);
+  color: var(--success-green);
+  border: 1px solid var(--success-green);
+}
+
+.return-rejected {
+  background: rgba(231, 76, 60, 0.15);
+  color: var(--error-red);
+  border: 1px solid var(--error-red);
 }
 
 .cancelled-badge {
@@ -585,13 +806,13 @@ header h1 {
 }
 
 .order-body.expanded {
-  max-height: 2000px;
+  max-height: 3000px;
   padding: 15px 20px;
 }
 
 .order-products {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 12px;
   margin-bottom: 15px;
 }
@@ -604,6 +825,7 @@ header h1 {
   align-items: center;
   gap: 12px;
   border: 1px solid var(--dark-border);
+  position: relative;
 }
 
 .order-product img {
@@ -638,6 +860,45 @@ header h1 {
   font-weight: 700;
   color: var(--primary-red);
   font-size: 0.9em;
+}
+
+.product-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.product-action-btn {
+  padding: 3px 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.7em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Almarai', sans-serif;
+}
+
+.product-action-btn.complaint {
+  background: rgba(241, 196, 15, 0.15);
+  color: var(--warning-orange);
+}
+
+.product-action-btn.complaint:hover:not(:disabled) {
+  background: var(--warning-orange);
+  color: white;
+}
+
+.product-action-btn.complaint:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.product-action-btn.complaint-sent {
+  background: rgba(46, 204, 113, 0.15);
+  color: var(--success-green);
+  cursor: default;
 }
 
 .order-details-grid {
@@ -739,7 +1000,7 @@ header h1 {
   background: var(--dark-card);
   border-radius: 16px;
   padding: 25px;
-  max-width: 600px;
+  max-width: 650px;
   width: 100%;
   box-shadow: var(--shadow-dark);
   border: 1px solid var(--dark-border);
@@ -788,6 +1049,31 @@ header h1 {
 .close-modal:hover {
   color: var(--primary-red);
   transform: rotate(90deg);
+}
+
+.modal-body textarea {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--dark-border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: 'Almarai', sans-serif;
+  font-size: 0.95em;
+  resize: vertical;
+  min-height: 100px;
+}
+
+.modal-body textarea:focus {
+  outline: none;
+  border-color: var(--primary-red);
+}
+
+.modal-footer {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  justify-content: flex-end;
 }
 
 .confirm-overlay {
@@ -861,10 +1147,15 @@ header h1 {
   color: white;
 }
 
-.confirm-box .buttons .btn-danger-confirm:hover {
+.confirm-box .buttons .btn-danger-confirm:hover:not(:disabled) {
   background: #c0392b;
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(231, 76, 60, 0.3);
+}
+
+.confirm-box .buttons .btn-danger-confirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .message-box {
@@ -919,6 +1210,69 @@ header h1 {
   border-left: 4px solid var(--info-blue);
 }
 
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.detail-item {
+  background: rgba(255,255,255,0.04);
+  padding: 12px 16px;
+  border-radius: 8px;
+}
+
+.detail-item .label {
+  color: var(--text-secondary);
+  font-size: 12px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.detail-item .value {
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.detail-product {
+  background: rgba(255,255,255,0.03);
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.detail-product .p-name {
+  color: var(--text-primary);
+}
+
+.detail-product .p-price {
+  color: var(--primary-red);
+  font-weight: 600;
+}
+
+.return-info-box {
+  background: rgba(155, 89, 182, 0.1);
+  border: 1px solid var(--accent-purple);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-top: 10px;
+}
+
+.return-info-box .return-label {
+  color: var(--text-secondary);
+  font-size: 0.8em;
+}
+
+.return-info-box .return-value {
+  color: var(--accent-purple);
+  font-weight: 600;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -959,6 +1313,10 @@ header h1 {
   .confirm-box { padding: 25px 20px; }
   .confirm-box .buttons { flex-direction: column; }
   .confirm-box .buttons .btn { width: 100%; }
+  .page-title .sync-btn { margin-right: 0; margin-top: 10px; }
+  .product-actions { flex-direction: column; }
+  .product-action-btn { width: 100%; justify-content: center; }
+  .detail-grid { grid-template-columns: 1fr; }
 }
 
 @media(max-width: 480px) {
@@ -982,8 +1340,14 @@ header h1 {
 </header>
 
 <div class="page-title">
-  <h2>سجل طلباتك</h2>
-  <p>جميع طلباتك السابقة في مكان واحد</p>
+  <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 10px;">
+    <h2>سجل طلباتك</h2>
+    <button class="btn btn-sync" onclick="syncFromFirebase()">
+      <i class="fas fa-sync"></i> مزامنة من Firebase
+    </button>
+    <span id="syncStatus" style="color: var(--text-muted); font-size: 0.85em;"></span>
+  </div>
+  <p>جميع طلباتك السابقة - يمكنك الاعتراض على منتج خلال 7 أيام من الاستلام أو طلب إرجاع المنتجات</p>
 </div>
 
 <div class="container">
@@ -1039,6 +1403,7 @@ header h1 {
   <div class="orders-list" id="ordersList"></div>
 </div>
 
+<!-- ===== نافذة تفاصيل الطلب ===== -->
 <div id="orderDetailModal" class="modal">
   <div class="modal-content">
     <div class="modal-header">
@@ -1049,6 +1414,68 @@ header h1 {
   </div>
 </div>
 
+<!-- ===== نافذة الاعتراض ===== -->
+<div id="complaintModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title"><i class="fas fa-exclamation-triangle" style="color: var(--warning-orange);"></i> الاعتراض على منتج</h3>
+      <button class="close-modal" onclick="closeComplaintModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="color: var(--text-secondary); margin-bottom: 15px;">
+        <i class="fas fa-info-circle"></i> يمكنك الاعتراض على المنتج خلال 7 أيام من تاريخ الاستلام
+      </p>
+      <div style="background: rgba(255,255,255,0.04); padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+        <div><strong>الطلب:</strong> <span id="complaintOrderId"></span></div>
+        <div><strong>المنتج:</strong> <span id="complaintProductName"></span></div>
+        <div><strong>تاريخ الاستلام:</strong> <span id="complaintDeliveryDate"></span></div>
+        <div id="complaintDaysLeft" style="color: var(--warning-orange); margin-top: 6px;"></div>
+      </div>
+      <label style="color: var(--text-secondary); display: block; margin-bottom: 6px;">سبب الاعتراض:</label>
+      <textarea id="complaintReason" placeholder="اكتب سبب الاعتراض على المنتج..."></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeComplaintModal()">إلغاء</button>
+      <button class="btn btn-primary" onclick="submitComplaint()" style="background: var(--warning-orange);">
+        <i class="fas fa-paper-plane"></i> إرسال الاعتراض
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== نافذة طلب الإرجاع ===== -->
+<div id="returnModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title"><i class="fas fa-undo-alt" style="color: var(--accent-purple);"></i> طلب إرجاع المنتجات</h3>
+      <button class="close-modal" onclick="closeReturnModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <p style="color: var(--text-secondary); margin-bottom: 15px;">
+        <i class="fas fa-info-circle"></i> يمكنك طلب إرجاع المنتجات خلال 7 أيام من تاريخ الاستلام
+      </p>
+      <div style="background: rgba(255,255,255,0.04); padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+        <div><strong>الطلب:</strong> <span id="returnOrderId"></span></div>
+        <div><strong>تاريخ الاستلام:</strong> <span id="returnDeliveryDate"></span></div>
+        <div id="returnDaysLeft" style="color: var(--warning-orange); margin-top: 6px;"></div>
+      </div>
+      <div style="margin-bottom: 15px;">
+        <label style="color: var(--text-secondary); display: block; margin-bottom: 6px;">اختر المنتجات للإرجاع:</label>
+        <div id="returnProductsList"></div>
+      </div>
+      <label style="color: var(--text-secondary); display: block; margin-bottom: 6px;">سبب الإرجاع:</label>
+      <textarea id="returnReason" placeholder="اكتب سبب طلب الإرجاع..."></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeReturnModal()">إلغاء</button>
+      <button class="btn btn-primary" onclick="submitReturn()" style="background: var(--accent-purple);">
+        <i class="fas fa-paper-plane"></i> إرسال طلب الإرجاع
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== نافذة تأكيد الإلغاء ===== -->
 <div class="confirm-overlay" id="confirmOverlay">
   <div class="confirm-box">
     <div class="icon"><i class="fas fa-exclamation-triangle"></i></div>
@@ -1069,12 +1496,18 @@ header h1 {
 
 <script>
 // ============================================================
-// سجل الطلبات - إصلاح مشكلة الإلغاء من المستخدم
+// سجل الطلبات - العميل (نسخة مصلحة)
 // ============================================================
 
-// ====== التهيئة ======
 const user = JSON.parse(localStorage.getItem('user') || 'null');
 let loggedInUser = null;
+let allOrders = [];
+let filteredOrders = [];
+let pendingCancelOrderId = null;
+let isProcessing = false;
+let complaintContext = null;
+let returnContext = null;
+let returnStatuses = [];
 
 if (user && user.email) {
     loggedInUser = user.email;
@@ -1092,72 +1525,76 @@ if (user && user.email) {
     throw new Error('No user logged in');
 }
 
-// ====== المتغيرات ======
-let allOrders = [];
-let filteredOrders = [];
-let pendingCancelOrderId = null;
-let isProcessing = false;
-
-// ====== تحميل الطلبات ======
-function loadOrders() {
+// ====== استيراد جميع الطلبات من localStorage ======
+function loadAllOrdersFromStorage() {
     allOrders = [];
+    const userEmail = loggedInUser;
     
-    const orderKey = `orders_${loggedInUser}`;
-    
+    const userOrderKey = `orders_${userEmail}`;
     try {
-        const userOrders = JSON.parse(localStorage.getItem(orderKey)) || [];
+        const userOrders = JSON.parse(localStorage.getItem(userOrderKey) || '[]');
         if (userOrders.length > 0) {
-            allOrders = [...userOrders];
+            userOrders.forEach(order => {
+                order.userEmail = userEmail;
+                if (!order.orderId && order.id) order.orderId = order.id;
+                if (!order.orderDate && order.date) order.orderDate = order.date;
+                if (!order.orderDate && order.createdAt) order.orderDate = order.createdAt;
+                allOrders.push(order);
+            });
         }
     } catch (e) {}
     
     try {
-        const generalOrders = JSON.parse(localStorage.getItem('orders')) || [];
+        const generalOrders = JSON.parse(localStorage.getItem('orders') || '[]');
         if (generalOrders.length > 0) {
-            const existingIds = new Set(allOrders.map(o => o.orderId));
-            const newOrders = generalOrders.filter(o => !existingIds.has(o.orderId));
+            const existingIds = new Set(allOrders.map(o => o.orderId || o.id));
+            const newOrders = generalOrders.filter(o => !existingIds.has(o.orderId || o.id) && o.userEmail === userEmail);
             if (newOrders.length > 0) {
-                allOrders = [...allOrders, ...newOrders];
+                newOrders.forEach(order => {
+                    order.userEmail = userEmail;
+                    if (!order.orderId && order.id) order.orderId = order.id;
+                    allOrders.push(order);
+                });
             }
         }
     } catch (e) {}
     
     try {
-        const ordersData = JSON.parse(localStorage.getItem('orders_data')) || [];
-        if (ordersData.length > 0) {
-            const existingIds = new Set(allOrders.map(o => o.orderId));
-            const newOrders = ordersData.filter(o => !existingIds.has(o.orderId));
-            if (newOrders.length > 0) {
-                allOrders = [...allOrders, ...newOrders];
-            }
+        const cancelledKey = `cancelled_orders_${userEmail}`;
+        const cancelledOrders = JSON.parse(localStorage.getItem(cancelledKey) || '[]');
+        if (cancelledOrders.length > 0) {
+            cancelledOrders.forEach(cancelledOrder => {
+                const id = cancelledOrder.orderId || cancelledOrder.id;
+                const existingIndex = allOrders.findIndex(o => (o.orderId || o.id) === id);
+                if (existingIndex !== -1) {
+                    allOrders[existingIndex].status = 'ملغي';
+                    allOrders[existingIndex].cancelledAt = cancelledOrder.cancelledAt;
+                } else {
+                    cancelledOrder.status = 'ملغي';
+                    cancelledOrder.userEmail = userEmail;
+                    allOrders.push(cancelledOrder);
+                }
+            });
         }
     } catch (e) {}
     
-    // البحث عن أي مفاتيح orders_ أخرى
-    try {
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key && key.startsWith('orders_') && key !== orderKey) {
-                try {
-                    const orders = JSON.parse(localStorage.getItem(key));
-                    if (Array.isArray(orders) && orders.length > 0) {
-                        const existingIds = new Set(allOrders.map(o => o.orderId));
-                        const newOrders = orders.filter(o => !existingIds.has(o.orderId));
-                        if (newOrders.length > 0) {
-                            allOrders = [...allOrders, ...newOrders];
-                        }
-                    }
-                } catch (e) {}
-            }
-        }
-    } catch (e) {}
-    
-    // ترتيب حسب التاريخ
     allOrders.sort((a, b) => {
         const dateA = new Date(a.orderDate || a.date || a.createdAt || 0);
         const dateB = new Date(b.orderDate || b.date || b.createdAt || 0);
         return dateB - dateA;
     });
+    
+    const uniqueOrders = [];
+    const seenIds = new Set();
+    allOrders.forEach(order => {
+        const id = order.orderId || order.id || `ORD-${Date.now()}-${Math.random()}`;
+        if (!seenIds.has(id)) {
+            seenIds.add(id);
+            order.orderId = id;
+            uniqueOrders.push(order);
+        }
+    });
+    allOrders = uniqueOrders;
     
     return allOrders;
 }
@@ -1169,46 +1606,128 @@ function saveOrders() {
     localStorage.setItem('orders', JSON.stringify(allOrders));
 }
 
-// ====== تحديث الطلب في جميع النسخ ======
-function updateOrderInAllStorages(order) {
+// ====== المزامنة من Firebase (مصلحة) ======
+async function syncFromFirebase() {
+    const syncBtn = document.querySelector('.btn-sync');
+    const statusEl = document.getElementById('syncStatus');
+    
+    syncBtn.disabled = true;
+    syncBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري المزامنة...';
+    statusEl.textContent = 'جاري المزامنة...';
+    
     try {
-        let updated = false;
+        // محاولة جلب الطلبات من Firebase
+        let firebaseOrders = [];
+        try {
+            if (typeof window.fetchAllOrdersFromFirebase === 'function') {
+                firebaseOrders = await window.fetchAllOrdersFromFirebase(loggedInUser);
+                console.log('✅ تم جلب الطلبات من Firebase:', firebaseOrders.length);
+            }
+        } catch (e) {
+            console.warn('⚠️ فشل جلب الطلبات من Firebase:', e);
+        }
         
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key && key.startsWith('orders_')) {
-                try {
-                    let orders = JSON.parse(localStorage.getItem(key));
-                    if (Array.isArray(orders)) {
-                        const idx = orders.findIndex(o => o.orderId === order.orderId);
-                        if (idx !== -1) {
-                            orders[idx] = { ...order };
-                            localStorage.setItem(key, JSON.stringify(orders));
-                            updated = true;
-                            console.log(`✅ تم تحديث الطلب ${order.orderId} في ${key}`);
-                        }
+        let cancelledOrders = [];
+        try {
+            if (typeof window.fetchCancelledOrdersFromFirebase === 'function') {
+                cancelledOrders = await window.fetchCancelledOrdersFromFirebase(loggedInUser);
+                console.log('✅ تم جلب الطلبات الملغية من Firebase:', cancelledOrders.length);
+            }
+        } catch (e) {
+            console.warn('⚠️ فشل جلب الطلبات الملغية من Firebase:', e);
+        }
+        
+        let updatedCount = 0;
+        
+        // دمج الطلبات من Firebase
+        if (firebaseOrders && firebaseOrders.length > 0) {
+            firebaseOrders.forEach(fbOrder => {
+                const existingIndex = allOrders.findIndex(o => (o.orderId || o.id) === fbOrder.orderId);
+                if (existingIndex !== -1) {
+                    // تحديث الطلب الموجود
+                    if (fbOrder.daysRemaining !== undefined) {
+                        allOrders[existingIndex].daysRemaining = fbOrder.daysRemaining;
                     }
-                } catch (e) {}
-            }
+                    if (fbOrder.estimatedDelivery) {
+                        allOrders[existingIndex].estimatedDelivery = fbOrder.estimatedDelivery;
+                    }
+                    allOrders[existingIndex] = { ...allOrders[existingIndex], ...fbOrder };
+                } else {
+                    allOrders.push(fbOrder);
+                    updatedCount++;
+                }
+            });
         }
         
-        if (!updated) {
-            const orderKey = `orders_${loggedInUser}`;
-            let userOrders = JSON.parse(localStorage.getItem(orderKey)) || [];
-            const existingIdx = userOrders.findIndex(o => o.orderId === order.orderId);
-            if (existingIdx !== -1) {
-                userOrders[existingIdx] = { ...order };
-            } else {
-                userOrders.push({ ...order });
-            }
-            localStorage.setItem(orderKey, JSON.stringify(userOrders));
-            updated = true;
+        // دمج الطلبات الملغية
+        if (cancelledOrders && cancelledOrders.length > 0) {
+            cancelledOrders.forEach(cancelledOrder => {
+                const id = cancelledOrder.orderId || cancelledOrder.id;
+                const existingIndex = allOrders.findIndex(o => (o.orderId || o.id) === id);
+                if (existingIndex !== -1) {
+                    if (allOrders[existingIndex].status !== 'ملغي') {
+                        allOrders[existingIndex].status = 'ملغي';
+                        allOrders[existingIndex].cancelledAt = cancelledOrder.cancelledAt;
+                        updatedCount++;
+                    }
+                } else {
+                    cancelledOrder.status = 'ملغي';
+                    allOrders.push(cancelledOrder);
+                    updatedCount++;
+                }
+            });
         }
         
-        return updated;
-    } catch (e) {
-        console.error('❌ خطأ في تحديث الطلب:', e);
-        return false;
+        // حفظ التغييرات
+        if (updatedCount > 0 || firebaseOrders.length > 0 || cancelledOrders.length > 0) {
+            saveOrders();
+            applyFilters();
+            statusEl.textContent = `✅ تم تحديث ${updatedCount} طلب من Firebase`;
+            showMessage(`تم تحديث ${updatedCount} طلب من Firebase`, 'success');
+        } else {
+            statusEl.textContent = '✅ جميع الطلبات محدثة';
+            showMessage('جميع الطلبات محدثة', 'info');
+        }
+        
+        // الاستماع لتحديثات وقت التبقي
+        try {
+            if (typeof window.listenToDeliveryTime === 'function') {
+                window.listenToDeliveryTime(loggedInUser, (orders) => {
+                    orders.forEach(order => {
+                        const existingIndex = allOrders.findIndex(o => (o.orderId || o.id) === order.orderId);
+                        if (existingIndex !== -1) {
+                            allOrders[existingIndex].daysRemaining = order.daysRemaining;
+                            allOrders[existingIndex].estimatedDelivery = order.estimatedDelivery;
+                        }
+                    });
+                    saveOrders();
+                    applyFilters();
+                });
+            }
+        } catch (e) {
+            console.warn('⚠️ فشل الاستماع لتحديثات وقت التبقي:', e);
+        }
+        
+        // الاستماع لتحديثات الإرجاع
+        try {
+            if (typeof window.listenToReturnUpdates === 'function') {
+                window.listenToReturnUpdates(loggedInUser, (returns) => {
+                    returnStatuses = returns || [];
+                    applyFilters();
+                });
+            }
+        } catch (e) {
+            console.warn('⚠️ فشل الاستماع لتحديثات الإرجاع:', e);
+        }
+        
+    } catch (error) {
+        console.error('❌ خطأ في المزامنة:', error);
+        statusEl.textContent = '❌ فشل المزامنة';
+        showMessage('فشل المزامنة مع Firebase: ' + error.message, 'error');
+    } finally {
+        syncBtn.disabled = false;
+        syncBtn.innerHTML = '<i class="fas fa-sync"></i> مزامنة من Firebase';
+        setTimeout(() => { statusEl.textContent = ''; }, 5000);
     }
 }
 
@@ -1216,29 +1735,16 @@ function updateOrderInAllStorages(order) {
 function calculateStats(orders) {
     const total = orders.length;
     const delivered = orders.filter(o => 
-        o.status === 'تم التوصيل' || 
-        o.status === 'مكتمل' || 
-        o.status === 'completed' ||
-        o.status === 'delivered'
+        o.status === 'تم التوصيل' || o.status === 'مكتمل' || o.status === 'completed' || o.status === 'delivered'
     ).length;
-    
     const pending = orders.filter(o => 
-        o.status === 'قيد التجهيز' || 
-        o.status === 'processing' ||
-        o.status === 'pending' ||
-        o.status === 'تم الشحن' ||
-        o.status === 'shipped'
+        o.status === 'قيد التجهيز' || o.status === 'processing' || o.status === 'pending' ||
+        o.status === 'تم الشحن' || o.status === 'shipped'
     ).length;
-    
-    const cancelled = orders.filter(o => 
-        o.status === 'ملغي' || 
-        o.status === 'cancelled'
-    ).length;
-    
+    const cancelled = orders.filter(o => o.status === 'ملغي' || o.status === 'cancelled').length;
     return { total, delivered, pending, cancelled };
 }
 
-// ====== تحديث الإحصائيات ======
 function updateStats(orders) {
     const stats = calculateStats(orders);
     document.getElementById('totalOrders').textContent = stats.total;
@@ -1247,66 +1753,56 @@ function updateStats(orders) {
     document.getElementById('cancelledOrders').textContent = stats.cancelled;
 }
 
-// ====== الحصول على حالة الطلب ======
 function getStatusArabic(status) {
     if (!status) return 'قيد التجهيز';
     const statusMap = {
-        'pending': 'قيد التجهيز',
-        'processing': 'قيد التجهيز',
-        'shipped': 'تم الشحن',
-        'delivered': 'تم التوصيل',
-        'completed': 'مكتمل',
-        'cancelled': 'ملغي',
-        'قيد التجهيز': 'قيد التجهيز',
-        'تم الشحن': 'تم الشحن',
-        'تم التوصيل': 'تم التوصيل',
-        'مكتمل': 'مكتمل',
-        'ملغي': 'ملغي'
+        'pending': 'قيد التجهيز', 'processing': 'قيد التجهيز',
+        'shipped': 'تم الشحن', 'delivered': 'تم التوصيل',
+        'completed': 'مكتمل', 'cancelled': 'ملغي',
+        'قيد التجهيز': 'قيد التجهيز', 'تم الشحن': 'تم الشحن',
+        'تم التوصيل': 'تم التوصيل', 'مكتمل': 'مكتمل', 'ملغي': 'ملغي'
     };
     return statusMap[status] || status;
 }
 
-// ====== الحصول على كلاس الحالة ======
 function getStatusClass(status) {
     const statusMap = {
-        'قيد التجهيز': 'status-processing',
-        'processing': 'status-processing',
-        'pending': 'status-processing',
-        'تم الشحن': 'status-shipped',
-        'shipped': 'status-shipped',
-        'تم التوصيل': 'status-delivered',
-        'delivered': 'status-delivered',
-        'مكتمل': 'status-delivered',
-        'completed': 'status-delivered',
-        'ملغي': 'status-cancelled',
-        'cancelled': 'status-cancelled'
+        'قيد التجهيز': 'status-processing', 'processing': 'status-processing', 'pending': 'status-processing',
+        'تم الشحن': 'status-shipped', 'shipped': 'status-shipped',
+        'تم التوصيل': 'status-delivered', 'delivered': 'status-delivered',
+        'مكتمل': 'status-delivered', 'completed': 'status-delivered',
+        'ملغي': 'status-cancelled', 'cancelled': 'status-cancelled'
     };
     return statusMap[status] || 'status-processing';
 }
 
-// ====== تنسيق التاريخ ======
 function formatDate(dateString) {
     if (!dateString) return 'تاريخ غير محدد';
     try {
         const date = new Date(dateString);
         if (isNaN(date.getTime())) return dateString;
         return date.toLocaleDateString('ar-SA', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
+            year: 'numeric', month: 'long', day: 'numeric',
+            hour: '2-digit', minute: '2-digit'
         });
-    } catch (e) {
-        return dateString;
-    }
+    } catch (e) { return dateString; }
 }
 
-// ====== تنسيق المبلغ ======
 function formatPrice(price) {
     const num = parseFloat(price);
     if (isNaN(num)) return '0.00 ر.س';
     return num.toFixed(2) + ' ر.س';
+}
+
+function getDaysRemaining(deliveryDate) {
+    if (!deliveryDate) return null;
+    try {
+        const delivered = new Date(deliveryDate);
+        const now = new Date();
+        const diffTime = now - delivered;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        return diffDays;
+    } catch (e) { return null; }
 }
 
 // ====== عرض الطلبات ======
@@ -1334,17 +1830,43 @@ function renderOrders(orders) {
         const date = order.orderDate || order.date || order.createdAt || 'تاريخ غير محدد';
         const total = order.totalAmount || order.amount || order.total || 0;
         const products = order.products || order.items || [];
-        
-        const paymentMethod = order.paymentMethod || 'غير محدد';
-        const trackingNumber = order.trackingNumber || 'غير متوفر';
-        const shippingAddress = order.shippingAddress || 'غير محدد';
-        
         const isCancelled = order.status === 'ملغي' || order.status === 'cancelled';
-        const canCancel = !isCancelled && 
-                         order.status !== 'تم التوصيل' && 
-                         order.status !== 'delivered' &&
-                         order.status !== 'مكتمل' &&
-                         order.status !== 'completed';
+        const isDelivered = order.status === 'تم التوصيل' || order.status === 'delivered' || order.status === 'مكتمل';
+        
+        // التحقق من حالة الإرجاع
+        const returnStatus = returnStatuses.find(r => r.orderId === orderId);
+        let returnBadge = '';
+        if (returnStatus) {
+            if (returnStatus.status === 'pending') {
+                returnBadge = `<span class="return-status-badge return-pending"><i class="fas fa-clock"></i> طلب إرجاع قيد المراجعة</span>`;
+            } else if (returnStatus.status === 'approved') {
+                const refundType = returnStatus.refundType === 'wallet' ? 'تم إرجاع الرصيد إلى المحفظة' : 'سيتم استلام الرصيد عن طريق المرسول';
+                returnBadge = `<span class="return-status-badge return-approved"><i class="fas fa-check-circle"></i> تم قبول الإرجاع - ${refundType}</span>`;
+            } else if (returnStatus.status === 'rejected') {
+                returnBadge = `<span class="return-status-badge return-rejected"><i class="fas fa-times-circle"></i> تم رفض الإرجاع</span>`;
+            }
+        }
+        
+        let deliveryTimeHtml = '';
+        if (order.daysRemaining !== undefined && order.daysRemaining !== null && !isCancelled) {
+            deliveryTimeHtml = `
+                <span class="delivery-badge delivery-sent">
+                    <i class="fas fa-clock"></i> متبقي ${order.daysRemaining} يوم للاستلام
+                </span>
+            `;
+        } else if (isDelivered && !isCancelled) {
+            const daysSince = getDaysRemaining(order.orderDate);
+            if (daysSince !== null && daysSince <= 7) {
+                deliveryTimeHtml = `
+                    <span class="delivery-badge delivery-pending">
+                        <i class="fas fa-hourglass-half"></i> يمكن الاعتراض خلال ${7 - daysSince} يوم
+                    </span>
+                `;
+            }
+        }
+        
+        const canCancel = !isCancelled && order.status !== 'تم التوصيل' && 
+                         order.status !== 'delivered' && order.status !== 'مكتمل' && order.status !== 'completed';
         
         return `
             <div class="order-card ${isCancelled ? 'cancelled' : ''}" id="order-${orderId}" onclick="toggleOrder('${orderId}')">
@@ -1353,19 +1875,15 @@ function renderOrders(orders) {
                         <div class="order-id">
                             <i class="fas fa-hashtag"></i> ${orderId}
                             ${isCancelled ? '<span class="cancelled-badge"><i class="fas fa-ban"></i> ملغي</span>' : ''}
+                            ${returnBadge}
+                            ${deliveryTimeHtml}
                         </div>
-                        <div class="order-date">
-                            <i class="fas fa-calendar-alt"></i> ${formatDate(date)}
-                        </div>
-                        <div class="order-status ${statusClass}">
-                            ${statusAr}
-                        </div>
+                        <div class="order-date"><i class="fas fa-calendar-alt"></i> ${formatDate(date)}</div>
+                        <div class="order-status ${statusClass}">${statusAr}</div>
                         ${products.length > 0 ? `<span style="color: var(--text-secondary); font-size: 0.8em;">${products.length} منتج</span>` : ''}
                     </div>
                     <div style="display: flex; align-items: center; gap: 12px;">
-                        <div class="order-amount">
-                            <i class="fas fa-tag"></i> ${formatPrice(total)}
-                        </div>
+                        <div class="order-amount"><i class="fas fa-tag"></i> ${formatPrice(total)}</div>
                         <button class="order-toggle" onclick="event.stopPropagation(); toggleOrder('${orderId}')" title="عرض التفاصيل">
                             <i class="fas fa-chevron-down"></i>
                         </button>
@@ -1375,21 +1893,44 @@ function renderOrders(orders) {
                 <div class="order-body" id="body-${orderId}">
                     ${products.length > 0 ? `
                         <div class="order-products">
-                            ${products.map(product => `
-                                <div class="order-product">
-                                    <img src="${product.image || 'https://via.placeholder.com/50x70/222/888?text=No+Image'}" 
-                                         alt="${product.title || 'منتج'}"
-                                         onerror="this.src='https://via.placeholder.com/50x70/222/888?text=No+Image'">
-                                    <div class="order-product-details">
-                                        <div class="order-product-title">${product.title || 'منتج بدون عنوان'}</div>
-                                        <div class="order-product-meta">
-                                            <span>الكمية: ${product.quantity || 1}</span>
-                                            ${product.format ? `<span>${product.format}</span>` : ''}
+                            ${products.map((product, pIdx) => {
+                                const canComplain = isDelivered && !isCancelled;
+                                const daysSince = getDaysRemaining(order.orderDate);
+                                const isWithin7Days = daysSince !== null && daysSince <= 7;
+                                const canComplainNow = canComplain && isWithin7Days;
+                                
+                                return `
+                                    <div class="order-product">
+                                        <img src="${product.image || 'https://via.placeholder.com/50x70/222/888?text=No+Image'}" 
+                                             alt="${product.title || 'منتج'}"
+                                             onerror="this.src='https://via.placeholder.com/50x70/222/888?text=No+Image'">
+                                        <div class="order-product-details">
+                                            <div class="order-product-title">${product.title || 'منتج بدون عنوان'}</div>
+                                            <div class="order-product-meta">
+                                                <span>الكمية: ${product.quantity || 1}</span>
+                                                ${product.format ? `<span>${product.format}</span>` : ''}
+                                            </div>
+                                            <div class="order-product-price">${formatPrice(product.total || product.price * (product.quantity || 1))}</div>
+                                            <div class="product-actions">
+                                                ${canComplainNow ? `
+                                                    <button class="product-action-btn complaint" onclick="event.stopPropagation(); openComplaintModal('${orderId}', ${pIdx}, '${product.title || 'منتج'}', '${order.orderDate}')">
+                                                        <i class="fas fa-exclamation-triangle"></i> اعتراض
+                                                    </button>
+                                                ` : (canComplain ? `
+                                                    <button class="product-action-btn complaint" disabled>
+                                                        <i class="fas fa-clock"></i> انتهت فترة الاعتراض
+                                                    </button>
+                                                ` : '')}
+                                                ${isCancelled ? `
+                                                    <button class="product-action-btn complaint" disabled>
+                                                        <i class="fas fa-ban"></i> ملغي
+                                                    </button>
+                                                ` : ''}
+                                            </div>
                                         </div>
-                                        <div class="order-product-price">${formatPrice(product.total || product.price * (product.quantity || 1))}</div>
                                     </div>
-                                </div>
-                            `).join('')}
+                                `;
+                            }).join('')}
                         </div>
                     ` : `
                         <div style="color: var(--text-secondary); padding: 12px; text-align: center;">
@@ -1400,26 +1941,50 @@ function renderOrders(orders) {
                     <div class="order-details-grid">
                         <div class="order-detail-item">
                             <label><i class="fas fa-credit-card"></i> طريقة الدفع</label>
-                            <div class="value">${paymentMethod}</div>
+                            <div class="value">${order.paymentMethod || 'غير محدد'}</div>
                         </div>
                         <div class="order-detail-item">
                             <label><i class="fas fa-truck"></i> رقم التتبع</label>
-                            <div class="value">${trackingNumber}</div>
+                            <div class="value">${order.trackingNumber || 'غير متوفر'}</div>
                         </div>
                         <div class="order-detail-item">
                             <label><i class="fas fa-map-marker-alt"></i> عنوان التوصيل</label>
-                            <div class="value">${shippingAddress}</div>
+                            <div class="value">${order.shippingAddress || 'غير محدد'}</div>
                         </div>
                         <div class="order-detail-item">
                             <label><i class="fas fa-money-bill-wave"></i> المبلغ الإجمالي</label>
                             <div class="value">${formatPrice(total)}</div>
                         </div>
+                        ${order.daysRemaining ? `
+                            <div class="order-detail-item" style="grid-column: 1 / -1; border: 1px solid var(--success-green);">
+                                <label><i class="fas fa-clock" style="color: var(--success-green);"></i> الوقت المتبقي للاستلام</label>
+                                <div class="value" style="color: var(--success-green);">${order.daysRemaining} يوم</div>
+                            </div>
+                        ` : ''}
+                        ${returnStatus && returnStatus.status === 'approved' ? `
+                            <div class="order-detail-item" style="grid-column: 1 / -1; border: 1px solid var(--success-green);">
+                                <label><i class="fas fa-undo-alt" style="color: var(--success-green);"></i> حالة الإرجاع</label>
+                                <div class="value" style="color: var(--success-green);">
+                                    ${returnStatus.refundType === 'wallet' ? '✅ تم إرجاع الرصيد إلى المحفظة' : '✅ تم قبول الإرجاع - سيتم استلام الرصيد عن طريق المرسول'}
+                                    ${returnStatus.resolution ? `<br><span style="font-size: 0.8em; color: var(--text-secondary);">القرار: ${returnStatus.resolution}</span>` : ''}
+                                </div>
+                            </div>
+                        ` : ''}
                     </div>
                     
                     <div class="order-actions">
                         <button class="btn btn-info" onclick="event.stopPropagation(); viewOrderDetails('${orderId}')" style="flex:1;">
                             <i class="fas fa-eye"></i> عرض التفاصيل
                         </button>
+                        ${isDelivered && !isCancelled && (!returnStatus || returnStatus.status === 'rejected') ? `
+                            <button class="btn btn-return" onclick="event.stopPropagation(); openReturnModal('${orderId}', '${order.orderDate}')" style="flex:1;">
+                                <i class="fas fa-undo-alt"></i> طلب إرجاع
+                            </button>
+                        ` : (isDelivered && !isCancelled && returnStatus && returnStatus.status === 'pending' ? `
+                            <button class="btn btn-secondary" disabled style="flex:1; opacity:0.6;">
+                                <i class="fas fa-clock"></i> قيد المراجعة
+                            </button>
+                        ` : '')}
                         ${canCancel ? `
                             <button class="btn btn-danger" onclick="event.stopPropagation(); showConfirmCancel('${orderId}')" style="flex:1;">
                                 <i class="fas fa-times"></i> إلغاء الطلب
@@ -1439,7 +2004,6 @@ function renderOrders(orders) {
     updateStats(orders);
 }
 
-// ====== توسيع/طي الطلب ======
 function toggleOrder(orderId) {
     const body = document.getElementById(`body-${orderId}`);
     if (!body) return;
@@ -1457,26 +2021,87 @@ function viewOrderDetails(orderId) {
     }
     
     const container = document.getElementById('orderDetailContent');
+    const isCancelled = order.status === 'ملغي' || order.status === 'cancelled';
     const statusAr = getStatusArabic(order.status);
     const statusClass = getStatusClass(order.status);
     const products = order.products || order.items || [];
-    const isCancelled = order.status === 'ملغي' || order.status === 'cancelled';
+    
+    // حالة الإرجاع
+    const returnStatus = returnStatuses.find(r => r.orderId === orderId);
+    let returnHtml = '';
+    if (returnStatus) {
+        if (returnStatus.status === 'pending') {
+            returnHtml = `
+                <div class="detail-item" style="grid-column: 1 / -1; border: 1px solid var(--warning-orange);">
+                    <span class="label"><i class="fas fa-clock" style="color: var(--warning-orange);"></i> حالة طلب الإرجاع</span>
+                    <span class="value" style="color: var(--warning-orange);">⏳ قيد المراجعة</span>
+                </div>
+            `;
+        } else if (returnStatus.status === 'approved') {
+            const refundText = returnStatus.refundType === 'wallet' ? 'تم إرجاع الرصيد إلى المحفظة' : 'سيتم استلام الرصيد عن طريق المرسول';
+            returnHtml = `
+                <div class="detail-item" style="grid-column: 1 / -1; border: 1px solid var(--success-green);">
+                    <span class="label"><i class="fas fa-check-circle" style="color: var(--success-green);"></i> حالة طلب الإرجاع</span>
+                    <span class="value" style="color: var(--success-green);">✅ تم القبول - ${refundText}</span>
+                    ${returnStatus.resolution ? `<br><span style="font-size: 0.8em; color: var(--text-secondary);">القرار: ${returnStatus.resolution}</span>` : ''}
+                </div>
+            `;
+        } else if (returnStatus.status === 'rejected') {
+            returnHtml = `
+                <div class="detail-item" style="grid-column: 1 / -1; border: 1px solid var(--error-red);">
+                    <span class="label"><i class="fas fa-times-circle" style="color: var(--error-red);"></i> حالة طلب الإرجاع</span>
+                    <span class="value" style="color: var(--error-red);">❌ تم الرفض</span>
+                    ${returnStatus.resolution ? `<br><span style="font-size: 0.8em; color: var(--text-secondary);">السبب: ${returnStatus.resolution}</span>` : ''}
+                </div>
+            `;
+        }
+    }
     
     container.innerHTML = `
-        <div style="margin-bottom: 18px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding: 12px; background: rgba(0,0,0,0.3); border-radius: 8px; ${isCancelled ? 'border: 2px solid var(--error-red);' : ''}">
-                <div>
-                    <strong style="color: ${isCancelled ? 'var(--error-red)' : 'var(--primary-red)'};">رقم الطلب:</strong>
-                    <span style="color: var(--text-primary);">${order.orderId || order.id}</span>
-                    ${isCancelled ? '<span class="cancelled-badge" style="font-size:0.8em;"><i class="fas fa-ban"></i> ملغي</span>' : ''}
+        <div style="margin-bottom: 16px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <div class="detail-item" style="${isCancelled ? 'border: 1px solid var(--error-red);' : ''}">
+                    <span class="label">رقم الطلب</span>
+                    <span class="value" style="color: ${isCancelled ? 'var(--error-red)' : 'var(--primary-red)'};">${order.orderId}</span>
+                    ${isCancelled ? ' <span style="color: var(--error-red); font-size: 14px;"><i class="fas fa-ban"></i> ملغي</span>' : ''}
                 </div>
-                <div>
-                    <strong style="color: var(--text-secondary);">التاريخ:</strong>
-                    <span style="color: var(--text-primary);">${formatDate(order.orderDate || order.date || order.createdAt)}</span>
+                <div class="detail-item">
+                    <span class="label">التاريخ</span>
+                    <span class="value">${formatDate(order.orderDate || order.date || order.createdAt)}</span>
                 </div>
-                <div class="order-status ${statusClass}">
-                    ${statusAr}
+                <div class="detail-item">
+                    <span class="label">المبلغ الإجمالي</span>
+                    <span class="value" style="color: ${isCancelled ? 'var(--text-muted)' : 'var(--primary-red)'};">${formatPrice(order.totalAmount || order.amount || order.total || 0)}</span>
                 </div>
+                <div class="detail-item">
+                    <span class="label">الحالة</span>
+                    <span class="value"><span class="order-status ${statusClass}">${statusAr}</span></span>
+                </div>
+                <div class="detail-item">
+                    <span class="label"><i class="fas fa-truck"></i> رقم التتبع</span>
+                    <span class="value">${order.trackingNumber || 'غير متوفر'}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="label"><i class="fas fa-credit-card"></i> طريقة الدفع</span>
+                    <span class="value">${order.paymentMethod || 'غير محدد'}</span>
+                </div>
+                <div class="detail-item" style="grid-column: 1 / -1;">
+                    <span class="label"><i class="fas fa-map-marker-alt"></i> عنوان التوصيل</span>
+                    <span class="value">${order.shippingAddress || 'غير محدد'}</span>
+                </div>
+                ${order.daysRemaining ? `
+                    <div class="detail-item" style="grid-column: 1 / -1; border: 1px solid var(--success-green);">
+                        <span class="label"><i class="fas fa-clock" style="color: var(--success-green);"></i> الوقت المتبقي للاستلام</span>
+                        <span class="value" style="color: var(--success-green);">${order.daysRemaining} يوم</span>
+                    </div>
+                ` : ''}
+                ${returnHtml}
+                ${isCancelled && order.cancelledAt ? `
+                    <div class="detail-item" style="grid-column: 1 / -1; border: 1px solid var(--error-red);">
+                        <span class="label">تاريخ الإلغاء</span>
+                        <span class="value" style="color: var(--error-red);">${formatDate(order.cancelledAt)}</span>
+                    </div>
+                ` : ''}
             </div>
         </div>
         
@@ -1485,19 +2110,14 @@ function viewOrderDetails(orderId) {
         </h4>
         
         ${products.length > 0 ? `
-            <div style="display: grid; gap: 8px; margin-bottom: 18px;">
+            <div style="margin-bottom: 16px;">
                 ${products.map(product => `
-                    <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.04); padding: 10px; border-radius: 8px; ${isCancelled ? 'opacity: 0.7;' : ''}">
-                        <img src="${product.image || 'https://via.placeholder.com/45x65/222/888?text=No+Image'}" 
-                             style="width: 45px; height: 65px; object-fit: cover; border-radius: 6px;"
-                             onerror="this.src='https://via.placeholder.com/45x65/222/888?text=No+Image'">
-                        <div style="flex: 1;">
-                            <div style="color: var(--text-primary); font-weight: 600;">${product.title || 'منتج'}</div>
-                            <div style="color: var(--text-secondary); font-size: 0.85em;">
-                                الكمية: ${product.quantity || 1} × ${formatPrice(product.price || 0)}
-                            </div>
+                    <div class="detail-product" style="${isCancelled ? 'opacity: 0.7;' : ''}">
+                        <span class="p-name">${product.title || 'منتج'}</span>
+                        <div>
+                            <span style="color: var(--text-secondary); font-size: 13px;">الكمية: ${product.quantity || 1}</span>
+                            <span class="p-price" style="margin-right: 12px;">${formatPrice(product.total || product.price * (product.quantity || 1))}</span>
                         </div>
-                        <div style="color: ${isCancelled ? 'var(--text-muted)' : 'var(--primary-red)'}; font-weight: 700;">${formatPrice(product.total || product.price * (product.quantity || 1))}</div>
                     </div>
                 `).join('')}
             </div>
@@ -1506,27 +2126,6 @@ function viewOrderDetails(orderId) {
                 لا توجد منتجات
             </div>
         `}
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; background: rgba(0,0,0,0.3); border-radius: 8px;">
-            <div>
-                <div style="color: var(--text-secondary); font-size: 0.85em;">طريقة الدفع</div>
-                <div style="color: var(--text-primary);">${order.paymentMethod || 'غير محدد'}</div>
-            </div>
-            <div>
-                <div style="color: var(--text-secondary); font-size: 0.85em;">رقم التتبع</div>
-                <div style="color: var(--text-primary);">${order.trackingNumber || 'غير متوفر'}</div>
-            </div>
-            <div style="grid-column: 1 / -1;">
-                <div style="color: var(--text-secondary); font-size: 0.85em;">عنوان التوصيل</div>
-                <div style="color: var(--text-primary);">${order.shippingAddress || 'غير محدد'}</div>
-            </div>
-            <div style="grid-column: 1 / -1; padding-top: 8px; border-top: 1px solid var(--dark-border);">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="color: var(--text-secondary); font-size: 0.85em;">المبلغ الإجمالي</span>
-                    <span style="color: ${isCancelled ? 'var(--text-muted)' : 'var(--primary-red)'}; font-size: 1.2em; font-weight: 700;">${formatPrice(order.totalAmount || order.amount || order.total || 0)}</span>
-                </div>
-            </div>
-        </div>
     `;
     
     document.getElementById('orderDetailModal').style.display = 'flex';
@@ -1536,7 +2135,151 @@ function closeOrderDetail() {
     document.getElementById('orderDetailModal').style.display = 'none';
 }
 
-// ====== نافذة تأكيد الإلغاء ======
+// ====== نافذة الاعتراض ======
+function openComplaintModal(orderId, productIndex, productName, deliveryDate) {
+    const order = allOrders.find(o => (o.orderId || o.id) === orderId);
+    if (!order) return;
+    
+    const daysSince = getDaysRemaining(order.orderDate);
+    if (daysSince === null || daysSince > 7) {
+        showMessage('انتهت فترة الاعتراض (7 أيام من تاريخ الاستلام)', 'error');
+        return;
+    }
+    
+    complaintContext = { orderId, productIndex, productName };
+    document.getElementById('complaintOrderId').textContent = orderId;
+    document.getElementById('complaintProductName').textContent = productName;
+    document.getElementById('complaintDeliveryDate').textContent = formatDate(order.orderDate);
+    document.getElementById('complaintDaysLeft').textContent = `⏳ متبقي ${7 - daysSince} يوم للاعتراض`;
+    document.getElementById('complaintReason').value = '';
+    document.getElementById('complaintModal').style.display = 'flex';
+}
+
+function closeComplaintModal() {
+    document.getElementById('complaintModal').style.display = 'none';
+    complaintContext = null;
+}
+
+async function submitComplaint() {
+    if (!complaintContext) return;
+    
+    const reason = document.getElementById('complaintReason').value.trim();
+    if (!reason) {
+        showMessage('الرجاء كتابة سبب الاعتراض', 'warning');
+        return;
+    }
+    
+    const { orderId, productIndex, productName } = complaintContext;
+    
+    if (typeof window.sendProductComplaint === 'function') {
+        try {
+            const result = await window.sendProductComplaint(orderId, productIndex, reason, loggedInUser);
+            if (result) {
+                showMessage(`✅ تم إرسال الاعتراض على "${productName}" بنجاح`, 'success');
+                closeComplaintModal();
+            } else {
+                showMessage('❌ فشل إرسال الاعتراض، حاول مرة أخرى', 'error');
+            }
+        } catch (error) {
+            console.error('❌ فشل إرسال الاعتراض:', error);
+            showMessage('❌ فشل إرسال الاعتراض، حاول مرة أخرى', 'error');
+        }
+    } else {
+        showMessage('❌ وظيفة الإرسال غير متاحة', 'error');
+    }
+}
+
+// ====== نافذة الإرجاع ======
+function openReturnModal(orderId, deliveryDate) {
+    const order = allOrders.find(o => (o.orderId || o.id) === orderId);
+    if (!order) return;
+    
+    const daysSince = getDaysRemaining(order.orderDate);
+    if (daysSince === null || daysSince > 7) {
+        showMessage('انتهت فترة الإرجاع (7 أيام من تاريخ الاستلام)', 'error');
+        return;
+    }
+    
+    returnContext = { orderId };
+    document.getElementById('returnOrderId').textContent = orderId;
+    document.getElementById('returnDeliveryDate').textContent = formatDate(order.orderDate);
+    document.getElementById('returnDaysLeft').textContent = `⏳ متبقي ${7 - daysSince} يوم للإرجاع`;
+    document.getElementById('returnReason').value = '';
+    
+    const products = order.products || order.items || [];
+    const listHtml = products.map((p, idx) => `
+        <div style="display: flex; align-items: center; gap: 12px; padding: 8px; background: rgba(255,255,255,0.03); border-radius: 6px; margin-bottom: 6px;">
+            <input type="checkbox" id="return_item_${idx}" value="${idx}" style="accent-color: var(--accent-purple); width: 18px; height: 18px;">
+            <label for="return_item_${idx}" style="flex: 1; cursor: pointer;">${p.title || 'منتج'} - ${formatPrice(p.price || 0)}</label>
+            <span style="color: var(--text-muted); font-size: 0.8em;">الكمية: ${p.quantity || 1}</span>
+        </div>
+    `).join('');
+    
+    document.getElementById('returnProductsList').innerHTML = listHtml || '<div style="color: var(--text-muted);">لا توجد منتجات</div>';
+    document.getElementById('returnModal').style.display = 'flex';
+}
+
+function closeReturnModal() {
+    document.getElementById('returnModal').style.display = 'none';
+    returnContext = null;
+}
+
+async function submitReturn() {
+    if (!returnContext) return;
+    
+    const reason = document.getElementById('returnReason').value.trim();
+    if (!reason) {
+        showMessage('الرجاء كتابة سبب الإرجاع', 'warning');
+        return;
+    }
+    
+    const selectedItems = [];
+    const checkboxes = document.querySelectorAll('#returnProductsList input[type="checkbox"]:checked');
+    if (checkboxes.length === 0) {
+        showMessage('الرجاء اختيار منتج واحد على الأقل للإرجاع', 'warning');
+        return;
+    }
+    
+    const order = allOrders.find(o => (o.orderId || o.id) === returnContext.orderId);
+    if (!order) return;
+    
+    const products = order.products || order.items || [];
+    checkboxes.forEach(cb => {
+        const idx = parseInt(cb.value);
+        if (products[idx]) {
+            selectedItems.push(products[idx]);
+        }
+    });
+    
+    if (typeof window.sendReturnRequest === 'function') {
+        try {
+            const result = await window.sendReturnRequest(returnContext.orderId, selectedItems, reason, loggedInUser);
+            if (result) {
+                showMessage(`✅ تم إرسال طلب الإرجاع لـ ${selectedItems.length} منتج بنجاح`, 'success');
+                closeReturnModal();
+                
+                // تحديث حالة الإرجاع محلياً
+                returnStatuses.push({
+                    orderId: returnContext.orderId,
+                    status: 'pending',
+                    items: selectedItems,
+                    reason: reason,
+                    createdAt: new Date().toISOString()
+                });
+                applyFilters();
+            } else {
+                showMessage('❌ فشل إرسال طلب الإرجاع، حاول مرة أخرى', 'error');
+            }
+        } catch (error) {
+            console.error('❌ فشل إرسال طلب الإرجاع:', error);
+            showMessage('❌ فشل إرسال طلب الإرجاع، حاول مرة أخرى', 'error');
+        }
+    } else {
+        showMessage('❌ وظيفة الإرسال غير متاحة', 'error');
+    }
+}
+
+// ====== تأكيد الإلغاء ======
 function showConfirmCancel(orderId) {
     if (isProcessing) {
         showMessage('جاري معالجة طلب سابق، انتظر قليلاً', 'warning');
@@ -1571,7 +2314,6 @@ function closeConfirm() {
     pendingCancelOrderId = null;
 }
 
-// ====== تنفيذ الإلغاء ======
 async function executeCancel() {
     if (isProcessing) {
         showMessage('جاري معالجة طلب سابق، انتظر قليلاً', 'warning');
@@ -1594,7 +2336,6 @@ async function executeCancel() {
     
     const order = allOrders[orderIndex];
     
-    // التحقق من الحالة مرة أخرى
     if (order.status === 'ملغي' || order.status === 'cancelled') {
         showMessage('⚠️ الطلب ملغي بالفعل', 'warning');
         closeConfirm();
@@ -1614,7 +2355,6 @@ async function executeCancel() {
     confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإلغاء...';
     
     try {
-        // تغيير الحالة
         order.status = 'ملغي';
         order.cancelledAt = new Date().toISOString();
         order.userEmail = loggedInUser;
@@ -1622,49 +2362,38 @@ async function executeCancel() {
         order.cancelledBy = 'user';
         
         allOrders[orderIndex] = order;
-        
-        // حفظ في localStorage
         saveOrders();
-        updateOrderInAllStorages(order);
         
-        // ====== إرسال إلى Firebase ======
         let firebaseSuccess = false;
         try {
             if (typeof window.sendCancelledOrderToFirebase === 'function') {
                 firebaseSuccess = await window.sendCancelledOrderToFirebase(order);
-                if (firebaseSuccess) {
-                    console.log('✅ تم إرسال الطلب الملغي إلى Firebase بنجاح');
-                } else {
-                    console.warn('⚠️ فشل إرسال الطلب الملغي إلى Firebase');
-                }
-            } else {
-                console.warn('⚠️ دالة Firebase غير متاحة');
-                // حفظ محلياً كنسخة احتياطية
-                const cancelledKey = `cancelled_orders_${loggedInUser}`;
-                let cancelledOrders = JSON.parse(localStorage.getItem(cancelledKey)) || [];
-                cancelledOrders.push({ ...order, synced: false });
-                localStorage.setItem(cancelledKey, JSON.stringify(cancelledOrders));
-                firebaseSuccess = true;
+                console.log('✅ إرسال الإلغاء إلى Firebase:', firebaseSuccess);
             }
         } catch (error) {
             console.error('❌ خطأ في إرسال الطلب إلى Firebase:', error);
-            // حفظ محلياً في حالة الفشل
-            const cancelledKey = `cancelled_orders_${loggedInUser}`;
-            let cancelledOrders = JSON.parse(localStorage.getItem(cancelledKey)) || [];
-            cancelledOrders.push({ ...order, synced: false });
-            localStorage.setItem(cancelledKey, JSON.stringify(cancelledOrders));
-            firebaseSuccess = true;
+        }
+        
+        const cancelledKey = `cancelled_orders_${loggedInUser}`;
+        let cancelledOrders = JSON.parse(localStorage.getItem(cancelledKey)) || [];
+        cancelledOrders.push({ ...order, synced: firebaseSuccess });
+        localStorage.setItem(cancelledKey, JSON.stringify(cancelledOrders));
+        
+        let generalCancelled = JSON.parse(localStorage.getItem('cancelled_orders') || '[]');
+        const existingIdx = generalCancelled.findIndex(o => (o.orderId || o.id) === orderId);
+        if (existingIdx === -1) {
+            generalCancelled.push({ ...order, synced: firebaseSuccess });
+            localStorage.setItem('cancelled_orders', JSON.stringify(generalCancelled));
         }
         
         closeConfirm();
         
         if (firebaseSuccess) {
-            showMessage('✅ تم إلغاء الطلب بنجاح وتحديثه في لوحة التحكم', 'success');
+            showMessage('✅ تم إلغاء الطلب بنجاح وتحديثه في Firebase', 'success');
         } else {
-            showMessage('⚠️ تم إلغاء الطلب ولكن حدث خطأ في المزامنة', 'warning');
+            showMessage('⚠️ تم إلغاء الطلب ولكن حدث خطأ في المزامنة مع Firebase', 'warning');
         }
         
-        // تحديث العرض
         applyFilters();
         
     } catch (error) {
@@ -1714,7 +2443,6 @@ function applyFilters() {
     renderOrders(filteredOrders);
 }
 
-// ====== مسح الفلاتر ======
 function clearFilters() {
     document.getElementById('statusFilter').value = 'all';
     document.getElementById('dateFrom').value = '';
@@ -1722,7 +2450,6 @@ function clearFilters() {
     applyFilters();
 }
 
-// ====== تصدير الطلبات ======
 function exportOrders() {
     if (allOrders.length === 0) {
         showMessage('لا توجد طلبات للتصدير', 'warning');
@@ -1740,7 +2467,6 @@ function exportOrders() {
     showMessage('تم تصدير الطلبات بنجاح', 'success');
 }
 
-// ====== عرض رسالة ======
 function showMessage(msg, type = 'success', duration = 4000) {
     const messageBox = document.getElementById('messageBox');
     if (!messageBox) return;
@@ -1755,28 +2481,50 @@ function showMessage(msg, type = 'success', duration = 4000) {
 // ====== التهيئة ======
 function initializePage() {
     if (!loggedInUser) return;
-    loadOrders();
+    
+    console.log('👤 المستخدم:', loggedInUser);
+    console.log('🔍 جاري استيراد الطلبات...');
+    
+    loadAllOrdersFromStorage();
     applyFilters();
     
+    // محاولة المزامنة بعد 2 ثانية
+    setTimeout(() => {
+        syncFromFirebase();
+    }, 2000);
+    
+    // الاستماع لتغييرات التخزين
     window.addEventListener('storage', (e) => {
-        if (e.key && e.key.startsWith('orders_')) {
-            loadOrders();
+        if (e.key && (e.key.startsWith('orders_') || e.key === 'orders' || e.key.startsWith('cancelled_'))) {
+            console.log('🔄 تم اكتشاف تغيير في التخزين:', e.key);
+            loadAllOrdersFromStorage();
             applyFilters();
         }
     });
     
+    // اختصار ESC
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeOrderDetail();
+            closeComplaintModal();
+            closeReturnModal();
             closeConfirm();
         }
     });
+    
+    console.log('✅ تم تهيئة صفحة سجل الطلبات بنجاح');
 }
 
 // ====== جعل الدوال متاحة عالمياً ======
 window.toggleOrder = toggleOrder;
 window.viewOrderDetails = viewOrderDetails;
 window.closeOrderDetail = closeOrderDetail;
+window.openComplaintModal = openComplaintModal;
+window.closeComplaintModal = closeComplaintModal;
+window.submitComplaint = submitComplaint;
+window.openReturnModal = openReturnModal;
+window.closeReturnModal = closeReturnModal;
+window.submitReturn = submitReturn;
 window.showConfirmCancel = showConfirmCancel;
 window.closeConfirm = closeConfirm;
 window.executeCancel = executeCancel;
@@ -1784,12 +2532,13 @@ window.applyFilters = applyFilters;
 window.clearFilters = clearFilters;
 window.exportOrders = exportOrders;
 window.showMessage = showMessage;
-window.loadOrders = loadOrders;
+window.syncFromFirebase = syncFromFirebase;
+window.loadAllOrdersFromStorage = loadAllOrdersFromStorage;
 
 // ====== بدء التشغيل ======
 document.addEventListener('DOMContentLoaded', initializePage);
 
-console.log('✅ تم تحميل سجل الطلبات مع دعم Firebase');
+console.log('✅ تم تحميل سجل الطلبات مع جميع الميزات');
 </script>
 
 </body>

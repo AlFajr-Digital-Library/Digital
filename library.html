@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>رفي | مكتبتي</title>
-  <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مكتبتي | رفي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <style>
     * {
       margin: 0;
@@ -15,17 +15,16 @@
 
     body {
       font-family: 'Almarai', sans-serif;
-      background: #0b0e14;
+      background: #0d0f14;
       background-image: 
-        radial-gradient(ellipse at 20% 50%, rgba(30, 60, 90, 0.3) 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 80%, rgba(20, 40, 70, 0.2) 0%, transparent 50%);
+        radial-gradient(ellipse at 70% 20%, #1a1f2e 0%, transparent 50%),
+        radial-gradient(ellipse at 30% 80%, #11141f 0%, transparent 45%);
       color: #e8e4de;
       min-height: 100vh;
-      padding-top: 0;
       overflow-x: hidden;
     }
 
-    /* ===== الشريط العلوي ===== */
+    /* ===== شريط علوي ===== */
     header {
       position: fixed;
       top: 0;
@@ -34,26 +33,19 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 16px 5%;
-      background: rgba(11, 14, 20, 0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(200, 170, 120, 0.15);
-      z-index: 10000;
-      height: 72px;
+      padding: 18px 6%;
+      background: rgba(13, 15, 20, 0.96);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(80, 180, 200, 0.08);
+      z-index: 1000;
+      height: 76px;
     }
 
     header .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: #d4b68a;
-      letter-spacing: -0.5px;
-    }
-    header .logo i {
       font-size: 1.8rem;
-      color: #c9a87c;
+      font-weight: 800;
+      color: #b8e6f0;
+      letter-spacing: -0.5px;
     }
 
     .header-actions {
@@ -63,116 +55,124 @@
     }
 
     .header-actions a {
-      color: #a8a4a0;
+      color: #8a9aa8;
       font-size: 1.2rem;
       text-decoration: none;
       transition: 0.3s ease;
-      width: 42px;
-      height: 42px;
+      width: 46px;
+      height: 46px;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 12px;
-      background: rgba(200, 170, 120, 0.06);
-      border: 1px solid rgba(200, 170, 120, 0.08);
+      background: rgba(80, 180, 200, 0.04);
+      border: 1px solid rgba(80, 180, 200, 0.06);
     }
     .header-actions a:hover {
-      color: #d4b68a;
-      background: rgba(200, 170, 120, 0.12);
-      border-color: rgba(200, 170, 120, 0.25);
+      color: #b8e6f0;
+      background: rgba(80, 180, 200, 0.08);
+      border-color: rgba(80, 180, 200, 0.15);
       transform: translateY(-2px);
     }
 
     .balance-box {
       font-weight: 700;
-      background: rgba(200, 170, 120, 0.08);
-      padding: 8px 18px;
+      background: rgba(80, 180, 200, 0.06);
+      padding: 10px 24px;
       border-radius: 30px;
-      color: #d4b68a;
-      font-size: 0.9rem;
-      border: 1px solid rgba(200, 170, 120, 0.15);
+      color: #b8e6f0;
+      font-size: 1rem;
+      border: 1px solid rgba(80, 180, 200, 0.08);
       display: flex;
       align-items: center;
       gap: 10px;
     }
-    .balance-box i {
-      color: #c9a87c;
-    }
 
-    /* ===== المحتوى الرئيسي ===== */
+    /* ===== المحتوى ===== */
     .main-wrap {
-      padding-top: 88px;
+      padding-top: 92px;
       max-width: 1400px;
       margin: 0 auto;
-      padding-left: 5%;
-      padding-right: 5%;
+      padding-left: 6%;
+      padding-right: 6%;
     }
 
-    /* ===== الهيدر ===== */
+    /* ===== هيدر الصفحة ===== */
     .page-header {
       display: flex;
       justify-content: space-between;
-      align-items: flex-end;
+      align-items: center;
       flex-wrap: wrap;
       gap: 20px;
-      padding: 20px 0 30px;
-      border-bottom: 1px solid rgba(200, 170, 120, 0.08);
-      margin-bottom: 30px;
+      padding: 28px 0 32px;
+      border-bottom: 1px solid rgba(80, 180, 200, 0.05);
+      margin-bottom: 32px;
     }
 
     .page-header h1 {
-      font-size: 2.4rem;
+      font-size: 2.8rem;
       font-weight: 800;
-      color: #ece8e2;
+      color: #ecf4f8;
       line-height: 1.2;
     }
     .page-header h1 span {
-      color: #d4b68a;
+      color: #6ac8d8;
+      font-weight: 800;
     }
     .page-header p {
-      color: #8a8682;
-      font-size: 1rem;
+      color: #8a9aa8;
+      font-size: 1.1rem;
       margin-top: 6px;
     }
 
     .header-stats-mini {
       display: flex;
-      gap: 30px;
-      background: rgba(200, 170, 120, 0.04);
-      padding: 12px 28px;
+      gap: 32px;
+      background: rgba(80, 180, 200, 0.03);
+      padding: 14px 32px;
       border-radius: 20px;
-      border: 1px solid rgba(200, 170, 120, 0.06);
+      border: 1px solid rgba(80, 180, 200, 0.05);
     }
     .header-stats-mini .stat-item {
       text-align: center;
     }
     .header-stats-mini .stat-item .num {
-      font-size: 1.6rem;
+      font-size: 1.8rem;
       font-weight: 800;
-      color: #d4b68a;
+      color: #b8e6f0;
     }
     .header-stats-mini .stat-item .lbl {
-      font-size: 0.75rem;
-      color: #8a8682;
+      font-size: 0.8rem;
+      color: #8a9aa8;
       letter-spacing: 0.5px;
     }
 
     /* ===== فلاتر ===== */
-    .filter-bar {
+    .filter-section {
+      background: rgba(80, 180, 200, 0.03);
+      border-radius: 20px;
+      padding: 18px 28px;
+      margin-bottom: 36px;
+      border: 1px solid rgba(80, 180, 200, 0.04);
       display: flex;
-      gap: 10px;
       flex-wrap: wrap;
-      margin-bottom: 35px;
-      padding-bottom: 20px;
-      border-bottom: 1px solid rgba(200, 170, 120, 0.06);
+      align-items: center;
+      gap: 16px;
+    }
+
+    .filter-section .filter-label {
+      color: #8a9aa8;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-left: 8px;
     }
 
     .filter-btn {
-      padding: 8px 22px;
+      padding: 10px 28px;
       background: transparent;
-      color: #8a8682;
-      border: 1px solid rgba(200, 170, 120, 0.1);
-      border-radius: 30px;
+      color: #8a9aa8;
+      border: 1px solid rgba(80, 180, 200, 0.05);
+      border-radius: 40px;
       cursor: pointer;
       font-weight: 600;
       transition: all 0.3s ease;
@@ -182,88 +182,74 @@
       gap: 8px;
     }
     .filter-btn:hover {
-      color: #d4b68a;
-      border-color: rgba(200, 170, 120, 0.3);
-      background: rgba(200, 170, 120, 0.05);
+      color: #b8e6f0;
+      border-color: rgba(80, 180, 200, 0.15);
+      background: rgba(80, 180, 200, 0.05);
     }
     .filter-btn.active {
-      background: rgba(200, 170, 120, 0.12);
-      color: #d4b68a;
-      border-color: #d4b68a;
-      box-shadow: 0 0 20px rgba(200, 170, 120, 0.05);
+      background: rgba(80, 180, 200, 0.08);
+      color: #b8e6f0;
+      border-color: rgba(80, 180, 200, 0.2);
+      box-shadow: 0 0 30px rgba(80, 180, 200, 0.03);
     }
 
-    /* ===== شبكة المنتجات ===== */
+    /* ===== شبكة ===== */
     .library-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 28px;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 30px;
       padding-bottom: 60px;
     }
 
-    /* ===== البطاقة ===== */
+    /* ===== بطاقة ===== */
     .product-card {
-      background: rgba(20, 26, 36, 0.6);
-      backdrop-filter: blur(4px);
+      background: rgba(18, 22, 32, 0.75);
+      backdrop-filter: blur(6px);
       border-radius: 24px;
       overflow: hidden;
-      border: 1px solid rgba(200, 170, 120, 0.06);
-      transition: all 0.4s cubic-bezier(0.15, 0.75, 0.4, 1);
+      border: 1px solid rgba(80, 180, 200, 0.05);
+      transition: all 0.4s ease;
       display: flex;
       flex-direction: column;
       position: relative;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
     }
 
     .product-card:hover {
       transform: translateY(-8px);
-      border-color: rgba(200, 170, 120, 0.25);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-      background: rgba(24, 32, 44, 0.7);
-    }
-
-    .product-card .card-badge {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background: rgba(212, 182, 138, 0.15);
-      backdrop-filter: blur(4px);
-      padding: 4px 14px;
-      border-radius: 30px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: #d4b68a;
-      border: 1px solid rgba(212, 182, 138, 0.15);
-      z-index: 2;
-      letter-spacing: 0.3px;
+      border-color: rgba(80, 180, 200, 0.12);
+      box-shadow: 0 24px 56px rgba(0, 0, 0, 0.4);
+      background: rgba(22, 28, 40, 0.8);
     }
 
     .product-card .img-wrap {
       width: 100%;
-      height: 210px;
+      height: 220px;
       overflow: hidden;
       position: relative;
+      background: #10141f;
     }
     .product-card .img-wrap img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.6s ease;
+      transition: transform 0.5s ease;
     }
     .product-card:hover .img-wrap img {
-      transform: scale(1.04);
+      transform: scale(1.03);
     }
 
     .product-card .card-body {
-      padding: 22px 22px 20px;
+      padding: 24px 26px 22px;
       flex: 1;
       display: flex;
       flex-direction: column;
     }
 
     .product-card .card-body .title {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: 700;
-      color: #ece8e2;
+      color: #ecf4f8;
       margin-bottom: 6px;
       line-height: 1.3;
     }
@@ -271,22 +257,22 @@
     .product-card .card-body .meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-      margin: 10px 0 12px;
+      gap: 8px;
+      margin: 10px 0 14px;
     }
     .product-card .card-body .meta span {
-      background: rgba(200, 170, 120, 0.06);
-      padding: 2px 12px;
+      background: rgba(80, 180, 200, 0.04);
+      padding: 4px 14px;
       border-radius: 30px;
-      font-size: 0.7rem;
-      color: #a8a4a0;
-      border: 1px solid rgba(200, 170, 120, 0.04);
+      font-size: 0.75rem;
+      color: #9aaab8;
+      border: 1px solid rgba(80, 180, 200, 0.04);
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
     }
     .product-card .card-body .meta span i {
-      color: #d4b68a;
+      color: #6ac8d8;
       font-size: 0.7rem;
     }
 
@@ -295,24 +281,29 @@
       justify-content: space-between;
       align-items: center;
       font-size: 0.85rem;
-      color: #8a8682;
-      padding: 6px 0;
-      border-bottom: 1px solid rgba(200, 170, 120, 0.04);
+      color: #8a9aa8;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(80, 180, 200, 0.03);
     }
     .product-card .card-body .info-line:last-of-type {
       border-bottom: none;
     }
     .product-card .card-body .info-line i {
-      color: #d4b68a;
-      width: 22px;
+      color: #6ac8d8;
+      width: 24px;
+      opacity: 0.7;
     }
 
     .product-card .card-body .price-tag {
-      margin: 14px 0 16px;
-      font-size: 1.3rem;
+      margin: 16px 0 18px;
+      font-size: 1.5rem;
       font-weight: 800;
-      color: #d4b68a;
-      letter-spacing: 0.5px;
+      color: #b8e6f0;
+    }
+    .product-card .card-body .price-tag span {
+      font-size: 0.85rem;
+      color: #8a9aa8;
+      font-weight: 400;
     }
 
     .product-card .card-actions {
@@ -322,9 +313,9 @@
     }
     .product-card .card-actions button {
       flex: 1;
-      padding: 12px 10px;
+      padding: 14px 12px;
       border: none;
-      border-radius: 16px;
+      border-radius: 40px;
       font-weight: 700;
       font-size: 0.9rem;
       cursor: pointer;
@@ -333,23 +324,23 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      background: rgba(200, 170, 120, 0.06);
-      color: #a8a4a0;
-      border: 1px solid rgba(200, 170, 120, 0.06);
+      background: rgba(80, 180, 200, 0.04);
+      color: #9aaab8;
+      border: 1px solid rgba(80, 180, 200, 0.04);
     }
     .product-card .card-actions button:hover {
-      background: rgba(200, 170, 120, 0.12);
-      color: #ece8e2;
+      background: rgba(80, 180, 200, 0.08);
+      color: #ecf4f8;
       transform: translateY(-2px);
     }
     .product-card .card-actions .btn-primary {
-      background: rgba(212, 182, 138, 0.12);
-      color: #d4b68a;
-      border-color: rgba(212, 182, 138, 0.2);
+      background: rgba(80, 180, 200, 0.08);
+      color: #b8e6f0;
+      border-color: rgba(80, 180, 200, 0.08);
     }
     .product-card .card-actions .btn-primary:hover {
-      background: rgba(212, 182, 138, 0.25);
-      box-shadow: 0 8px 24px rgba(212, 182, 138, 0.08);
+      background: rgba(80, 180, 200, 0.16);
+      box-shadow: 0 6px 28px rgba(80, 180, 200, 0.06);
     }
 
     /* ===== فارغ ===== */
@@ -359,74 +350,72 @@
       padding: 80px 20px;
     }
     .empty-state i {
-      font-size: 4rem;
-      color: rgba(200, 170, 120, 0.15);
-      margin-bottom: 20px;
+      font-size: 4.5rem;
+      color: rgba(80, 180, 200, 0.05);
+      margin-bottom: 24px;
     }
     .empty-state h3 {
-      font-size: 2rem;
-      color: #ece8e2;
+      font-size: 2.2rem;
+      color: #ecf4f8;
       margin-bottom: 10px;
     }
     .empty-state p {
-      color: #8a8682;
-      max-width: 400px;
-      margin: 0 auto 30px;
-      line-height: 1.6;
+      color: #8a9aa8;
+      max-width: 420px;
+      margin: 0 auto 28px;
+      line-height: 1.7;
     }
     .empty-state .browse-btn {
       display: inline-block;
-      padding: 14px 40px;
-      background: rgba(212, 182, 138, 0.12);
-      color: #d4b68a;
+      padding: 16px 48px;
+      background: rgba(80, 180, 200, 0.05);
+      color: #b8e6f0;
       text-decoration: none;
       border-radius: 60px;
       font-weight: 700;
-      border: 1px solid rgba(212, 182, 138, 0.2);
+      border: 1px solid rgba(80, 180, 200, 0.06);
       transition: all 0.3s ease;
+      font-size: 1.05rem;
     }
     .empty-state .browse-btn:hover {
-      background: rgba(212, 182, 138, 0.2);
+      background: rgba(80, 180, 200, 0.08);
       transform: translateY(-3px);
-      box-shadow: 0 12px 30px rgba(212, 182, 138, 0.05);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.2);
     }
 
     /* ===== متجاوب ===== */
     @media(max-width: 768px) {
-      header { height: 64px; padding: 12px 4%; }
-      header .logo { font-size: 1.3rem; }
-      .main-wrap { padding-top: 76px; padding-left: 4%; padding-right: 4%; }
-      .page-header { flex-direction: column; align-items: flex-start; gap: 12px; }
-      .page-header h1 { font-size: 1.8rem; }
-      .header-stats-mini { width: 100%; justify-content: space-around; padding: 10px 16px; gap: 10px; }
-      .header-stats-mini .stat-item .num { font-size: 1.2rem; }
-      .library-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 18px; }
-      .product-card .img-wrap { height: 170px; }
+      header { height: 66px; padding: 12px 4%; }
+      header .logo { font-size: 1.4rem; }
+      .main-wrap { padding-top: 82px; padding-left: 4%; padding-right: 4%; }
+      .page-header { flex-direction: column; align-items: flex-start; gap: 14px; }
+      .page-header h1 { font-size: 2rem; }
+      .header-stats-mini { width: 100%; justify-content: space-around; padding: 12px 16px; gap: 8px; }
+      .header-stats-mini .stat-item .num { font-size: 1.4rem; }
+      .filter-section { padding: 14px 18px; }
+      .library-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 22px; }
+      .product-card .img-wrap { height: 180px; }
     }
 
     @media(max-width: 480px) {
       .library-grid { grid-template-columns: 1fr; }
-      .product-card .img-wrap { height: 190px; }
-      .filter-bar { justify-content: center; }
-      .filter-btn { padding: 6px 16px; font-size: 0.8rem; }
-      .header-stats-mini { flex-wrap: wrap; gap: 8px; }
-      .header-stats-mini .stat-item { flex: 1; min-width: 60px; }
+      .product-card .img-wrap { height: 200px; }
+      .filter-section { justify-content: center; }
+      .filter-btn { padding: 8px 18px; font-size: 0.8rem; }
+      .header-stats-mini { flex-wrap: wrap; gap: 4px; }
+      .header-stats-mini .stat-item { flex: 1; min-width: 55px; }
     }
 
-    /* ===== سكرول ===== */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0b0e14; }
-    ::-webkit-scrollbar-thumb { background: rgba(212, 182, 138, 0.3); border-radius: 10px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(212, 182, 138, 0.5); }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #0d0f14; }
+    ::-webkit-scrollbar-thumb { background: rgba(80, 180, 200, 0.15); border-radius: 20px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(80, 180, 200, 0.25); }
   </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">
-    <i class="fas fa-feather-alt"></i>
-    <span>رفي</span>
-  </div>
+  <div class="logo">رفي</div>
   <div class="header-actions">
     <a href="index.html" title="الرئيسية"><i class="fas fa-home"></i></a>
     <a href="basket.html" title="سلة الشراء"><i class="fas fa-shopping-bag"></i></a>
@@ -460,208 +449,204 @@
     </div>
   </div>
 
-  <div class="filter-bar">
-    <button class="filter-btn active" data-filter="all"><i class="fas fa-th"></i> الكل</button>
-    <button class="filter-btn" data-filter="story"><i class="fas fa-book"></i> قصص</button>
-    <button class="filter-btn" data-filter="manga"><i class="fas fa-palette"></i> مانجا</button>
-    <button class="filter-btn" data-filter="video"><i class="fas fa-video"></i> فيديو</button>
-    <button class="filter-btn" data-filter="recent"><i class="fas fa-clock"></i> الأحدث</button>
+  <div class="filter-section">
+    <span class="filter-label"><i class="fas fa-sliders-h"></i> تصفية:</span>
+    <button class="filter-btn active" data-filter="all">الكل</button>
+    <button class="filter-btn" data-filter="story">قصص</button>
+    <button class="filter-btn" data-filter="manga">مانجا</button>
+    <button class="filter-btn" data-filter="video">فيديو</button>
+    <button class="filter-btn" data-filter="recent">الأحدث</button>
   </div>
 
   <div class="library-grid" id="libraryContainer"></div>
 </div>
 
 <script>
-  // ====== بيانات المستخدم ======
-  const user = JSON.parse(localStorage.getItem('user') || 'null');
-  let loggedInUser = null;
-  if (user && user.email) {
-    loggedInUser = user.email;
-  } else {
-    setTimeout(() => { window.location.href = 'login.html'; }, 1000);
-    document.body.innerHTML = `
-      <div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#0b0e14;color:#e8e4de;font-family:'Almarai';flex-direction:column;gap:20px;">
-        <i class="fas fa-lock" style="font-size:48px;color:#d4b68a;opacity:0.5;"></i>
-        <h2>يرجى تسجيل الدخول</h2>
-        <p style="color:#8a8682;">سيتم تحويلك إلى صفحة تسجيل الدخول...</p>
-      </div>
-    `;
-    throw new Error('No user logged in');
-  }
+  (function() {
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
+    let loggedInUser = null;
+    if (user && user.email) {
+      loggedInUser = user.email;
+    } else {
+      document.body.innerHTML = `
+        <div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#0d0f14;color:#e8e4de;font-family:'Almarai';flex-direction:column;gap:16px;">
+          <i class="fas fa-lock" style="font-size:48px;color:#6ac8d8;opacity:0.2;"></i>
+          <h2 style="font-weight:700;">تسجيل الدخول مطلوب</h2>
+          <p style="color:#8a9aa8;">سيتم تحويلك إلى صفحة تسجيل الدخول...</p>
+        </div>
+      `;
+      setTimeout(() => { window.location.href = 'login.html'; }, 1200);
+      throw new Error('No user');
+    }
 
-  const LIBRARY_KEY = `library_${loggedInUser}`;
-  const BALANCE_KEY = `balance_${loggedInUser}`;
-  let library = JSON.parse(localStorage.getItem(LIBRARY_KEY)) || [];
+    const LIBRARY_KEY = `library_${loggedInUser}`;
+    const BALANCE_KEY = `balance_${loggedInUser}`;
+    let library = JSON.parse(localStorage.getItem(LIBRARY_KEY)) || [];
 
-  // ====== عناصر DOM ======
-  const container = document.getElementById('libraryContainer');
-  const totalItemsEl = document.getElementById('totalItems');
-  const avgRatingEl = document.getElementById('avgRating');
-  const totalSpentEl = document.getElementById('totalSpent');
-  const globalBalanceEl = document.getElementById('globalBalance');
-  const filterBtns = document.querySelectorAll('.filter-btn');
+    const container = document.getElementById('libraryContainer');
+    const totalItemsEl = document.getElementById('totalItems');
+    const avgRatingEl = document.getElementById('avgRating');
+    const totalSpentEl = document.getElementById('totalSpent');
+    const globalBalanceEl = document.getElementById('globalBalance');
+    const filterBtns = document.querySelectorAll('.filter-btn');
 
-  // ====== تهيئة ======
-  function init() {
-    const balance = parseFloat(localStorage.getItem(BALANCE_KEY)) || 0;
-    globalBalanceEl.textContent = balance.toFixed(2) + ' ر.س';
-    updateStats();
-    render('all');
+    function updateStats() {
+      if (library.length === 0) {
+        totalItemsEl.textContent = '0';
+        avgRatingEl.textContent = '0.0';
+        totalSpentEl.textContent = '0';
+        return;
+      }
+      totalItemsEl.textContent = library.length;
+      const totalRating = library.reduce((s, i) => s + (parseFloat(i.rating) || 0), 0);
+      avgRatingEl.textContent = (totalRating / library.length).toFixed(1);
+      const totalSpent = library.reduce((s, i) => s + (parseFloat(i.finalPrice) || 0), 0);
+      totalSpentEl.textContent = totalSpent.toFixed(0);
+    }
 
-    filterBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        filterBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        render(btn.dataset.filter);
+    function render(filter = 'all') {
+      container.innerHTML = '';
+
+      if (library.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <h3>مكتبتك فارغة</h3>
+            <p>لم تقم بشراء أي منتجات رقمية بعد. تصفح المتجر وابدأ في بناء مكتبتك.</p>
+            <a href="index.html" class="browse-btn"><i class="fas fa-store"></i> استكشف المتجر</a>
+          </div>
+        `;
+        return;
+      }
+
+      let filtered = [...library];
+      switch(filter) {
+        case 'story':
+          filtered = library.filter(i => i.type?.includes('قصة') || i.category?.includes('قصص') || i.type?.toLowerCase().includes('story'));
+          break;
+        case 'manga':
+          filtered = library.filter(i => i.type?.includes('مانجا') || i.category?.includes('مانجا') || i.type?.toLowerCase().includes('manga'));
+          break;
+        case 'video':
+          filtered = library.filter(i => i.type?.includes('فيديو') || i.category?.includes('فيديوهات') || i.type?.toLowerCase().includes('video'));
+          break;
+        case 'recent':
+          filtered = [...library].sort((a, b) => new Date(b.purchaseDate || 0) - new Date(a.purchaseDate || 0));
+          break;
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-filter"></i>
+            <h3>لا توجد منتجات</h3>
+            <p>لا يوجد منتجات في هذه الفئة</p>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const price = parseFloat(item.finalPrice || item.price || 0);
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <div class="img-wrap">
+            <img src="${item.image || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI0MCIgZmlsbD0iIzE0MWEyNCIvPjx0ZXh0IHg9IjIwMCIgeT0iMTIwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM4YTg2ODIiIHRleHQtYW5jaG9yPSJtaWRkbGUiPuiCoeKApuWkp+agoeW4gzwvdGV4dD48L3N2Zz4='}" alt="${item.title}" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="title">${item.title || 'منتج'}</div>
+            <div class="meta">
+              <span><i class="fas fa-tag"></i> ${item.category || 'عام'}</span>
+              <span><i class="fas fa-box"></i> ${item.format || 'رقمي'}</span>
+              ${item.rating ? `<span><i class="fas fa-star"></i> ${item.rating}</span>` : ''}
+            </div>
+            <div class="info-line"><i class="fas fa-calendar-alt"></i> ${item.purchaseDate || 'غير معروف'}</div>
+            <div class="info-line"><i class="fas fa-hashtag"></i> ${item.transactionId || 'غير معروف'}</div>
+            <div class="price-tag">${price.toFixed(2)} <span>ر.س</span></div>
+            <div class="card-actions">
+              <button class="btn-primary" onclick="openProduct('${item.id}')"><i class="fas fa-${item.type?.includes('فيديو') ? 'play' : 'book-open'}"></i> ${item.type?.includes('فيديو') ? 'مشاهدة' : 'قراءة'}</button>
+              <button onclick="downloadProduct('${item.id}')"><i class="fas fa-download"></i> تحميل</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
       });
-    });
-  }
-
-  // ====== تحديث الإحصائيات ======
-  function updateStats() {
-    if (library.length === 0) {
-      totalItemsEl.textContent = '0';
-      avgRatingEl.textContent = '0.0';
-      totalSpentEl.textContent = '0';
-      return;
     }
-    totalItemsEl.textContent = library.length;
-    const totalRating = library.reduce((s, i) => s + (parseFloat(i.rating) || 0), 0);
-    avgRatingEl.textContent = (totalRating / library.length).toFixed(1);
-    const totalSpent = library.reduce((s, i) => s + (parseFloat(i.finalPrice) || 0), 0);
-    totalSpentEl.textContent = totalSpent.toFixed(0);
-  }
 
-  // ====== عرض المنتجات ======
-  function render(filter = 'all') {
-    container.innerHTML = '';
+    window.openProduct = function(id) {
+      const p = library.find(i => i.id === id);
+      if (!p) return;
+      alert(`جاري فتح "${p.title}"...`);
+      if (p.type?.includes('فيديو')) window.open(`player.html?id=${id}`, '_blank');
+      else if (p.type?.includes('مانجا')) window.open(`manga-reader.html?id=${id}`, '_blank');
+      else window.open(`reader.html?id=${id}`, '_blank');
+    };
 
-    if (library.length === 0) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <i class="fas fa-inbox"></i>
-          <h3>مكتبتك فارغة</h3>
-          <p>لم تقم بشراء أي منتجات رقمية بعد. تصفح المتجر وابدأ في بناء مكتبتك.</p>
-          <a href="index.html" class="browse-btn"><i class="fas fa-store"></i> استكشف المتجر</a>
-        </div>
+    window.downloadProduct = function(id) {
+      const p = library.find(i => i.id === id);
+      if (!p) return;
+      alert(`جاري تحميل "${p.title}"...`);
+      const link = document.createElement('a');
+      link.href = '#';
+      link.download = `${p.title}.zip`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showNotif(`تم بدء تحميل ${p.title}`);
+    };
+
+    function showNotif(msg) {
+      const el = document.createElement('div');
+      el.style.cssText = `
+        position:fixed; bottom:24px; right:24px;
+        background:rgba(13,15,20,0.96); backdrop-filter:blur(10px);
+        color:#ecf4f8; padding:14px 28px; border-radius:24px;
+        border:1px solid rgba(80,180,200,0.06);
+        z-index:99999; font-weight:600;
+        box-shadow:0 12px 40px rgba(0,0,0,0.5);
+        animation: slideIn 0.3s ease-out;
+        font-family:'Almarai',sans-serif;
+        font-size:1rem;
       `;
-      return;
+      el.textContent = msg;
+      document.body.appendChild(el);
+      setTimeout(() => {
+        el.style.animation = 'slideOut 0.3s ease-out';
+        setTimeout(() => el.remove(), 300);
+      }, 2800);
     }
 
-    let filtered = [...library];
-    switch(filter) {
-      case 'story':
-        filtered = library.filter(i => i.type?.includes('قصة') || i.category?.includes('قصص') || i.type?.toLowerCase().includes('story'));
-        break;
-      case 'manga':
-        filtered = library.filter(i => i.type?.includes('مانجا') || i.category?.includes('مانجا') || i.type?.toLowerCase().includes('manga'));
-        break;
-      case 'video':
-        filtered = library.filter(i => i.type?.includes('فيديو') || i.category?.includes('فيديوهات') || i.type?.toLowerCase().includes('video'));
-        break;
-      case 'recent':
-        filtered = [...library].sort((a, b) => new Date(b.purchaseDate || 0) - new Date(a.purchaseDate || 0));
-        break;
-    }
-
-    if (filtered.length === 0) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <i class="fas fa-filter"></i>
-          <h3>لا توجد منتجات</h3>
-          <p>لا يوجد منتجات في هذه الفئة</p>
-        </div>
-      `;
-      return;
-    }
-
-    filtered.forEach(item => {
-      const price = parseFloat(item.finalPrice || item.price || 0);
-      const card = document.createElement('div');
-      card.className = 'product-card';
-      card.innerHTML = `
-        <div class="card-badge"><i class="fas fa-check-circle"></i> مملوك</div>
-        <div class="img-wrap">
-          <img src="${item.image || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI0MCIgZmlsbD0iIzE0MWEyNCIvPjx0ZXh0IHg9IjIwMCIgeT0iMTIwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM4YTg2ODIiIHRleHQtYW5jaG9yPSJtaWRkbGUiPuiCoeKApuWkp+agoeW4gzwvdGV4dD48L3N2Zz4='}" alt="${item.title}" loading="lazy">
-        </div>
-        <div class="card-body">
-          <div class="title">${item.title || 'منتج'}</div>
-          <div class="meta">
-            <span><i class="fas fa-tag"></i> ${item.category || 'عام'}</span>
-            <span><i class="fas fa-box"></i> ${item.format || 'رقمي'}</span>
-            ${item.rating ? `<span><i class="fas fa-star"></i> ${item.rating}</span>` : ''}
-          </div>
-          <div class="info-line"><i class="fas fa-calendar-alt"></i> ${item.purchaseDate || 'غير معروف'}</div>
-          <div class="info-line"><i class="fas fa-hashtag"></i> ${item.transactionId || 'غير معروف'}</div>
-          <div class="price-tag">${price.toFixed(2)} <span style="font-size:0.8rem;color:#8a8682;">ر.س</span></div>
-          <div class="card-actions">
-            <button class="btn-primary" onclick="openProduct('${item.id}')"><i class="fas fa-${item.type?.includes('فيديو') ? 'play' : 'book-open'}"></i> ${item.type?.includes('فيديو') ? 'مشاهدة' : 'قراءة'}</button>
-            <button onclick="downloadProduct('${item.id}')"><i class="fas fa-download"></i> تحميل</button>
-          </div>
-        </div>
-      `;
-      container.appendChild(card);
-    });
-  }
-
-  // ====== دوال المنتج ======
-  function openProduct(id) {
-    const p = library.find(i => i.id === id);
-    if (!p) return;
-    alert(`جاري فتح "${p.title}"...`);
-    if (p.type?.includes('فيديو')) window.open(`player.html?id=${id}`, '_blank');
-    else if (p.type?.includes('مانجا')) window.open(`manga-reader.html?id=${id}`, '_blank');
-    else window.open(`reader.html?id=${id}`, '_blank');
-  }
-
-  function downloadProduct(id) {
-    const p = library.find(i => i.id === id);
-    if (!p) return;
-    alert(`جاري تحميل "${p.title}"...`);
-    const link = document.createElement('a');
-    link.href = '#';
-    link.download = `${p.title}.zip`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    showNotif(`تم بدء تحميل ${p.title}`);
-  }
-
-  // ====== إشعار ======
-  function showNotif(msg) {
-    const el = document.createElement('div');
-    el.style.cssText = `
-      position:fixed; bottom:28px; right:28px;
-      background:rgba(20,26,36,0.95); backdrop-filter:blur(8px);
-      color:#ece8e2; padding:14px 28px; border-radius:20px;
-      border:1px solid rgba(200,170,120,0.15);
-      z-index:99999; font-weight:600;
-      box-shadow:0 16px 40px rgba(0,0,0,0.6);
-      animation: slideIn 0.3s ease-out;
+    const st = document.createElement('style');
+    st.textContent = `
+      @keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+      @keyframes slideOut { from { transform:translateX(0); opacity:1; } to { transform:translateX(100%); opacity:0; } }
     `;
-    el.textContent = msg;
-    document.body.appendChild(el);
-    setTimeout(() => {
-      el.style.animation = 'slideOut 0.3s ease-out';
-      setTimeout(() => el.remove(), 300);
-    }, 2800);
-  }
+    document.head.appendChild(st);
 
-  // ====== أنماط الحركة ======
-  const st = document.createElement('style');
-  st.textContent = `
-    @keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
-    @keyframes slideOut { from { transform:translateX(0); opacity:1; } to { transform:translateX(100%); opacity:0; } }
-  `;
-  document.head.appendChild(st);
+    function init() {
+      const balance = parseFloat(localStorage.getItem(BALANCE_KEY)) || 0;
+      globalBalanceEl.textContent = balance.toFixed(2) + ' ر.س';
+      updateStats();
+      render('all');
 
-  document.addEventListener('DOMContentLoaded', init);
-  window.addEventListener('pageshow', () => {
-    library = JSON.parse(localStorage.getItem(LIBRARY_KEY)) || [];
-    updateStats();
-    const active = document.querySelector('.filter-btn.active');
-    render(active?.dataset.filter || 'all');
-  });
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          render(btn.dataset.filter);
+        });
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+    window.addEventListener('pageshow', () => {
+      library = JSON.parse(localStorage.getItem(LIBRARY_KEY)) || [];
+      updateStats();
+      const active = document.querySelector('.filter-btn.active');
+      render(active?.dataset.filter || 'all');
+    });
+  })();
 </script>
 </body>
 </html>
