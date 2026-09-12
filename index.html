@@ -3310,11 +3310,461 @@ input:checked + .toggle-slider:before {
     color: #f0f6fc !important;
 } */
   </style>
+
+    <style>
+        /* ====== إعادة تعيين ====== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #121212;
+            color: white;
+            min-height: 100vh;
+        }
+
+        /* ====== الحاوية الرئيسية (كل المحتوى بداخلها) ====== */
+        .app-wrapper {
+            transition: margin-top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            margin-top: 0;
+        }
+
+        .app-wrapper.push-down {
+            margin-top: 64px;
+        }
+
+        /* ====== الرسالة العلوية (ثابتة في الأعلى) ====== */
+        .connection-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            font-weight: 600;
+            font-size: 16px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform: translateY(-120%);
+            opacity: 0;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .connection-bar.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* ====== حالة عدم الاتصال (برتقالي محمر ناعم) ====== */
+        .connection-bar.offline {
+            background: rgba(200, 70, 20, 0.95);
+            border-bottom: 3px solid #ff8a65;
+            color: #fff3e0;
+        }
+
+        .connection-bar.offline .status-dot {
+            background: #ff8a65;
+            box-shadow: 0 0 20px rgba(255, 138, 101, 0.4);
+            animation: blinkDot 1.2s ease-in-out infinite;
+        }
+
+        .connection-bar.offline .retry-btn {
+            background: rgba(255, 255, 255, 0.12);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            display: inline-flex;
+        }
+
+        .connection-bar.offline .status-icon {
+            color: #ffab91;
+        }
+
+        /* ====== حالة الاتصال (أخضر مزرق ناعم) ====== */
+        .connection-bar.online {
+            background: rgba(0, 90, 80, 0.95);
+            border-bottom: 3px solid #4db6ac;
+            color: #e0f2f1;
+        }
+
+        .connection-bar.online .status-dot {
+            background: #4db6ac;
+            box-shadow: 0 0 20px rgba(77, 182, 172, 0.4);
+        }
+
+        .connection-bar.online .status-icon {
+            color: #80cbc4;
+        }
+
+        .connection-bar.online .retry-btn {
+            display: none;
+        }
+
+        /* ====== عناصر الرسالة ====== */
+        .connection-bar .status-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+
+        .connection-bar .status-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .connection-bar .status-text {
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 0.3px;
+        }
+
+        .connection-bar .retry-btn {
+            background: rgba(255, 255, 255, 0.12);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 5px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .connection-bar .retry-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .connection-bar .close-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0 6px;
+            transition: all 0.3s;
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: inherit;
+        }
+
+        .connection-bar .close-btn:hover {
+            color: rgba(255, 255, 255, 0.9);
+            transform: translateY(-50%) scale(1.2);
+        }
+
+        @keyframes blinkDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+
+        /* ====== المحتوى الرئيسي ====== */
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e1e1e, #2d2d2d);
+            padding: 30px 20px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #ff6b35;
+            font-size: 32px;
+        }
+
+        .header p {
+            color: #b0b0b0;
+            font-size: 16px;
+            margin-top: 8px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: linear-gradient(135deg, #1e1e1e, #2d2d2d);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #333;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: #ff6b35;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .product-card .info {
+            padding: 16px 20px;
+        }
+
+        .product-card .info h3 {
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+
+        .product-card .info .category {
+            color: #ffab00;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .product-card .info .desc {
+            color: #b0b0b0;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .product-card .info .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid #333;
+        }
+
+        .product-card .info .price {
+            color: #4caf50;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .product-card .info .btn {
+            background: linear-gradient(135deg, #ff6b35, #ff8e53);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .product-card .info .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .simulate-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .sim-btn {
+            padding: 10px 24px;
+            border-radius: 10px;
+            border: 2px solid #333;
+            background: #1e1e1e;
+            color: #b0b0b0;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .sim-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .sim-btn.offline-sim {
+            border-color: #ff8a65;
+            color: #ff8a65;
+        }
+
+        .sim-btn.offline-sim:hover {
+            background: #ff8a65;
+            color: #121212;
+        }
+
+        .sim-btn.online-sim {
+            border-color: #4db6ac;
+            color: #4db6ac;
+        }
+
+        .sim-btn.online-sim:hover {
+            background: #4db6ac;
+            color: #121212;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            border-top: 1px solid #333;
+            color: #666;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .app-wrapper.push-down {
+                margin-top: 60px;
+            }
+            .connection-bar {
+                padding: 12px 16px;
+                font-size: 14px;
+                border-radius: 0 0 12px 12px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .connection-bar .status-text {
+                font-size: 13px;
+            }
+            .connection-bar .retry-btn {
+                font-size: 12px;
+                padding: 4px 14px;
+            }
+            .products-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .connection-bar .close-btn {
+                position: relative;
+                left: auto;
+                top: auto;
+                transform: none;
+                margin-right: auto;
+            }
+            .connection-bar .close-btn:hover {
+                transform: scale(1.2);
+            }
+        }
+
+        /* ====== دفع المحتوى للأسفل ====== */
+.app-wrapper {
+    transition: margin-top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    margin-top: 0;
+}
+
+.app-wrapper.push-down {
+    margin-top: 64px;
+}
+
+/* ====== حركة سلسة للشريط العلوي ====== */
+.top {
+    transition: top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    top: 0;
+}
+
+.top2 {
+    transition: top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    top: 70px;
+}
+
+.main-content {
+    transition: padding-top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    padding-top: 90px;
+}
+
+/* ====== زر إعادة المحاولة - أيقونة فقط ====== */
+.connection-bar .retry-btn {
+    background: rgba(255, 255, 255, 0.12);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    position: absolute;
+    left: 60px; /* يخلية في أقصى اليسار جنب زر الإغلاق */
+}
+
+/* الزر يظهر فقط في حالة عدم الاتصال */
+.connection-bar.offline .retry-btn {
+    display: flex;
+}
+
+/* ====== تأثير hover بسيط جداً ====== */
+.connection-bar .retry-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.05);
+}
+
+.connection-bar .retry-btn:active {
+    transform: scale(0.95);
+}
+    </style>
 </head>
 
 <body>
   <!-- الخلفية -->
 <img id="img1" src="img//Alk.jpg" alt="خلفية">
+
+
+
+
+    <!-- ====== الرسالة العلوية ====== -->
+    <div class="connection-bar" id="connectionBar">
+        <span class="status-dot"></span>
+        <i class="fas fa-wifi status-icon"></i>
+        <span class="status-text" id="statusText">جاري التحقق...</span>
+        <button class="retry-btn" id="retryBtn">
+            <i class="fas fa-sync-alt"></i>
+        </button>
+        <button class="close-btn" id="closeBarBtn">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
 
 <!-- الشريط العلوي -->
 <div class="top">
@@ -4335,6 +4785,250 @@ input:checked + .toggle-slider:before {
     <span class="ltr-text" style="display: none;">© 2026 Fajr Library. All rights reserved.</span>
   </div>
 </footer>
+
+<script>
+    (function() {
+        'use strict';
+
+        const bar = document.getElementById('connectionBar');
+        const topBar = document.querySelector('.top'); // الشريط العلوي الثابت
+        const top2Bar = document.querySelector('.top2'); // الشريط الثاني
+        const mainContent = document.querySelector('.main-content'); // المحتوى الرئيسي
+        const statusText = document.getElementById('statusText');
+        const retryBtn = document.getElementById('retryBtn');
+        const closeBtn = document.getElementById('closeBarBtn');
+
+        // ====== التحقق من وجود العناصر ======
+        if (!bar || !statusText) {
+            console.warn('⚠️ بعض العناصر غير موجودة');
+            return;
+        }
+
+        let isOnline = navigator.onLine;
+        let closeTimeout = null;
+        let firstLoad = true;
+
+        // ====== النكات ======
+        const jokes = [
+            'وين راح النت يا عمي؟ 🤔',
+            'النت قرر ياخذ بريك 😂',
+            'وينك يا شبكة؟ 🙃',
+            'أحس النت ضايع 😭',
+            ' بدام نتك قطع عندك زين مسوين عرض خرافي خذ الكود ولاتقول لأحد MNETSEFR',
+            'الشبكة طارت! أصل الراوتر زعل منك.. روّق عليه وتعال كمل تسوقك بالسلامة'
+        ];
+
+        const backJokes = [
+            'أهلاً بك رجعت 🎉',
+            'النت رجع والدنيا زي الفل 😎',
+            'الحمدلله على السلامة 🤩',
+            'رجعت يا غالي 😍',
+            'شغلنا انطلق 🔥'
+        ];
+
+        function getRandom(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        // ====== دفع المحتوى للأسفل (كل العناصر) ======
+        function pushContent() {
+            // ندفع الشريط العلوي
+            if (topBar) {
+                topBar.style.top = '64px';
+                topBar.style.transition = 'top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            }
+            // ندفع الشريط الثاني
+            if (top2Bar) {
+                top2Bar.style.top = '134px';
+                top2Bar.style.transition = 'top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            }
+            // ندفع المحتوى الرئيسي
+            if (mainContent) {
+                mainContent.style.paddingTop = '150px';
+                mainContent.style.transition = 'padding-top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            }
+        }
+
+        function pullContent() {
+            // نرجع الشريط العلوي
+            if (topBar) {
+                topBar.style.top = '0';
+            }
+            // نرجع الشريط الثاني
+            if (top2Bar) {
+                top2Bar.style.top = '70px';
+            }
+            // نرجع المحتوى الرئيسي
+            if (mainContent) {
+                mainContent.style.paddingTop = '90px';
+            }
+        }
+
+        // ====== تحديث الرسالة ======
+        function updateBar(online) {
+            if (!bar) return;
+
+            bar.classList.remove('offline', 'online');
+
+            if (online) {
+                bar.classList.add('online');
+                statusText.textContent = getRandom(backJokes);
+                
+                if (bar.classList.contains('show')) {
+                    if (closeTimeout) clearTimeout(closeTimeout);
+                    closeTimeout = setTimeout(() => {
+                        bar.classList.remove('show');
+                        pullContent();
+                        closeTimeout = null;
+                    }, 4000);
+                }
+            } else {
+                bar.classList.add('offline');
+                statusText.textContent = getRandom(jokes);
+                
+                if (closeTimeout) {
+                    clearTimeout(closeTimeout);
+                    closeTimeout = null;
+                }
+                
+                if (!firstLoad) {
+                    bar.classList.add('show');
+                    pushContent();
+                }
+            }
+
+            if (firstLoad) {
+                bar.classList.remove('show');
+                pullContent();
+                firstLoad = false;
+            }
+        }
+
+        // ====== التحقق ======
+        function checkConnection() {
+            const online = navigator.onLine;
+            if (online !== isOnline) {
+                isOnline = online;
+                updateBar(online);
+            } else {
+                updateBar(online);
+            }
+        }
+
+        // ====== أحداث ======
+        window.addEventListener('online', function() {
+            isOnline = true;
+            updateBar(true);
+        });
+
+        window.addEventListener('offline', function() {
+            isOnline = false;
+            updateBar(false);
+        });
+
+        // ====== زر إعادة المحاولة ======
+        if (retryBtn) {
+            retryBtn.addEventListener('click', function() {
+                checkConnection();
+                if (navigator.onLine) {
+                    bar.classList.add('online');
+                    bar.classList.remove('offline');
+                    statusText.textContent = getRandom(backJokes);
+                    setTimeout(() => {
+                        bar.classList.remove('show');
+                        pullContent();
+                    }, 4000);
+                } else {
+                    statusText.textContent = getRandom(jokes);
+                }
+            });
+        }
+
+        // ====== زر الإغلاق ======
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function() {
+                bar.classList.remove('show');
+                pullContent();
+                if (closeTimeout) {
+                    clearTimeout(closeTimeout);
+                    closeTimeout = null;
+                }
+            });
+        }
+
+        // ====== التحميل ======
+        setTimeout(function() {
+            if (!bar) return;
+            bar.classList.remove('show');
+            pullContent();
+            firstLoad = false;
+            
+            if (navigator.onLine) {
+                bar.classList.add('online');
+                bar.classList.remove('offline');
+                statusText.textContent = '✅ النت شغال زي الفل';
+            } else {
+                bar.classList.add('offline');
+                bar.classList.remove('online');
+                statusText.textContent = getRandom(jokes);
+                bar.classList.add('show');
+                pushContent();
+            }
+        }, 500);
+
+        // ====== فحص دوري ======
+        setInterval(function() {
+            if (!bar) return;
+            const currentOnline = navigator.onLine;
+            if (currentOnline !== isOnline) {
+                isOnline = currentOnline;
+                updateBar(currentOnline);
+            } else {
+                if (!bar.classList.contains('show') && !isOnline) {
+                    bar.classList.add('show');
+                    pushContent();
+                    statusText.textContent = getRandom(jokes);
+                }
+                if (bar.classList.contains('show') && isOnline) {
+                    if (!closeTimeout) {
+                        statusText.textContent = getRandom(backJokes);
+                        closeTimeout = setTimeout(() => {
+                            bar.classList.remove('show');
+                            pullContent();
+                            closeTimeout = null;
+                        }, 4000);
+                    }
+                }
+            }
+        }, 5000);
+
+        // ====== دوال المحاكاة ======
+        window.simulateOffline = function() {
+            isOnline = false;
+            updateBar(false);
+            bar.classList.add('show');
+            pushContent();
+            statusText.textContent = getRandom(jokes);
+        };
+
+        window.simulateOnline = function() {
+            isOnline = true;
+            updateBar(true);
+            bar.classList.add('online');
+            bar.classList.remove('offline');
+            statusText.textContent = getRandom(backJokes);
+            if (closeTimeout) clearTimeout(closeTimeout);
+            closeTimeout = setTimeout(() => {
+                bar.classList.remove('show');
+                pullContent();
+                closeTimeout = null;
+            }, 4000);
+        };
+
+        console.log('✅ نظام الرسالة جاهز مع دفع الشريط العلوي');
+
+    })();
+</script>
 
 <script type="module">
 // ====== استيراد Firebase ======
@@ -7443,5 +8137,7 @@ window.openConfirmDelete = openConfirmDelete;
 window.closeConfirmDelete = closeConfirmDelete;
 window.executeDeleteComment = executeDeleteComment;
 </script>
+
+
 </body>
 </html>

@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Nexus Gaming OS · نظام الترفيه المتكامل</title>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ========== المتغيرات العامة ========== */
+    :root {
+      --bg-color: #07090e;
+      --accent-glow: rgba(235, 68, 50, 0.45);
+      --accent-border: #eb4432;
+      --accent-hover: #ff5a48;
+      --glass-bg: rgba(255, 255, 255, 0.06);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --card-bg: rgba(8, 12, 20, 0.6);
+      --shadow-glow: 0 0 30px rgba(235, 68, 50, 0.25);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    }
+
+    /* ========== إعادة التعيين ========== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+      padding: 10px;
+      margin: 0;
+      position: relative;
+    }
+
+    /* ========== الخلفية المتحركة ========== */
+    .ambient-glow {
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at 50% 30%, var(--accent-glow) 0%, rgba(7, 9, 14, 0) 70%);
+      z-index: 0;
+      pointer-events: none;
+      animation: pulseGlow 4s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; transform: scale(1.1); }
+    }
+
+    /* ========== حاوية التلفاز ========== */
+    .tv-container {
+      position: relative;
+      width: 100%;
+      max-width: 1400px;
+      height: 90vh;
+      min-height: 600px;
+      max-height: 900px;
+      background: #000;
+      border-radius: 20px;
+      box-shadow: 0 0 60px rgba(0, 0, 0, 0.9), 0 0 120px var(--accent-glow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      z-index: 1;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      transition: var(--transition);
+    }
+
+    /* ========== طبقة الخلفية ========== */
+    .hero-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(180deg, rgba(7,9,14,0.6) 0%, rgba(7,9,14,0.9) 100%),
+                  url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjgwIiBoZWlnaHQ9IjcyMCIgdmlld0JveD0iMCAwIDEyODAgNzIwIj48cmVjdCB3aWR0aD0iMTI4MCIgaGVpZ2h0PSI3MjAiIGZpbGw9IiMxMTE2MjAiLz48Y2lyY2xlIGN4PSI2MDAiIGN5PSIzNTAiIHI9IjE4MCIgZmlsbD0iIzJhMjQyMCIgb3BhY2l0eT0iMC4zIi8+PHBhdGggZD0iTTAgMTQ0MEwxMjgwIDBMOTYwIDcyMEwwIDcyMFoiIGZpbGw9IiMxYTFjMjAiIG9wYWNpdHk9IjAuMiIvPjwvc3ZnPg==') center/cover;
+      z-index: 1;
+      transition: var(--transition);
+    }
+
+    /* ========== طبقة واجهة المستخدم ========== */
+    .ui-layer {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      padding: 16px 24px;
+      justify-content: space-between;
+      pointer-events: auto;
+      gap: 12px;
+    }
+
+    /* ========== الألواح الزجاجية ========== */
+    .glass-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      transition: var(--transition);
+    }
+
+    .glass-panel:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    }
+
+    /* ========== الرأس والتنقل ========== */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    nav {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      background: rgba(0,0,0,0.4);
+      padding: 4px 6px;
+      border-radius: 40px;
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--glass-border);
+      flex-wrap: wrap;
+    }
+
+    .bumper {
+      font-size: 10px;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.18);
+      padding: 4px 8px;
+      border-radius: 20px;
+      color: #f9fafb;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .bumper:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.1);
+    }
+
+    .nav-tab {
+      padding: 8px 14px;
+      font-weight: 600;
+      font-size: 12px;
+      color: var(--text-muted);
+      border-radius: 30px;
+      cursor: pointer;
+      transition: var(--transition);
+      white-space: nowrap;
+      border: none;
+      background: transparent;
+      font-family: 'Cairo', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-tab i {
+      font-size: 14px;
+    }
+
+    .nav-tab:hover {
+      color: white;
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .nav-tab.active {
+      background: #ffffff;
+      color: #000000;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+      font-weight: 700;
+    }
+
+    .status-bar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(0,0,0,0.5);
+      padding: 6px 12px;
+      border-radius: 40px;
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .status-bar:hover {
+      background: rgba(0,0,0,0.7);
+      transform: scale(1.05);
+    }
+
+    .profile-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #a855f7, #3b82f6);
+      border: 2px solid white;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .profile-avatar:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+    }
+
+    /* ========== قسم البطل ========== */
+    .hero-content {
+      max-width: 520px;
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero-title {
+      font-family: 'Orbitron', 'Cairo', sans-serif;
+      font-size: clamp(24px, 4vw, 42px);
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      line-height: 1.1;
+      margin-bottom: 8px;
+      text-shadow: 0 8px 25px rgba(0,0,0,0.8);
+    }
+
+    .badges {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      font-size: 9px;
+      font-weight: 700;
+      padding: 4px 8px;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 20px;
+      backdrop-filter: blur(5px);
+      cursor: default;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .badge i {
+      font-size: 10px;
+    }
+
+    .badge.accent {
+      border-color: var(--accent-border);
+      color: #ff7b6b;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      font-weight: 700;
+      font-size: 13px;
+      border-radius: 30px;
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: 'Cairo', sans-serif;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn i {
+      font-size: 14px;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .btn:active::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-primary {
+      background: var(--accent-border);
+      color: white;
+      box-shadow: 0 0 20px var(--accent-glow);
+      outline: 2px solid rgba(255,255,255,0.7);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(235, 68, 50, 0.7);
+    }
+
+    .btn-secondary {
+      background: var(--glass-bg);
+      color: white;
+      border: 1px solid var(--glass-border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    /* ========== صفوف المحتوى ========== */
+    .content-rows {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 16px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .row-title {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .row-title i {
+      font-size: 14px;
+      color: var(--accent-border);
+    }
+
+    .card-grid {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 5px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent-border) transparent;
+    }
+
+    .card-grid::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .card-grid::-webkit-scrollbar-thumb {
+      background: var(--accent-border);
+      border-radius: 10px;
+    }
+
+    .game-card {
+      position: relative;
+      min-width: 160px;
+      width: 170px;
+      height: 100px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid transparent;
+      background: #1e1e2a;
+      transition: var(--transition);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .game-card:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+      border-color: rgba(255,255,255,0.3);
+    }
+
+    .game-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .game-card.focused {
+      border-color: var(--accent-border);
+      transform: scale(1.08);
+      box-shadow: 0 0 25px var(--accent-glow);
+      z-index: 3;
+    }
+
+    .game-card .game-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 4px 8px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.8));
+      font-size: 9px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .progress-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(0,0,0,0.6);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent-border);
+      transition: width 0.5s ease;
+    }
+
+    .party-panel {
+      padding: 10px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    /* ========== دردشة مصغرة ========== */
+    .chat-widget {
+      background: rgba(20, 20, 30, 0.8);
+      backdrop-filter: blur(12px);
+      border-radius: 16px;
+      padding: 10px;
+      border: 1px solid var(--glass-border);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: var(--transition);
+    }
+
+    .chat-widget:hover {
+      background: rgba(30, 30, 40, 0.9);
+    }
+
+    .chat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #e5e7eb;
+    }
+
+    .chat-header i {
+      font-size: 12px;
+      color: var(--accent-border);
+    }
+
+    .chat-messages {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 80px;
+      overflow-y: auto;
+      font-size: 10px;
+      color: #d1d5db;
+      padding-right: 4px;
+      scrollbar-width: thin;
+    }
+
+    .chat-messages::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .chat-messages::-webkit-scrollbar-thumb {
+      background: var(--accent-border);
+      border-radius: 10px;
+    }
+
+    .msg {
+      display: flex;
+      gap: 4px;
+      background: rgba(255,255,255,0.05);
+      padding: 4px 6px;
+      border-radius: 8px;
+      align-items: center;
+      animation: fadeInUp 0.3s ease-out;
+    }
+
+    .msg-user {
+      font-weight: 700;
+      color: #93c5fd;
+    }
+
+    .chat-input-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 6px 10px;
+      font-size: 11px;
+      color: white;
+      outline: none;
+      font-family: 'Cairo', sans-serif;
+      transition: var(--transition);
+    }
+
+    .chat-input:focus {
+      border-color: var(--accent-border);
+      background: rgba(0,0,0,0.7);
+      box-shadow: 0 0 10px rgba(235, 68, 50, 0.3);
+    }
+
+    .send-btn {
+      background: var(--accent-border);
+      border: none;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .send-btn:hover {
+      background: var(--accent-hover);
+      transform: scale(1.1);
+    }
+
+    .send-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* ========== شارة الإشعارات ========== */
+    .notification-badge {
+      background: #ef4444;
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      margin-left: 4px;
+      cursor: pointer;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    /* ========== التذييل ========== */
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .controller-hints {
+      display: flex;
+      gap: 12px;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .btn-hint {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #374151;
+      color: white;
+      font-size: 10px;
+      margin-right: 4px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-hint:hover {
+      transform: scale(1.3);
+    }
+
+    .btn-hint.a { background: #10b981; }
+    .btn-hint.b { background: #ef4444; }
+    .btn-hint.x { background: #3b82f6; }
+    .btn-hint.y { background: #f59e0b; }
+
+    .online-dot {
+      color: #10b981;
+      font-size: 10px;
+    }
+
+    /* ========== نافذة منبثقة ========== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #1a1a2e;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 0 50px rgba(0,0,0,0.8);
+      animation: slideUp 0.3s ease-out;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .modal-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .modal-title i {
+      color: var(--accent-border);
+    }
+
+    .modal-body {
+      color: #d1d5db;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .modal-close {
+      background: var(--accent-border);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: var(--transition);
+      font-family: 'Cairo', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .modal-close:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+    }
+
+    /* ========== التجاوب مع الشاشات ========== */
+    @media (max-width: 1024px) {
+      .tv-container {
+        height: 85vh;
+        min-height: 550px;
+      }
+      
+      .content-rows {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      
+      .ui-layer {
+        padding: 12px 16px;
+      }
+      
+      .game-card {
+        min-width: 140px;
+        width: 150px;
+        height: 85px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 5px;
+      }
+      
+      .tv-container {
+        height: 95vh;
+        min-height: 500px;
+        border-radius: 12px;
+      }
+      
+      .ui-layer {
+        padding: 8px 10px;
+        gap: 8px;
+      }
+      
+      header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      nav {
+        justify-content: center;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+      }
+      
+      .status-bar {
+        justify-content: center;
+      }
+      
+      .hero-title {
+        font-size: 28px;
+      }
+      
+      .btn {
+        padding: 8px 16px;
+        font-size: 11px;
+      }
+      
+      .card-grid {
+        gap: 8px;
+      }
+      
+      .game-card {
+        min-width: 120px;
+        width: 130px;
+        height: 75px;
+      }
+      
+      footer {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      
+      .controller-hints {
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title {
+        font-size: 22px;
+      }
+      
+      .badges {
+        gap: 4px;
+      }
+      
+      .badge {
+        font-size: 8px;
+        padding: 3px 6px;
+      }
+      
+      .chat-widget {
+        padding: 8px;
+      }
+      
+      .chat-messages {
+        max-height: 40px;
+      }
+      
+      .game-card {
+        min-width: 100px;
+        width: 110px;
+        height: 65px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- الخلفية المتوهجة -->
+  <div class="ambient-glow"></div>
+
+  <!-- حاوية التلفاز -->
+  <div class="tv-container">
+    <div class="hero-bg"></div>
+
+    <div class="ui-layer">
+      <!-- ===== الرأس والتنقل ===== -->
+      <header>
+        <nav>
+          <span class="bumper" onclick="showToast('زر LB - التبويب السابق')"><i class="fas fa-chevron-left"></i> LB</span>
+          <button class="nav-tab active" onclick="switchTab(this, 'home')">
+            <i class="fas fa-home"></i> الرئيسية
+          </button>
+          <button class="nav-tab" onclick="switchTab(this, 'cloud')">
+            <i class="fas fa-cloud"></i> السحابة
+          </button>
+          <button class="nav-tab" onclick="switchTab(this, 'library')">
+            <i class="fas fa-gamepad"></i> المكتبة
+          </button>
+          <button class="nav-tab" onclick="switchTab(this, 'store')">
+            <i class="fas fa-shopping-cart"></i> المتجر
+          </button>
+          <button class="nav-tab" onclick="switchTab(this, 'community')">
+            <i class="fas fa-users"></i> المجتمع
+          </button>
+          <span class="bumper" onclick="showToast('زر RB - التبويب التالي')">RB <i class="fas fa-chevron-right"></i></span>
+        </nav>
+
+        <div class="status-bar" onclick="showToast('حالة النظام: 18ms | 85% بطارية')">
+          <span class="online-dot"><i class="fas fa-wifi"></i> 18ms</span>
+          <span><i class="fas fa-battery-three-quarters"></i> 85%</span>
+          <span style="display: flex; align-items: center;">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" onclick="showNotifications()">3</span>
+          </span>
+          <div class="profile-avatar" onclick="showProfile()" title="NovaPrime">
+            <i class="fas fa-user"></i>
+          </div>
+        </div>
+      </header>
+
+      <!-- ===== قسم البطل ===== -->
+      <section class="hero-content">
+        <div class="badges">
+          <span class="badge accent"><i class="fas fa-cloud-upload-alt"></i> بث سحابي</span>
+          <span class="badge"><i class="fas fa-tv"></i> HDR120</span>
+          <span class="badge"><i class="fas fa-swords"></i> لعبة أكشن</span>
+        </div>
+        <h1 class="hero-title">ELDEN RING</h1>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="startStream('Elden Ring')">
+            <i class="fas fa-play"></i> بث فوري
+          </button>
+          <button class="btn btn-secondary" onclick="downloadGame('Elden Ring')">
+            <i class="fas fa-download"></i> تحميل
+          </button>
+          <button class="btn btn-secondary" onclick="showGameDetails('Elden Ring')">
+            <i class="fas fa-info-circle"></i> تفاصيل
+          </button>
+        </div>
+      </section>
+
+      <!-- ===== صفوف المحتوى ===== -->
+      <section class="content-rows">
+        <!-- اليسار: متابعة اللعب -->
+        <div>
+          <div class="row-title">
+            <i class="fas fa-clock"></i>
+            <span>متابعة اللعب</span>
+            <span style="margin-right: auto; font-size: 9px; cursor: pointer;" onclick="showAllGames()">
+              عرض الكل <i class="fas fa-arrow-left"></i>
+            </span>
+          </div>
+          <div class="card-grid">
+            <div class="game-card focused" onclick="selectGame(this, 'Elden Ring')">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%2321262f'/%3E%3Ccircle cx='150' cy='100' r='45' fill='%23eb4432' opacity='0.6'/%3E%3Ctext x='70' y='175' fill='white' font-family='Inter' font-size='14'%3EELDEN RING%3C/text%3E%3C/svg%3E" alt="Elden Ring">
+              <div class="game-info">
+                <span>Elden Ring</span>
+                <span><i class="fas fa-clock"></i> 68%</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width: 68%;"></div></div>
+            </div>
+            <div class="game-card" onclick="selectGame(this, 'Halo Infinite')">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%231b2733'/%3E%3Cpolygon points='90,50 220,100 90,150' fill='%233b82f6'/%3E%3Ctext x='60' y='185' fill='white' font-family='Inter' font-size='14'%3EHALO%3C/text%3E%3C/svg%3E" alt="Halo Infinite">
+              <div class="game-info">
+                <span>Halo Infinite</span>
+                <span><i class="fas fa-clock"></i> 42%</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width: 42%;"></div></div>
+            </div>
+            <div class="game-card" onclick="selectGame(this, 'Cyberpunk 2077')">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%232d1f2e'/%3E%3Crect x='80' y='50' width='140' height='100' fill='%23a855f7' opacity='0.7'/%3E%3Ctext x='50' y='175' fill='white' font-family='Inter' font-size='14'%3ECYBERPUNK%3C/text%3E%3C/svg%3E" alt="Cyberpunk">
+              <div class="game-info">
+                <span>Cyberpunk 2077</span>
+                <span><i class="fas fa-clock"></i> 15%</span>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width: 15%;"></div></div>
+            </div>
+            <div class="game-card" onclick="selectGame(this, 'God of War')">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='200' viewBox='0 0 300 200'%3E%3Crect width='300' height='200' fill='%232a1a1a'/%3E%3Ctext x='80' y='100' fill='%23ef4444' font-family='Inter' font-size='20'%3E⚔️%3C/text%3E%3Ctext x='50' y='175' fill='white' font-family='Inter' font-size='14'%3EGOD OF WAR%3C/text%3E%3C/svg%3E" alt="God of War">
+              <div class="game-info">
+                <span>God of War</span>
+                <span><i class="fas fa-star"></i> جديد</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap;">
+            <div class="glass-panel" style="padding: 6px 10px; display: flex; align-items: center; gap: 6px; font-size: 10px; cursor: pointer;" onclick="showToast('8 أصدقاء متصلين الآن')">
+              <i class="fas fa-user-friends"></i> 8 أصدقاء متصلين
+            </div>
+            <div class="glass-panel" style="padding: 6px 10px; font-size: 10px; cursor: pointer;" onclick="showToast('التحديات الأسبوعية: 4/7 مكتملة')">
+              <i class="fas fa-trophy"></i> التحديات: 4/7
+            </div>
+            <div class="glass-panel" style="padding: 6px 10px; font-size: 10px; cursor: pointer;" onclick="showCloudStatus()">
+              <i class="fas fa-cloud"></i> سحابة: نشطة
+            </div>
+          </div>
+        </div>
+
+        <!-- اليمين: الحفلة والدردشة -->
+        <div>
+          <div class="row-title">
+            <i class="fas fa-comments"></i>
+            <span>الحفلة والدردشة</span>
+          </div>
+          <div class="glass-panel party-panel" style="margin-bottom: 8px;" onclick="joinVoice('Alex_Apex')">
+            <div style="font-size: 11px;">
+              <div style="font-weight: 700;">
+                <i class="fas fa-circle" style="color: #10b981; font-size: 8px;"></i> Alex_Apex
+              </div>
+              <div style="color: var(--text-muted); font-size: 9px;">يلعب Halo Infinite</div>
+            </div>
+            <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 10px;" onclick="event.stopPropagation(); joinVoice('Alex_Apex')">
+              <i class="fas fa-microphone"></i> انضمام
+            </button>
+          </div>
+
+          <!-- دردشة مصغرة -->
+          <div class="chat-widget">
+            <div class="chat-header">
+              <span><i class="fas fa-hashtag"></i> party-chat</span>
+              <span><i class="fas fa-microphone"></i> 3 أعضاء</span>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+              <div class="msg">
+                <span class="msg-user">Nova:</span> raid boss قريبًا؟
+              </div>
+              <div class="msg">
+                <span class="msg-user">Alex:</span> أعطني 5 دقائق
+              </div>
+              <div class="msg">
+                <span class="msg-user">Luna:</span> هيا بنا
+              </div>
+              <div class="msg">
+                <span class="msg-user">System:</span> <i class="fas fa-calendar"></i> حدث جديد بدأ
+              </div>
+            </div>
+            <div class="chat-input-row">
+              <input class="chat-input" type="text" id="chatInput" placeholder="رسالة إلى #party-chat..." onkeypress="handleChatEnter(event)">
+              <button class="send-btn" onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+          
+          <!-- إحصائيات سريعة -->
+          <div style="margin-top: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+            <div class="glass-panel" style="padding: 8px; text-align: center; cursor: pointer;" onclick="showAchievements()">
+              <i class="fas fa-medal" style="font-size: 20px; color: #f59e0b;"></i>
+              <div style="font-size: 9px; margin-top: 4px;">128 إنجاز</div>
+            </div>
+            <div class="glass-panel" style="padding: 8px; text-align: center; cursor: pointer;" onclick="showLeaderboard()">
+              <i class="fas fa-chart-line" style="font-size: 20px; color: #3b82f6;"></i>
+              <div style="font-size: 9px; margin-top: 4px;">المركز 5</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== التذييل ===== -->
+      <footer>
+        <div class="controller-hints">
+          <span><span class="btn-hint a" onclick="showToast('تحديد')">A</span> تحديد</span>
+          <span><span class="btn-hint b" onclick="showToast('رجوع')">B</span> رجوع</span>
+          <span><span class="btn-hint x" onclick="showToast('قائمة سريعة')">X</span> قائمة</span>
+          <span><span class="btn-hint y" onclick="showToast('بحث')">Y</span> بحث</span>
+          <span><span class="btn-hint" onclick="showSettings()"><i class="fas fa-cog"></i></span> إعدادات</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 11px; font-weight: 600; color: var(--text-muted); cursor: pointer;" onclick="showToast('المساعد الصوتي مفعل')">
+            <i class="fas fa-microphone-alt"></i> "يا مساعد"
+          </span>
+          <span style="font-size: 10px; background: rgba(255,255,255,0.1); padding: 3px 8px; border-radius: 20px; cursor: pointer;" onclick="showToast('Nexus Cloud v2.0')">
+            <i class="fas fa-cloud"></i> Nexus Cloud
+          </span>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- نافذة منبثقة عامة -->
+  <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-title" id="modalTitle">
+        <i class="fas fa-info-circle"></i> عنوان
+      </div>
+      <div class="modal-body" id="modalBody">المحتوى</div>
+      <button class="modal-close" onclick="closeModal()">
+        <i class="fas fa-times"></i> إغلاق
+      </button>
+    </div>
+  </div>
+
+  <!-- نظام التوست -->
+  <div id="toastContainer" style="position: fixed; top: 20px; right: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 10px;"></div>
+
+  <script>
+    // ========== نظام التوست ==========
+    function showToast(message) {
+      const toastContainer = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        background: rgba(20, 20, 30, 0.95);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 12px;
+        border: 1px solid rgba(255,255,255,0.2);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        backdrop-filter: blur(10px);
+        font-size: 13px;
+        font-weight: 600;
+        animation: slideIn 0.3s ease-out;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: 'Cairo', sans-serif;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      `;
+      toast.innerHTML = `<i class="fas fa-check-circle" style="color: #10b981;"></i> ${message}`;
+      toast.onclick = () => toast.remove();
+      toastContainer.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // ========== تبديل التبويبات ==========
+    function switchTab(element, tabName) {
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      element.classList.add('active');
+      
+      const tabData = {
+        'home': {
+          icon: 'fa-home',
+          title: 'الرئيسية',
+          content: 'مرحبًا بك في Nexus Gaming OS! استمتع بأحدث الألعاب والتحديثات.'
+        },
+        'cloud': {
+          icon: 'fa-cloud',
+          title: 'السحابة',
+          content: 'خدمة البث السحابي:\n\n• 4K HDR بث مباشر\n• زمن استجابة 18ms\n• مكتبة 500+ لعبة\n• حفظ تلقائي في السحابة\n• تشغيل على أي جهاز'
+        },
+        'library': {
+          icon: 'fa-gamepad',
+          title: 'المكتبة',
+          content: 'مكتبتك:\n\n• Elden Ring - 68% مكتمل\n• Halo Infinite - 42% مكتمل\n• Cyberpunk 2077 - 15% مكتمل\n• God of War - جديد\n• Spider-Man - جديد\n• Forza Horizon 5 - جديد'
+        },
+        'store': {
+          icon: 'fa-shopping-cart',
+          title: 'المتجر',
+          content: 'أحدث العروض:\n\n🔥 تخفيضات الصيف - خصم 50%\n🎮 ألعاب جديدة\n💰 عروض حصرية للأعضاء\n💎 نقاط Nexus'
+        },
+        'community': {
+          icon: 'fa-users',
+          title: 'المجتمع',
+          content: 'المجتمع:\n\n• 8 أصدقاء متصلين\n• 3 دعوات حفلة\n• 15 رسالة جديدة\n• تحديات أسبوعية نشطة'
+        }
+      };
+      
+      const data = tabData[tabName];
+      showToast(`تم التبديل إلى ${data.title}`);
+      
+      if (tabName !== 'home') {
+        showModal(
+          `<i class="fas ${data.icon}"></i> ${data.title}`,
+          data.content
+        );
+      }
+    }
+
+    // ========== اختيار لعبة ==========
+    function selectGame(element, gameName) {
+      document.querySelectorAll('.game-card').forEach(card => {
+        card.classList.remove('focused');
+      });
+      
+      element.classList.add('focused');
+      
+      document.querySelector('.hero-title').textContent = gameName.toUpperCase();
+      showToast(`تم اختيار ${gameName}`);
+    }
+
+    // ========== بدء البث ==========
+    function startStream(gameName) {
+      showModal(
+        `<i class="fas fa-play-circle"></i> بدء البث: ${gameName}`,
+        `جاري الاتصال بالخادم السحابي...\n\nاللعبة: ${gameName}\nالجودة: 4K HDR\nمعدل الإطارات: 120fps\nزمن الاستجابة: 18ms\n\nتم الاتصال بنجاح! استمتع باللعبة.`
+      );
+    }
+
+    // ========== تحميل اللعبة ==========
+    function downloadGame(gameName) {
+      showToast(`جاري تحميل ${gameName}...`);
+      setTimeout(() => {
+        showToast(`تم تحميل ${gameName} بنجاح ✅`);
+      }, 2000);
+    }
+
+    // ========== تفاصيل اللعبة ==========
+    function showGameDetails(gameName) {
+      showModal(
+        `<i class="fas fa-info-circle"></i> تفاصيل ${gameName}`,
+        `🎮 ${gameName}\n\nالنوع: أكشن، مغامرات\nالتقييم: 9.5/10\nالمطور: FromSoftware\nالإصدار: 2022\n\nالمتطلبات:\n• معالج: 4 نواة\n• ذاكرة: 16GB RAM\n• تخزين: 100GB\n• اتصال: 10Mbps+`
+      );
+    }
+
+    // ========== عرض جميع الألعاب ==========
+    function showAllGames() {
+      showModal(
+        '<i class="fas fa-gamepad"></i> مكتبة الألعاب',
+        '📚 جميع الألعاب:\n\n• Elden Ring\n• Halo Infinite\n• Cyberpunk 2077\n• God of War\n• Spider-Man\n• Forza Horizon 5\n• The Witcher 3\n• Red Dead Redemption 2\n• ... والمزيد'
+      );
+    }
+
+    // ========== عرض الملف الشخصي ==========
+    function showProfile() {
+      showModal(
+        '<i class="fas fa-user-circle"></i> الملف الشخصي',
+        '👤 NovaPrime\n\nالمستوى: 45\nالإنجازات: 128\nساعات اللعب: 1,234 ساعة\n\nالأصدقاء: 89 متصل\nالتقييم: ⭐⭐⭐⭐⭐\n\nالإحصائيات:\n• الفوز: 65%\n• الدقة: 78%\n• المهام: 342'
+      );
+    }
+
+    // ========== عرض الإشعارات ==========
+    function showNotifications() {
+      showModal(
+        '<i class="fas fa-bell"></i> الإشعارات (3)',
+        '1. Alex_Apex دعاك إلى حفلة\n2. تحديث جديد متاح للعبة Halo Infinite\n3. لقد حققت إنجازًا جديدًا في Elden Ring'
+      );
+    }
+
+    // ========== الانضمام الصوتي ==========
+    function joinVoice(userName) {
+      showToast(`تم الانضمام إلى الدردشة الصوتية مع ${userName} 🎙️`);
+    }
+
+    // ========== نظام الدردشة ==========
+    function sendMessage() {
+      const input = document.getElementById('chatInput');
+      const message = input.value.trim();
+      
+      if (message) {
+        const chatMessages = document.getElementById('chatMessages');
+        const newMsg = document.createElement('div');
+        newMsg.className = 'msg';
+        newMsg.innerHTML = `<span class="msg-user">Nova:</span> ${message}`;
+        chatMessages.appendChild(newMsg);
+        
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        input.value = '';
+        
+        showToast('تم إرسال الرسالة ✉️');
+      }
+    }
+
+    function handleChatEnter(event) {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    }
+
+    // ========== وظائف إضافية ==========
+    function showCloudStatus() {
+      showModal(
+        '<i class="fas fa-cloud"></i> حالة السحابة',
+        '🟢 السحابة نشطة\n\n• الخادم: أوروبا الغربية\n• زمن الاستجابة: 18ms\n• معدل النقل: 150Mbps\n• عدد المستخدمين: 12,847\n• وقت التشغيل: 99.9%'
+      );
+    }
+
+    function showAchievements() {
+      showModal(
+        '<i class="fas fa-medal"></i> الإنجازات',
+        '🏆 إنجازاتك:\n\n• أسطورة Elden Ring\n• محارب Halo\n• مكتشف Cyberpunk\n• صائد الجوائز\n• بطل المجتمع\n\nالمجموع: 128 إنجاز'
+      );
+    }
+
+    function showLeaderboard() {
+      showModal(
+        '<i class="fas fa-chart-line"></i> لوحة الصدارة',
+        '🏆 لوحة الصدارة الأسبوعية:\n\n1. ShadowKiller - 2,450 نقطة\n2. LunaStar - 2,210 نقطة\n3. DragonSlayer - 1,980 نقطة\n4. NovaPrime - 1,850 نقطة\n5. Alex_Apex - 1,720 نقطة'
+      );
+    }
+
+    function showSettings() {
+      showModal(
+        '<i class="fas fa-cog"></i> الإعدادات',
+        '⚙️ الإعدادات:\n\n• الصوت: 80%\n• الرسومات: Ultra\n• السطوع: 75%\n• اللغة: العربية\n• الإشعارات: مفعلة\n• الحفظ التلقائي: مفعل\n• الوضع الليلي: مفعل'
+      );
+    }
+
+    // ========== نظام النافذة المنبثقة ==========
+    function showModal(title, body) {
+      document.getElementById('modalTitle').innerHTML = title;
+      document.getElementById('modalBody').textContent = body;
+      document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    // ========== إضافة أنماط CSS الديناميكية ==========
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = `
+      @keyframes slideIn {
+        from {
+          transform: translateX(100px);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      
+      .game-card, .nav-tab, .btn, .profile-avatar, .status-bar, .glass-panel {
+        will-change: transform;
+      }
+    `;
+    document.head.appendChild(styleSheet);
+
+    // ========== التهيئة عند التحميل ==========
+    document.addEventListener('DOMContentLoaded', function() {
+      showToast('مرحبًا بك في Nexus Gaming OS 🎮');
+      
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          closeModal();
+        }
+      });
+      
+      // دعم اللمس والسحب للبطاقات
+      const cardGrids = document.querySelectorAll('.card-grid');
+      cardGrids.forEach(grid => {
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+        
+        grid.addEventListener('mousedown', (e) => {
+          isDown = true;
+          startX = e.pageX - grid.offsetLeft;
+          scrollLeft = grid.scrollLeft;
+        });
+        
+        grid.addEventListener('mouseleave', () => {
+          isDown = false;
+        });
+        
+        grid.addEventListener('mouseup', () => {
+          isDown = false;
+        });
+        
+        grid.addEventListener('mousemove', (e) => {
+          if (!isDown) return;
+          e.preventDefault();
+          const x = e.pageX - grid.offsetLeft;
+          const walk = (x - startX) * 2;
+          grid.scrollLeft = scrollLeft - walk;
+        });
+      });
+    });
+
+    // ========== محاكاة نشاط النظام ==========
+    setInterval(() => {
+      const latencyElement = document.querySelector('.online-dot');
+      if (latencyElement) {
+        const newLatency = Math.floor(Math.random() * 15) + 15;
+        latencyElement.innerHTML = `<i class="fas fa-wifi"></i> ${newLatency}ms`;
+      }
+    }, 5000);
+
+    setInterval(() => {
+      const batteryElement = document.querySelector('.status-bar span:nth-child(2)');
+      if (batteryElement && Math.random() > 0.7) {
+        const currentBattery = parseInt(batteryElement.textContent);
+        const newBattery = Math.max(10, Math.min(100, currentBattery - 1));
+        batteryElement.innerHTML = `<i class="fas fa-battery-three-quarters"></i> ${newBattery}%`;
+      }
+    }, 10000);
+  </script>
+</body>
+</html>
